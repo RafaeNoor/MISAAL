@@ -1,5 +1,8 @@
 import common.Types
+from  common.Instructions import Context
 import subprocess
+import os
+import tempfile
 
 
 HYDRIDE_HEADER =  """
@@ -14,7 +17,8 @@ HYDRIDE_HEADER =  """
         
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
-        (custodian-limit-memory (current-custodian) (* 1000 1024 1024))
+        (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
+        (current-bitwidth 16)
         """
 
 
@@ -58,10 +62,13 @@ def emit_context_expr(ctx, dsl_inst):
         dsl_inst (_type_): _description_
     """
 
-    terms = ["(", dsl_inst.get_dsl_name()]
+    dsl_name = dsl_inst.name + "_dsl"
+    terms = ["(", dsl_name]
     for arg in ctx.context_args:
-        
-        terms.append(arg.get_dsl_value())
+        if isinstance(arg, Context):
+            terms.append(emit_context_expr(arg,arg))
+        else:
+            terms.append(arg.get_dsl_value())
 
     terms.append(")")
 
@@ -75,7 +82,8 @@ def emit_verify_equal(v1, v2):
 
 def execute_racket_file(statements):
 
-    with open("tmp.rkt", "w+") as WriteFile:
+    filename = next(tempfile._get_candidate_names()) + ".rkt"
+    with open(filename, "w+") as WriteFile:
         def write_line(line):
             WriteFile.write(line + "\n")
 
@@ -84,9 +92,9 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    result = subprocess.run(["racket tmp.rkt"], shell=True)
+    result = subprocess.run(["racket {}".format(filename)], shell=True)
 
-    subprocess.run(["rm tmp.rkt"], shell = True)
+    subprocess.run(["rm {}}".format(filename)], shell = True)
     return result
     
 
