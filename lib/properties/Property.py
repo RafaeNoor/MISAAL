@@ -103,10 +103,11 @@ class Property:
         property_map = {}
 
         print("Total Number of Candidates: ", len(self.candidates))
-        candidate_count = 0
+        
         # create a thread pool with 4 threads
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=4)
-        
+        global candidate_count 
+        candidate_count = 0 
         def worker(candidate):
             """Parallelizable method on each candidate
 
@@ -114,12 +115,11 @@ class Property:
                 candidate (_type_): _description_
             """
             if self.property_holds_on_candidate(candidate):
+                key = self.serialize_candidate(candidate)
+
+                global candidate_count
                 
                 candidate_count += 1
-
-                key = self.serialize_candidate(candidate)
-                print(key)
-
                 if key not in property_map:
                     property_map[key] = []
                 property_map[key].append ({
@@ -134,9 +134,9 @@ class Property:
 
 
         pool.shutdown(wait=True)
-
+        
         print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
-
+        print(property_map)
         return property_map
 
 

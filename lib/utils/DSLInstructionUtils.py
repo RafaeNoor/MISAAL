@@ -94,7 +94,7 @@ def execute_racket_file(statements):
 
     result = subprocess.run(["racket {}".format(filename)], shell=True)
 
-    subprocess.run(["rm {}}".format(filename)], shell = True)
+    subprocess.run(["rm {}".format(filename)], shell = True)
     return result
     
 

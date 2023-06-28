@@ -36,3 +36,7 @@ class CodeSynthesizerDesc:
 X86_SYNTH_DESC = CodeSynthesizerDesc(interpreter_name="hydride:interpret", cost_name= "hydride:cost",
 bind_name="bind-expr", printer_name="hydride:print-expr", get_prec_name="hydride:get-prec",
 get_length_name="hydride:get-length")
+
+HVX_SYNTH_DESC = CodeSynthesizerDesc(interpreter_name="hvx:interpret", cost_name= "hvx:cost",
+bind_name="hvx:bind-expr", printer_name="hvx:print-expr", get_prec_name="hvx:get-prec",
+get_length_name="hvx:get-length")
