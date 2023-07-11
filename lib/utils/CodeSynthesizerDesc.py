@@ -4,7 +4,7 @@ class CodeSynthesizerDesc:
     """Class to capture the names of the various components of Hydride's automatically
     generated code-synthesizer components
     """
-    def __init__(self, interpreter_name = "",
+    def __init__(self, target_name = "" ,interpreter_name = "",
     cost_name = "", bind_name = "", printer_name = "",
     get_prec_name = "", get_length_name = "" ):
         """Constructor
@@ -17,7 +17,7 @@ class CodeSynthesizerDesc:
             get_prec_name (str, optional): _description_. Defaults to "".
             get_length_name (str, optional): _description_. Defaults to "".
         """
-
+        self.target_name = target_name
         self.interpreter_name = interpreter_name
         self.cost_name = cost_name
         self.bind_name = bind_name
@@ -27,16 +27,16 @@ class CodeSynthesizerDesc:
 
     def interpret_expr(self, expr, env_name):
         return "({} {} {})".format(self.interpreter_name, str(expr), env_name)
-    
-        
 
 
 
 
-X86_SYNTH_DESC = CodeSynthesizerDesc(interpreter_name="hydride:interpret", cost_name= "hydride:cost",
-bind_name="bind-expr", printer_name="hydride:print-expr", get_prec_name="hydride:get-prec",
+
+
+X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "x86",interpreter_name="hydride:interpret", cost_name= "hydride:cost",
+bind_name="bind-expr", printer_name="hydride:hydride-printer", get_prec_name="hydride:get-prec",
 get_length_name="hydride:get-length")
 
-HVX_SYNTH_DESC = CodeSynthesizerDesc(interpreter_name="hvx:interpret", cost_name= "hvx:cost",
-bind_name="hvx:bind-expr", printer_name="hvx:print-expr", get_prec_name="hvx:get-prec",
+HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "hvx",interpreter_name="hvx:interpret", cost_name= "hvx:cost",
+bind_name="hvx:bind-expr", printer_name="hvx:hydride-printer", get_prec_name="hvx:get-prec",
 get_length_name="hvx:get-length")

@@ -3,6 +3,7 @@ from  common.Instructions import Context
 import subprocess
 import os
 import tempfile
+import glob
 
 
 HYDRIDE_HEADER =  """
@@ -14,7 +15,7 @@ HYDRIDE_HEADER =  """
         (require rosette/lib/destruct)
         (require rosette/solver/smt/boolector)
         (require hydride)
-        
+
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
         (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
@@ -34,7 +35,7 @@ def get_symbolic_bitvector_indices_for_ctx(dsl_inst):
         context_indices = [i for i in range(0, len(context.args)) if isinstance(context.args[i], BitVector)]
         indices.append(context_indices)
 
-    return indices        
+    return indices
 
 
 def get_concrete_bitvector_indices_for_ctx(dsl_inst):
@@ -49,7 +50,7 @@ def get_concrete_bitvector_indices_for_ctx(dsl_inst):
         context_indices = [i for i in range(0, len(context.args)) if isinstance(context.args[i], ConstBitVector)]
         indices.append(context_indices)
 
-    return indices  
+    return indices
 
 
 
@@ -96,9 +97,9 @@ def execute_racket_file(statements):
 
     subprocess.run(["rm {}".format(filename)], shell = True)
     return result
-    
 
-        
+
+
 
 
 def emit_racket_cond(clauses, cases):
@@ -144,13 +145,88 @@ def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_
 
     cex_unsat_check = "(unsat? cex)"
 
-    handler = emit_racket_cond([cex_unsat_check, "else"], ["(displayln \"PROPERTY HOLDS!\") (exit 0)", 
+    handler = emit_racket_cond([cex_unsat_check, "else"], ["(displayln \"PROPERTY HOLDS!\") (exit 0)",
     "(displayln \"PROPERTY DOES NOT HOLD!\") (exit 1)"])
 
 
     statements = [create_env, create_expr_1, create_expr_2, cex, print_cex, handler]
 
 
-    
+
     return execute_racket_file(statements)
+
+
+def simplify_expression(dsl_expr, code_synthesizer_desc, input_sizes, input_precs):
+    """Issues synthesis query to test if the DSLExpression dsl_expr can be simplfied
+    into a simpler expression.
+
+    Args:
+        dsl_expr (DSLInstruction): _description_
+        code_synthesizer_desc (_type_): _description_
+    """
+
+
+    is_simplified = False
+    simplified_expr = None
+
+    statements = []
+
+    define_input_expr = "(define hydride-expr {})".format(dsl_expr.emit_context_expr_string())
+    statements.append(define_input_expr)
+
+
+    define_input_size = "(define input-sizes (list {}))".format(" ".join(input_sizes))
+    define_input_precs = "(define input-precs (list {}))".format(" ".join(input_precs))
+
+    statements.append(define_input_size)
+    statements.append(define_input_precs)
+
+    statements.append("(define output-hash-name \"inst.combine.expr.2\")")
+
+    define_out_expr = "(define output-expr (inst-combine hydride-expr #t #f 'z3 input-sizes input-precs \"{}\" 'regular \"\"  output-hash-name \"\" \"out_hash\" 1))".format(code_synthesizer_desc.target_name)
+    statements.append(define_out_expr)
+
+
+
+    check_simplified = "(not (equal? hydride-expr output-expr))"
+
+    # Check if lower cost
+    check_simplified = "(> ({} hydride-expr) ({} output-expr))".format(code_synthesizer_desc.cost_name, code_synthesizer_desc.cost_name)
+
+    # Write simplified expression to file
+    serialize_output = "({} output-expr)".format(code_synthesizer_desc.printer_name)
+
+    serialize_input = "({} hydride-expr)".format(code_synthesizer_desc.printer_name)
+
+    serialize_expr = "(string-append {} \"\\n\" {})".format(serialize_input, serialize_output)
+
+    serialize_expr = serialize_output
+
+
+    read_out_fname = next(tempfile._get_candidate_names()) + ".temp"
+    write_to_file  = "(write-str-to-file {} \"{}\")".format(serialize_expr, read_out_fname)
+
+
+    if_simplified = "(begin (displayln \"Simplfied!!\") (pretty-print hydride-expr) (pretty-print output-expr) {}  (exit 0))".format(write_to_file)
+    handler = emit_racket_cond([check_simplified, "else"], [if_simplified ,
+    "(displayln \"Unable to simplify!\") (exit 1)"])
+    statements.append(handler)
+
+
+    is_simplified = execute_racket_file(statements).returncode == 0
+
+    if is_simplified:
+        with open(read_out_fname, "r") as ReadFile:
+            simplified_expr = ReadFile.read()
+
+        #subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+
+    return (is_simplified, simplified_expr)
+
+
+def cleanup_tmp_files():
+    tmp_files = glob.glob("/tmp/base_*")
+    print("Cleaning up {} tmp files ...".format(len(tmp_files)))
+    for f in tmp_files:
+        subprocess.call("rm -f {}".format(f), shell = True)
 
