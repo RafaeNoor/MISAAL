@@ -34,7 +34,6 @@ def get_matching_context(nested_expr, dsl_list):
 
     for dsl_inst in dsl_list:
         if dsl_inst.name == dsl_name:
-            print("MATCH!")
             matching_dsl_inst = dsl_inst
             break
 
@@ -126,7 +125,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
             if isinstance(arg, BitVector):
                 matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list) # Offset zero corresponds to the name of the current matching context
 
-            return matching_context
+        return matching_context
 
 
     else:
