@@ -296,6 +296,14 @@ class IdentifySwizzles(Property):
         return shuffle_contexts
 
 
+    def identify_stream_precision(self, stream):
+        for idx, a_iter in enumerate(stream):
+            for src_idx, rng in enumerate(a_iter):
+                hi = int(rng.split(" ")[0])
+                lo = int(rng.split(" ")[1])
+                prec = hi - lo + 1
+                return prec
+
 
 
     def generate_intra_iteration_access_swizzle_old(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec ):
@@ -314,6 +322,7 @@ class IdentifySwizzles(Property):
             if num_a_sources != max_distinct_inputs:
                 continue
 
+            #TEMP:
             print(a_streams[0])
             print("Num Sources: ", max_distinct_inputs)
 
@@ -321,6 +330,14 @@ class IdentifySwizzles(Property):
                 print("Single source case, skipping ... ")
 
                 continue
+
+            # For HVX and other targets, operands actually take mixed precision, so we should
+            # determine the specific prec being used for a given stream
+
+            prec = self.identify_stream_precision(a_streams)
+            print("Stream precision identified to be: ", prec, "for ", a_streams[0])
+
+
 
             input_slice_size =  a_size // num_a_sources
             print("Input Slice Size: ", input_slice_size)
@@ -359,12 +376,20 @@ class IdentifySwizzles(Property):
 
                 print("Starts", starts)
 
-                shuffle_vector_args = []
 
             # Each iteration you should sort each stream of extract in descending order
 
+                shuffle_vector_args = []
+
+                print("a_stream:",a_streams)
                 for idx, a_iter in enumerate(a_streams):
 
+
+                    # In HVX, the same slices of the scalar Register are
+                    # accessed repeatedly. Hence we only account for the stream
+                    # till we have enough indices to produce the shuffle vector
+                    if prec * len(shuffle_vector_args) == a_size:
+                        break
 
 
 
@@ -377,6 +402,8 @@ class IdentifySwizzles(Property):
 
 
 
+
+
                     #if len(a_iter) != num_a_sources:
                     #    break
 
@@ -385,7 +412,11 @@ class IdentifySwizzles(Property):
                         lo = int(rng.split(" ")[1])
 
 
-                        prec = hi - lo + 1
+                        new_prec = hi - lo + 1
+
+                        if new_prec != prec:
+                            print("PREC CHANGED! from", prec,"to", new_prec)
+                        prec = new_prec
                         print("PREC:", prec)
                         print("Source index:", src_idx)
 
@@ -408,10 +439,11 @@ class IdentifySwizzles(Property):
                 shuffle_vector_args = self.blocked_reverse(shuffle_vector_args, num_a_sources)
                 print(shuffle_vector_args)
 
-                datum = (shuffle_vector_args,  {"result_size": a_size, "operand_size": base_vect_size, "prec": prec})
+                datum = (shuffle_vector_args,  {"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources})
 
                 # Different streams may identify the same swizzle patterns
                 if datum not in intra_shuffle_contexts:
+                    print(datum)
                     intra_shuffle_contexts.append(datum)
 
 
@@ -436,53 +468,6 @@ class IdentifySwizzles(Property):
 
 
 
-    def generate_intra_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec ):
-
-        intra_shuffle_contexts = []
-
-        for test_key in list(streams.keys()):
-            key_streams = streams[test_key]
-            print(var_to_size_map)
-            key_size = var_to_size_map[test_key]
-
-            base_vect_size = a_size
-
-            num_key_sources = min(len(key_streams[0]), max_distinct_inputs)
-
-            if num_key_sources != max_distinct_inputs:
-                continue
-
-            print(key_streams[0])
-            print("Num Sources: ", max_distinct_inputs)
-
-            if num_key_sources == 1:
-                print("Single source case, skipping ... ")
-                continue
-
-
-            input_slice_size =  key_size // num_key_sources
-            print("Input Slice Size: ", input_slice_size) # For each input operand we consider 'input_slice_size' bits from it
-
-            num_shuffle_iterations = 1
-
-
-
-            for target_size in target_vector_sizes:
-                if target_size >= input_slice_size and target_size % input_slice_size == 0:
-                    num_shuffle_iterations = target_size //  input_slice_size # 4
-                    print("Using Target Size:", target_size)
-
-                    base_vect_size = target_size
-
-                    break
-
-            num_shuffle_iterations = target_size //  input_slice_size
-
-
-            step_size = base_vect_size // (num_shuffle_iterations )
-
-
-        return intra_shuffle_contexts
 
 
 
