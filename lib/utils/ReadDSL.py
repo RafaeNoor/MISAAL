@@ -110,7 +110,11 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
     elif first_term == 'lit':
 
         lit_value = nested_expr[1][1]
-        lit_size = nested_expr[1]
+        lit_size = nested_expr[1][2]
+
+        if isinstance(lit_size, list):
+            lit_size = lit_size[1]
+
         const_bv = ConstBitVector(lit_value, lit_size)
 
         return const_bv

@@ -81,6 +81,9 @@ def emit_verify_equal(v1, v2):
 
 
 
+def get_random_tempfile_name():
+    return next(tempfile._get_candidate_names())
+
 def execute_racket_file(statements):
 
     filename = next(tempfile._get_candidate_names()) + ".rkt"
@@ -224,9 +227,53 @@ def simplify_expression(dsl_expr, code_synthesizer_desc, input_sizes, input_prec
     return (is_simplified, simplified_expr)
 
 
+
+def execute_racket_file_and_read_from_file(statements, fname_prefix):
+
+    racket_file = fname_prefix + ".rkt"
+
+    with open(racket_file, "w+") as WriteFile:
+        WriteFile.write(HYDRIDE_HEADER + "\n")
+        WriteFile.write("\n".join(statements))
+
+    print("Check racket_file:", racket_file)
+
+    log_file = fname_prefix + ".log"
+
+    with open(log_file, "w+") as LogFile:
+        result = subprocess.run(["racket {}".format(racket_file)], shell=True, stdout = LogFile, stderr = LogFile)
+
+
+
+    output = ""
+    with open(log_file, "r") as LogFile:
+        output = LogFile.read()
+
+
+
+    #subprocess.run(["rm {}".format(racket_file)], shell = True)
+    #subprocess.run(["rm {}".format(log_file)], shell = True)
+
+    return output
+
+
+
+
+
+
 def cleanup_tmp_files():
     tmp_files = glob.glob("/tmp/base_*")
     print("Cleaning up {} tmp files ...".format(len(tmp_files)))
     for f in tmp_files:
         subprocess.call("rm -f {}".format(f), shell = True)
+
+
+def ordered_deduplicate(ls):
+    deduplicated = list(set(ls))
+
+    deduplicated.sort(key = lambda x : ls.index(x))
+
+    return deduplicated
+
+
 
