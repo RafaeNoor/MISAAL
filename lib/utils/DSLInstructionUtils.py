@@ -251,8 +251,8 @@ def execute_racket_file_and_read_from_file(statements, fname_prefix):
 
 
 
-    #subprocess.run(["rm {}".format(racket_file)], shell = True)
-    #subprocess.run(["rm {}".format(log_file)], shell = True)
+    subprocess.run(["rm {}".format(racket_file)], shell = True)
+    subprocess.run(["rm {}".format(log_file)], shell = True)
 
     return output
 

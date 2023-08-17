@@ -439,7 +439,7 @@ class IdentifySwizzles(Property):
                 shuffle_vector_args = self.blocked_reverse(shuffle_vector_args, num_a_sources)
                 print(shuffle_vector_args)
 
-                datum = (shuffle_vector_args,  {"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources})
+                datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources}
 
                 # Different streams may identify the same swizzle patterns
                 if datum not in intra_shuffle_contexts:
@@ -475,7 +475,9 @@ class IdentifySwizzles(Property):
         return candidate[0].name
 
     def get_property_on_candidate(self, candidate):
-        return {"candidate": candidate[0].name ,"num_sources": candidate[2] ,"swizzle_args": self.swizzle_context_map[candidate[0].name], "operand_size": candidate[3]}
+
+        swizzle_prop = self.swizzle_context_map[candidate[0].name]
+        return {"candidate": candidate[0].name ,"num_sources": candidate[2] ,"contexts": self.swizzle_context_map[candidate[0].name]}
 
 
 

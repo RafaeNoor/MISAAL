@@ -137,6 +137,7 @@ class Property:
         POOL_SIZE = 8
 
         if self.parallel:
+            print("Running Property Inference in Parallel")
 
             # Issue candidates in batches so that we can routinely garbage collect
             # and files generated during synthesis:
