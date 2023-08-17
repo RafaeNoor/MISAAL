@@ -33,6 +33,8 @@ class IdentifySwizzles(Property):
 
         candidates = []
         for dsl_inst in self.dsl_list:
+            if "mask" in dsl_inst.name:
+                continue
             if self.instruction_may_access_cross_lane(dsl_inst):
                 for num_sources in self.num_input_sources:
                     for target_size in self.synth_desc.get_target_vector_sizes():
@@ -44,6 +46,7 @@ class IdentifySwizzles(Property):
         print("Candidates:")
         for cand in candidates:
             print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3])
+
 
 
 
@@ -402,7 +405,9 @@ class IdentifySwizzles(Property):
                         starts[index_modulo] -= 1
 
                 print("Shuffle vector arguments")
+                shuffle_vector_args = self.blocked_reverse(shuffle_vector_args, num_a_sources)
                 print(shuffle_vector_args)
+
                 datum = (shuffle_vector_args,  {"result_size": a_size, "operand_size": base_vect_size, "prec": prec})
 
                 # Different streams may identify the same swizzle patterns
@@ -411,6 +416,23 @@ class IdentifySwizzles(Property):
 
 
         return intra_shuffle_contexts
+
+
+
+    # Traces are executed from MSB to LSB, where MSB is the largest bit index.
+    # However for ease of readability, in Hydride we say the MSB is 0. Hence this
+    # reverse the indices in blocked fashion to respect that convention
+    def blocked_reverse(self, shuffle_indices, block_size):
+
+        assert len(shuffle_indices) % block_size == 0 , "Blocked reverse must be applied when we can evenly divide in block sizes"
+
+        ordered_indices = []
+
+        for i in reversed(range(0, len(shuffle_indices), block_size)):
+            ordered_indices += shuffle_indices[i:i+block_size]
+
+        return ordered_indices
+
 
 
 
