@@ -120,9 +120,11 @@ class IdentifySwizzles(Property):
         new_sema = []
 
         apply_cond = False
-        for line in dsl_inst.semantics:
+        for line_idx, line in enumerate(dsl_inst.semantics):
             if "apply" in line:
-                apply_cond = True
+                next_line = dsl_inst.semantics[line_idx+1]
+                if "concat" not in next_line:
+                    apply_cond = True
 
             if "cond" in line:
                 apply_cond = True
@@ -163,6 +165,10 @@ class IdentifySwizzles(Property):
             return False
 
 
+        if sample_context.out_precision is None:
+            return False
+
+
         print("Sample context name: ", sample_context.name)
         bv_streams = self.get_bv_streams(dsl_inst, modified_sema, num_sources, sample_context)
 
@@ -170,7 +176,7 @@ class IdentifySwizzles(Property):
 
         arg_map = self.get_dsl_inst_formal_arg_to_size_map(dsl_inst, sample_context)
 
-        swizzle_contexts = self.identify_swizzles(bv_streams, target_vector_sizes = [target_size], max_distinct_inputs = num_sources, var_to_size_map = arg_map, prec = sample_context.in_precision)
+        swizzle_contexts = self.identify_swizzles(bv_streams, target_vector_sizes = [target_size], max_distinct_inputs = num_sources, var_to_size_map = arg_map, input_prec = sample_context.in_precision, output_prec = sample_context.out_precision, output_size = sample_context.out_vectsize)
 
 
         self.swizzle_context_map[sample_context.name] = swizzle_contexts
@@ -246,7 +252,7 @@ class IdentifySwizzles(Property):
 
         return arg_to_size_map
 
-    def identify_swizzles(self, bv_streams, target_vector_sizes = [], max_distinct_inputs = None, var_to_size_map = {}, prec = 16):
+    def identify_swizzles(self, bv_streams, target_vector_sizes = [], max_distinct_inputs = None, var_to_size_map = {}, input_prec = 16, output_prec = 16, output_size = 256):
 
         data = bv_streams.strip().split("STORE")
         iterations = []
@@ -286,7 +292,10 @@ class IdentifySwizzles(Property):
 
         shuffle_contexts = []
 
-        shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, prec)
+        #shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec)
+
+
+        shuffle_contexts += self.generate_inter_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size)
 
         return shuffle_contexts
 
@@ -298,6 +307,147 @@ class IdentifySwizzles(Property):
                 lo = int(rng.split(" ")[1])
                 prec = hi - lo + 1
                 return prec
+
+
+
+    def generate_inter_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size):
+        """SIMD operations which access non-contigous slices across iterations. For example:
+
+        op [a0, a1, a2, a3] = [fn[a0], fn[a2], fn[a1], fn[a3]]
+
+        In such cases we can derive two different swizzles:
+        1. Reorder the input such that the output is produced in a contigous manner:
+            swizzle_operand([a0, a1, a2, a3]) => [a0, a2 , a1, a3]
+            op[ a0, a2, a1, a3 ]  =[fn[a0], fn[a1], fn[a2], fn[a3]]
+
+        2. Reorder the output such that operation is applied on elements
+            in a contigous manner
+
+            ;output index:    0        1       2       3           0       2       1       3
+            swizzle_output([fn[a0], fn[a2], fn[a1], fn[a3]]) => [fn[a0], fn[a1], fn[a2], fn[a3]]
+
+        We find such relations across operands and outputs. Currently, we limit ourselves
+        to those operands and outputs which contain the same number of elements (but the element-bitwidth
+        can be different, and in most of these cases is).
+        """
+
+        inter_shuffle_contexts = []
+
+
+        for test_key in list(streams.keys()):
+            a_streams = streams[test_key]
+            a_size = var_to_size_map[test_key]
+            base_vect_size = None
+
+            # For HVX and other targets, operands actually take mixed precision, so we should
+            # determine the specific prec being used for a given stream
+
+            input_prec = self.identify_stream_precision(a_streams)
+            print("Stream precision identified to be: ", input_prec, "for ", a_streams[0])
+
+
+            num_input_elems = a_size // input_prec
+            num_output_elems = output_size // output_prec
+
+            if num_input_elems != num_output_elems:
+                continue
+
+
+            base_vect_size = None
+            for target_size in target_vector_sizes:
+                if target_size >= a_size and target_size % a_size == 0:
+                    print("Using Target Size:", target_size)
+                    base_vect_size = target_size
+                    break
+
+
+            if base_vect_size == None:
+                print("Unable to split ", a_size ,"into", target_vector_sizes)
+                continue
+
+
+            # Each element of access pair is defined as:
+            # (input_idx, output_idx)
+            access_pair = []
+
+            range_map = {}
+            for idx, a_iter in enumerate(reversed(a_streams)):
+
+                # Only those instructions which access a single element for at-least one operand per iteration to calculate the outut are considered in this method. Multiple accesses for an operand within a single iteration are handled seperately.
+                if len(a_iter) != 1:
+                    break
+
+
+                input_slice = a_iter[0]
+
+
+                if input_slice in range_map:
+                    access_pair.append(range_map[input_slice])
+                    continue
+
+
+                hi = int(input_slice.split(" ")[0])
+                lo = int(input_slice.split(" ")[1])
+
+                input_idx = lo // input_prec
+
+                datum = (input_idx, idx)
+
+                range_map[input_slice] = datum
+
+                access_pair.append(datum)
+
+
+            # Check if regular access
+
+            regular_access = True
+            for input_idx, output_idx in access_pair:
+
+                if input_idx != output_idx:
+                    regular_access = False
+                    break
+            if regular_access:
+                # Check the other operand
+                continue
+
+
+            print("Found Inter-Iteration swizzle candidate")
+
+            # Swizzle operand for ordering
+            shuffle_vector_operands = sorted(access_pair, key = lambda x : x[1])
+
+            # Swizzle result according to operand ordering
+            shuffle_vector_result = sorted(access_pair, key = lambda x : x[0])
+
+
+            shuffle_vector_operands = [(0, input_idx) for (input_idx, output_idx) in shuffle_vector_operands]
+
+            shuffle_vector_result = [(0, output_idx) for (input_idx, output_idx) in shuffle_vector_result]
+
+            operand_datum = {"swizzle_args": shuffle_vector_operands, "result_size": a_size, "operand_size": a_size, "prec": input_prec, "num_sources": 1}
+
+
+
+            result_datum = {"swizzle_args": shuffle_vector_operands, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1}
+
+
+            if operand_datum not in inter_shuffle_contexts:
+                inter_shuffle_contexts.append(operand_datum)
+
+
+            if result_datum not in inter_shuffle_contexts:
+                inter_shuffle_contexts.append(result_datum)
+
+
+        return inter_shuffle_contexts
+
+
+
+
+
+
+
+
 
 
 
@@ -399,8 +549,6 @@ class IdentifySwizzles(Property):
 
 
 
-                    #if len(a_iter) != num_a_sources:
-                    #    break
 
 
                     # Maping of ranges to the specific shuffle offset, in case where
