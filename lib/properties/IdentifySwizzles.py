@@ -27,7 +27,7 @@ class IdentifySwizzles(Property):
         so that we may infer the required shuffles.
 
         Returns:
-            [(DSL_Instruction, InstrumentedSemantics, num_sources, target_vector_size)]
+            [(DSL_Instruction, InstrumentedSemantics, num_sources, target_vector_size, ctx)]
         """
 
 
@@ -38,14 +38,15 @@ class IdentifySwizzles(Property):
             if self.instruction_may_access_cross_lane(dsl_inst):
                 for num_sources in self.num_input_sources:
                     for target_size in self.synth_desc.get_target_vector_sizes():
-                        candidates.append((dsl_inst, self.get_instrumented_semantics(dsl_inst), num_sources, target_size))
+                        for ctx in dsl_inst.contexts:
+                            candidates.append((dsl_inst, self.get_instrumented_semantics(dsl_inst), num_sources, target_size, ctx))
 
 
         #candidates = [cand for cand in candidates if "_mm256_hadd_epi32" in cand[0].name]
 
         print("Candidates:")
         for cand in candidates:
-            print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3])
+            print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3], cand[4].name)
 
 
 
@@ -156,17 +157,11 @@ class IdentifySwizzles(Property):
         modified_sema = candidate[1]
         num_sources = candidate[2]
         target_size = candidate[3]
+        sample_context = candidate[4]
 
-        sample_context = None
-
-        for ctx in dsl_inst.contexts:
-            if "mask" not in  ctx.name:
-                sample_context = ctx
-                break
-
-
-        if sample_context == None:
+        if sample_context.in_precision is None:
             return False
+
 
         print("Sample context name: ", sample_context.name)
         bv_streams = self.get_bv_streams(dsl_inst, modified_sema, num_sources, sample_context)
@@ -178,7 +173,7 @@ class IdentifySwizzles(Property):
         swizzle_contexts = self.identify_swizzles(bv_streams, target_vector_sizes = [target_size], max_distinct_inputs = num_sources, var_to_size_map = arg_map, prec = sample_context.in_precision)
 
 
-        self.swizzle_context_map[dsl_inst.name] = swizzle_contexts
+        self.swizzle_context_map[sample_context.name] = swizzle_contexts
 
 
         return swizzle_contexts != []
@@ -291,7 +286,7 @@ class IdentifySwizzles(Property):
 
         shuffle_contexts = []
 
-        shuffle_contexts += self.generate_intra_iteration_access_swizzle_old(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, prec)
+        shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, prec)
 
         return shuffle_contexts
 
@@ -306,7 +301,7 @@ class IdentifySwizzles(Property):
 
 
 
-    def generate_intra_iteration_access_swizzle_old(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec ):
+    def generate_intra_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec ):
 
         intra_shuffle_contexts = []
 
@@ -407,7 +402,16 @@ class IdentifySwizzles(Property):
                     #if len(a_iter) != num_a_sources:
                     #    break
 
+
+                    # Maping of ranges to the specific shuffle offset, in case where
+                    # the same slice is accessed across iterations.
+                    range_map = {}
                     for src_idx, rng in enumerate(a_iter):
+
+                        if rng in range_map:
+                            shuffle_vector_args.append((index_modulo,slice_range))
+                            continue
+
                         hi = int(rng.split(" ")[0])
                         lo = int(rng.split(" ")[1])
 
@@ -424,14 +428,18 @@ class IdentifySwizzles(Property):
                         # Index Module selects which source to index from
                         index_modulo = src_idx % num_a_sources
                         print("Index Modulo:", index_modulo)
-                        #slice_range = (((index_modulo * base_vect_size) + (iteration * step_size)) // prec) + (starts[index_modulo] )
-                        #print("Slice left:", (((index_modulo * base_vect_size) + (iteration * step_size)) // prec))
-                        #print("Slice Right:", (starts[index_modulo] ))
 
                         source_lowest_index = index_modulo * (base_vect_size // prec)# lowest address of index_modulo arg
                         slice_range = starts[index_modulo] + source_lowest_index
 
                         print("Slice_Range:", slice_range)
+
+                        datum = (index_modulo,slice_range)
+
+
+                        range_map[rng] = datum
+
+
                         shuffle_vector_args.append((index_modulo,slice_range))
                         starts[index_modulo] -= 1
 
@@ -472,12 +480,12 @@ class IdentifySwizzles(Property):
 
 
     def serialize_candidate(self, candidate):
-        return candidate[0].name
+        return candidate[4].name
 
     def get_property_on_candidate(self, candidate):
 
-        swizzle_prop = self.swizzle_context_map[candidate[0].name]
-        return {"candidate": candidate[0].name ,"num_sources": candidate[2] ,"contexts": self.swizzle_context_map[candidate[0].name]}
+        swizzle_prop = self.swizzle_context_map[candidate[4].name]
+        return {"candidate": candidate[0].name ,"num_sources": candidate[2] ,"contexts": self.swizzle_context_map[candidate[4].name]}
 
 
 
