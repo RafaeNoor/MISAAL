@@ -1,14 +1,14 @@
 import string
-from DSLInstructionUtils import *
 
 
 
 class Swizzle:
-    def __init__(self, num_sources = None, result_size = None, prec = None, operand_size = None, swizzle_args = [], derived_from = ""):
+    def __init__(self, num_sources = None, result_size = None, input_prec = None, output_prec = None, operand_size = None, swizzle_args = [], derived_from = ""):
 
         self.num_sources = num_sources
         self.result_size = result_size
-        self.prec = prec
+        self.input_prec = input_prec
+        self.output_prec = output_prec
         self.operand_size = operand_size
         self.swizzle_args = [swizzle_args]
         self.names = [derived_from]
@@ -21,9 +21,11 @@ class Swizzle:
                 continue
             if swizzle.result_size != self.result_size:
                 continue
-            if swizzle.prec != self.prec:
+            if swizzle.input_prec != self.input_prec:
                 continue
             if swizzle.operand_size != self.operand_size:
+                continue
+            if swizzle.output_prec != self.output_prec:
                 continue
 
             index = idx
@@ -73,12 +75,14 @@ class Swizzle:
         print("X"* 100)
 
         num_inputs = self.num_sources
-        elem_bw = self.prec
+        elem_bw = self.input_prec
+        output_bw = self.output_prec
         input_size = self.operand_size
         result_size = self.result_size
 
         print("Number of Operands:", num_inputs)
         print("Element Bitwidth:", elem_bw)
+        print("Output Bitwidth:", output_bw)
         print("Input Size:", input_size)
         print("Result Size:", result_size)
 
@@ -108,7 +112,8 @@ def parse_swizzle_object(ctx, class_name):
     return Swizzle(num_sources = ctx['num_sources'],
                    result_size = ctx['result_size'],
                    operand_size = ctx['operand_size'],
-                   prec = ctx['prec'],
+                   input_prec = ctx['prec'],
+                   output_prec = ctx['output_prec'],
                    swizzle_args = ctx['swizzle_args'],
                    derived_from = class_name)
 

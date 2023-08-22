@@ -5,6 +5,7 @@ Defines utilities to generate egglog constructs
 import copy
 from  common.Types import *
 from common.Instructions import *
+from utils.ExprParamUtils import serialize_operand_for_param_map
 
 HYDRIDE_EXPR_LABEL = "HydrideExpr"
 
@@ -64,11 +65,20 @@ def emit_egg_dsl_decl(dsl_inst):
 
 
 # Main method for converting a DSLExpression to
-# an egg log expression
-def emit_expr_to_egg(expr):
+# an egg log expression.
+# For re-writes, we want to maintain the same
+# variable names in the input expression and
+# output expression when necessary, 'param_map'
+# enables mapping leaves of the expressions
+# (i.e. register operands and/or precision, size literals
+# to free_variable_names)
+def emit_expr_to_egg(expr, param_map = {}):
+
+    # TODO: Check if this works, as expr
+    # is not a string
 
     if isinstance(expr, Context):
-        return emit_ctx_to_egg(expr)
+        return emit_ctx_to_egg(expr, param_map = param_map)
     elif isinstance(expr, BitVector):
         return emit_bv_to_egg(expr)
     elif isinstance(expr, ConstBitVector):
@@ -85,13 +95,18 @@ def emit_expr_to_egg(expr):
         assert False, "Unsupported type to emit to egg"
 
 
-def emit_ctx_to_egg(expr):
+def emit_ctx_to_egg(expr, param_map = {}):
     tokens = []
 
     tokens.append(expr.dsl_name)
 
     for arg in expr.context_args:
-        tokens.append(emit_expr_to_egg(arg))
+        serialized_name = serialize_operand_for_param_map(expr, arg)
+
+        if serialized_name in param_map:
+            tokens.append(param_map[serialized_name])
+        else:
+            tokens.append(emit_expr_to_egg(arg))
 
     return "({})".format("\n".join(tokens))
 

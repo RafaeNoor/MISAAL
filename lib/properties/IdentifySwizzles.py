@@ -35,7 +35,7 @@ class IdentifySwizzles(Property):
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
-            if self.instruction_may_access_cross_lane(dsl_inst):
+            if self.instruction_may_access_cross_lane(dsl_inst) or True:
                 for num_sources in self.num_input_sources:
                     for target_size in self.synth_desc.get_target_vector_sizes():
                         for ctx in dsl_inst.contexts:
@@ -292,7 +292,7 @@ class IdentifySwizzles(Property):
 
         shuffle_contexts = []
 
-        #shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec)
+        shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec)
 
 
         shuffle_contexts += self.generate_inter_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size)
@@ -382,7 +382,10 @@ class IdentifySwizzles(Property):
 
 
                 if input_slice in range_map:
-                    access_pair.append(range_map[input_slice])
+                    memo_entry = range_map[input_slice]
+                    memo_result = (memo_entry[0], idx)
+
+                    access_pair.append(memo_result)
                     continue
 
 
@@ -412,23 +415,34 @@ class IdentifySwizzles(Property):
 
 
             print("Found Inter-Iteration swizzle candidate")
+            print(access_pair)
 
             # Swizzle operand for ordering
             shuffle_vector_operands = sorted(access_pair, key = lambda x : x[1])
 
+
             # Swizzle result according to operand ordering
             shuffle_vector_result = sorted(access_pair, key = lambda x : x[0])
+
+            print("Access Pair Shuffled according to operands")
+            print(shuffle_vector_operands)
+
+
+            print("Access Pair Shuffled according to Result")
+            print(shuffle_vector_result)
+
+
 
 
             shuffle_vector_operands = [(0, input_idx) for (input_idx, output_idx) in shuffle_vector_operands]
 
             shuffle_vector_result = [(0, output_idx) for (input_idx, output_idx) in shuffle_vector_result]
 
-            operand_datum = {"swizzle_args": shuffle_vector_operands, "result_size": a_size, "operand_size": a_size, "prec": input_prec, "num_sources": 1}
+            operand_datum = {"swizzle_args": shuffle_vector_operands, "result_size": a_size, "operand_size": a_size, "prec": input_prec, "num_sources": 1, "output_prec": input_prec}
 
 
 
-            result_datum = {"swizzle_args": shuffle_vector_operands, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1}
+            result_datum = {"swizzle_args": shuffle_vector_result, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1, "output_prec": output_prec}
 
 
             if operand_datum not in inter_shuffle_contexts:
@@ -451,7 +465,7 @@ class IdentifySwizzles(Property):
 
 
 
-    def generate_intra_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec ):
+    def generate_intra_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, prec, output_prec ):
 
         intra_shuffle_contexts = []
 
@@ -595,7 +609,7 @@ class IdentifySwizzles(Property):
                 shuffle_vector_args = self.blocked_reverse(shuffle_vector_args, num_a_sources)
                 print(shuffle_vector_args)
 
-                datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources}
+                datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "input_prec": prec, "num_sources": num_a_sources, "output_prec": output_prec}
 
                 # Different streams may identify the same swizzle patterns
                 if datum not in intra_shuffle_contexts:

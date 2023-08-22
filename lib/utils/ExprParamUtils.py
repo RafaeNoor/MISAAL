@@ -1,4 +1,4 @@
-import common.Types
+from common.Types import *
 from  common.Instructions import Context
 import subprocess
 import os
@@ -7,6 +7,7 @@ import glob
 
 
 def class_name(arg):
+
     if isinstance(arg, ConstBitVector):
         return "const_bv"
     elif isinstance(arg,LaneSize):
@@ -19,6 +20,8 @@ def class_name(arg):
         return "bool"
     elif isinstance(arg, Reg):
         return "reg"+str(arg.index)
+    elif isinstance(arg, Context):
+        return arg.name
     else:
         print("Unable to identify class name for:\t", arg)
         assert False, "Unsupported class name type"
@@ -32,13 +35,13 @@ def serialize_operand_for_param_map(expr, arg):
             return class_name(arg)
         else:
             return expr.name+"_"+class_name(arg)+"_"+str(idx)
+    assert False, "Unreachable"
 
 
 
 def find_integer_arg_with_same_value(input_map, reverse_map,  value):
     for key, operand in reverse_map.items():
         if isinstance(operand, Integer):
-
             if operand.value == value:
                 return key
     return None
@@ -62,14 +65,15 @@ def find_precision_arg_with_same_value(input_map, reverse_map,  value):
 
 def find_arg_with_same_value(input_map, reverse_map, input_arg):
 
-    if isinstance(arg, Integer):
+    if isinstance(input_arg, Integer):
         return find_integer_arg_with_same_value(input_map, reverse_map, input_arg.value)
-    elif isinstance(arg, Precision):
+    elif isinstance(input_arg, Precision):
         return find_precision_arg_with_same_value(input_map, reverse_map, input_arg.value)
 
-    elif isinstance(arg, LaneSize):
+    elif isinstance(input_arg, LaneSize):
         return find_lane_size_arg_with_same_value(input_map, reverse_map, input_arg.value)
     else:
+        print(input_arg)
         assert False, "Unsupported argument type: " + str(input_arg)
 
 
@@ -93,13 +97,12 @@ def generate_parameter_map(expr1, expr2, input_map = {}, reverse_map = {}):
             current_map[serialized_name] = serialized_name
             current_reverse_map[serialized_name] = e1
         else:
-
-
             serialized_name = serialize_operand_for_param_map(expr1, e1)
-            matching_arg_name = find_arg_with_same_value(current_input_map, current_reverse_map, e1.value)
+            matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e1)
             if matching_arg_name != None:
                 current_map[serialized_name] = current_map[matching_arg_name]
             else:
+
                 current_map[serialized_name] = serialized_name
                 current_reverse_map[serialized_name] = e1
 
@@ -120,7 +123,7 @@ def generate_parameter_map(expr1, expr2, input_map = {}, reverse_map = {}):
 
 
             serialized_name = serialize_operand_for_param_map(expr2, e2)
-            matching_arg_name = find_arg_with_same_value(current_input_map, current_reverse_map, e2.value)
+            matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e2)
             if matching_arg_name != None:
                 current_map[serialized_name] = current_map[matching_arg_name]
             else:
