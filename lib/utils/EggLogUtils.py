@@ -101,12 +101,13 @@ def emit_ctx_to_egg(expr, param_map = {}):
     tokens.append(expr.dsl_name)
 
     for arg in expr.context_args:
+
         serialized_name = serialize_operand_for_param_map(expr, arg)
 
         if serialized_name in param_map:
             tokens.append(param_map[serialized_name])
         else:
-            tokens.append(emit_expr_to_egg(arg))
+            tokens.append(emit_expr_to_egg(arg, param_map = param_map))
 
     return "({}\n)".format("\n".join(tokens))
 
@@ -134,7 +135,10 @@ def emit_reg_to_egg(expr):
     return "reg_{}".format(expr.index)
 
 
-def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = {}):
+def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = None):
+
+    if param_map is None:
+        param_map = copy.deepcopy({})
 
     candidate_expr = emit_expr_to_egg(candidate, param_map = param_map)
     simplified_expr = emit_expr_to_egg(simplified, param_map = param_map)

@@ -255,6 +255,7 @@ class Associative(Property):
                 output_expression_string = property_object['output_expression']
 
 
+
                 input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
 
 
@@ -262,7 +263,9 @@ class Associative(Property):
                 output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
 
 
+
                 param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
 
                 rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
 

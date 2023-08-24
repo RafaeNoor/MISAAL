@@ -707,6 +707,9 @@ class IdentifySwizzles(Property):
         return {"candidate": candidate[0].name ,"num_sources": candidate[2] ,"contexts": self.swizzle_context_map[candidate[4].name]}
 
 
+    def emit_property_to_egg(self, property_map):
+        # Does not apply to this property
+        return []
 
 
 

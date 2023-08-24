@@ -4,6 +4,7 @@ import subprocess
 import os
 import tempfile
 import glob
+import copy
 
 
 def class_name(arg):
@@ -82,7 +83,14 @@ def find_arg_with_same_value(input_map, reverse_map, input_arg):
 
 # Creates a map from leaf parameters of expressions
 # to free variable names.
-def generate_parameter_map(expr1, expr2, input_map = {}, reverse_map = {}):
+def generate_parameter_map(expr1, expr2, input_map = None, reverse_map = None):
+
+    if input_map is None:
+        input_map = copy.deepcopy({})
+
+    if reverse_map is None:
+        reverse_map = copy.deepcopy({})
+
     current_map = input_map
     current_reverse_map = reverse_map
 
@@ -117,7 +125,7 @@ def generate_parameter_map(expr1, expr2, input_map = {}, reverse_map = {}):
             updated_map , updated_reverse_map = generate_parameter_map(expr1, e2, input_map = current_map, reverse_map = current_reverse_map)
             current_map, current_reverse_map  = updated_map, updated_reverse_map
         elif isinstance(e2, Reg) or isinstance(e2, ConstBitVector):
-            serialized_name = serialize_operand_for_param_map(expr1, e2)
+            serialized_name = serialize_operand_for_param_map(expr2, e2)
             current_map[serialized_name] = serialized_name
             current_reverse_map[serialized_name] = e2
         else:
