@@ -63,7 +63,7 @@ def emit_context_expr(ctx, dsl_inst):
         dsl_inst (_type_): _description_
     """
 
-    dsl_name = dsl_inst.name + "_dsl"
+    dsl_name = ctx.dsl_name + "_dsl"
     terms = ["(", dsl_name]
     for arg in ctx.context_args:
         if isinstance(arg, Context):

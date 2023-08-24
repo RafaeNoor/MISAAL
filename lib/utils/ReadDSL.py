@@ -27,6 +27,7 @@ TEST_STRING = """
  ))
 """
 
+
 def get_matching_context(nested_expr, dsl_list):
     dsl_name = nested_expr[0].split("_dsl")[0]
 
@@ -52,7 +53,7 @@ def get_matching_context(nested_expr, dsl_list):
             break
 
 
-        assert arg.isnumeric(), "Expected numeric string"
+        assert arg.lstrip("-").isnumeric(), "Expected numeric string"
 
 
         new_matching_context_indices = []
@@ -81,7 +82,11 @@ def get_matching_context(nested_expr, dsl_list):
 
         matching_context_indices = new_matching_context_indices
 
-    return copy.deepcopy(matching_dsl_inst.contexts[matching_context_indices[0]])
+    ctx_copy =  copy.deepcopy(matching_dsl_inst.contexts[matching_context_indices[0]])
+
+    return ctx_copy
+
+
 
 
 
@@ -126,7 +131,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
         matching_context = get_matching_context(nested_expr, dsl_list)
 
         for idx, arg in enumerate(matching_context.context_args):
-            if isinstance(arg, BitVector):
+            if isinstance(arg, BitVector) or isinstance(arg, ConstBitVector):
                 matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list) # Offset zero corresponds to the name of the current matching context
 
         return matching_context

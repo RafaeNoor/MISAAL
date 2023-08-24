@@ -1,4 +1,4 @@
-from properties.Property import Property
+from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
@@ -41,10 +41,10 @@ class IdentifySwizzles(Property):
                         for ctx in dsl_inst.contexts:
                             candidates.append((dsl_inst, self.get_instrumented_semantics(dsl_inst), num_sources, target_size, ctx))
 
+        candidates = [cand for cand in candidates if "unpack" in cand[0].name ]
 
-        #candidates = [cand for cand in candidates if "_mm256_hadd_epi32" in cand[0].name]
 
-        print("Candidates:")
+
         for cand in candidates:
             print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3], cand[4].name)
 
@@ -150,6 +150,34 @@ class IdentifySwizzles(Property):
 
 
 
+    def does_inst_sema_combine_slices(self, dsl_inst):
+        apply_cond = False
+        for line_idx, line in enumerate(dsl_inst.semantics):
+            if "apply" in line:
+                next_line = dsl_inst.semantics[line_idx+1]
+                if "concat" not in next_line:
+                    apply_cond = True
+
+            if "cond" in line:
+                apply_cond = True
+
+            if dsl_inst.name in line:
+                continue
+            elif "extract" in line:
+                continue
+            elif self.is_store_line(line):
+                if apply_cond:
+                    apply_cond = False
+                else:
+                    return True
+            else:
+                continue
+
+
+        return False
+
+
+
 
 
     def property_holds_on_candidate(self, candidate):
@@ -170,13 +198,14 @@ class IdentifySwizzles(Property):
 
 
         print("Sample context name: ", sample_context.name)
+        swizzle_contexts = []
         bv_streams = self.get_bv_streams(dsl_inst, modified_sema, num_sources, sample_context)
 
         print(bv_streams)
 
         arg_map = self.get_dsl_inst_formal_arg_to_size_map(dsl_inst, sample_context)
 
-        swizzle_contexts = self.identify_swizzles(bv_streams, target_vector_sizes = [target_size], max_distinct_inputs = num_sources, var_to_size_map = arg_map, input_prec = sample_context.in_precision, output_prec = sample_context.out_precision, output_size = sample_context.out_vectsize)
+        swizzle_contexts = self.identify_swizzles(dsl_inst, bv_streams, target_vector_sizes = [target_size], max_distinct_inputs = num_sources, var_to_size_map = arg_map, input_prec = sample_context.in_precision, output_prec = sample_context.out_precision, output_size = sample_context.out_vectsize)
 
 
         self.swizzle_context_map[sample_context.name] = swizzle_contexts
@@ -225,6 +254,23 @@ class IdentifySwizzles(Property):
 
 
 
+    def is_inst_swizzle(self, dsl_inst):
+
+        # We consider an instruction to be a swizzle instruction
+        # if it purely performs extraction and concatenations only.
+
+        sample_ctx = dsl_inst.get_sample_context()
+
+        bv_ops = sample_ctx.get_bv_ops()
+
+        op_cond = all([op in ["extract", "concat"] for op in bv_ops])
+
+
+
+        return op_cond
+
+
+
 
 
 
@@ -252,7 +298,7 @@ class IdentifySwizzles(Property):
 
         return arg_to_size_map
 
-    def identify_swizzles(self, bv_streams, target_vector_sizes = [], max_distinct_inputs = None, var_to_size_map = {}, input_prec = 16, output_prec = 16, output_size = 256):
+    def identify_swizzles(self, dsl_inst,  bv_streams, target_vector_sizes = [], max_distinct_inputs = None, var_to_size_map = {}, input_prec = 16, output_prec = 16, output_size = 256):
 
         data = bv_streams.strip().split("STORE")
         iterations = []
@@ -290,12 +336,14 @@ class IdentifySwizzles(Property):
 
         print(streams)
 
+
         shuffle_contexts = []
 
         shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec)
 
+        combine_slices = self.does_inst_sema_combine_slices(dsl_inst)
 
-        shuffle_contexts += self.generate_inter_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size)
+        shuffle_contexts += self.generate_inter_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size, combine_slices = combine_slices)
 
         return shuffle_contexts
 
@@ -310,7 +358,7 @@ class IdentifySwizzles(Property):
 
 
 
-    def generate_inter_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size):
+    def generate_inter_iteration_access_swizzle(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size, combine_slices = False ):
         """SIMD operations which access non-contigous slices across iterations. For example:
 
         op [a0, a1, a2, a3] = [fn[a0], fn[a2], fn[a1], fn[a3]]
@@ -442,7 +490,16 @@ class IdentifySwizzles(Property):
 
 
 
+
+            result_datum = {}
+
+
             result_datum = {"swizzle_args": shuffle_vector_result, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1, "output_prec": output_prec}
+
+            if combine_slices:
+                result_datum['result_size'] = len(shuffle_vector_result) * input_prec
+                result_datum['prec'] = input_prec
+
 
 
             if operand_datum not in inter_shuffle_contexts:
@@ -609,7 +666,7 @@ class IdentifySwizzles(Property):
                 shuffle_vector_args = self.blocked_reverse(shuffle_vector_args, num_a_sources)
                 print(shuffle_vector_args)
 
-                datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "input_prec": prec, "num_sources": num_a_sources, "output_prec": output_prec}
+                datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources, "output_prec": output_prec}
 
                 # Different streams may identify the same swizzle patterns
                 if datum not in intra_shuffle_contexts:

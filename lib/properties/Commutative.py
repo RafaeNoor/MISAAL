@@ -1,4 +1,4 @@
-from properties.Property import Property
+from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
@@ -6,14 +6,14 @@ from  common.Types import *
 class Commutative(Property):
     """Class for inferring the commutative property on DSL Instructions. This property
     returns a list of pair of indices for which symbolic/concrete vector inputs are commutative with respect
-    to each other. 
+    to each other.
 
     For example:
-    (vec-add a b) applies element wise integer addition to input symbolic vectors a and b. 
+    (vec-add a b) applies element wise integer addition to input symbolic vectors a and b.
 
-    We know integer addition is commutative hence applies this property would yield the 
+    We know integer addition is commutative hence applies this property would yield the
     property:
-    [[0,1]] 
+    [[0,1]]
 
     That is, symbolic vectors at index 0 and 1 can commute with each other.
 
@@ -23,10 +23,18 @@ class Commutative(Property):
     Args:
         Property (BaseClass): Inherits from base class Property
     """
-    
+
 
     def __init__(self, dsl_list = [], synth_desc = None):
+
+        # Prune masked expression, handle masked property generation seperately
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+
+
         super().__init__(name = "Commutative", dsl_list = dsl_list, synth_desc = synth_desc)
+
+        self.context_map = {}
 
 
 
@@ -40,7 +48,7 @@ class Commutative(Property):
         possible commuting pairs
 
         Returns:
-            [(DSL_Instruction, Pair of Indices)] 
+            [(DSL_Instruction, Pair of Indices)]
         """
 
         tuples = []
@@ -61,9 +69,9 @@ class Commutative(Property):
         """
         context_pairs = [set(self.get_commutable_args_candidates_context(ctx)) for ctx in dsl_inst.contexts]
 
-        
+
         intersected_pairs = context_pairs[0]
-        
+
         for pairs in context_pairs[1:]:
             intersected_pairs = intersected_pairs.intersection(pairs)
 
@@ -84,7 +92,7 @@ class Commutative(Property):
             ctx (Context): Specific Context from a DSLInstruction.
         """
 
-        # Map from input size to 
+        # Map from input size to
         arg_sizes_map = {}
         for idx, arg in enumerate(ctx.context_args):
             if isinstance(arg, ConstBitVector) or isinstance(arg, BitVector):
@@ -114,20 +122,20 @@ class Commutative(Property):
 
         dsl_inst = candidate[0]
         pair = candidate[1]
-        
-        sample_ctx = dsl_inst.get_sample_context()
+
+        sample_ctx = self.get_sample_context_for_property(dsl_inst)
 
         print("Checking if commutativity holds for", dsl_inst.name, "on", pair)
 
-  
+
         # We know pairs are of the same size so we have to get the bitvector size
         bv_size = sample_ctx.context_args[pair[0]].size
-            
+
         reg_0 = Reg("0" , 16, bv_size)
         reg_1 = Reg("1" , 16, bv_size)
 
         vector_args = [bv_size, bv_size]
-        
+
         # Create an expression with the two operands swapped
         commute_expr_0 = copy.deepcopy(sample_ctx)
         commute_expr_0.context_args[pair[0]] = reg_0
@@ -151,39 +159,76 @@ class Commutative(Property):
 
         for count, other_index in enumerate(other_indices):
             arg_size = commute_expr_0.context_args[other_index].size
-            
+
             reg_i = Reg(str(count + 2), 16, arg_size)
             vector_args.append(arg_size)
 
             commute_expr_0.context_args[other_index] = reg_i
             commute_expr_1.context_args[other_index] = reg_i
 
-        
-
- 
 
 
 
 
-        
+
+
+
+
 
         property_holds = check_if_contexts_equal(commute_expr_0, commute_expr_1, dsl_inst, dsl_inst, vector_args, self.synth_desc)
 
-        
+
+        if property_holds.returncode == 0:
+            key = self.serialize_candidate(candidate)
+            self.context_map[key] = (commute_expr_0, commute_expr_1)
+
+
         return property_holds.returncode == 0
 
 
     def serialize_candidate(self, candidate):
-        return candidate[0].name
+        return candidate[0].name +"_"+str(candidate[1])
 
     def get_property_on_candidate(self, candidate):
-        return {"candidate": candidate[0].name, "indices": candidate[1]}
+        key = self.serialize_candidate(candidate)
+        input_expression, output_expression = self.context_map[key]
+        return {"candidate": candidate[0].name, "indices": candidate[1],
+                "input_expression": input_expression.emit_context_expr_string(),
+                "output_expression": output_expression.emit_context_expr_string()
+                }
 
 
-            
+    def emit_property_to_egg(self, property_map):
+
+        egg_rules = []
 
 
-        
+        for key in property_map:
+            for instance in property_map[key]:
+
+                property_object = instance['property']
+
+                input_expression_string = property_object['input_expression']
+
+
+                output_expression_string = property_object['output_expression']
+
+
+
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+
+
+
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+
+
+                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+
+                egg_rules.append(rule)
+
+        return egg_rules
 
 
 
@@ -191,4 +236,9 @@ class Commutative(Property):
 
 
 
-    
+
+
+
+
+
+

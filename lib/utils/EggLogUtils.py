@@ -108,7 +108,7 @@ def emit_ctx_to_egg(expr, param_map = {}):
         else:
             tokens.append(emit_expr_to_egg(arg))
 
-    return "({})".format("\n".join(tokens))
+    return "({}\n)".format("\n".join(tokens))
 
 
 def emit_bv_to_egg(expr):
@@ -134,12 +134,12 @@ def emit_reg_to_egg(expr):
     return "reg_{}".format(expr.index)
 
 
-def emit_rewrite_expr(candidate, simplified, bidirectional = False):
+def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = {}):
 
-    candidate_expr = emit_expr_to_egg(candidate)
-    simplified_expr = emit_expr_to_egg(simplified)
+    candidate_expr = emit_expr_to_egg(candidate, param_map = param_map)
+    simplified_expr = emit_expr_to_egg(simplified, param_map = param_map)
 
     if bidirectional:
-        return "(birewrite {} {} )".format(candidate_expr, simplified_expr)
+        return "(birewrite \n{}\n {}\n)".format(candidate_expr, simplified_expr)
     else:
-        return "(rewrite {} {})".format(candidate_expr, simplified_expr)
+        return "(rewrite \n{}\n{}\n)".format(candidate_expr, simplified_expr)

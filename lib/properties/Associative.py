@@ -1,12 +1,12 @@
-from properties.Property import Property
+from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
 
 class Associative(Property):
-    """Check whether the associative property holds on DSL instructions. 
+    """Check whether the associative property holds on DSL instructions.
 
-    For example, the operations + is associative iff. 
+    For example, the operations + is associative iff.
 
     (+ (+ A B) C) == (+ A (+ B C))
 
@@ -14,10 +14,19 @@ class Associative(Property):
         Property (class): Base Class for expressng properties
     """
 
-    
+
 
     def __init__(self, dsl_list = [], synth_desc = None):
+
+        # Prune masked expression, handle masked property generation seperately
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+
         super().__init__(name = "Associative", dsl_list = dsl_list, synth_desc = synth_desc)
+
+
+
+        self.context_map = {}
 
 
 
@@ -34,8 +43,8 @@ class Associative(Property):
         Additional constraints on the pair of indices are that the size of the operands corresponding
         to the indicies be the same as the output type of the instructions to ensure type legalility.
 
-        
-        
+
+
 
         Returns:
            (DSLInstruction, Pair of Indicies): _description_
@@ -60,9 +69,9 @@ class Associative(Property):
         """
         context_pairs = [set(self.get_associatable_args_candidates_context(ctx)) for ctx in dsl_inst.contexts]
 
-        
+
         intersected_pairs = context_pairs[0]
-        
+
         for pairs in context_pairs[1:]:
             intersected_pairs = intersected_pairs.intersection(pairs)
 
@@ -83,7 +92,7 @@ class Associative(Property):
             ctx (Context): Specific Context from a DSLInstruction.
         """
 
-        # Map from input size to 
+        # Map from input size to
         arg_sizes_map = {}
         for idx, arg in enumerate(ctx.context_args):
             if not (isinstance(arg, ConstBitVector) or isinstance(arg, BitVector)):
@@ -92,7 +101,7 @@ class Associative(Property):
             if not ctx.has_output_size():
                 continue
 
-            # Only include those pairs which 
+            # Only include those pairs which
             # have the same size as the output size
             if ctx.get_output_size() != arg.size:
                 continue
@@ -123,21 +132,22 @@ class Associative(Property):
 
         dsl_inst = candidate[0]
         pair = candidate[1]
-        
-        sample_ctx = dsl_inst.get_sample_context()
+
+        #sample_ctx = dsl_inst.get_sample_context()
+        sample_ctx = self.get_sample_context_for_property(dsl_inst)
 
         print("Checking if associativity holds for", dsl_inst.name, "on", pair)
 
-  
+
         # We know pairs are of the same size so we have to get the bitvector size
         bv_size = sample_ctx.context_args[pair[0]].size
-            
+
         reg_0 = Reg("0" , 16, bv_size)
         reg_1 = Reg("1" , 16, bv_size)
         reg_2 = Reg("2" , 16, bv_size)
 
         vector_args = [bv_size, bv_size, bv_size]
-        
+
         # We create the two expressions after applying associativity and
         # check if they are equal symbolically
 
@@ -160,9 +170,9 @@ class Associative(Property):
 
         form_2_inner_expr.context_args[pair[0]] = reg_1
         form_2_inner_expr.context_args[pair[1]] = reg_2
-        
 
-        # For all other symbolic operands which are not part of the pair of indices being 
+
+        # For all other symbolic operands which are not part of the pair of indices being
         # tested, we created symbolic holes and ensure that they are kept the same in both cases.
         # We handle the outer expression and inner expression cases seperately.
         outer_other_indices = []
@@ -179,8 +189,8 @@ class Associative(Property):
 
             form_1_expr.context_args[idx] = reg_i
             form_2_expr.context_args[idx] = reg_i
-        
-        
+
+
 
 
         inner_other_indices = []
@@ -197,30 +207,30 @@ class Associative(Property):
 
             form_1_inner_expr.context_args[idx] = reg_i
             form_2_inner_expr.context_args[idx] = reg_i
- 
 
 
 
 
-        
+
+
 
         property_holds = check_if_contexts_equal(form_1_expr, form_2_expr, dsl_inst, dsl_inst, vector_args, self.synth_desc)
 
-        
+        if property_holds.returncode == 0:
+            key = self.serialize_candidate(candidate)
+            self.context_map[key] = (form_1_expr, form_2_expr)
+
         return property_holds.returncode == 0
 
 
     def serialize_candidate(self, candidate):
-        return candidate[0].name
+        return candidate[0].name+"_"+str(candidate[1])
 
     def get_property_on_candidate(self, candidate):
-        return {"candidate": candidate[0].name, "indices": candidate[1]}
-
-
-            
-
-
-        
+        key = self.serialize_candidate(candidate)
+        input_expression, output_expression = self.context_map[key]
+        return {"candidate": candidate[0].name, "indices": candidate[1], "input_expression": input_expression.emit_context_expr_string(),
+                "output_expression": output_expression.emit_context_expr_string()}
 
 
 
@@ -228,4 +238,42 @@ class Associative(Property):
 
 
 
-    
+
+    def emit_property_to_egg(self, property_map):
+
+        egg_rules = []
+
+
+        for key in property_map:
+            for instance in property_map[key]:
+
+                property_object = instance['property']
+
+                input_expression_string = property_object['input_expression']
+
+
+                output_expression_string = property_object['output_expression']
+
+
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+
+
+
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+
+
+                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+
+                egg_rules.append(rule)
+
+        return egg_rules
+
+
+
+
+
+
+
+

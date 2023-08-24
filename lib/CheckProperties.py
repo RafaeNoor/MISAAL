@@ -41,8 +41,25 @@ for property in test_properties:
         property_result_suffix = "_{}_results".format(target)
 
         PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
+        PropertyInstance.parallel = True
         property_map = PropertyInstance.get_property()
 
 
+        property_label = target+"_"+PropertyInstance.name
         with open("{}.py".format(PropertyInstance.name+property_result_suffix), "w+") as DumpFile:
-            DumpFile.write(json.dumps(property_map, indent = 4))
+            DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
+
+
+        egg_log_name = property_label+"_egg.egg"
+
+        seperator = ";" + "="*100
+
+        with open(egg_log_name, "w+") as DumpFile:
+            egg_rules = PropertyInstance.emit_property_to_egg(property_map)
+            write_line = lambda x : DumpFile.write(x+"\n")
+            write_line(";; Automatically generated rules")
+
+            for rule in egg_rules:
+                write_line(seperator)
+                write_line(rule)
+

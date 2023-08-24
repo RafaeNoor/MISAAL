@@ -35,6 +35,7 @@ def serialize_operand_for_param_map(expr, arg):
             return class_name(arg)
         else:
             return expr.name+"_"+class_name(arg)+"_"+str(idx)
+    print("\n\n",arg.get_dsl_value(), "\nfor\n", expr.emit_context_expr_string() )
     assert False, "Unreachable"
 
 

@@ -1,7 +1,10 @@
-import common.Types
+from common.Types import *
 import concurrent.futures
 from  utils.DSLInstructionUtils import *
+from utils.EggLogUtils import *
 import json
+from utils.ReadDSL import read_string_to_dsl
+from utils.ExprParamUtils import generate_parameter_map
 
 class Property:
     """Abstract class to represent properties for Hydride IR's Equivalence Classes
@@ -175,8 +178,25 @@ class Property:
         return property_map
 
 
+    def get_sample_context_for_property(self, dsl_inst):
+        sample_context = None
+        num_symbolic_args = 0
+
+        for ctx in dsl_inst.contexts:
+
+            ctx_sym_args = 0
+            for arg in ctx.context_args:
+                if isinstance(arg, BitVector):
+                    ctx_sym_args += 1
+            if ctx_sym_args > num_symbolic_args:
+                num_symbolic_args = ctx_sym_args
+                sample_context = ctx
+        return sample_context
 
 
+
+    def emit_property_to_egg(self, property_map):
+        raise NotImplementedError()
 
 
 

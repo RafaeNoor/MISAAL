@@ -19,11 +19,17 @@ class SimplifyingIdentity(Property):
 
 
     def __init__(self, dsl_list = [], synth_desc = None, num_iterations = 1000, input_depth = 2, permute_limit = 5):
+
+        # Prune masked expression, handle masked property generation seperately
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
         super().__init__(name = "SimplifyingIdentity", dsl_list = dsl_list, synth_desc = synth_desc)
         self.num_iterations = num_iterations
         self.input_depth = input_depth
         self.permute_limit = permute_limit
         self.simplify_map = {}
+
+
 
 
 
@@ -230,6 +236,49 @@ class SimplifyingIdentity(Property):
         with open("Append_dict.py", "a+") as WriteFile:
             WriteFile.write(json.dumps(property_t, indent = 4))
         return property_t
+
+
+
+
+
+
+
+
+
+    def emit_property_to_egg(self, property_map):
+
+        egg_rules = []
+
+
+        for key in property_map:
+            for instance in property_map[key]:
+
+                property_object = instance['property']
+
+                input_expression_string = property_object['candidate']
+
+
+                output_expression_string = property_object['simplified']
+
+
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+
+
+
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+
+
+                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+
+                egg_rules.append(rule)
+
+        return egg_rules
+
+
+
+
 
 
 

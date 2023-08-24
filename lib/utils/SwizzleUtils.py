@@ -109,13 +109,23 @@ class Swizzle:
 
 def parse_swizzle_object(ctx, class_name):
 
-    return Swizzle(num_sources = ctx['num_sources'],
+    if 'prec' in ctx:
+        return Swizzle(num_sources = ctx['num_sources'],
                    result_size = ctx['result_size'],
                    operand_size = ctx['operand_size'],
                    input_prec = ctx['prec'],
                    output_prec = ctx['output_prec'],
                    swizzle_args = ctx['swizzle_args'],
                    derived_from = class_name)
+    else:
+        return Swizzle(num_sources = ctx['num_sources'],
+                   result_size = ctx['result_size'],
+                   operand_size = ctx['operand_size'],
+                   input_prec = ctx['input_prec'],
+                   output_prec = ctx['output_prec'],
+                   swizzle_args = ctx['swizzle_args'],
+                   derived_from = class_name)
+
 
 
 def summarize_distinct_swizzles(swizzle_analysis_result):

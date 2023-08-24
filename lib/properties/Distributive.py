@@ -1,4 +1,4 @@
-from properties.Property import Property
+from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
@@ -8,6 +8,12 @@ class Distributive(Property):
 
 
     def __init__(self, dsl_list = [], synth_desc = None):
+
+        # Prune masked expression, handle masked property generation seperately
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+
+
         super().__init__(name = "Distributive", dsl_list = dsl_list, synth_desc = synth_desc)
 
         # Memo table to avoid recomputing search for expressions producing output of size
@@ -36,7 +42,7 @@ class Distributive(Property):
 
         matches = []
         for dsl_inst in self.dsl_list:
-            sample_ctx = dsl_inst.get_sample_context()
+            sample_ctx = self.get_sample_context_for_property(dsl_inst)
 
             if sample_ctx.has_output_size() and (sample_ctx.get_output_size() == output_size):
                 num_matching_inputs = 0
@@ -78,7 +84,10 @@ class Distributive(Property):
         for dsl_inst in self.dsl_list:
             distributable_args = self.get_distributable_args_candidates_instruction(dsl_inst)
 
-            outer_context = dsl_inst.get_sample_context()
+            #outer_context = dsl_inst.get_sample_context()
+
+            outer_context = self.get_sample_context_for_property(dsl_inst)
+
             for pairs in distributable_args:
                 bv_size = outer_context.context_args[pairs[0]].size
 
@@ -157,10 +166,13 @@ class Distributive(Property):
         inner_dsl_inst = candidate[1]
         pair = candidate[2]
 
-        outer_sample_ctx = outer_dsl_inst.get_sample_context()
-        inner_sample_ctx = inner_dsl_inst.get_sample_context()
+        #outer_sample_ctx = outer_dsl_inst.get_sample_context()
+        #inner_sample_ctx = inner_dsl_inst.get_sample_context()
 
-        print("Checking if Distributivity holds for", outer_dsl_inst.name, "over", inner_dsl_inst.name ,"on", pair)
+        outer_sample_ctx = self.get_sample_context_for_property(outer_dsl_inst)
+        inner_sample_ctx = self.get_sample_context_for_property(inner_dsl_inst)
+
+        print("Checking if Distributivity holds for", outer_dsl_inst.name,"({})".format(outer_sample_ctx.name) ,"over", inner_dsl_inst.name ,"({})".format(inner_sample_ctx.name),"on", pair)
 
 
         # We know pairs are of the same size so we have to get the bitvector size
@@ -292,6 +304,36 @@ class Distributive(Property):
 
 
 
+    def emit_property_to_egg(self, property_map):
+
+        egg_rules = []
+
+
+        for key in property_map:
+            for instance in property_map[key]:
+
+                property_object = instance['property']
+
+                input_expression_string = property_object['input_expression']
+
+
+                output_expression_string = property_object['output_expression']
+
+
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+
+
+
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+
+
+                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+
+                egg_rules.append(rule)
+
+        return egg_rules
 
 
 
