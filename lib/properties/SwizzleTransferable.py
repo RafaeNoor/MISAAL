@@ -1,4 +1,4 @@
-from properties.Property import Property
+from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
@@ -153,8 +153,13 @@ class SwizzleTransferable(Property):
 
     def get_type_legal_swizzle(self, swizzle_inst, input_size, input_prec):
 
+        # First search for ideal candidate where precision and size match,
+        # if that doesn't find a matching context search for matching input size
         for ctx in swizzle_inst.contexts:
+            if ctx.in_vectsize == input_size and ctx.in_precision == input_prec:
+                return ctx
 
+        for ctx in swizzle_inst.contexts:
             if ctx.in_vectsize == input_size:
                 return ctx
 
@@ -175,6 +180,8 @@ class SwizzleTransferable(Property):
 
         sample_ctx = dsl_inst.get_sample_context()
 
+        input_precision = sample_ctx.in_precision
+
         print("Checking if Swizzle Transferability holds for", dsl_inst.name, "on", pair, "with swizzle ", swizzle_inst.name)
 
         # TODO:  TYPECHECK if swizzle is compatible
@@ -191,7 +198,7 @@ class SwizzleTransferable(Property):
         # check if they are equal symbolically
 
 
-        swizzle = self.get_type_legal_swizzle(swizzle_inst, bv_size, 16)
+        swizzle = self.get_type_legal_swizzle(swizzle_inst, bv_size, input_precision)
 
         # Form 1: (swizzle (+ reg_0 reg_1) )
         form_1_expr = copy.deepcopy(swizzle)
@@ -221,20 +228,19 @@ class SwizzleTransferable(Property):
         # tested, we created symbolic holes and ensure that they are kept the same in both cases.
         # We handle the outer expression and inner expression cases seperately.
         outer_other_indices = []
-        for idx, arg in enumerate(form_1_expr.context_args):
+        for idx, arg in enumerate(form_1_inner_expr.context_args):
             if isinstance(arg, BitVector):
                 outer_other_indices.append(idx)
 
 
         # Replace this index argument in both pairs of expressions with the same symbolic hole:
         for idx in outer_other_indices:
-            bv_size = form_1_expr.context_args[idx].size
+            bv_size = form_1_inner_expr.context_args[idx].size
             reg_i = Reg(str(len(vector_args)), 16, bv_size)
             vector_args.append(bv_size)
 
-            form_1_expr.context_args[idx] = reg_i
-            form_2_inner_expr_left.context_args[idx] = reg_i
-            form_2_inner_expr_right.context_args[idx] = reg_i
+            form_1_inner_expr.context_args[idx] = reg_i
+            form_2_expr.context_args[idx] = reg_i
 
 
 
@@ -261,7 +267,43 @@ class SwizzleTransferable(Property):
 
         (input_expression, output_expression) = self.context_map[key]
 
-        return {"candidate": candidate[0].name, "indices": candidate[1], "input_expression": input_expression, "output_expression": output_expression}
+        return {"candidate": candidate[0].name, "indices": candidate[1], "input_expression": input_expression.emit_context_expr_string(), "output_expression": output_expression.emit_context_expr_string()}
+
+    def emit_property_to_egg(self, property_map):
+
+        egg_rules = []
+
+
+        for key in property_map:
+            for instance in property_map[key]:
+
+                property_object = instance['property']
+
+                input_expression_string = property_object['input_expression']
+
+
+                output_expression_string = property_object['output_expression']
+
+
+
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+
+
+
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+
+
+
+                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+
+                egg_rules.append(rule)
+
+        return egg_rules
+
+
 
 
 
