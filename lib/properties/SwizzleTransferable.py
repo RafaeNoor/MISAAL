@@ -27,10 +27,19 @@ class SwizzleTransferable(Property):
     def __init__(self, dsl_list = [], synth_desc = None, swizzles = []):
         super().__init__(name = "SwizzleTransfer", dsl_list = dsl_list, synth_desc = synth_desc)
         self.swizzles = swizzles
-
         self.context_map = {}
 
 
+
+    def get_num_swizzle_inputs(self, swizzle):
+        sample_ctx = swizzle.get_sample_context()
+
+        num_bvs = 0
+        for arg in sample_ctx.context_args:
+            if isinstance(arg, BitVector):
+                num_bvs += 1
+
+        return num_bvs
 
 
 
@@ -45,11 +54,12 @@ class SwizzleTransferable(Property):
 
         tripples = []
 
+        swizzles = [sw for sw in self.swizzles if self.get_num_swizzle_inputs(sw) == 1]
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
             transferable_args = self.get_transferable_args_candidates_instruction(dsl_inst)
-            for swizzle in self.swizzles:
+            for swizzle in swizzles:
                 for pairs in transferable_args:
                     tripples.append((dsl_inst, pairs, swizzle))
 
@@ -62,16 +72,29 @@ class SwizzleTransferable(Property):
         Args:
             dsl_inst (DSLInstruction): DSLInstruction type
         """
-        context_pairs = [set(self.get_transferable_args_candidates_context(ctx)) for ctx in dsl_inst.contexts]
+        context_pairs = [self.get_transferable_args_candidates_context(ctx) for ctx in dsl_inst.contexts]
+
 
 
         intersected_pairs = context_pairs[0]
 
         for pairs in context_pairs[1:]:
-            intersected_pairs = intersected_pairs.intersection(pairs)
+            intersected_pairs = self.intersect(pairs, intersected_pairs)
+
 
 
         return list(intersected_pairs)
+
+
+
+    def intersect(self, pair1, pair2):
+
+        result = []
+        for p1 in pair1:
+            for p2 in pair2:
+                if p1 == p2:
+                    result.append(p1)
+        return result
 
 
 
@@ -111,6 +134,7 @@ class SwizzleTransferable(Property):
 
         transferable_args = []
 
+
         for size_key in arg_sizes_map:
 
             arg_indices = arg_sizes_map[size_key]
@@ -120,20 +144,38 @@ class SwizzleTransferable(Property):
             combinations = powerset(arg_indices)
 
             for comb in combinations:
+                if len(comb) != 2:
+                    continue
                 transferable_args.append(list(comb))
 
         return transferable_args
 
 
+    def get_type_legal_swizzle(self, swizzle_inst, input_size, input_prec):
+
+        for ctx in swizzle_inst.contexts:
+
+            if ctx.in_vectsize == input_size:
+                return ctx
+
+        return None
+
+    def get_swizzle_operand_index(self, swizzle_ctx):
+
+        for idx, arg in enumerate(swizzle_ctx.context_args):
+            if isinstance(arg, BitVector):
+                return idx
+        return -1
+
     def property_holds_on_candidate(self, candidate):
 
         dsl_inst = candidate[0]
         pair = candidate[1]
-        swizzle = candidate[2]
+        swizzle_inst = candidate[2]
 
         sample_ctx = dsl_inst.get_sample_context()
 
-        print("Checking if associativity holds for", dsl_inst.name, "on", pair)
+        print("Checking if Swizzle Transferability holds for", dsl_inst.name, "on", pair, "with swizzle ", swizzle_inst.name)
 
         # TODO:  TYPECHECK if swizzle is compatible
 
@@ -148,9 +190,13 @@ class SwizzleTransferable(Property):
         # We create the two expressions after applying associativity and
         # check if they are equal symbolically
 
+
+        swizzle = self.get_type_legal_swizzle(swizzle_inst, bv_size, 16)
+
         # Form 1: (swizzle (+ reg_0 reg_1) )
         form_1_expr = copy.deepcopy(swizzle)
         form_1_inner_expr = copy.deepcopy(sample_ctx)
+
 
         swizzle_index = self.get_swizzle_operand_index(swizzle)
 
@@ -194,6 +240,13 @@ class SwizzleTransferable(Property):
 
 
         property_holds = check_if_contexts_equal(form_1_expr, form_2_expr, dsl_inst, dsl_inst, vector_args, self.synth_desc)
+
+        if property_holds.returncode == 0:
+            key = self.serialize_candidate(candidate)
+            self.context_map[key] = (form_1_expr, form_2_expr)
+
+
+
 
 
         return property_holds.returncode == 0
