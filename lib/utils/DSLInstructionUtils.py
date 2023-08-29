@@ -63,7 +63,7 @@ def emit_context_expr(ctx, dsl_inst):
         dsl_inst (_type_): _description_
     """
 
-    dsl_name = ctx.dsl_name + "_dsl"
+    dsl_name = ctx.dsl_name + ctx.dsl_name_suffix()
     terms = ["(", dsl_name]
     for arg in ctx.context_args:
         if isinstance(arg, Context):
@@ -87,6 +87,7 @@ def get_random_tempfile_name():
 def execute_racket_file(statements):
 
     filename = next(tempfile._get_candidate_names()) + ".rkt"
+    print("Executing file:\t", filename)
     with open(filename, "w+") as WriteFile:
         def write_line(line):
             WriteFile.write(line + "\n")
@@ -136,8 +137,12 @@ def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_
 
     create_env = "(define env (vector {}))".format(" ".join(env_elements))
 
-    create_expr_1 = "(define expr_1 {})".format(emit_context_expr(ctx1, dsl_inst1))
-    create_expr_2 = "(define expr_2 {})".format(emit_context_expr(ctx2, dsl_inst2))
+    #create_expr_1 = "(define expr_1 {})".format(emit_context_expr(ctx1, dsl_inst1))
+    #create_expr_2 = "(define expr_2 {})".format(emit_context_expr(ctx2, dsl_inst2))
+
+
+    create_expr_1 = "(define expr_1 {})".format(ctx1.emit_context_expr_string())
+    create_expr_2 = "(define expr_2 {})".format(ctx2.emit_context_expr_string())
 
     result_expr_1 = code_synthesizer_desc.interpret_expr("expr_1", "env")
     result_expr_2 = code_synthesizer_desc.interpret_expr("expr_2", "env")
@@ -275,5 +280,78 @@ def ordered_deduplicate(ls):
 
     return deduplicated
 
+
+def translate_expression(input_expr, src_language, target_language, input_sizes, input_precs, optimize = True, symbolic = False):
+
+    is_simplified = False
+    simplified_expr = None
+
+    statements = []
+
+    define_input_expr = "(define hydride-expr {})".format(input_expr.emit_context_expr_string())
+    statements.append(define_input_expr)
+
+
+    define_input_size = "(define input-sizes (list {}))".format(" ".join(input_sizes))
+    define_input_precs = "(define input-precs (list {}))".format(" ".join(input_precs))
+
+    statements.append(define_input_size)
+    statements.append(define_input_precs)
+
+    language_to_symbol = {"hvx": "'hvx",
+                          "x86": "'x86",
+                          "halide": "'halide" ,
+                          "halide_hvx": "'halide",
+                          "halide_x86": "'halide",
+                          }
+
+    assert src_language in language_to_symbol, "Src language must be in supported languages"
+
+    assert target_language in language_to_symbol, "Target language must be in supported languages"
+
+    statements.append("(define src-language {})".format(language_to_symbol[src_language]))
+
+    statements.append("(define target-language {})".format(language_to_symbol[target_language]))
+
+
+    symbolic_flag = ["#f", "t"][int(symbolic)]
+    opt_flag = ["#f", "t"][int(optimize)]
+    define_out_expr = "(define-values (solved? output-expr elapsed) (rewrite-ir hydride-expr  {} {} 'z3 input-sizes input-precs 1 src-language target-language 'regular ))".format(opt_flag , symbolic_flag)
+    statements.append(define_out_expr)
+
+
+
+    check_simplified = "solved?"
+
+
+    # Write simplified expression to file
+    serialize_output = "({} output-expr)".format("~s")
+
+    serialize_input = "({} hydride-expr)".format("~s")
+
+    serialize_expr = "(string-append {} \"\\n\" {})".format(serialize_input, serialize_output)
+
+    serialize_expr = serialize_output
+
+
+    read_out_fname = next(tempfile._get_candidate_names()) + ".temp"
+    write_to_file  = "(write-str-to-file {} \"{}\")".format(serialize_expr, read_out_fname)
+
+
+    if_simplified = "(begin (displayln \"Simplfied!!\") (pretty-print hydride-expr) (pretty-print output-expr) {}  (exit 0))".format(write_to_file)
+    handler = emit_racket_cond([check_simplified, "else"], [if_simplified ,
+    "(displayln \"Unable to simplify!\") (exit 1)"])
+    statements.append(handler)
+
+
+    is_simplified = execute_racket_file(statements).returncode == 0
+
+    if is_simplified:
+        with open(read_out_fname, "r") as ReadFile:
+            simplified_expr = ReadFile.read()
+
+        #subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+
+    return (is_simplified, simplified_expr)
 
 
