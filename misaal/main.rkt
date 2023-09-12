@@ -37,7 +37,12 @@
 (require misaal/ir/halide/interpreter)
 (require misaal/ir/halide/get_ops)
 (require misaal/ir/halide/cost_model)
+(require misaal/ir/halide/utils)
 
+
+;; Synthesis Utilities
+
+(require misaal/synthesis/ir_to_ir_transform)
 
 
 (provide 
@@ -51,5 +56,10 @@
 (all-from-out misaal/ir/halide/interpreter)
 (all-from-out misaal/ir/halide/get_ops)
 (all-from-out misaal/ir/halide/cost_model)
+(all-from-out misaal/ir/halide/utils)
+
+
+
+(all-from-out misaal/synthesis/ir_to_ir_transform)
 
   )

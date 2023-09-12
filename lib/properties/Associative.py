@@ -136,7 +136,7 @@ class Associative(Property):
         #sample_ctx = dsl_inst.get_sample_context()
         sample_ctx = self.get_sample_context_for_property(dsl_inst)
 
-        print("Checking if associativity holds for", dsl_inst.name, "on", pair)
+        print("Checking if associativity holds for", dsl_inst.name,"({})".format(sample_ctx.name) , "on", pair)
 
 
         # We know pairs are of the same size so we have to get the bitvector size
@@ -211,10 +211,12 @@ class Associative(Property):
 
 
 
+        print(form_1_expr.emit_context_expr_string())
 
 
 
         property_holds = check_if_contexts_equal(form_1_expr, form_2_expr, dsl_inst, dsl_inst, vector_args, self.synth_desc)
+        print(property_holds)
 
         if property_holds.returncode == 0:
             key = self.serialize_candidate(candidate)

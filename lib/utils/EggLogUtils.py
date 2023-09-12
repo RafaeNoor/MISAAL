@@ -6,6 +6,7 @@ import copy
 from  common.Types import *
 from common.Instructions import *
 from utils.ExprParamUtils import serialize_operand_for_param_map
+from utils.DSLInstructionUtils import get_context_registers
 
 HYDRIDE_EXPR_LABEL = "HydrideExpr"
 
@@ -16,14 +17,14 @@ def emit_egg_decl_bv():
 
 
 def emit_egg_decl_scalar():
-    return "(datatype SCALAR (INT i64))"
+    return "" #"(datatype SCALAR (INT i64))"
 
-def emit_egg_datatypes(dsl_list):
+def emit_egg_datatypes(dsl_list, cost = 1):
 
     symbolic_bvs = emit_egg_decl_bv()
     scalars = emit_egg_decl_scalar()
 
-    dsl_decls = [emit_egg_dsl_decl(dsl_inst) for dsl_inst in dsl_list]
+    dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = cost) for dsl_inst in dsl_list]
 
     comment = "; Declaring constructs for instructions"
 
@@ -36,30 +37,37 @@ def emit_egg_datatypes(dsl_list):
 
 
 
-def emit_egg_dsl_decl(dsl_inst):
+def emit_egg_dsl_decl(dsl_inst, cost = 1):
     tokens = []
 
     tokens.append(dsl_inst.name)
 
     sample_ctx = dsl_inst.get_sample_context()
     for arg in sample_ctx.context_args:
-
         if isinstance(arg, BitVector):
             tokens.append(HYDRIDE_EXPR_LABEL)
         elif isinstance(arg, ConstBitVector):
             tokens.append(HYDRIDE_EXPR_LABEL)
         elif isinstance(arg, LaneSize):
-            tokens.append("SCALAR")
+            tokens.append("i64")
         elif isinstance(arg, Precision):
-            tokens.append("SCALAR")
+            tokens.append("i64")
         elif isinstance(arg, Integer):
-            tokens.append("SCALAR")
+            tokens.append("i64")
+        elif isinstance(arg, Bool):
+            # TODO: Do we need different representation
+            # for bools?
+            tokens.append("i64")
+        elif isinstance(arg, BoundedBitVector):
+            print("Not supported currently")
+            tokens.append(HYDRIDE_EXPR_LABEL)
         else:
             print(dsl_inst.name)
+            print(arg)
             assert False, "Unable to emit egg declaration for dsl_inst"
 
 
-    return "({})".format(" ".join(tokens))
+    return "({} :cost {})".format(" ".join(tokens), cost)
 
 
 
@@ -91,7 +99,10 @@ def emit_expr_to_egg(expr, param_map = {}):
         return emit_int_to_egg(expr)
     elif isinstance(expr, Reg):
         return emit_reg_to_egg(expr)
+    elif isinstance(expr, Bool):
+        return emit_bool_to_egg(expr)
     else:
+        print(expr)
         assert False, "Unsupported type to emit to egg"
 
 
@@ -117,18 +128,31 @@ def emit_bv_to_egg(expr):
 
 
 def emit_const_bv_to_egg(expr):
-    return "(LIT {} {})".format(expr.value, expr.size)
+    if "#x" in expr.value:
+        hex_str = "0x"+ expr.value.split("#x")[-1]
+        return "(LIT {} {})".format(int(hex_str, 16), expr.size)
+    else:
+        return "(LIT {} {})".format(expr.value, expr.size)
+
 
 
 def emit_lanesize_to_egg(expr):
-    return "(INT {})".format(expr.value)
+
+    return "{}".format(expr.value)
+    #return "(INT {})".format(expr.value)
 
 def emit_precision_to_egg(expr):
-    return "(INT {})".format(expr.value)
+    return "{}".format(expr.value)
+    #return "(INT {})".format(expr.value)
 
 
 def emit_int_to_egg(expr):
-    return "(INT {})".format(expr.value)
+    return "{}".format(expr.value)
+    #return "(INT {})".format(expr.value)
+
+def emit_bool_to_egg(expr):
+    return "{}".format(int(expr.value == "#t"))
+    #return "(INT {})".format(int(expr.value == "#t"))
 
 
 def emit_reg_to_egg(expr):
@@ -147,3 +171,33 @@ def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = 
         return "(birewrite \n{}\n {}\n)".format(candidate_expr, simplified_expr)
     else:
         return "(rewrite \n{}\n{}\n)".format(candidate_expr, simplified_expr)
+
+
+
+# EggLog has constraints on when a bi-rewrite can be applied.
+# This method checks if the properties are valid.
+def is_birewrite_valid(expr1, expr2):
+
+    if isinstance(expr2, Reg):
+        # Currently egg log doesn't
+        # allow these simplifications
+        return False
+
+    regs_expr1 = get_context_registers(expr1)
+
+    regs_expr2 = get_context_registers(expr2)
+
+    reg_ids_1 = [int(reg.index) for reg in regs_expr1]
+    reg_ids_2 = [int(reg.index) for reg in regs_expr2]
+
+    unique_ids_1 = list(set(reg_ids_1))
+    unique_ids_2 = list(set(reg_ids_2))
+
+    if len(unique_ids_1) != len(unique_ids_2):
+        return False
+
+
+
+    return True
+
+

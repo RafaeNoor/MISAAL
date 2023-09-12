@@ -19,6 +19,8 @@
 
 (require hydride/ir/hydride/definition)
 (require misaal/ir/halide/types)
+(require misaal/ir/halide/length)
+(require misaal/ir/halide/prec)
 
 (provide  (all-defined-out))
 ;; ================================================================================
@@ -27,6 +29,9 @@
 (define (typed:halide:interpret prog env)
   (destruct prog
             [(reg id) (vector-ref-bv env id)]
+            [(typed:int-imm data prec signed?)
+            (lambda (i) (halide:imm-ref data signed?) )
+             ]
             [(buffer-index index elemT buffsize) (lambda (i) (halide:buffer-ref (halide:create-buffer (vector-ref env index) elemT) i))]
             [(lit v) v]
             [ (vector-two-input-swizzle_dsl v0 v1 num_2 prec_i_o num_4 num_5 num_6 num_7 num_8)
@@ -241,6 +246,9 @@
              (lambda (i) (halide:do-shl ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
             [ (typed:vec-sub v0 v1 num_2 prec_i_o)
+             (println (typed:halide:get-prec v0 (vector)))
+             (assert (equal? (typed:halide:get-prec v0 (vector)) num_2))
+             (assert (equal? (typed:halide:get-prec v1 (vector)) num_2))
              (lambda (i) (halide:do-sub ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
             [ (typed:xBroadcast v0 size_i prec_i_o num_3)
@@ -249,4 +257,14 @@
             [v (error "Unrecognized Term in Interpreter" v)]
             )
   )
+
+
+(define (typed:halide:interpret-hydride expr env)
+  (printf "vec-size ~a\n" (typed:halide:get-length expr env)  )
+  (printf "vec-prec ~a\n" (typed:halide:get-prec expr env)  )
+  (define vec-len (/ (typed:halide:get-length expr env) (typed:halide:get-prec expr env)))
+  (printf "vec-len ~a\n" vec-len)
+  (halide:assemble-bitvector (typed:halide:interpret expr env) vec-len)
+  )
+
 ;; ================================================================================

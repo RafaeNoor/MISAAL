@@ -11,25 +11,20 @@ from  common.Instructions import Context
 
 
 TEST_STRING = """
-(define hydride-expr  (_mm_movm_epi8_dsl ; _mm512_maskz_mov_epi16
-	(reg (bv 0 (bitvector 8))) ; < 1 x i32> None
-	(lit (bv #b1 (bitvector 1)))
-	(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))
-	(reg (bv 1 (bitvector 8))) ; < 32 x i16> None
-	512
-	512
-	0
-	512
-	16
-	1
-	16
-	0
- ))
+(hexagon_V6_vabsdiffh_128B_dsl
+(reg 0)
+(reg 1)  1024  1024  0  1024  16  -1  -1  0  0  );<64 x i16>
 """
 
-
 def get_matching_context(nested_expr, dsl_list):
-    dsl_name = nested_expr[0].split("_dsl")[0]
+    dsl_name = ""
+
+    if "dsl" in nested_expr[0]:
+        dsl_name = nested_expr[0].split("_dsl")[0]
+    else:
+        dsl_name = nested_expr[0]
+
+    print("DSL Name to search:", dsl_name)
 
     matching_dsl_inst = None
 
@@ -44,10 +39,41 @@ def get_matching_context(nested_expr, dsl_list):
     # indices until we have a matching context
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
+    print("checking:", nested_expr[1:])
     for idx, arg in enumerate(nested_expr[1:]):
 
+        new_matching_context_indices = []
+
         if not isinstance(arg, str):
+            # May be parsing halide expresison,  check if this is a buffer index
+
+            if isinstance(arg, list) and arg[0] == 'buffer-index':
+
+                # Get type matching context
+                for ci in matching_context_indices:
+                    ctx = matching_dsl_inst.contexts[ci]
+                    is_signed = int(not 'u' in arg[2])
+
+                    if ctx.signedness != None and ctx.signedness != is_signed:
+                        print("Signedness does not match")
+                        continue
+
+                    ctx_arg =  ctx.context_args[idx]
+
+                    if ctx_arg.size != int(arg[3]):
+                        print("Size does not match", ctx_arg.size, int(arg[3]))
+                        continue
+
+                    input_prec = int(arg[2].split("int")[-1])
+
+                    if ctx.in_precision != input_prec:
+                        print("Precision does not match", ctx.in_precision, input_prec)
+                        continue
+
+                    new_matching_context_indices.append(ci)
+                matching_context_indices = new_matching_context_indices
             continue
+
 
         if len(matching_context_indices) == 1:
             break
@@ -56,7 +82,6 @@ def get_matching_context(nested_expr, dsl_list):
         assert arg.lstrip("-").isnumeric(), "Expected numeric string"
 
 
-        new_matching_context_indices = []
 
         parameter_value = int(arg)
 
@@ -82,6 +107,7 @@ def get_matching_context(nested_expr, dsl_list):
 
         matching_context_indices = new_matching_context_indices
 
+    assert len(matching_context_indices) == 1, "Unable to find matching context in DSL Parsing"
     ctx_copy =  copy.deepcopy(matching_dsl_inst.contexts[matching_context_indices[0]])
 
     return ctx_copy
@@ -98,6 +124,7 @@ def get_matching_context(nested_expr, dsl_list):
 [['define', 'hydride-expr', ['_mm_movm_epi8_dsl', ['reg', ['bv', '0', ['bitvector', '8']]], ['lit', ['bv', '#b1', ['bitvector', '1']]], ['lit', ['bv', '#x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', ['bitvector', '512']]], ['reg', ['bv', '1', ['bitvector', '8']]], '512', '512', '0', '512', '16', '1', '16', '0']]]
 def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
+
     first_term = nested_expr[0]
 
     # Skip defines if they exist
@@ -107,11 +134,24 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
     elif first_term == 'reg':
         # Just create a register with arbritary size and precision. Parent of this
         # register will set the registers precision and size
-        reg_index_term = nested_expr[1][1]
+        reg_index_term  = None
+
+        if isinstance(nested_expr[1], list):
+            reg_index_term = nested_expr[1][1]
+        else:
+            reg_index_term = nested_expr[1]
+
         reg = Reg(reg_index_term, 8, 8)
 
         return reg
 
+
+    elif first_term == 'buffer-index':
+        #TODO: Need to figure out how to handle buffer index
+        #['vec-absd', ['buffer-index', '0', "'uint16 1024)          (buffer-index  1 '", 'uint16', '1024']]
+        reg_index_term = nested_expr[1]
+        reg = Reg(reg_index_term, 8, 8)
+        return reg
     elif first_term == 'lit':
 
         lit_value = nested_expr[1][1]
@@ -138,6 +178,18 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
 
     else:
+        print("Possibly dsl instruction in halide")
+
+        matching_context = get_matching_context(nested_expr, dsl_list)
+
+        for idx, arg in enumerate(matching_context.context_args):
+            if isinstance(arg, BitVector) or isinstance(arg, ConstBitVector):
+                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list) # Offset zero corresponds to the name of the current matching context
+
+        if matching_context != None:
+            return matching_context
+
+        print(nested_expr)
         assert False, "Unable to parse unrecognized token " + nested_expr
 
 
@@ -147,7 +199,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
 
 def read_string_to_dsl(input_string, dsl_list):
-    lines = input_string.split("\n")
+    lines = input_string.replace("'","").split("\n")
 
     # remove racket comments
     lines = [line.split(";",1)[0] for line in lines]

@@ -1,0 +1,136 @@
+
+(datatype  HydrideExpr 
+    (LIT i64 i64 :cost 1) 
+    (SYMBV i64 :cost 1)
+    (interleave-vector HydrideExpr i64 i64)
+    (deinterleave-vector HydrideExpr i64 i64)
+    (typed-cast-int HydrideExpr i64 i64 i64 i64 :cost 10000)
+    (typed-cast-uint HydrideExpr i64 i64 i64 i64 :cost 10000)
+    (typed-concat_vectors HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-abs HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-absd HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-div HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-halving_add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-max HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-min HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-mod HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-mul HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-rounding_halving_add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-rounding_mul_shift_right HydrideExpr HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-rounding_shift_right HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-sat-add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-sat-sub HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-shr HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-signed-vec-widen-mul HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-slice_vectors HydrideExpr i64 i64 i64 i64 i64 :cost 10000)
+    (typed-unsigned-vec-absd HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-div HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-halving_add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-max HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-min HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-mod HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-mul HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-rounding_halving_add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-rounding_mul_shift_right HydrideExpr HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-rounding_shift_right HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-sat-add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-sat-sub HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-shr HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-unsigned-vec-widen-mul HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-vec-add HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-vec-bwand HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-vec-bwnot HydrideExpr i64 i64 :cost 10000)
+    (typed-vec-saturate HydrideExpr i64 i64 i64 i64 i64 :cost 10000)
+    (typed-vec-shl HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-vec-sub HydrideExpr HydrideExpr i64 i64 :cost 10000)
+    (typed-xBroadcast HydrideExpr i64 i64 i64 :cost 10000)
+    )
+
+
+
+
+
+;; Widen Mul 
+(rewrite
+    (typed-signed-vec-widen-mul v1 v2 iprec isize)
+
+    (typed-signed-vec-mul
+        (typed-cast-int v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed-cast-int v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+
+(rewrite
+    (typed-unsigned-vec-widen-mul v1 v2 iprec isize)
+
+    (typed-unsigned-vec-mul
+        (typed-cast-uint v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed-cast-uint v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+
+;; Scalar BroadCasts
+(rewrite
+    (typed-xBroadcast (LIT val 16) 16 16 factor)
+    (typed-cast-int (typed-xBroadcast (LIT val 8) 8 8 factor) 8 1 factor 16)
+    :when (< val 255)
+)
+
+
+(rewrite
+    (typed-xBroadcast (LIT val 32) 32 32 factor)
+    (typed-cast-int (typed-xBroadcast (LIT val 16) 16 16 factor) 16 1 factor 32)
+    :when (< val 2147483647)
+)
+
+
+;; Rounding Mul Shift Right
+(rewrite
+ (typed-signed-vec-rounding_mul_shift_right 
+     v1 v2 
+     (typed-xBroadcast (LIT 15 16) 16 16 64)
+     16 1024
+ )
+
+ (hexagon_V6_vmpyhvsrs_128B
+     (LIT 1 32) (LIT 15 32) (LIT 2 32)
+     (LIT 15 64) v1 v2 
+     1024 1024 0 1024 16 32 1 1 1 64 1 1 -1 32 16 1 1 0
+ )
+)
+
+
+
+
+
+
+
+(rewrite
+(typed-signed-vec-rounding_mul_shift_right 
+     v1 v2 
+     (typed-xBroadcast (LIT 31 32) 32 32 32)
+     32 1024
+ )
+(hexagon_V6_vmpyowh_rnd_sacc_128B (LIT 14 64) (LIT 1 64) (LIT 1 64)  (hexagon_V6_vmpyewuh_128B (LIT 16 64)  v1 v2 1024 1024 0 512 16 32 1 0 64 1 0) v1 v2 1024 1024 0 512 16 32 1 1 -1 -1 1 64 1 64 1 16 0)
+
+
+)
+
+
+
+;; Scalar broadcasts
+
+(rewrite
+    (typed-xBroadcast v0 16 16 64)
+    (hexagon_V6_lvsplatw_128B (scalar_splat v0 16 32) 1024 1024 0 1024 32 0)
+)
+
+(rewrite 
+(typed-xBroadcast v0 8 8 128)
+(hexagon_V6_lvsplatb_128B (scalar_splat v0 8 32) 1024 1024 0 1024 8 0)
+
+)

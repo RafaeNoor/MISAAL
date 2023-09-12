@@ -1,4 +1,4 @@
-from properties.Property import Property
+from properties.Property import *
 import json
 from  utils.DSLInstructionUtils import *
 from utils.GenerateRandomExpr import create_random_expression
@@ -49,7 +49,8 @@ class SimplifyingIdentity(Property):
         for i in range(self.num_iterations):
 
             ## Inclusive for loop
-            for depth in range(1, self.input_depth + 1):
+            #for depth in range(1, self.input_depth + 1):
+            for depth in range(self.input_depth, self.input_depth + 1):
 
                 try:
                     expr, discard = create_random_expression(self.dsl_list, depth = depth,

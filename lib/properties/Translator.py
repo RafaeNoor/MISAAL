@@ -1,4 +1,6 @@
-from properties.Property import Property
+from properties.Property import *
+import random
+import sys
 import json
 from  utils.DSLInstructionUtils import *
 from utils.GenerateRandomExpr import create_random_expression
@@ -8,12 +10,11 @@ from  common.Types import *
 class Translator(Property):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None,  num_iterations = 1000, input_depth = 2, permute_limit = 5):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [],   num_iterations = 1500, input_depth = 2, permute_limit = 3, exhaustive = False):
 
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
-        ``
         super().__init__(name = "Translator", dsl_list = dsl_list, synth_desc = source_synth_desc)
         self.num_iterations = num_iterations
         self.input_depth = input_depth
@@ -21,6 +22,11 @@ class Translator(Property):
         self.simplify_map = {}
         self.source_synth_desc = source_synth_desc
         self.target_synth_desc = target_synth_desc
+        self.input_dsl_list = dsl_list
+        self.output_dsl_list = target_dsl_list
+        self.exhaustive = exhaustive
+
+        random.shuffle(self.input_dsl_list)
 
 
 
@@ -39,17 +45,63 @@ class Translator(Property):
 
 
         expressions = []
-        for i in range(self.num_iterations):
+        accounted_for = []
 
-            ## Inclusive for loop
-            for depth in range(1, self.input_depth + 1):
+        if self.exhaustive:
+            print("Exhaustive")
+            for dsl_inst in self.dsl_list:
 
-                try:
-                    expr, discard = create_random_expression(self.dsl_list, depth = depth,
-                    required_output_precision = None, required_output_size = None)
-                    expressions += self.permute_ordering_of_registers(expr, limit = self.permute_limit)
-                except:
-                    continue
+                copy_inst = copy.deepcopy(dsl_inst)
+
+                for context in dsl_inst.contexts:
+                    copy_inst.contexts = [context]
+
+                    try:
+                        expr, discard = create_random_expression([copy_inst], depth = self.input_depth,
+                        required_output_precision = None, required_output_size = None)
+                        perm_expression = self.permute_ordering_of_registers(expr, limit = self.permute_limit)
+
+                        for expr in perm_expression:
+                            key = expr.emit_context_expr_string()
+                            if key in accounted_for:
+                                continue
+
+                            accounted_for.append(key)
+                            expressions.append(expr)
+
+                    except KeyboardInterrupt:
+                        sys.exit()
+
+
+                    except:
+                        continue
+
+
+
+
+        else:
+            for i in range(self.num_iterations):
+
+                ## Inclusive for loop
+                #for depth in range(1, self.input_depth + 1):
+
+                for depth in range(self.input_depth, self.input_depth + 1):
+
+                    try:
+                        expr, discard = create_random_expression(self.dsl_list, depth = depth,
+                        required_output_precision = None, required_output_size = None)
+                        perm_expression = self.permute_ordering_of_registers(expr, limit = self.permute_limit)
+
+                        for expr in perm_expression:
+                            key = expr.emit_context_expr_string()
+                            if key in accounted_for:
+                                continue
+
+                            accounted_for.append(key)
+                            expressions.append(expr)
+
+                    except:
+                        continue
 
         return expressions
 
@@ -210,7 +262,9 @@ class Translator(Property):
         input_precs = [str(reg.precision) for reg in regs]
 
         # TODO: Change to translate expression with optional optimize flag
-        (is_simplified, simplified_expr) =  simplify_expression(dsl_expression, self.synth_desc, input_sizes, input_precs)
+        #(is_simplified, simplified_expr) =  simplify_expression(dsl_expression, self.synth_desc, input_sizes, input_precs)
+
+        (is_simplified, simplified_expr) =  translate_expression(dsl_expression, self.source_synth_desc, self.target_synth_desc,input_sizes, input_precs)
 
 
 
@@ -256,16 +310,22 @@ class Translator(Property):
                 output_expression_string = property_object['simplified']
 
 
-                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+                input_expression = read_string_to_dsl(input_expression_string, self.input_dsl_list + self.support_dsl)
+
+                print("Read Input successfully!")
 
 
 
-                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+                output_expression = read_string_to_dsl(output_expression_string, self.output_dsl_list + self.support_dsl)
 
 
-                param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+                print("Read Output successfully!")
 
-                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = True, param_map = param_map)
+                bidirectional_flag = is_birewrite_valid(input_expression, output_expression)
+
+                #param_map, reverse_map  = generate_parameter_map(input_expression, output_expression)
+
+                rule = emit_rewrite_expr(input_expression, output_expression, bidirectional = bidirectional_flag, param_map = {})
 
                 egg_rules.append(rule)
 

@@ -171,6 +171,8 @@ class Commutative(Property):
 
 
 
+        print(commute_expr_0.emit_context_expr_string())
+
 
 
 

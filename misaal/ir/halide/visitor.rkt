@@ -30,6 +30,7 @@
             [(idx-j id) (fn prog)]
             [(reg id) (fn prog) ]
             [(buffer-index index elemT buffSize) (fn prog)]
+            [(typed:int-imm data prec signed?) (fn prog)]
             [(lit v) (fn prog)]
             [(nop v1) (typed:halide:visitor v1 fn)]
             [(idx-add i1 i2) (fn prog) ]
@@ -286,7 +287,7 @@
              (define v0-visited (typed:halide:visitor v0 fn))
              (fn ( typed:xBroadcast v0-visited size_i prec_i_o num_3 ))
              ]
-            [_ (error "Unrecognized expression in visitor")]
+            [_ (error "Unrecognized expression in typed:halide:visitor" prog)]
             )
   )
 ;; ================================================================================

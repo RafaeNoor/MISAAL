@@ -66,6 +66,7 @@
  (destruct prog
 	[(reg id) 1]
 	[(lit v) 1 ]
+	[(typed:int-imm  data prec signed?) 1 ]
 	[(buffer-index index elemT buffSize) 1]
 		[ (vector-two-input-swizzle_dsl v0 v1 num_2 prec_i_o num_4 num_5 num_6 num_7 num_8)
 		(+ 4 (typed:halide:cost  v0)  (typed:halide:cost  v1)  

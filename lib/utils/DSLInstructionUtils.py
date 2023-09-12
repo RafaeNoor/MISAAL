@@ -1,4 +1,6 @@
 import common.Types
+import sys
+from common.Types import *
 from  common.Instructions import Context
 import subprocess
 import os
@@ -11,14 +13,13 @@ HYDRIDE_HEADER =  """
         (require rosette/lib/synthax)
         (require rosette/lib/angelic)
         (require racket/pretty)
-        (require data/bit-vector)
         (require rosette/lib/destruct)
-        (require rosette/solver/smt/boolector)
         (require hydride)
+        (require misaal)
 
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
-        (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
+        (custodian-limit-memory (current-custodian) (* 1000 1024 1024))
         (current-bitwidth 16)
         """
 
@@ -84,6 +85,11 @@ def emit_verify_equal(v1, v2):
 def get_random_tempfile_name():
     return next(tempfile._get_candidate_names())
 
+
+class HelperCompletedProcess:
+    def __init__(self, returncode = 1):
+        self.returncode = returncode
+
 def execute_racket_file(statements):
 
     filename = next(tempfile._get_candidate_names()) + ".rkt"
@@ -97,9 +103,28 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    result = subprocess.run(["racket {}".format(filename)], shell=True)
+    TIMEOUT = 5 * 60 # 10 mins
+    result = None
+    try:
+        result = subprocess.run(["racket", "{}".format(filename)],
+                                stdout = subprocess.DEVNULL,
+                                stderr = subprocess.DEVNULL,
+                                timeout = TIMEOUT)
 
-    subprocess.run(["rm {}".format(filename)], shell = True)
+    except KeyboardInterrupt:
+        sys.exit()
+    except subprocess.TimeoutExpired:
+        print("File Timedout:\t", filename)
+        result = HelperCompletedProcess(returncode = 1)
+    except :
+        print("Unknown error for", filename, ":\t")
+        result = HelperCompletedProcess(returncode = 1)
+
+
+
+
+    print("Completed executing file:\t", filename)
+    #subprocess.run(["rm {}".format(filename)], shell = True)
     return result
 
 
@@ -281,7 +306,7 @@ def ordered_deduplicate(ls):
     return deduplicated
 
 
-def translate_expression(input_expr, src_language, target_language, input_sizes, input_precs, optimize = True, symbolic = False):
+def translate_expression(input_expr, src_language_desc, target_language_desc, input_sizes, input_precs, optimize = True, symbolic = False):
 
     is_simplified = False
     simplified_expr = None
@@ -305,18 +330,28 @@ def translate_expression(input_expr, src_language, target_language, input_sizes,
                           "halide_x86": "'halide",
                           }
 
-    assert src_language in language_to_symbol, "Src language must be in supported languages"
+    assert src_language_desc.target_name in language_to_symbol, "Src language must be in supported languages"
 
-    assert target_language in language_to_symbol, "Target language must be in supported languages"
+    assert target_language_desc.target_name in language_to_symbol, "Target language must be in supported languages"
 
-    statements.append("(define src-language {})".format(language_to_symbol[src_language]))
+    statements.append("(define src-language {})".format(language_to_symbol[src_language_desc.target_name]))
 
-    statements.append("(define target-language {})".format(language_to_symbol[target_language]))
+    statements.append("(define target-language {})".format(language_to_symbol[target_language_desc.target_name]))
 
 
-    symbolic_flag = ["#f", "t"][int(symbolic)]
-    opt_flag = ["#f", "t"][int(optimize)]
-    define_out_expr = "(define-values (solved? output-expr elapsed) (rewrite-ir hydride-expr  {} {} 'z3 input-sizes input-precs 1 src-language target-language 'regular ))".format(opt_flag , symbolic_flag)
+    #(src-interpreter src-cost-fn src-visitor src-length-fn src-prec-fn src-get-ops)
+
+    statements.append("(define src-language-desc (vector {} {} {} {} {} {}))".format(src_language_desc.interpreter_name, src_language_desc.cost_name, src_language_desc.visitor_name, src_language_desc.get_length_name, src_language_desc.get_prec_name, src_language_desc.get_ops_name))
+
+    statements.append("(define target-language-desc (vector {} {} {} {} {} {}))".format(target_language_desc.interpreter_name, target_language_desc.cost_name, target_language_desc.visitor_name, target_language_desc.get_length_name, target_language_desc.get_prec_name, target_language_desc.get_ops_name))
+
+    # Set global flags for target
+    statements.append(target_language_desc.set_target_name)
+
+
+    symbolic_flag = ["#f", "#t"][int(symbolic)]
+    opt_flag = ["#f", "#t"][int(optimize)]
+    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 4 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
     statements.append(define_out_expr)
 
 
@@ -325,9 +360,9 @@ def translate_expression(input_expr, src_language, target_language, input_sizes,
 
 
     # Write simplified expression to file
-    serialize_output = "({} output-expr)".format("~s")
+    serialize_output = "({} output-expr)".format(target_language_desc.printer_name)
 
-    serialize_input = "({} hydride-expr)".format("~s")
+    serialize_input = "({} hydride-expr)".format(src_language_desc.printer_name)
 
     serialize_expr = "(string-append {} \"\\n\" {})".format(serialize_input, serialize_output)
 
@@ -350,8 +385,26 @@ def translate_expression(input_expr, src_language, target_language, input_sizes,
         with open(read_out_fname, "r") as ReadFile:
             simplified_expr = ReadFile.read()
 
-        #subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+        subprocess.call("rm -f {}".format(read_out_fname), shell = True)
 
     return (is_simplified, simplified_expr)
+
+
+
+def get_context_registers(ctx):
+
+    if isinstance(ctx, Reg):
+        return [ctx]
+
+    if not isinstance(ctx, Context):
+        return []
+
+    regs = []
+
+    for arg in ctx.context_args:
+        regs += get_context_registers(arg)
+    return regs
+
+
 
 
