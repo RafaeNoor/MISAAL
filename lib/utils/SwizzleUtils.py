@@ -1,10 +1,12 @@
 import string
+import copy
 
 
 
 class Swizzle:
-    def __init__(self, num_sources = None, result_size = None, input_prec = None, output_prec = None, operand_size = None, swizzle_args = [], derived_from = ""):
+    def __init__(self, num_sources = None, result_size = None, input_prec = None, output_prec = None, operand_size = None, swizzle_args = [], derived_from = "", name = ""):
 
+        self.name = name
         self.num_sources = num_sources
         self.result_size = result_size
         self.input_prec = input_prec
@@ -103,11 +105,99 @@ class Swizzle:
             result = self.apply_shuffle_vector(shuffle_vector_args, operands)
             print("Result:\n{}".format(result))
 
+            print("XML:")
+            print(self.create_xml_for_swizzle())
+
+
+    def get_xml_type_string(self, param_size):
+        type_string = ""
+
+        if param_size == 64:
+            type_string = "__m64"
+        elif param_size == 32:
+            type_string = "int"
+        else:
+            type_string = "__m{}i".format(param_size)
+        return type_string
+
+    def create_xml_parameter(self, param_name, param_size, param_prec):
+        type_string = self.get_xml_type_string(param_size)
+
+        return '<parameter type="{}" varname="{}" etype="UI{}"/>'.format(type_string, param_name, param_prec)
+
+    def create_xml_for_swizzle(self):
+        parameters = []
+
+        for i in range(self.num_sources):
+            param_name = "v{}".format(i)
+            parameter = self.create_xml_parameter( param_name, self.operand_size, self.input_prec)
+            parameters.append(parameter)
+        parameters = "\n".join(parameters)
+
+        template = copy.deepcopy("""
+<intrinsic tech="AVX2" name="{}">
+	<type>Integer</type>
+	<CPUID>AVX2</CPUID>
+	<category>Swizzle</category>
+	<return type="{}" varname="dst" etype="UI{}"/>
+        {}
+	<description>Automatically generated swizzle.</description>
+	<operation>
+        {}
+
+	</operation>
+	<instruction name="{}" form="ymm, ymm, ymm" xed="VPUNPCKLBW_YMMqq_YMMqq_YMMqq"/>
+	<header>immintrin.h</header>
+</intrinsic>
+        """).format(self.name, self.get_xml_type_string(self.result_size),
+                   self.output_prec, parameters, self.emit_swizzle_to_pseudocode(), self.name )
+
+        return template
+
+
+    def emit_swizzle_to_pseudocode(self):
+        """
+        We currently emit to x86 syntax to leverage the existing x86 parser
+
+        """
+
+        statements = []
+        shuffle_vector_args = self.swizzle_args[0]
+
+        for idx, (operand_index, total_index) in enumerate(shuffle_vector_args):
+            operand_name = "v{}".format(operand_index)
+
+            local_index = total_index - (operand_index * (self.operand_size // self.input_prec))
+
+            local_slice_low = local_index * self.input_prec
+            local_slice_high = local_slice_low + self.input_prec - 1 # inclusive indexing
+
+            #output_slice_low = idx * self.output_prec
+            #output_slice_high = output_slice_low + self.output_prec -1
+
+            output_slice_low = idx * self.input_prec
+            output_slice_high = output_slice_low + self.input_prec -1
+
+            statement = "dst[{}:{}] := {}[{}:{}]".format(output_slice_high,
+                                                         output_slice_low,
+                                                         operand_name,
+                                                         local_slice_high,
+                                                         local_slice_low)
+
+            statements.append(statement)
+        return "\n".join(statements)
 
 
 
 
-def parse_swizzle_object(ctx, class_name):
+
+
+
+
+
+
+
+def parse_swizzle_object(ctx, class_name, swizzle_name):
 
     if 'prec' in ctx:
         return Swizzle(num_sources = ctx['num_sources'],
@@ -116,7 +206,7 @@ def parse_swizzle_object(ctx, class_name):
                    input_prec = ctx['prec'],
                    output_prec = ctx['output_prec'],
                    swizzle_args = ctx['swizzle_args'],
-                   derived_from = class_name)
+                   derived_from = class_name, name = swizzle_name)
     else:
         return Swizzle(num_sources = ctx['num_sources'],
                    result_size = ctx['result_size'],
@@ -124,21 +214,24 @@ def parse_swizzle_object(ctx, class_name):
                    input_prec = ctx['input_prec'],
                    output_prec = ctx['output_prec'],
                    swizzle_args = ctx['swizzle_args'],
-                   derived_from = class_name)
+                   derived_from = class_name, name = swizzle_name)
 
 
 
-def summarize_distinct_swizzles(swizzle_analysis_result):
+def summarize_distinct_swizzles(swizzle_analysis_result, target_name = "misaal"):
 
     swizzles = []
 
 
+    sid = 0
     for key, props  in swizzle_analysis_result.items():
         for prop in props:
             ctxs = prop['property']['contexts']
 
-            for ctx in ctxs:
-                swizzle_ctx = parse_swizzle_object(ctx, key)
+            for ctx in (ctxs):
+                swizzle_name = "{}_swizzle_{}".format(target_name, sid)
+                sid+= 1
+                swizzle_ctx = parse_swizzle_object(ctx, key, swizzle_name)
 
                 existing_match_index = swizzle_ctx.get_matching_swizzle_context_index(swizzles)
 
@@ -151,8 +244,16 @@ def summarize_distinct_swizzles(swizzle_analysis_result):
 
     print("Number of Distinct Swizzle Classes: ", len(swizzles))
 
+    intrins = []
     for swizzle in swizzles:
         swizzle.interpret_swizzle_context()
+        intrins.append(swizzle.create_xml_for_swizzle())
+
+
+    with open(target_name+"_"+"swizzles.xml", "w+") as XMLFile:
+        XMLFile.write("<intrinsics_list>\n")
+        XMLFile.write("\n".join(intrins) +"\n")
+        XMLFile.write("</intrinsics_list>\n")
 
 
 

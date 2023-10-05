@@ -19,7 +19,7 @@ HYDRIDE_HEADER =  """
 
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
-        (custodian-limit-memory (current-custodian) (* 1000 1024 1024))
+        (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
         (current-bitwidth 16)
         """
 
@@ -103,7 +103,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = 5 * 60 # 10 mins
+    TIMEOUT = 10 * 60 # 10 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -404,6 +404,127 @@ def get_context_registers(ctx):
     for arg in ctx.context_args:
         regs += get_context_registers(arg)
     return regs
+
+
+
+
+
+
+# For architectures like ARM do extracts on extract
+#, this pass inlines those extracts.
+def inline_nested_extracts_in_sema(sema):
+
+    lines = sema
+
+    slice_map = {}
+
+    new_statements_counter = 0
+
+    updated_lines = []
+
+    dead_statements = []
+
+    for line in lines:
+        if "(extract" in line:
+            result_name = str(line.split("(extract")[0].strip().split(" ")[-1])
+
+            from_var = line.split("(extract")[-1].lstrip().split(" ")[-1].replace(")","").replace("\"","")
+            high_slice = line.split("(extract")[-1].lstrip().split(" ")[0].replace(")","").replace("(","")
+
+            low_slice = line.split("(extract")[-1].lstrip().split(" ")[1].replace(")","").replace("(","")
+
+
+
+            if from_var in slice_map:
+
+                # i.e. from_var is itself generated from something which is an extract statement
+                new_low_slice_name = "new.{}".format(new_statements_counter)
+                new_statements_counter += 1
+
+                new_low_slice_stmt = "(define {} (+ {} {}))".format(new_low_slice_name, slice_map[from_var][2], low_slice)
+
+
+                new_high_slice_name = "new.{}".format(new_statements_counter)
+                new_statements_counter += 1
+
+                new_high_slice_stmt = "(define {} (+ {} {}))".format(new_high_slice_name,high_slice, slice_map[from_var][2])
+
+                dead_statements.append(from_var)
+
+                from_var = slice_map[from_var][0]
+                new_extract_statement = "(define {}  (extract {} {} {}))".format(result_name, new_high_slice_name, new_low_slice_name, from_var)
+
+                updated_lines.append(new_low_slice_stmt)
+                updated_lines.append(new_high_slice_stmt)
+                updated_lines.append(new_extract_statement)
+
+                high_slice = new_high_slice_name
+                low_slice = new_low_slice_name
+
+            else:
+                updated_lines.append(line)
+
+
+            slice_map[result_name] = (from_var, high_slice, low_slice)
+
+
+        else:
+            updated_lines.append(line)
+
+    pruned_lines = []
+
+    # Remove dead statements
+    #print("DEAD:", dead_statements)
+    for line in updated_lines:
+        prune_line = False
+        for name in dead_statements:
+            if name+" " in line or name+")" in line:
+                prune_line = True
+
+        if not prune_line:
+            pruned_lines.append(line)
+        else:
+            print("PRUNING LINE:[",line,"]")
+
+
+    return (pruned_lines)
+
+
+
+# Remove any extracts which are extracting the entire
+# bitvector. Simply return the bitvector operand. Only
+# works for constant parameter slices
+def remove_redundant_extracts(lines, arg_size_map):
+
+    replace_list = []
+
+    updated_lines = []
+    for line in lines:
+        if "(extract" in line:
+            result_name = str(line.split("(extract")[0].strip().split(" ")[-1])
+
+            from_var = line.split("(extract")[-1].lstrip().split(" ")[-1].replace(")","").replace("\"","")
+            high_slice = line.split("(extract")[-1].lstrip().split(" ")[0].replace(")","").replace("(","")
+
+            low_slice = line.split("(extract")[-1].lstrip().split(" ")[1].replace(")","").replace("(","")
+
+            if low_slice.isnumeric() and high_slice.isnumeric() and from_var in arg_size_map:
+                total_size = int(high_slice) - int(low_slice) + 1
+                if arg_size_map[from_var] == total_size:
+                    replace_list.append(result_name)
+
+
+            if result_name in replace_list:
+                new_line = "(define {} {})".format(result_name, from_var)
+                updated_lines.append(new_line)
+            else:
+                updated_lines.append(line)
+        else:
+            updated_lines.append(line)
+
+
+    return (updated_lines)
+
 
 
 

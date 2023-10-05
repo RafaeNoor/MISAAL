@@ -11,6 +11,7 @@ class IdentifySwizzles(Property):
         self.profile_prefix  = profile_prefix
         self.num_input_sources = num_input_sources
         self.swizzle_context_map = {}
+        self.profile_only_params = True
 
 
 
@@ -35,18 +36,21 @@ class IdentifySwizzles(Property):
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
+            if dsl_inst.name not in ["vsubl_high_u16"]:
+                continue
+
             if self.instruction_may_access_cross_lane(dsl_inst) or True:
                 for num_sources in self.num_input_sources:
                     for target_size in self.synth_desc.get_target_vector_sizes():
                         for ctx in dsl_inst.contexts:
                             candidates.append((dsl_inst, self.get_instrumented_semantics(dsl_inst), num_sources, target_size, ctx))
 
-        candidates = [cand for cand in candidates if "unpack" in cand[0].name ]
+        #candidates = [cand for cand in candidates if "unpack" in cand[0].name ]
 
 
 
-        for cand in candidates:
-            print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3], cand[4].name)
+        #for cand in candidates:
+        #    print(cand[0].name, "num_sources: ", cand[2],"target_size", cand[3], cand[4].name)
 
 
 
@@ -95,7 +99,7 @@ class IdentifySwizzles(Property):
     def get_profiling_name(self, dsl_inst):
         return dsl_inst.name + self.profile_prefix
 
-    def handle_profile_extract(self, extract_call):
+    def handle_profile_extract(self, extract_call, formal_params):
 
         operands = extract_call.split("extract")[-1].split(")")[0].strip().split()
 
@@ -103,6 +107,9 @@ class IdentifySwizzles(Property):
         lo = operands[1]
         arg = operands[2]
 
+
+        if self.profile_only_params and arg not in formal_params:
+            return ""
         return "(printf \"EXTRACT ~a ~a FROM ~a \\n\" {} {} \"{}\")".format(hi, lo, arg)
 
 
@@ -119,6 +126,18 @@ class IdentifySwizzles(Property):
     def get_instrumented_semantics(self, dsl_inst):
         new_sema = []
 
+
+        original_sema = dsl_inst.semantics
+
+        arg_map = self.get_dsl_inst_formal_arg_to_size_map(dsl_inst, dsl_inst.contexts[0])
+        formal_params = [key for key in arg_map]
+        try:
+            # Pre-processing
+            dsl_inst.semantics = inline_nested_extracts_in_sema(dsl_inst.semantics)
+            dsl_inst.semantics = remove_redundant_extracts(dsl_inst.semantics, arg_map)
+        except:
+            dsl_inst.semantics = original_sema
+
         apply_cond = False
         for line_idx, line in enumerate(dsl_inst.semantics):
             if "apply" in line:
@@ -132,7 +151,7 @@ class IdentifySwizzles(Property):
             if dsl_inst.name in line:
                 new_sema.append(line.replace(dsl_inst.name, self.get_profiling_name(dsl_inst)).replace("\"", ""))
             elif "extract" in line:
-                profile_call = self.handle_profile_extract(line)
+                profile_call = self.handle_profile_extract(line, formal_params)
                 new_sema.append(profile_call)
                 new_sema.append(line.replace("\"",""))
                 pass
@@ -289,7 +308,7 @@ class IdentifySwizzles(Property):
 
 
 
-        print(formal_args)
+        #print(formal_args)
         arg_to_size_map = {}
 
         for idx, arg in enumerate(sample_context.context_args):

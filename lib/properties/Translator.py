@@ -103,6 +103,7 @@ class Translator(Property):
                     except:
                         continue
 
+        random.shuffle(expressions)
         return expressions
 
 

@@ -14,6 +14,8 @@ import signal
 import pwd
 from subprocess import check_output
 
+import random
+
 class Property:
     """Abstract class to represent properties for Hydride IR's Equivalence Classes
 
@@ -38,6 +40,7 @@ class Property:
 
     def set_candidates(self, candidates):
         self.candidates = candidates
+        random.shuffle(self.candidates)
 
     def generate_candidates(self):
         raise NotImplementedError()
@@ -145,8 +148,8 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 64
-        POOL_SIZE = 16
+        BATCH_SIZE = 8
+        POOL_SIZE = 8
 
         if self.parallel:
             print("Running Property Inference in Parallel")

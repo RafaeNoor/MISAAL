@@ -48,6 +48,11 @@ HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "hvx",interpreter_name="hvx:in
 bind_name="hvx:bind-expr", printer_name="hvx:hydride-printer", get_prec_name="hvx:get-prec",
 get_length_name="hvx:get-length", target_vector_sizes = [1024, 2048], visitor_name = "hvx:visitor", get_ops_name = "hvx:get-bv-ops")
 
+
+ARM_SYNTH_DESC = CodeSynthesizerDesc(target_name= "arm",interpreter_name="arm:interpret", cost_name= "arm:cost",
+bind_name="arm:bind-expr", printer_name="arm:hydride-printer", get_prec_name="arm:get-prec",
+get_length_name="arm:get-length", target_vector_sizes = [1024, 2048], visitor_name = "arm:visitor", get_ops_name = "arm:get-bv-ops")
+
 HALIDE_X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops")
 
 
