@@ -994,6 +994,153 @@
 )
 
 	]
+[(typed:vec-eq v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:vec-eq_p16_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:vec-eq_p16_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:vec-eq_p32_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:vec-eq_p32_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:vec-eq_p8_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:vec-eq_p8_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:vec-eq")]
+)
+
+	]
+
+	[(typed:signed-vec-le v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:signed-vec-le_p16_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:signed-vec-le_p16_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:signed-vec-le_p32_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:signed-vec-le_p32_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:signed-vec-le_p8_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:signed-vec-le_p8_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'bvsle 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:signed-vec-le")]
+)
+
+	]
+	[(typed:signed-vec-lt v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:signed-vec-lt_p16_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:signed-vec-lt_p16_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:signed-vec-lt_p32_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:signed-vec-lt_p32_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:signed-vec-lt_p8_s1024_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:signed-vec-lt_p8_s2048_signed_1
+ 
+  (remove-duplicates (append (list  'bvslt 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:signed-vec-lt")]
+)
+
+	]
+
+	[(typed:unsigned-vec-le v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:unsigned-vec-le_p16_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:unsigned-vec-le_p16_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:unsigned-vec-le_p32_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:unsigned-vec-le_p32_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:unsigned-vec-le_p8_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:unsigned-vec-le_p8_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'bvule 'bveq 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:unsigned-vec-le")]
+)
+
+	]
+	[(typed:unsigned-vec-lt v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:unsigned-vec-lt_p16_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:unsigned-vec-lt_p16_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:unsigned-vec-lt_p32_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:unsigned-vec-lt_p32_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:unsigned-vec-lt_p8_s1024_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:unsigned-vec-lt_p8_s2048_signed_0
+ 
+  (remove-duplicates (append (list  'bvult 'extract) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:unsigned-vec-lt")]
+)
+
+	]
+[(typed:vec-eq v0 v1 prec_i size_i)
+		(cond 
+		[(and  (equal? prec_i 16) (equal? size_i 1024)); typed:vec-eq_p16_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 16) (equal? size_i 2048)); typed:vec-eq_p16_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 1024)); typed:vec-eq_p32_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 32) (equal? size_i 2048)); typed:vec-eq_p32_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 1024)); typed:vec-eq_p8_s1024_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[(and  (equal? prec_i 8) (equal? size_i 2048)); typed:vec-eq_p8_s2048_signed_None
+ 
+  (remove-duplicates (append (list  'if 'extract 'bveq 'eq) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
+		[else (error "Unable to get ops  for typed:vec-eq")]
+)
+
+	]
+
     [_ (list)]
  )
 )

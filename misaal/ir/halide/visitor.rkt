@@ -287,6 +287,35 @@
              (define v0-visited (typed:halide:visitor v0 fn))
              (fn ( typed:xBroadcast v0-visited size_i prec_i_o num_3 ))
              ]
+
+            [ (typed:signed-vec-le v0 v1 prec_i size_i)
+             (define v0-visited (typed:halide:visitor v0 fn))
+             (define v1-visited (typed:halide:visitor v1 fn))
+             (fn ( typed:signed-vec-le v0-visited v1-visited prec_i size_i ))
+             ]
+            [ (typed:signed-vec-lt v0 v1 prec_i size_i)
+             (define v0-visited (typed:halide:visitor v0 fn))
+             (define v1-visited (typed:halide:visitor v1 fn))
+             (fn ( typed:signed-vec-lt v0-visited v1-visited prec_i size_i ))
+             ]
+
+            [ (typed:unsigned-vec-le v0 v1 prec_i size_i)
+             (define v0-visited (typed:halide:visitor v0 fn))
+             (define v1-visited (typed:halide:visitor v1 fn))
+             (fn ( typed:unsigned-vec-le v0-visited v1-visited prec_i size_i ))
+             ]
+            [ (typed:unsigned-vec-lt v0 v1 prec_i size_i)
+             (define v0-visited (typed:halide:visitor v0 fn))
+             (define v1-visited (typed:halide:visitor v1 fn))
+             (fn ( typed:unsigned-vec-lt v0-visited v1-visited prec_i size_i ))
+             ]
+
+            [ (typed:vec-eq v0 v1 prec_i size_i)
+             (define v0-visited (typed:halide:visitor v0 fn))
+             (define v1-visited (typed:halide:visitor v1 fn))
+             (fn ( typed:vec-eq v0-visited v1-visited prec_i size_i ))
+             ]
+
             [_ (error "Unrecognized expression in typed:halide:visitor" prog)]
             )
   )

@@ -26,10 +26,12 @@
   (define elemT (typed-get-elemT expr))
 
   (cond 
+    [(equal? elemT 'int1) #t]
     [(equal? elemT 'int8) #t]
     [(equal? elemT 'int16) #t]
     [(equal? elemT 'int32) #t]
     [(equal? elemT 'int64) #t]
+    [(equal? elemT 'uint1) #t]
     [(equal? elemT 'uint8) #f]
     [(equal? elemT 'uint16) #f]
     [(equal? elemT 'uint32) #f]
@@ -543,132 +545,132 @@
 
             [(typed:int-imm data prec signed?) (string-append "(LIT " (~s (bitvector->integer data)) " " (~s prec) ")\n") ]
             [ (typed:cast-int v0 prec_i isigned? num_3 prec_o)
-             (string-append "(typed-cast-int " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog isigned?) " " (emit-integer-to-egglog num_3) " " 
+             (string-append "\n(typed-cast-int " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog isigned?) " " (emit-integer-to-egglog num_3) " " 
                             (emit-integer-to-egglog prec_o) ")\n")
              ]
             [ (typed:cast-uint v0 prec_i isigned? num_3 prec_o)
-             (string-append "(typed-cast-uint " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog isigned?) " " (emit-integer-to-egglog num_3) " " 
+             (string-append "\n(typed-cast-uint " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog isigned?) " " (emit-integer-to-egglog num_3) " " 
                             (emit-integer-to-egglog prec_o) ")\n")
              ]
             [ (typed:concat_vectors v0 v1 prec_i_o size_i)
-             (string-append "(typed-concat-vectors " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
+             (string-append "\n(typed-concat_vectors " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
              ]
             [ (typed:signed-vec-abs v0 num_1 prec_i_o)
-             (string-append "(typed-signed-vec-abs " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-abs " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-absd v0 v1 num_2 prec_i_o)
 
-             (string-append "(typed-signed-vec-absd " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-absd " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-div v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-div " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-div " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-halving_add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-max v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-max " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-max " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-min v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-min " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-min " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-mod v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-mod " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-mod " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-mul v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-rounding_halving_add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-rounding_halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-rounding_halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-rounding_mul_shift_right v0 v1 v2 num_3 prec_i_o)
-             (string-append "(typed-signed-vec-rounding_mul_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-expr-to-egglog v2) " " (emit-integer-to-egglog num_3) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-rounding_mul_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-expr-to-egglog v2) " " (emit-integer-to-egglog num_3) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-rounding_shift_right v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-rounding_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-rounding_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-sat-add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-sat-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-sat-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
 
             [ (typed:signed-vec-sat-sub v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-sat-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-sat-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-shr v0 v1 num_2 prec_i_o)
-             (string-append "(typed-signed-vec-shr " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-signed-vec-shr " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:signed-vec-widen-mul v0 v1 prec_i_o size_i)
-             (string-append "(typed-signed-vec-widen-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
+             (string-append "\n(typed-signed-vec-widen-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
              ]
             [ (typed:slice_vectors v0 num_1 num_2 num_3 prec_i_o size_i)
-             (string-append "(typed-slice_vectors " (emit-expr-to-egglog v0)  " " (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog num_2)  " " (emit-integer-to-egglog num_3)  " " (emit-integer-to-egglog prec_i_o)  " "   (emit-integer-to-egglog size_i)")\n")
+             (string-append "\n(typed-slice_vectors " (emit-expr-to-egglog v0)  " " (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog num_2)  " " (emit-integer-to-egglog num_3)  " " (emit-integer-to-egglog prec_i_o)  " "   (emit-integer-to-egglog size_i)")\n")
              ]
             [ (typed:unsigned-vec-absd v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-absd " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-absd " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-div v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-div " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-div " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-halving_add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-max v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-max " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-max " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-min v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-min " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-min " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-mod v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-mod " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-mod " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-mul v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-rounding_halving_add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-rounding_halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-rounding_halving_add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-rounding_mul_shift_right v0 v1 v2 num_3 prec_i_o)
-             (string-append "(typed-unsigned-vec-rounding_mul_shift_right" (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-expr-to-egglog v2) " " (emit-integer-to-egglog num_3) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-rounding_mul_shift_right" (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-expr-to-egglog v2) " " (emit-integer-to-egglog num_3) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-rounding_shift_right v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-rounding_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-rounding_shift_right " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-sat-add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-sat-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-sat-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-sat-sub v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-sat-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-sat-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-shr v0 v1 num_2 prec_i_o)
-             (string-append "(typed-unsigned-vec-shr " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-unsigned-vec-shr " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:unsigned-vec-widen-mul v0 v1 prec_i_o size_i)
-             (string-append "(typed-unsigned-vec-widen-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
+             (string-append "\n(typed-unsigned-vec-widen-mul " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog size_i) ")\n")
              ]
             [ (typed:vec-add v0 v1 num_2 prec_i_o)
-             (string-append "(typed-vec-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-vec-add " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:vec-bwand v0 v1 num_2 prec_i_o)
-             (string-append "(typed-vec-bwand " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-vec-bwand " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:vec-bwnot v0 num_1 prec_i_o)
-             (string-append "(typed-vec-bwnot " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-vec-bwnot " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog num_1) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:vec-saturate v0 prec_i num_2 num_3 prec_o bool_5)
-             (string-append "(typed-vec-saturate " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog num_2) " " (emit-integer-to-egglog num_3) " "  
+             (string-append "\n(typed-vec-saturate " (emit-expr-to-egglog v0) " "  (emit-integer-to-egglog prec_i) " " (emit-bool-to-egglog num_2) " " (emit-integer-to-egglog num_3) " "  
                             (emit-integer-to-egglog prec_o) " "
                             (emit-bool-to-egglog bool_5) " "
                             ")\n")
              ]
             [ (typed:vec-shl v0 v1 num_2 prec_i_o)
-             (string-append "(typed-vec-shl " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-vec-shl " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:vec-sub v0 v1 num_2 prec_i_o)
-             (string-append "(typed-vec-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
+             (string-append "\n(typed-vec-sub " (emit-expr-to-egglog v0) " " (emit-expr-to-egglog v1) " " (emit-integer-to-egglog num_2) " " (emit-integer-to-egglog prec_i_o) ")\n")
              ]
             [ (typed:xBroadcast v0 size_i prec_i_o num_3)
 
-             (string-append "(typed-xBroadcast " (emit-expr-to-egglog v0)  " " (emit-integer-to-egglog size_i) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog num_3)  ")\n")
+             (string-append "\n(typed-xBroadcast " (emit-expr-to-egglog v0)  " " (emit-integer-to-egglog size_i) " " (emit-integer-to-egglog prec_i_o) " " (emit-integer-to-egglog num_3)  ")\n")
              ]
             [_ 
               (println expr)

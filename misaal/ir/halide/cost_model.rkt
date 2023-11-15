@@ -61,6 +61,11 @@
 (define cost_typed:vec-shl 1)
 (define cost_typed:vec-sub 1)
 (define cost_typed:xBroadcast 1)
+(define cost_typed:vec-eq 1)
+(define cost_typed:unsigned-vec-le 1)
+(define cost_typed:unsigned-vec-lt 1)
+(define cost_typed:signed-vec-le 1)
+(define cost_typed:signed-vec-lt 1)
 
 (define (typed:halide:cost prog)
  (destruct prog
@@ -269,6 +274,29 @@
 	]
 	[ (typed:xBroadcast v0 size_i prec_i_o num_3)
 		(+ cost_typed:xBroadcast (typed:halide:cost  v0)  
+		)
+	]
+
+	[ (typed:vec-eq v0 v1 prec_i size_i)
+		(+ cost_typed:vec-eq (typed:halide:cost  v0)  (typed:halide:cost  v1)  
+		)
+	]
+
+	[ (typed:unsigned-vec-le v0 v1 prec_i size_i)
+		(+ cost_typed:unsigned-vec-le (typed:halide:cost  v0)  (typed:halide:cost  v1)  
+		)
+	]
+	[ (typed:unsigned-vec-lt v0 v1 prec_i size_i)
+		(+ cost_typed:unsigned-vec-lt (typed:halide:cost  v0)  (typed:halide:cost  v1)  
+		)
+	]
+
+	[ (typed:signed-vec-le v0 v1 prec_i size_i)
+		(+ cost_typed:signed-vec-le (typed:halide:cost  v0)  (typed:halide:cost  v1)  
+		)
+	]
+	[ (typed:signed-vec-lt v0 v1 prec_i size_i)
+		(+ cost_typed:signed-vec-lt (typed:halide:cost  v0)  (typed:halide:cost  v1)  
 		)
 	]
 	[v  (error "Unrecognized Term in cost model" v)]

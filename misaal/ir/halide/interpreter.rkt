@@ -161,6 +161,18 @@
              (lambda (i) (halide:do-shr ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
 
              ]
+
+            [ (typed:signed-vec-lt v0 v1 num_2 prec_i_o)
+
+             (lambda (i) (halide:do-lt ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
+
+             ]
+
+            [ (typed:signed-vec-le v0 v1 num_2 prec_i_o)
+
+             (lambda (i) (halide:do-le ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
+
+             ]
             [ (typed:signed-vec-widen-mul v0 v1 prec_i_o size_i)
              (lambda (i) (halide:do-widened-mul ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
@@ -211,6 +223,14 @@
             [ (typed:unsigned-vec-shr v0 v1 num_2 prec_i_o)
              (lambda (i) (halide:do-shr ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
+
+            [ (typed:unsigned-vec-le v0 v1 num_2 prec_i_o)
+             (lambda (i) (halide:do-le ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
+             ]
+
+            [ (typed:unsigned-vec-lt v0 v1 num_2 prec_i_o)
+             (lambda (i) (halide:do-lt ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
+             ]
             [ (typed:unsigned-vec-widen-mul v0 v1 prec_i_o size_i)
 
              (lambda (i) (halide:do-widened-mul ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
@@ -246,10 +266,11 @@
              (lambda (i) (halide:do-shl ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
             [ (typed:vec-sub v0 v1 num_2 prec_i_o)
-             (println (typed:halide:get-prec v0 (vector)))
-             (assert (equal? (typed:halide:get-prec v0 (vector)) num_2))
-             (assert (equal? (typed:halide:get-prec v1 (vector)) num_2))
              (lambda (i) (halide:do-sub ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
+             ]
+
+            [ (typed:vec-eq v0 v1 num_2 prec_i_o)
+             (lambda (i) (halide:do-eq ((typed:halide:interpret v0 env) i) ((typed:halide:interpret v1 env) i)))
              ]
             [ (typed:xBroadcast v0 size_i prec_i_o num_3)
                 (lambda (i) ((typed:halide:interpret v0 env) 0))
@@ -260,10 +281,7 @@
 
 
 (define (typed:halide:interpret-hydride expr env)
-  (printf "vec-size ~a\n" (typed:halide:get-length expr env)  )
-  (printf "vec-prec ~a\n" (typed:halide:get-prec expr env)  )
   (define vec-len (/ (typed:halide:get-length expr env) (typed:halide:get-prec expr env)))
-  (printf "vec-len ~a\n" vec-len)
   (halide:assemble-bitvector (typed:halide:interpret expr env) vec-len)
   )
 

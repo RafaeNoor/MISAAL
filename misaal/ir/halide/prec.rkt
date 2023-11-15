@@ -521,9 +521,30 @@
 		(cond 
 		[(and  (equal? size_i 32) (equal? prec_i_o 32) (equal? num_3 32)) 32]
 		[(and  (equal? size_i 32) (equal? prec_i_o 32) (equal? num_3 64)) 32]
-		[else (error "Unable to infer prec for typed:xBroadcast")]
+        [else prec_i_o]
+		;[else (error "Unable to infer prec for typed:xBroadcast")]
 )
 
+	]
+
+	[(typed:vec-eq v0 v1 prec_i_o size_i_o)
+     1
+	]
+
+	[(typed:signed-vec-le v0 v1 prec_i_o size_i_o)
+     1
+	]
+
+	[(typed:signed-vec-lt v0 v1 prec_i_o size_i_o)
+     1
+	]
+
+	[(typed:unsigned-vec-le v0 v1 prec_i_o size_i_o)
+     1
+	]
+
+	[(typed:unsigned-vec-lt v0 v1 prec_i_o size_i_o)
+    1
 	]
 	
 [

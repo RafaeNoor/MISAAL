@@ -509,11 +509,32 @@
 )
 
 	]
+
+	[(typed:vec-eq v0 v1 prec_i_o size_i_o)
+     (/ size_i_o prec_i_o)
+	]
+
+	[(typed:signed-vec-le v0 v1 prec_i_o size_i_o)
+     (/ size_i_o prec_i_o)
+	]
+
+	[(typed:signed-vec-lt v0 v1 prec_i_o size_i_o)
+     (/ size_i_o prec_i_o)
+	]
+
+	[(typed:unsigned-vec-le v0 v1 prec_i_o size_i_o)
+     (/ size_i_o prec_i_o)
+	]
+
+	[(typed:unsigned-vec-lt v0 v1 prec_i_o size_i_o)
+     (/ size_i_o prec_i_o)
+	]
 	[(typed:xBroadcast v0 size_i prec_i_o num_3)
 		(cond 
 		[(and  (equal? size_i 32) (equal? prec_i_o 32) (equal? num_3 32)) 1024]
 		[(and  (equal? size_i 32) (equal? prec_i_o 32) (equal? num_3 64)) 2048]
-		[else (error "Unable to infer length for typed:xBroadcast: "  prog)]
+        [else (* num_3 prec_i_o)]
+		;[else (error "Unable to infer length for typed:xBroadcast: "  prog)]
 )
 
 	]
