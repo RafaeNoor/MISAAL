@@ -1,4 +1,24 @@
-
+import sys
+import time
+import subprocess as sb
+from common.DSLParser import parse_dict
+from x86SemanticsAllArgs import semantcs
+from common.PredefinedDSL import *
+from common.StructDef import StructDef
+from interpreter.InterpreterDef import InterpreterDef
+from utils.CostDef import CostDef
+from utils.GetLengthDef import GetLengthDef
+from utils.GetOutPrecDef import GetOutPrecDef
+from utils.IRPrinter import IRPrinter
+from utils.BindDef import BindDef
+from utils.GetBVOps import GetBVOps
+from Specification import Specification, parse_spec
+from utils.VisitorDef import VisitorDef
+from utils.ScaleDef import ScaleDef
+from utils.GetTargetSpecificNames import GetTargetNames
+from utils.GetSubExpressions import GetSubExpressions
+from utils.ExtractExprDepth import ExtractExprDepth
+from utils.GetVariants import GetVariants
 
 class CodeSynthesizerDesc:
     """Class to capture the names of the various components of Hydride's automatically
@@ -6,7 +26,7 @@ class CodeSynthesizerDesc:
     """
     def __init__(self, target_name = "" ,interpreter_name = "",
     cost_name = "", bind_name = "", printer_name = "",
-    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = ""):
+    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = "", emit_interpreter = False):
         """Constructor
 
         Args:
@@ -28,6 +48,7 @@ class CodeSynthesizerDesc:
         self.visitor_name = visitor_name
         self.get_ops_name = get_ops_name
         self.set_target_name = "(set-target-{})".format(self.target_name)
+        self.emit_interpreter = emit_interpreter
 
     def interpret_expr(self, expr, env_name):
         return "({} {} {})".format(self.interpreter_name, str(expr), env_name)
@@ -36,7 +57,57 @@ class CodeSynthesizerDesc:
         return self.target_vector_sizes
 
 
+    def emit_interpreter_framework(self, dsl_list):
+        sd = StructDef(emit_default = False)
+        idd = InterpreterDef()
+        cd = CostDef()
+#sp = parse_spec(specification)
+        gl = GetLengthDef(get_len_name = self.get_length_name)
+        gp = GetOutPrecDef(get_prec_name = self.get_prec_name)
+        ip = IRPrinter(printer_name = self.printer_name, get_length_name = self.get_length_name, get_prec_name = self.get_prec_name)
+        bd = BindDef(bind_name = self.bind_name)
+        vd = VisitorDef()
+        gbo = GetBVOps(get_ops_name = self.get_ops_name)
 
+        statements = []
+
+        for dsl_inst in dsl_list:
+            statements.append(dsl_inst.get_semantics())
+
+        statements.append(sd.emit_struct_defs(dsl_list))
+        statements.append(cd.emit_cost_model(dsl_list, sd, cost_name = self.cost_name))
+
+        statements.append(idd.emit_interpreter(dsl_list, sd, add_assertions = False, interpret_name = self.interpreter_name))
+
+        statements.append(gl.emit_get_length(dsl_list, sd))
+
+        statements.append(gp.emit_get_prec(dsl_list, sd))
+
+        statements.append(ip.emit_dsl_printer(dsl_list, sd, prog_name = "prog"))
+
+        statements.append(bd.emit_binder(dsl_list ,sd))
+
+        statements.append(vd.emit_visitor(dsl_list, sd, visitor_name = self.visitor_name))
+
+        statements.append(gbo.emit_get_bv_ops(dsl_list, sd))
+
+
+        return "\n".join(statements)
+
+
+
+
+
+
+
+
+
+def create_synth_desc(base_prefix, emit_interpreter, target_sizes):
+    def join(string):
+        return base_prefix +":"+string
+
+    return CodeSynthesizerDesc(target_name = base_prefix, interpreter_name = join("interpret"), cost_name = join("cost"),
+                               bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), emit_interpreter = emit_interpreter)
 
 
 
@@ -51,7 +122,7 @@ get_length_name="hvx:get-length", target_vector_sizes = [1024, 2048], visitor_na
 
 ARM_SYNTH_DESC = CodeSynthesizerDesc(target_name= "arm",interpreter_name="arm:interpret", cost_name= "arm:cost",
 bind_name="arm:bind-expr", printer_name="arm:hydride-printer", get_prec_name="arm:get-prec",
-get_length_name="arm:get-length", target_vector_sizes = [1024, 2048], visitor_name = "arm:visitor", get_ops_name = "arm:get-bv-ops")
+get_length_name="arm:get-length", target_vector_sizes = [32, 64, 128], visitor_name = "arm:visitor", get_ops_name = "arm:get-bv-ops")
 
 HALIDE_X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops")
 

@@ -1,4 +1,5 @@
 import common.Types
+import copy
 import sys
 from common.Types import *
 from  common.Instructions import Context
@@ -306,15 +307,13 @@ def ordered_deduplicate(ls):
     return deduplicated
 
 
-def translate_expression(input_expr, src_language_desc, target_language_desc, input_sizes, input_precs, optimize = True, symbolic = False):
+def translate_expression(input_expr, src_language_desc, target_language_desc, input_sizes, input_precs, optimize = True, symbolic = False, src_language_dsl = [], target_language_dsl = []):
 
     is_simplified = False
     simplified_expr = None
 
     statements = []
 
-    define_input_expr = "(define hydride-expr {})".format(input_expr.emit_context_expr_string())
-    statements.append(define_input_expr)
 
 
     define_input_size = "(define input-sizes (list {}))".format(" ".join(input_sizes))
@@ -330,13 +329,23 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
                           "halide_x86": "'halide",
                           }
 
-    assert src_language_desc.target_name in language_to_symbol, "Src language must be in supported languages"
+    assert src_language_desc.target_name in language_to_symbol or src_language_desc.emit_interpreter, "Src language must be in supported languages"
 
-    assert target_language_desc.target_name in language_to_symbol, "Target language must be in supported languages"
+    assert target_language_desc.target_name in language_to_symbol or target_language_desc.emit_interpreter, "Target language must be in supported languages"
 
-    statements.append("(define src-language {})".format(language_to_symbol[src_language_desc.target_name]))
+    if src_language_desc.emit_interpreter:
+        statements.append(src_language_desc.emit_interpreter_framework(src_language_dsl))
 
-    statements.append("(define target-language {})".format(language_to_symbol[target_language_desc.target_name]))
+
+    if target_language_desc.emit_interpreter and src_language_desc.target_name != target_language_desc.target_name:
+        statements.append(target_language_desc.emit_interpreter_framework(target_language_dsl))
+
+    #statements.append("(define src-language {})".format(language_to_symbol[src_language_desc.target_name]))
+
+    if target_language_desc.emit_interpreter:
+        statements.append("(define target-language {})".format("'"+target_language_desc.target_name))
+    else:
+        statements.append("(define target-language {})".format(language_to_symbol[target_language_desc.target_name]))
 
 
     #(src-interpreter src-cost-fn src-visitor src-length-fn src-prec-fn src-get-ops)
@@ -346,8 +355,11 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
     statements.append("(define target-language-desc (vector {} {} {} {} {} {}))".format(target_language_desc.interpreter_name, target_language_desc.cost_name, target_language_desc.visitor_name, target_language_desc.get_length_name, target_language_desc.get_prec_name, target_language_desc.get_ops_name))
 
     # Set global flags for target
-    statements.append(target_language_desc.set_target_name)
+    if target_language_desc.target_name in language_to_symbol:
+        statements.append(target_language_desc.set_target_name)
 
+    define_input_expr = "(define hydride-expr {})".format(input_expr.emit_context_expr_string())
+    statements.append(define_input_expr)
 
     symbolic_flag = ["#f", "#t"][int(symbolic)]
     opt_flag = ["#f", "#t"][int(optimize)]
@@ -526,6 +538,108 @@ def remove_redundant_extracts(lines, arg_size_map):
     return (updated_lines)
 
 
+
+
+
+def create_exhaustive_expressions(dsl_list, expr_depth):
+
+    # Creates exhaustively all expression up to given depth, however
+    # the name of the registers would contain a place-holder name which would
+    # need to be set correctly later.
+    memo = {}
+    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None, memo = memo)
+
+    print("Setting Register Names")
+
+
+    reg_set_expressions = set_reg_names_exprs(depth_expressions)
+
+
+    return reg_set_expressions
+
+
+def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size = None, return_prec = None, memo = {}):
+
+    key = str((expr_depth, return_size, return_prec))
+
+    #print("Create exhaustive invoked with:", key)
+
+    if expr_depth == 0:
+        assert (return_size != None) and (return_prec != None), "Invalid invokation of create_exhaustive_expressions_helper with 0 depth"
+        return [Reg("placeholder", return_prec, return_size)]
+
+
+
+    if key in memo:
+        #print("Memo Hit:", key, len(memo[key]))
+        return copy.deepcopy(memo[key])
+
+
+    relavent_ctx = []
+    for dsl_inst in dsl_list:
+
+        if return_size == None:
+            relavent_ctx += dsl_inst.contexts
+        else:
+            for ctx in dsl_inst.contexts:
+                if ctx.get_output_size() == return_size and ctx.in_precision == return_prec:
+                    relavent_ctx.append(ctx)
+
+
+
+    return_expressions = []
+    for rctx in relavent_ctx:
+        partial_expressions = [copy.deepcopy(rctx)]
+        for idx, rctx_arg in enumerate(rctx.context_args):
+            if isinstance(rctx_arg, BitVector):
+                child_exprs = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth -1, return_size = rctx_arg.size, return_prec = rctx.in_precision, memo = memo)
+                copied_expressions = []
+                for i in range(len(child_exprs)):
+                    copied_expressions += copy.deepcopy(partial_expressions)
+
+                for i in range(len(child_exprs)):
+                    child_expr = child_exprs[i]
+                    for j in range(len(partial_expressions)):
+                        actual_index = i * len(partial_expressions) + j
+                        copied_expressions[actual_index].context_args[idx] = child_expr
+
+                partial_expressions = copied_expressions
+        return_expressions += partial_expressions
+
+    memo[key] = return_expressions
+
+    return return_expressions
+
+
+def set_reg_names_exprs(expressions):
+
+    results = []
+    for expr in expressions:
+        new_expr, discard = set_reg_names_exprs_helper(expr, 0)
+        results.append(new_expr)
+
+    return results
+
+
+
+
+def set_reg_names_exprs_helper(expr, counter = 0):
+    if isinstance(expr, Reg):
+        new_Reg = Reg(str(counter), expr.precision, expr.size)
+
+        return new_Reg, counter + 1
+
+    if not isinstance(expr, Context):
+        return expr, counter
+
+
+    for idx, arg in enumerate(expr.context_args):
+        updated_arg, updated_counter = set_reg_names_exprs_helper(arg, counter)
+        counter = updated_counter
+        expr.context_args[idx] = updated_arg
+
+
+    return expr, counter
 
 
 

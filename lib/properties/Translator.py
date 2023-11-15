@@ -265,7 +265,7 @@ class Translator(Property):
         # TODO: Change to translate expression with optional optimize flag
         #(is_simplified, simplified_expr) =  simplify_expression(dsl_expression, self.synth_desc, input_sizes, input_precs)
 
-        (is_simplified, simplified_expr) =  translate_expression(dsl_expression, self.source_synth_desc, self.target_synth_desc,input_sizes, input_precs)
+        (is_simplified, simplified_expr) =  translate_expression(dsl_expression, self.source_synth_desc, self.target_synth_desc,input_sizes, input_precs, src_language_dsl = self.input_dsl_list, target_language_dsl = self.output_dsl_list)
 
 
 

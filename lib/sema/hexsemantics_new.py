@@ -6714,4 +6714,29 @@ semantics = {
 "semantics" : ['"(define (hexagon_V6_vdealvdd_128B  Vu Vv Rt %vectsize %outerlanesize %laneoffset0 %innerlanesize0 %laneoffset1 %innerlanesize1 %laneoffset2 %innerlanesize2 %laneoffset3 %innerlanesize3 %arg0 %arg1 %arg2 %arg3 %arg4 %arg5)"','"(define Rt_int (bitvector->integer Rt))"','"(define %elem_size (* (- 0 Rt_int) %arg0))"','"(define Vdd"','"(apply"','"concat"','"(for/list ([%outer.it (reverse (range 0 %vectsize %outerlanesize))])"','"(concat"','"(apply"','"concat"','"(for/list ([%inner.it.0 (reverse (range %laneoffset0 %innerlanesize0 %elem_size))])"','"(define %low.0 (+ %elem_size (* %arg1 %inner.it.0)))"','"(define %high.0 (+ %low.0 (- %elem_size 1)))"','"(define %ext.Vu.0 (extract  %high.0 %low.0 Vu))"','"%ext.Vu.0"','")"','")"','"(apply"','"concat"','"(for/list ([%inner.it.1 (reverse (range %laneoffset1 %innerlanesize1 %elem_size))])"','"(define %low.1 (+ %elem_size (* %arg2 %inner.it.1)))"','"(define %high.1 (+ %low.1 (- %elem_size 1)))"','"(define %ext.Vv.0 (extract  %high.1 %low.1 Vv))"','"%ext.Vv.0"','")"','")"','"(apply"','"concat"','"(for/list ([%inner.it.2 (reverse (range %laneoffset2 %innerlanesize2 %elem_size))])"','"(define %low.2 (* %arg3 %inner.it.2))"','"(define %high.2 (+ %low.2 (- %elem_size 1)))"','"(define %ext.Vu.1 (extract  %high.2 %low.2 Vu))"','"%ext.Vu.1"','")"','")"','"(apply"','"concat"','"(for/list ([%inner.it.3 (reverse (range %laneoffset3 %innerlanesize3 %elem_size))])"','"(define %low.3 (* %arg4 %inner.it.3))"','"(define %high.3 (+ %low.3 (- %elem_size 1)))"','"(define %ext.Vv.1 (extract  %high.3 %low.3 Vv))"','"%ext.Vv.1"','")"','")"','")"','")"','")"','")"','"(bvpadhighbits  Vdd %arg5)"','")"']
 },
 
+ "hexagon_V6_vmpyhvsrs_128B" : {
+        "target_instructions" : {
+          "hexagon_V6_vmpyhvsrs_128B" : {
+              "args" : ["(bv #x00000000000000000000000000000001 32)","(bv #x0000000000000000000000000000000f 32)","(bv #x00000000000000000000000000000002 32)","(bv #x0000000000000000000000000000000f 64)","SYMBOLIC_BV_1024","SYMBOLIC_BV_1024","1024","1024","0","1024","16","32","1","1","1","64","1","1","-1","32","16","1","1","0"],
+              "in_vectsize" : 1024,
+              "out_vectsize" : 1024,
+              "lanesize" : 1024,
+              "in_precision" : 16,
+              "out_precision" : 16,
+              "in_vectsize_index" : 6,
+              "out_vectsize_index" : 6,
+              "in_lanesize_index" : 9,
+              "out_lanesize_index" : 7,
+              "in_precision_index" : 10,
+              "out_precision_index" : 10,
+              "arg_permute_map" : [-1,-1,-1,-1,0,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+              "Signedness" : 1,
+              "Cost" : "None",
+              "SIMD" : "True",
+              "Extensions" : "['hvx']",
+  },
+    },
+      "semantics" : ['"(define (hexagon_V6_vmpyhvsrs_128B  %arg3 %arg4 %arg5 %arg11 Vu Vv %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg0 %arg1 %arg2 %arg6 %arg7 %arg8 %arg9 %arg10 %arg12 %arg13 %arg14 %arg15 %arg16 )"','"(define Vd"','"(apply"','"concat"','"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"','"(apply"','"concat"','"(for/list ([i.new (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"','"(define %lastidx0 (- %elemsize0  1))"','"(define %1 (+  i.new  %lastidx0))"','"(define %2 (extract  %1 i.new Vu))"','"(define %3.ab0 (bvsizeext  %2 %arg0 %arg1))"','"(define %4 (extract  %1 i.new Vv))"','"(define %5.ab0 (bvsizeext  %4 %arg0 %arg2))"','"(define %6 (bvmul  %3.ab0 %5.ab0 )) "','"(define %7 (bvshl  %arg3 %arg4 ))"','"(define %8.ab0 (bvdiv  %7  %arg5 %arg6 ))"','"(define %9.ab0 (bvsizeext  %8.ab0 %arg7 %arg8))"','"(define %10.ab0 (bvsizeext  %6 %arg7 %arg9))"','"(define %11.ab0 (bvaddnw  %9.ab0 %10.ab0 %arg7 %arg10 ))"','"(define %12 (bvashr  %11.ab0 %arg11 ))"','"(define %13.ab0 (bvsaturate  %12 %arg7 %arg12 %arg14 ))"','"(define %14.ab0 (bvsaturate  %13.ab0 %arg12 %arg13 %arg15 ))"','"%14.ab0"','")"','")"','")"','")"','")"','"(bvpadhighbits  Vd %arg16)"','")"','""'],
+  },
+
         }

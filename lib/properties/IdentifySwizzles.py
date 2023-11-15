@@ -36,8 +36,8 @@ class IdentifySwizzles(Property):
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
-            if dsl_inst.name not in ["vsubl_high_u16"]:
-                continue
+            #if dsl_inst.name not in ["vdotq_s32"]:
+            #    continue
 
             if self.instruction_may_access_cross_lane(dsl_inst) or True:
                 for num_sources in self.num_input_sources:
@@ -521,11 +521,11 @@ class IdentifySwizzles(Property):
 
 
 
-            if operand_datum not in inter_shuffle_contexts:
+            if operand_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(operand_datum):
                 inter_shuffle_contexts.append(operand_datum)
 
 
-            if result_datum not in inter_shuffle_contexts:
+            if result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(result_datum) :
                 inter_shuffle_contexts.append(result_datum)
 
 
@@ -688,12 +688,25 @@ class IdentifySwizzles(Property):
                 datum =  {"swizzle_args": shuffle_vector_args,"result_size": a_size, "operand_size": base_vect_size, "prec": prec, "num_sources": num_a_sources, "output_prec": output_prec}
 
                 # Different streams may identify the same swizzle patterns
-                if datum not in intra_shuffle_contexts:
+                if datum not in intra_shuffle_contexts and self.is_swizzle_datum_legal(datum):
                     print(datum)
                     intra_shuffle_contexts.append(datum)
 
 
         return intra_shuffle_contexts
+
+    def is_swizzle_datum_legal(self, datum):
+        result_size = datum['result_size']
+
+        if result_size not in self.synth_desc.target_vector_sizes:
+            return False
+
+        operand_size = datum['operand_size']
+
+        if operand_size not in self.synth_desc.target_vector_sizes:
+            return False
+
+        return True
 
 
 

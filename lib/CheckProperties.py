@@ -8,31 +8,49 @@ from properties.Commutative import *
 from properties.Distributive import *
 from properties.Associative import *
 from properties.SimplifyingIdentity import SimplifyingIdentity
+from properties.IdentifySwizzles import IdentifySwizzles
+from properties.SwizzleTransferable import SwizzleTransferable
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
-from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC
+from sema.halide_sema import halide_semantics
+from sema.hex_swizzles import hvx_swizzles
+from sema.ARMSema import arm_semantics
+from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC
+
 import json
 
-test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity]
-test_properties = [ SimplifyingIdentity]
+test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles]
+#test_properties = [ SimplifyingIdentity]
+test_properties = [Commutative, Associative, Distributive, IdentifySwizzles]
+test_properties = [IdentifySwizzles]
+
+
+
 
 TARGET_TO_SEMA = {
     "x86": x86_semantics,
-    "hvx": hvx_semantics
+    "hvx": hvx_semantics,
+    "halide_hvx": halide_semantics,
+    "arm" : arm_semantics,
 }
 
 
 TARGET_TO_DESC = {
     "x86": X86_SYNTH_DESC,
-    "hvx": HVX_SYNTH_DESC
+    "hvx": HVX_SYNTH_DESC,
+    "halide_hvx": HALIDE_HVX_SYNTH_DESC,
+    "arm": ARM_SYNTH_DESC,
 }
 
 
 
 
 
-TARGETS = ["x86", "hvx"]
+TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
+TARGETS = ["hvx"]
+
+
 
 for property in test_properties:
     for target in TARGETS:
@@ -40,15 +58,22 @@ for property in test_properties:
         synthesizer_desc = TARGET_TO_DESC[target]
         property_result_suffix = "_{}_results".format(target)
 
-        PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
+        PropertyInstance = None
+        if property is SwizzleTransferable:
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, swizzles = parse_dict(hvx_swizzles))
+        else:
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
         PropertyInstance.parallel = True
         property_map = PropertyInstance.get_property()
 
+        break
 
         property_label = target+"_"+PropertyInstance.name
         with open("{}.py".format(PropertyInstance.name+property_result_suffix), "w+") as DumpFile:
             DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
 
+        if "halide" in target:
+            continue
 
         egg_log_name = property_label+"_egg.egg"
 
@@ -62,4 +87,5 @@ for property in test_properties:
             for rule in egg_rules:
                 write_line(seperator)
                 write_line(rule)
+
 

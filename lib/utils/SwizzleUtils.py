@@ -35,6 +35,23 @@ class Swizzle:
         return index
 
 
+    def is_valid(self):
+        # Currently, the way we interpret swizzles may emit an incomplete mask which is unable to generate
+        # the required size. TODO:
+
+        # The number of bits which the shuffle mask provides should be equal to the number of the result bits. Otherwise the swizzle is ambigous.
+        bits_accounted_for = 0
+
+        assert len(self.swizzle_args) == 1, "Expecting single swizzle args context"
+
+        shuffle_mask = self.swizzle_args[0]
+
+        for operand_index, total_index in shuffle_mask:
+            bits_accounted_for += self.input_prec
+
+
+        return bits_accounted_for == self.result_size
+
     def merge_swizzle_context(self, swizzle):
         combined_names = self.names + swizzle.names
         self.names = list(set(combined_names))
@@ -232,6 +249,10 @@ def summarize_distinct_swizzles(swizzle_analysis_result, target_name = "misaal")
                 swizzle_name = "{}_swizzle_{}".format(target_name, sid)
                 sid+= 1
                 swizzle_ctx = parse_swizzle_object(ctx, key, swizzle_name)
+
+                if not swizzle_ctx.is_valid():
+                    print(swizzle_name, "is in valid!")
+                    continue
 
                 existing_match_index = swizzle_ctx.get_matching_swizzle_context_index(swizzles)
 
