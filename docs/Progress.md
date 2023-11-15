@@ -17,3 +17,5 @@
 * Identify swizzle optimizations for movement of operations
 
 * Identify swizzle optimizations for simplification
+
+* More general emit_grammar which takes path to dictionary as a parameter 
