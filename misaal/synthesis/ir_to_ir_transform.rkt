@@ -14,13 +14,18 @@
 
 
 
+(require misaal/synthesis/target_desc)
+(require misaal/synthesis/grammar_utils)
+
+
+
 
 (require hydride/halide)
 
 
 (provide (all-defined-out))
 
-(define (misaal-rewrite-ir spec-expr  starting-depth depth-limit  optimize? symbolic? solver input-sizes input-precs scale-factor src-language-desc target-language-desc cost-model-type target)
+(define (misaal-rewrite-ir spec-expr  starting-depth depth-limit  optimize? symbolic? solver input-sizes input-precs scale-factor src-language-desc target-language-desc cost-model-type target-symbol)
   (debug-log (format "Invoked step-wise-synthesis!\n"))
 
   (define step-limit 5)
@@ -30,8 +35,15 @@
   (define-values 
     (src-interpreter src-cost-fn src-visitor src-length-fn src-prec-fn src-get-ops)
     (cond
-      [(equal? (vector-length src-language-desc) 6)
-       (values (vector-ref src-language-desc 0) (vector-ref src-language-desc 1)  (vector-ref src-language-desc 2) (vector-ref src-language-desc 3) (vector-ref src-language-desc 4) (vector-ref src-language-desc 5))
+      [#t ;(equal? (vector-length src-language-desc) 6)
+       ;(values (vector-ref src-language-desc 0) (vector-ref src-language-desc 1)  (vector-ref src-language-desc 2) (vector-ref src-language-desc 3) (vector-ref src-language-desc 4) (vector-ref src-language-desc 5))
+       (values (target-desc-interpreter src-language-desc)  
+               (target-desc-cost-fn src-language-desc)
+               (target-desc-visitor src-language-desc)
+               (target-desc-length-fn src-language-desc)
+               (target-desc-prec-fn src-language-desc)
+               (target-desc-get-ops-fn src-language-desc)
+               )
        ]
       [else
         (error "Unsupported src language in misaal-rewrite-ir" src-language-desc)
@@ -43,8 +55,16 @@
   (define-values 
     (target-interpreter target-cost-fn target-visitor target-length-fn target-prec-fn target-get-ops)
     (cond
-      [(equal? (vector-length target-language-desc) 6)
-       (values (vector-ref target-language-desc 0) (vector-ref target-language-desc 1)  (vector-ref target-language-desc 2) (vector-ref target-language-desc 3) (vector-ref target-language-desc 4) (vector-ref target-language-desc 5))
+      [#t ;(equal? (vector-length target-language-desc) 6)
+       ;(values (vector-ref target-language-desc 0) (vector-ref target-language-desc 1)  (vector-ref target-language-desc 2) (vector-ref target-language-desc 3) (vector-ref target-language-desc 4) (vector-ref target-language-desc 5))
+
+       (values (target-desc-interpreter target-language-desc)  
+               (target-desc-cost-fn target-language-desc)
+               (target-desc-visitor target-language-desc)
+               (target-desc-length-fn target-language-desc)
+               (target-desc-prec-fn target-language-desc)
+               (target-desc-get-ops-fn target-language-desc)
+               )
        ]
       [else
         (error "Unsupported target language in misaal-rewrite-ir" target-language-desc)
@@ -175,13 +195,16 @@
                                                        ;; get-cost-model step-i, depth d
                                                        (define-values (grammar interpreter cost-model) 
                                                                       (cond
-                                                                        [equal? target 'halide
+                                                                        [(equal? target-symbol 'halide)
+                                                                                (debug-log "Target is Halide IR")
+                                                                                (debug-log target-symbol)
                                                                                 (define-values (inter-grammar inter-interpreter inter-cost-model)
                                                                                                (get-expr-grammar-step-hydride spec-expr base_name src-get-ops src-visitor src-length-fn src-prec-fn input-precs input-sizes (list) expr-VF t d scale-factor))
                                                                                 (values inter-grammar target-interpreter target-cost-fn )
                                                                                 ]
                                                                         [else
-                                                                          (get-expr-grammar-step-hydride spec-expr base_name src-get-ops src-visitor src-length-fn src-prec-fn input-precs input-sizes (list) expr-VF t d scale-factor)
+                                                                          (debug-log "Running custom grammar importer")
+                                                                          (get-expr-grammar-step-misaal spec-expr base_name src-get-ops src-visitor src-length-fn src-prec-fn input-precs input-sizes (list) expr-VF t d scale-factor target-language-desc)
                                                                           ]
                                                                         )
                                                                       )

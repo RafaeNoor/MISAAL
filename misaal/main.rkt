@@ -43,6 +43,8 @@
 ;; Synthesis Utilities
 
 (require misaal/synthesis/ir_to_ir_transform)
+(require misaal/synthesis/target_desc)
+(require misaal/synthesis/grammar_utils)
 
 
 (provide 
@@ -61,5 +63,7 @@
 
 
 (all-from-out misaal/synthesis/ir_to_ir_transform)
+(all-from-out misaal/synthesis/target_desc)
+(all-from-out misaal/synthesis/grammar_utils)
 
   )

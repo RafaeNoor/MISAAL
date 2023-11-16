@@ -350,9 +350,9 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
 
     #(src-interpreter src-cost-fn src-visitor src-length-fn src-prec-fn src-get-ops)
 
-    statements.append("(define src-language-desc (vector {} {} {} {} {} {}))".format(src_language_desc.interpreter_name, src_language_desc.cost_name, src_language_desc.visitor_name, src_language_desc.get_length_name, src_language_desc.get_prec_name, src_language_desc.get_ops_name))
+    statements.append("(define src-language-desc (target-desc {} {} {} {} {} {} \"{}\" \"{}\"))".format(src_language_desc.interpreter_name, src_language_desc.cost_name, src_language_desc.visitor_name, src_language_desc.get_length_name, src_language_desc.get_prec_name, src_language_desc.get_ops_name, src_language_desc.sema_path,  src_language_desc.dict_name))
 
-    statements.append("(define target-language-desc (vector {} {} {} {} {} {}))".format(target_language_desc.interpreter_name, target_language_desc.cost_name, target_language_desc.visitor_name, target_language_desc.get_length_name, target_language_desc.get_prec_name, target_language_desc.get_ops_name))
+    statements.append("(define target-language-desc (target-desc {} {} {} {} {} {} \"{}\" \"{}\"))".format(target_language_desc.interpreter_name, target_language_desc.cost_name, target_language_desc.visitor_name, target_language_desc.get_length_name, target_language_desc.get_prec_name, target_language_desc.get_ops_name, target_language_desc.sema_path, target_language_desc.dict_name))
 
     # Set global flags for target
     if target_language_desc.target_name in language_to_symbol:

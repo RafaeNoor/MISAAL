@@ -1,4 +1,5 @@
 import sys
+import os
 import time
 import subprocess as sb
 from common.DSLParser import parse_dict
@@ -26,7 +27,7 @@ class CodeSynthesizerDesc:
     """
     def __init__(self, target_name = "" ,interpreter_name = "",
     cost_name = "", bind_name = "", printer_name = "",
-    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = "", emit_interpreter = False):
+    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = "", emit_interpreter = False, sema_path = None, dict_name = None):
         """Constructor
 
         Args:
@@ -49,6 +50,8 @@ class CodeSynthesizerDesc:
         self.get_ops_name = get_ops_name
         self.set_target_name = "(set-target-{})".format(self.target_name)
         self.emit_interpreter = emit_interpreter
+        self.sema_path = sema_path
+        self.dict_name = dict_name
 
     def interpret_expr(self, expr, env_name):
         return "({} {} {})".format(self.interpreter_name, str(expr), env_name)
@@ -102,30 +105,31 @@ class CodeSynthesizerDesc:
 
 
 
-def create_synth_desc(base_prefix, emit_interpreter, target_sizes):
+def create_synth_desc(base_prefix, emit_interpreter, target_sizes, sema_path, dict_name):
     def join(string):
         return base_prefix +":"+string
 
     return CodeSynthesizerDesc(target_name = base_prefix, interpreter_name = join("interpret"), cost_name = join("cost"),
-                               bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), emit_interpreter = emit_interpreter)
+                               bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), emit_interpreter = emit_interpreter, sema_path = sema_path, dict_name = dict_name)
 
+MISAAL_SRC =  os.getenv('MISAAL_SRC')
 
 
 X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "x86",interpreter_name="hydride:interpret", cost_name= "hydride:cost",
 bind_name="bind-expr", printer_name="hydride:hydride-printer", get_prec_name="hydride:get-prec",
-                                     get_length_name="hydride:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "hydride:visitor", get_ops_name = "hydride:get-bv-ops")
+                                     get_length_name="hydride:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "hydride:visitor", get_ops_name = "hydride:get-bv-ops", sema_path = os.path.join(MISAAL_SRC, "/lib/sema/x86SemanticsAllArgs.py"), dict_name = "semantcs")
 
 HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "hvx",interpreter_name="hvx:interpret", cost_name= "hvx:cost",
 bind_name="hvx:bind-expr", printer_name="hvx:hydride-printer", get_prec_name="hvx:get-prec",
-get_length_name="hvx:get-length", target_vector_sizes = [1024, 2048], visitor_name = "hvx:visitor", get_ops_name = "hvx:get-bv-ops")
+get_length_name="hvx:get-length", target_vector_sizes = [1024, 2048], visitor_name = "hvx:visitor", get_ops_name = "hvx:get-bv-ops", sema_path = os.path.join(MISAAL_SRC, "/lib/sema/hexsemantics_new.py"), dict_name = "semantics")
 
 
 ARM_SYNTH_DESC = CodeSynthesizerDesc(target_name= "arm",interpreter_name="arm:interpret", cost_name= "arm:cost",
 bind_name="arm:bind-expr", printer_name="arm:hydride-printer", get_prec_name="arm:get-prec",
-get_length_name="arm:get-length", target_vector_sizes = [32, 64, 128], visitor_name = "arm:visitor", get_ops_name = "arm:get-bv-ops")
+get_length_name="arm:get-length", target_vector_sizes = [32, 64, 128], visitor_name = "arm:visitor", get_ops_name = "arm:get-bv-ops" , sema_path = os.path.join(MISAAL_SRC, "/lib/sema/ARMSema.py"), dict_name = "arm_semantics" )
 
-HALIDE_X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops")
+HALIDE_X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [32, 64,128, 256, 512], visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops" , sema_path = os.path.join(MISAAL_SRC,"/lib/sema/halide_sema.py"), dict_name = "halide_semantics")
 
 
-HALIDE_HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [1024, 2048] , visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops")
+HALIDE_HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [1024, 2048] , visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops" , sema_path = os.path.join(MISAAL_SRC,"/lib/sema/halide_sema.py"), dict_name = "halide_semantics" )
 
