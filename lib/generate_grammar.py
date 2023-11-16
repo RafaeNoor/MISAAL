@@ -127,6 +127,16 @@ with open(OUTPUT_GRAMMAR_FILE, "w+") as OutputFile:
     write_to_file(hydride_header)
 
 
+
+
+    for dsl_inst in dsl_list:
+        write_to_file(dsl_inst.get_semantics())
+
+
+    write_to_file(sd.emit_struct_defs(dsl_list))
+
+
+
     syn_class =  [StepWiseSynthesizer, AllInstructionsSynthesizer][0]
 
     syn = syn_class(spec = sp, dsl_operators = dsl_list,
