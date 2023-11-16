@@ -42,7 +42,7 @@
 
   (define spec-file-name (string-append "/tmp/" base_name "_spec.JSON"))
   (write-str-to-file grammar-spec spec-file-name)
-  (define gen-grammar-cmd (string-append PYTHON " " MISAAL-GEN-GRAMMAR-SCRIPT " --spec_name " spec-file-name " --output_path " (path->string grammar-file-name) " --VF  " (~s VF) " --is_shuffle " (~s is_shuffle)  " --step " (~s step-idx) " --depth " (~s depth) " --scale_factor " (~s scale-factor) " --target_dict " (~s (target-desc-sema-path synth-target-desc))  " --dict_name " (~s  (target-desc-dict-name synth-target-desc) ) ))
+  (define gen-grammar-cmd (string-append PYTHON " " MISAAL-GEN-GRAMMAR-SCRIPT " --spec_name " spec-file-name " --output_path " (path->string grammar-file-name) " --VF  " (~s VF) " --is_shuffle " (~s is_shuffle)  " --step " (~s step-idx) " --depth " (~s depth) " --scale_factor " (~s scale-factor) " --target_dict " (~s (target-desc-sema-path synth-target-desc))  " --dict_name " (~s  (target-desc-dict-name synth-target-desc) ) " > /dev/null 2>&1" ))
   (debug-log gen-grammar-cmd)
   (system gen-grammar-cmd)
   )

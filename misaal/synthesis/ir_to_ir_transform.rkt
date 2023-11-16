@@ -130,9 +130,9 @@
 
               (define NUM_THREADS 
                 (cond 
-                  [(<= d 2) 1]
+                  [(<= d 2) 2]
                   [else
-                    1
+                    2
                     ]
                   )
                 )

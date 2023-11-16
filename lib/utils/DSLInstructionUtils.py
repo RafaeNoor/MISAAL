@@ -104,7 +104,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = 10 * 60 # 10 mins
+    TIMEOUT = 15 * 60 # 15 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -125,7 +125,7 @@ def execute_racket_file(statements):
 
 
     print("Completed executing file:\t", filename)
-    #subprocess.run(["rm {}".format(filename)], shell = True)
+    subprocess.run(["rm {}".format(filename)], shell = True)
     return result
 
 
@@ -228,6 +228,7 @@ def simplify_expression(dsl_expr, code_synthesizer_desc, input_sizes, input_prec
     check_simplified = "(> ({} hydride-expr) ({} output-expr))".format(code_synthesizer_desc.cost_name, code_synthesizer_desc.cost_name)
 
     # Write simplified expression to file
+    # TEMPORARY
     serialize_output = "({} output-expr)".format(code_synthesizer_desc.printer_name)
 
     serialize_input = "({} hydride-expr)".format(code_synthesizer_desc.printer_name)
@@ -253,7 +254,7 @@ def simplify_expression(dsl_expr, code_synthesizer_desc, input_sizes, input_prec
         with open(read_out_fname, "r") as ReadFile:
             simplified_expr = ReadFile.read()
 
-        #subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+        subprocess.call("rm -f {}".format(read_out_fname), shell = True)
 
     return (is_simplified, simplified_expr)
 

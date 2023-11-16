@@ -148,7 +148,7 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 8
+        BATCH_SIZE = 16
         POOL_SIZE = 8
 
         if self.parallel:
