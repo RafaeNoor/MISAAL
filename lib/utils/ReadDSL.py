@@ -107,6 +107,9 @@ def get_matching_context(nested_expr, dsl_list):
 
         matching_context_indices = new_matching_context_indices
 
+    if len(matching_context_indices) != 1:
+        print("MATCHING INDICES: ", matching_context_indices)
+        print("Matching dsl_inst: ",matching_dsl_inst.name)
     assert len(matching_context_indices) == 1, "Unable to find matching context in DSL Parsing"
     ctx_copy =  copy.deepcopy(matching_dsl_inst.contexts[matching_context_indices[0]])
 
@@ -141,6 +144,8 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
         else:
             reg_index_term = nested_expr[1]
 
+        if reg_index_term.startswith("#x"):
+            reg_index_term = str(int(reg_index_term[2:], 16))
         reg = Reg(reg_index_term, 8, 8)
 
         return reg

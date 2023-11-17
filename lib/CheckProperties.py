@@ -20,6 +20,7 @@ from sema.ARMSema import arm_semantics
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc
 
+
 from properties.SimplifyingSwizzles import SimplifyingSwizzles
 
 import json
@@ -66,7 +67,7 @@ TARGET_TO_DESC = {
 
 
 TARGETS = ["hvx"]
-test_properties = [SimplifyingSwizzles]
+test_properties = [SwizzleTransferable]
 
 
 for property in test_properties:
@@ -77,19 +78,19 @@ for property in test_properties:
 
         PropertyInstance = None
         if property is SwizzleTransferable:
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, swizzles = parse_dict(hvx_swizzles))
+            swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = swizzle_synth_desc, swizzles = parse_dict(hvx_swizzles))
         elif property is SimplifyingSwizzles:
             swizzle_dict = TARGET_TO_SWIZZLE[target]
             swizzles = parse_dict(swizzle_dict)
             print("Total Swizzle classes: ", len(swizzles))
-            swizzles = swizzles[:2]
 
-            swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes)
+            swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
             PropertyInstance = SimplifyingSwizzles(dsl_list = swizzles, synth_desc = swizzle_synth_desc,input_depth = 2)
 
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
-        PropertyInstance.parallel = False
+        PropertyInstance.parallel = True
         property_map = PropertyInstance.get_property()
 
 

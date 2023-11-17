@@ -244,8 +244,9 @@ class SwizzleTransferable(Property):
 
 
 
+        check_dsl_list = [dsl_inst, swizzle_inst]
 
-        property_holds = check_if_contexts_equal(form_1_expr, form_2_expr, dsl_inst, dsl_inst, vector_args, self.synth_desc)
+        property_holds = check_if_contexts_equal(form_1_expr, form_2_expr, dsl_inst, dsl_inst, vector_args, self.synth_desc, dsl_list = check_dsl_list)
 
         if property_holds.returncode == 0:
             key = self.serialize_candidate(candidate)
@@ -286,11 +287,11 @@ class SwizzleTransferable(Property):
 
 
 
-                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list)
+                input_expression = read_string_to_dsl(input_expression_string, self.dsl_list+self.swizzles)
 
 
 
-                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list)
+                output_expression = read_string_to_dsl(output_expression_string, self.dsl_list+self.swizzles)
 
 
 

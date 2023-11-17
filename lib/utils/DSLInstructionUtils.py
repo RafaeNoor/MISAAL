@@ -8,6 +8,7 @@ import os
 import tempfile
 import glob
 
+REMOVE_RKT_FILES = True
 
 HYDRIDE_HEADER =  """
         #lang rosette
@@ -125,7 +126,8 @@ def execute_racket_file(statements):
 
 
     print("Completed executing file:\t", filename)
-    subprocess.run(["rm {}".format(filename)], shell = True)
+    if REMOVE_RKT_FILES:
+        subprocess.run(["rm {}".format(filename)], shell = True)
     return result
 
 
@@ -147,7 +149,7 @@ def emit_racket_cond(clauses, cases):
     return "\n".join(cond)
 
 
-def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_synthesizer_desc):
+def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_synthesizer_desc, dsl_list = []):
     """Symbollically verifies that ctx1 and ctx2 are equal for provided vector sizes
 
     Args:
@@ -159,12 +161,16 @@ def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_
         code_synthesizer_desc (CodeSynthesizerDesc): Descriptions of Code Synthesizer utilities
     """
 
+
     env_elements = ["(?? (bitvector {}))".format(size) for size in vector_sizes]
 
     create_env = "(define env (vector {}))".format(" ".join(env_elements))
 
-    #create_expr_1 = "(define expr_1 {})".format(emit_context_expr(ctx1, dsl_inst1))
-    #create_expr_2 = "(define expr_2 {})".format(emit_context_expr(ctx2, dsl_inst2))
+    statements = [create_env]
+
+
+    if code_synthesizer_desc.emit_interpreter:
+        statements.append(code_synthesizer_desc.emit_interpreter_framework(dsl_list))
 
 
     create_expr_1 = "(define expr_1 {})".format(ctx1.emit_context_expr_string())
@@ -183,7 +189,7 @@ def check_if_contexts_equal(ctx1, ctx2, dsl_inst1, dsl_inst2,vector_sizes, code_
     "(displayln \"PROPERTY DOES NOT HOLD!\") (exit 1)"])
 
 
-    statements = [create_env, create_expr_1, create_expr_2, cex, print_cex, handler]
+    statements += [create_expr_1, create_expr_2, cex, print_cex, handler]
 
 
 
@@ -254,7 +260,8 @@ def simplify_expression(dsl_expr, code_synthesizer_desc, input_sizes, input_prec
         with open(read_out_fname, "r") as ReadFile:
             simplified_expr = ReadFile.read()
 
-        subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+        if REMOVE_RKT_FILES:
+            subprocess.call("rm -f {}".format(read_out_fname), shell = True)
 
     return (is_simplified, simplified_expr)
 
@@ -283,8 +290,9 @@ def execute_racket_file_and_read_from_file(statements, fname_prefix):
 
 
 
-    subprocess.run(["rm {}".format(racket_file)], shell = True)
-    subprocess.run(["rm {}".format(log_file)], shell = True)
+    if REMOVE_RKT_FILES:
+        subprocess.run(["rm {}".format(racket_file)], shell = True)
+        subprocess.run(["rm {}".format(log_file)], shell = True)
 
     return output
 
@@ -369,7 +377,8 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
 
 
 
-    check_simplified = "solved?"
+    # Hacky fix!
+    check_simplified = "(and solved? (not (equal? (pretty-format hydride-expr) (pretty-format output-expr))))"
 
 
     # Write simplified expression to file
@@ -398,7 +407,8 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
         with open(read_out_fname, "r") as ReadFile:
             simplified_expr = ReadFile.read()
 
-        subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+        if REMOVE_RKT_FILES:
+            subprocess.call("rm -f {}".format(read_out_fname), shell = True)
 
     return (is_simplified, simplified_expr)
 
@@ -644,3 +654,10 @@ def set_reg_names_exprs_helper(expr, counter = 0):
 
 
 
+def get_max_symbolic_args(dsl_inst):
+    max_sym_args = 0
+
+    for ctx in dsl_inst.contexts:
+        max_sym_args = max(max_sym_args, len([arg for arg in ctx.context_args if isinstance(arg, BitVector)]))
+
+    return max_sym_args

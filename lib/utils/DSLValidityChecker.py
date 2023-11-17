@@ -48,12 +48,19 @@ def check_validity_inst(dsl_inst):
 
 def check_validity(dsl_list):
 
+
     statements= []
+
+    contexts = 0
+    for dsl_inst in dsl_list:
+        contexts += len(dsl_inst.contexts)
+    print("{} DSL Instructions with {} contexts ...".format(len(dsl_list), contexts))
+
     for dsl_inst in dsl_list:
         inst_validity = check_validity_inst(dsl_inst)
 
         for idx, validity in enumerate(inst_validity):
-            statements.append("Validity of {}: {}".format(dsl_inst.contexts[idx], validity))
+            statements.append("Validity of {}:\t{}".format(dsl_inst.contexts[idx].name, validity))
 
     for stmt in statements:
         print(stmt)

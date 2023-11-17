@@ -30,6 +30,11 @@ class Swizzle:
             if swizzle.output_prec != self.output_prec:
                 continue
 
+            # TODO: Should we check if masks are the same?
+            if swizzle.swizzle_args[0] != self.swizzle_args[0]:
+                continue
+
+
             index = idx
 
         return index
