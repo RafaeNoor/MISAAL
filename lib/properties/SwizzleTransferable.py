@@ -167,10 +167,20 @@ class SwizzleTransferable(Property):
 
     def get_swizzle_operand_index(self, swizzle_ctx):
 
+        assert isinstance(swizzle_ctx, Context), "Expected Swizzle context!"
         for idx, arg in enumerate(swizzle_ctx.context_args):
             if isinstance(arg, BitVector):
                 return idx
         return -1
+
+    def get_swizzle_operand_indicies(self, swizzle_ctx):
+
+        indicies = []
+        assert isinstance(swizzle_ctx, Context), "Expected Swizzle context!"
+        for idx, arg in enumerate(swizzle_ctx.context_args):
+            if isinstance(arg, BitVector):
+                indicies.append(idx)
+        return indicies
 
     def property_holds_on_candidate(self, candidate):
 

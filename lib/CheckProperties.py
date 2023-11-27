@@ -10,6 +10,8 @@ from properties.Associative import *
 from properties.SimplifyingIdentity import SimplifyingIdentity
 from properties.IdentifySwizzles import IdentifySwizzles
 from properties.SwizzleTransferable import SwizzleTransferable
+from properties.SynthSwizzleTransferable import SynthSwizzleTransferable
+from properties.FusedSwizzleTranslator import FusedSwizzleTranslator
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
@@ -29,7 +31,7 @@ import sys
 import json
 
 TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
-test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable]
+test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
 
 
 
@@ -67,7 +69,7 @@ TARGET_TO_DESC = {
 
 
 TARGETS = ["hvx"]
-test_properties = [SwizzleTransferable]
+test_properties = [SynthSwizzleTransferable, FusedSwizzleTranslator]
 
 
 for property in test_properties:
@@ -88,6 +90,16 @@ for property in test_properties:
             swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
             PropertyInstance = SimplifyingSwizzles(dsl_list = swizzles, synth_desc = swizzle_synth_desc,input_depth = 2)
 
+        elif property is SynthSwizzleTransferable:
+            swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = swizzle_synth_desc, swizzles = parse_dict(hvx_swizzles))
+
+        elif property is FusedSwizzleTranslator:
+            swizzle_dict = TARGET_TO_SWIZZLE[target]
+            swizzles = parse_dict(swizzle_dict)
+            print("Total Swizzle classes: ", len(swizzles))
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, shuffle_deriviation_map_path="hvx_swizzle_derivation_map.JSON", swizzles = swizzles )
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
         PropertyInstance.parallel = True
@@ -97,6 +109,8 @@ for property in test_properties:
         property_label = target+"_"+PropertyInstance.name
         with open("{}.py".format(PropertyInstance.name+property_result_suffix), "w+") as DumpFile:
             DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
+
+        continue
 
         if "halide" in target:
             continue

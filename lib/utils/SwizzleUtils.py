@@ -1,5 +1,6 @@
 import string
 import copy
+import json
 
 
 
@@ -270,10 +271,17 @@ def summarize_distinct_swizzles(swizzle_analysis_result, target_name = "misaal")
 
     print("Number of Distinct Swizzle Classes: ", len(swizzles))
 
+    derivation_map = {}
+
     intrins = []
     for swizzle in swizzles:
+        derivation_map[swizzle.name] = swizzle.names
         swizzle.interpret_swizzle_context()
         intrins.append(swizzle.create_xml_for_swizzle())
+
+
+    with open(target_name+"_"+"swizzle_derivation_map.JSON","w+") as JSONFile:
+        JSONFile.write(json.dumps(derivation_map, indent = 4))
 
 
     with open(target_name+"_"+"swizzles.xml", "w+") as XMLFile:

@@ -52,6 +52,7 @@ class CodeSynthesizerDesc:
         self.emit_interpreter = emit_interpreter
         self.sema_path = sema_path
         self.dict_name = dict_name
+        self.emit_sema = True
 
     def interpret_expr(self, expr, env_name):
         return "({} {} {})".format(self.interpreter_name, str(expr), env_name)
@@ -74,11 +75,12 @@ class CodeSynthesizerDesc:
 
         statements = []
 
-        for dsl_inst in dsl_list:
-            statements.append(dsl_inst.get_semantics())
+        if self.emit_sema:
+            for dsl_inst in dsl_list:
+                statements.append(dsl_inst.get_semantics())
 
-        statements.append(sd.emit_struct_defs(dsl_list))
-        statements.append(cd.emit_cost_model(dsl_list, sd, cost_name = self.cost_name))
+            statements.append(sd.emit_struct_defs(dsl_list))
+        statements.append(cd.emit_cost_model(dsl_list, sd, cost_name = self.cost_name, use_label = self.emit_sema))
 
         statements.append(idd.emit_interpreter(dsl_list, sd, add_assertions = False, interpret_name = self.interpreter_name))
 

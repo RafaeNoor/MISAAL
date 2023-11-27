@@ -96,48 +96,50 @@ def generate_parameter_map(expr1, expr2, input_map = None, reverse_map = None):
 
 
 
-    for idx, e1 in enumerate(expr1.context_args):
+    if isinstance(expr1, Context):
+        for idx, e1 in enumerate(expr1.context_args):
 
-        if isinstance(e1, Context):
-            updated_map , updated_reverse_map = generate_parameter_map(e1, expr2, input_map = current_map, reverse_map = current_reverse_map)
-            current_map, current_reverse_map  = updated_map, updated_reverse_map
-        elif isinstance(e1, Reg) or isinstance(e1, ConstBitVector):
-            serialized_name = serialize_operand_for_param_map(expr1, e1)
-            current_map[serialized_name] = serialized_name
-            current_reverse_map[serialized_name] = e1
-        else:
-            serialized_name = serialize_operand_for_param_map(expr1, e1)
-            matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e1)
-            if matching_arg_name != None:
-                current_map[serialized_name] = current_map[matching_arg_name]
-            else:
-
+            if isinstance(e1, Context):
+                updated_map , updated_reverse_map = generate_parameter_map(e1, expr2, input_map = current_map, reverse_map = current_reverse_map)
+                current_map, current_reverse_map  = updated_map, updated_reverse_map
+            elif isinstance(e1, Reg) or isinstance(e1, ConstBitVector):
+                serialized_name = serialize_operand_for_param_map(expr1, e1)
                 current_map[serialized_name] = serialized_name
                 current_reverse_map[serialized_name] = e1
+            else:
+                serialized_name = serialize_operand_for_param_map(expr1, e1)
+                matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e1)
+                if matching_arg_name != None:
+                    current_map[serialized_name] = current_map[matching_arg_name]
+                else:
+
+                    current_map[serialized_name] = serialized_name
+                    current_reverse_map[serialized_name] = e1
 
 
 
     # Repeat for expression expr2. TODO: Refactor into single loop
 
-    for idx, e2 in enumerate(expr2.context_args):
+    if isinstance(expr2, Context):
+        for idx, e2 in enumerate(expr2.context_args):
 
-        if isinstance(e2, Context):
-            updated_map , updated_reverse_map = generate_parameter_map(expr1, e2, input_map = current_map, reverse_map = current_reverse_map)
-            current_map, current_reverse_map  = updated_map, updated_reverse_map
-        elif isinstance(e2, Reg) or isinstance(e2, ConstBitVector):
-            serialized_name = serialize_operand_for_param_map(expr2, e2)
-            current_map[serialized_name] = serialized_name
-            current_reverse_map[serialized_name] = e2
-        else:
-
-
-            serialized_name = serialize_operand_for_param_map(expr2, e2)
-            matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e2)
-            if matching_arg_name != None:
-                current_map[serialized_name] = current_map[matching_arg_name]
-            else:
+            if isinstance(e2, Context):
+                updated_map , updated_reverse_map = generate_parameter_map(expr1, e2, input_map = current_map, reverse_map = current_reverse_map)
+                current_map, current_reverse_map  = updated_map, updated_reverse_map
+            elif isinstance(e2, Reg) or isinstance(e2, ConstBitVector):
+                serialized_name = serialize_operand_for_param_map(expr2, e2)
                 current_map[serialized_name] = serialized_name
                 current_reverse_map[serialized_name] = e2
+            else:
+
+
+                serialized_name = serialize_operand_for_param_map(expr2, e2)
+                matching_arg_name = find_arg_with_same_value(current_map, current_reverse_map, e2)
+                if matching_arg_name != None:
+                    current_map[serialized_name] = current_map[matching_arg_name]
+                else:
+                    current_map[serialized_name] = serialized_name
+                    current_reverse_map[serialized_name] = e2
 
 
     return current_map, current_reverse_map

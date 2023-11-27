@@ -372,7 +372,7 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
 
     symbolic_flag = ["#f", "#t"][int(symbolic)]
     opt_flag = ["#f", "#t"][int(optimize)]
-    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 2 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
+    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 3 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
     statements.append(define_out_expr)
 
 
