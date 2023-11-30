@@ -19,17 +19,37 @@ class FusedSwizzleTranslator(Translator):
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+
+        # Temporary testing
+        #dsl_list = [dsl_inst for dsl_inst in dsl_list if "hexagon_V6_vmpybv_128B"  in dsl_inst.name]
+
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list ,
                          num_iterations = num_iterations, input_depth = input_depth, permute_limit = permute_limit, exhaustive = exhaustive)
         self.name = "FusedSwizzleTranslator"
         self.swizzles = swizzles
 
         # Maps names of swizzle contexts to source language contexts
-        self.shuffle_deriviation_map = json.load(open(shuffle_deriviation_map_path))
+        self.shuffle_deriviation_map = self.merge_derivation_map(json.load(open(shuffle_deriviation_map_path)))
 
 
 
 
+    def merge_derivation_map(self, d_map):
+
+        pairs = []
+        # Merge hvx_swizzle_1 and hvx_swizzle_152
+        pairs.append(('hvx_swizzle_1', 'hvx_swizzle_152'))
+
+        # Merge hvx_swizzle_44 and hvx_swizzle_0
+        pairs.append(('hvx_swizzle_44', 'hvx_swizzle_0'))
+
+        for (sw1, sw2) in pairs:
+            combined = d_map[sw1] + d_map[sw2]
+            combined = list(set(combined))
+            d_map[sw1] = combined
+            d_map[sw2] = combined
+
+        return d_map
 
 
     def get_property_desc(self):
@@ -40,8 +60,8 @@ class FusedSwizzleTranslator(Translator):
             for ctx in dsl_inst.contexts:
                 if ctx.name == name:
                     return ctx, dsl_inst
-        assert False, "Unable to find ctx by name:\t" + name
-        return None
+        #assert False, "Unable to find ctx by name:" + name
+        return None, None
 
 
 
@@ -63,11 +83,32 @@ class FusedSwizzleTranslator(Translator):
         for swc in swizzle_contexts:
             relavent_insts_name = self.shuffle_deriviation_map[swc.name]
 
+
+
             for rin in relavent_insts_name:
                 ctx, parent_inst = self.get_context_by_name(rin)
 
-                candidates.append((swc, ctx, True))
-                candidates.append((swc, ctx, False))
+                if ctx == None:
+                    continue
+
+
+                expr_input_precision = ctx.in_precision
+                swizzle_input_precision = swc.in_precision
+
+                expr_output_size = ctx.out_vectsize
+                swizzle_output_size = swc.out_vectsize
+
+                expr_input_size = ctx.in_vectsize
+                swizzle_input_size = swc.in_vectsize
+
+                if  swizzle_input_size == expr_output_size:
+                    # If we want to swizzle result, then we must check that
+                    # the result of the operation has the same type as the input to the swizzle
+                    candidates.append((swc, ctx, False))
+
+                if  swizzle_output_size == expr_input_size:
+                    candidates.append((swc, ctx, True))
+
 
 
 
@@ -237,7 +278,7 @@ class FusedSwizzleTranslator(Translator):
 
 
         if is_simplified:
-            self.simplify_map[self.serialize_candidate(candidate)] = simplified_expr
+            self.simplify_map[self.serialize_candidate(candidate)] = (spec_expr, simplified_expr)
 
 
 

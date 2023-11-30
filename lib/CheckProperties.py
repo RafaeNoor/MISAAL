@@ -69,7 +69,7 @@ TARGET_TO_DESC = {
 
 
 TARGETS = ["hvx"]
-test_properties = [SynthSwizzleTransferable, FusedSwizzleTranslator]
+test_properties = [SynthSwizzleTransferable, FusedSwizzleTranslator][1:]
 
 
 for property in test_properties:
