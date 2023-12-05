@@ -148,8 +148,8 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 128
-        POOL_SIZE = 32
+        BATCH_SIZE = 384
+        POOL_SIZE = min(74, BATCH_SIZE)
 
         if self.parallel:
             print("Running Property Inference in Parallel")

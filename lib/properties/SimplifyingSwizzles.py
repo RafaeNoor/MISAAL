@@ -15,7 +15,7 @@ class SimplifyingSwizzles(Translator):
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
-        #dsl_list = [dsl_inst for dsl_inst in dsl_list if get_max_symbolic_args(dsl_inst) <= 2]
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if get_max_symbolic_args(dsl_inst) <= 2]
 
         print("DSL Inst: ", len(dsl_list))
 

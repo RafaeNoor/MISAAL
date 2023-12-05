@@ -121,8 +121,8 @@ class SwizzleTransferable(Property):
 
             # Only include those pairs which
             # have the same size as the output size
-            if ctx.get_output_size() != arg.size:
-                continue
+            #if ctx.get_output_size() != arg.size:
+            #    continue
 
             size_key = str(arg.size)
 

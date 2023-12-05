@@ -12,6 +12,7 @@ class IdentifySwizzles(Property):
         self.num_input_sources = num_input_sources
         self.swizzle_context_map = {}
         self.profile_only_params = True
+        self.elem_bitwidths = [8, 16, 32]
 
 
 
@@ -36,6 +37,8 @@ class IdentifySwizzles(Property):
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
+            if dsl_inst.has_bounded_behavior():
+                dsl_inst = convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst)
             #if dsl_inst.name not in ["vdotq_s32"]:
             #    continue
 
@@ -358,6 +361,7 @@ class IdentifySwizzles(Property):
 
         shuffle_contexts = []
 
+        #TEMP UNCOMMENT
         shuffle_contexts += self.generate_intra_iteration_access_swizzle(var_to_size_map, streams,  max_distinct_inputs, target_vector_sizes, input_prec, output_prec)
 
         combine_slices = self.does_inst_sema_combine_slices(dsl_inst)
@@ -510,6 +514,8 @@ class IdentifySwizzles(Property):
 
 
 
+
+
             result_datum = {}
 
 
@@ -527,6 +533,28 @@ class IdentifySwizzles(Property):
 
             if result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(result_datum) :
                 inter_shuffle_contexts.append(result_datum)
+
+
+            # Adding doubling of precision (and register bitwidth)
+            DOUBLE_KEYS = ['result_size', 'prec', 'operand_size', 'output_prec']
+
+            if input_prec * 2 in self.elem_bitwidths:
+                doubled_operand_datum = copy.deepcopy(operand_datum)
+                for key in DOUBLE_KEYS:
+                    doubled_operand_datum[key] = operand_datum[key] * 2
+
+                if doubled_operand_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(doubled_operand_datum):
+                    inter_shuffle_contexts.append(doubled_operand_datum)
+
+
+            if output_prec * 2 in self.elem_bitwidths:
+                doubled_result_datum = copy.deepcopy(result_datum)
+                for key in DOUBLE_KEYS:
+                    doubled_result_datum[key] = result_datum[key] * 2
+
+                if doubled_result_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(doubled_result_datum):
+                    inter_shuffle_contexts.append(doubled_result_datum)
+
 
 
         return inter_shuffle_contexts

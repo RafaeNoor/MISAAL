@@ -8,8 +8,7 @@ import os
 import tempfile
 import glob
 
-REMOVE_RKT_FILES = True
-
+REMOVE_RKT_FILES = False
 HYDRIDE_HEADER =  """
         #lang rosette
         (require rosette/lib/synthax)
@@ -105,13 +104,14 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = 15 * 60 # 15 mins
+    TIMEOUT = int(2 * 60) # 15 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
                                 stdout = subprocess.DEVNULL,
                                 stderr = subprocess.DEVNULL,
-                                timeout = TIMEOUT)
+                                timeout = TIMEOUT
+                                )
 
     except KeyboardInterrupt:
         sys.exit()
@@ -404,11 +404,17 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
     is_simplified = execute_racket_file(statements).returncode == 0
 
     if is_simplified:
+        print("Simplied expression!")
         with open(read_out_fname, "r") as ReadFile:
             simplified_expr = ReadFile.read()
 
+        print(input_expr.emit_context_expr_string())
+        print("to")
+        print(simplified_expr)
+
         if REMOVE_RKT_FILES:
-            subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+            #subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+            pass
 
     return (is_simplified, simplified_expr)
 
@@ -554,11 +560,12 @@ def remove_redundant_extracts(lines, arg_size_map):
 
 def create_exhaustive_expressions(dsl_list, expr_depth):
 
+    print("create_exhaustive_expressions with depth", expr_depth)
     # Creates exhaustively all expression up to given depth, however
     # the name of the registers would contain a place-holder name which would
     # need to be set correctly later.
     memo = {}
-    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None, memo = memo)
+    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo)
 
     print("Setting Register Names")
 
@@ -617,6 +624,9 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
                 partial_expressions = copied_expressions
         return_expressions += partial_expressions
 
+    if return_size != None:
+        return_expressions += [Reg("placeholder", return_prec, return_size)]
+
     memo[key] = return_expressions
 
     return return_expressions
@@ -661,3 +671,24 @@ def get_max_symbolic_args(dsl_inst):
         max_sym_args = max(max_sym_args, len([arg for arg in ctx.context_args if isinstance(arg, BitVector)]))
 
     return max_sym_args
+
+
+def convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst):
+    assert dsl_inst.has_bounded_behavior(), "Instruction must be bounded"
+
+    ctx = dsl_inst.contexts[0]
+    precs = [int(k) for k in ctx.in_bound_map]
+
+    new_ctxs = []
+    for prec in precs:
+        ctx_copy = copy.deepcopy(ctx)
+        ctx_copy.specialize_context_bounded(prec)
+        new_ctxs.append(ctx_copy)
+
+    updated_inst = copy.deepcopy(dsl_inst)
+    updated_inst.contexts = new_ctxs
+
+    return updated_inst
+
+
+

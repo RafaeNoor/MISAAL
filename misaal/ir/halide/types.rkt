@@ -16,7 +16,7 @@
 
 
 ;; Generalized Broadcast
-(struct typed:xBroadcast (sca prec size factor) #:transparent)
+(struct typed:xBroadcast (sca prec size factor) #:transparent #:mutable)
 (struct typed:int-imm (data prec signed?) #:transparent #:mutable)
 
 (struct typed:ramp (base stride len) #:transparent)

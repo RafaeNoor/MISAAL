@@ -13,6 +13,14 @@ class SynthSwizzleTransferable(SwizzleTransferable):
 
 
     def __init__(self, dsl_list = [], synth_desc = None, swizzles = []):
+
+        testing_list = [
+                        "hexagon_V6_vmpybv_128B",
+        ]
+
+        # Temporary testing
+        #dsl_list = [dsl_inst for dsl_inst in dsl_list if  dsl_inst.name in testing_list]
+
         super().__init__( dsl_list = dsl_list, synth_desc = synth_desc, swizzles = swizzles)
         self.name = "SynthSwizzleTransfer"
 
@@ -80,10 +88,17 @@ class SynthSwizzleTransferable(SwizzleTransferable):
         # check if they are equal symbolically
 
 
-        swizzle = self.get_type_legal_swizzle(swizzle_inst, bv_size, input_precision)
+        swizzle = None
+        if apply_on_result:
+            swizzle = self.get_type_legal_swizzle(swizzle_inst, sample_ctx.out_vectsize, sample_ctx.out_precision)
+        else:
+            swizzle = self.get_type_legal_swizzle(swizzle_inst, bv_size, input_precision)
+
+
         if swizzle is None:
             return False
 
+        print("Using {} for eq class {} in swizzle".format(swizzle.name, swizzle_inst.name))
         # Form 1: (swizzle (+ reg_0 reg_1) )
         # Form 1: (swizzle (+ reg_0 reg_1) (+ reg_2 reg_3))
         # Form 1: Swizzle on result of operations
@@ -157,6 +172,12 @@ class SynthSwizzleTransferable(SwizzleTransferable):
         # except the current swizzle being used in spec. This way we can synthesize the change of
         # instructions when swizzle is happening
         combined_list = self.dsl_list + [sw for sw in self.swizzles if sw.name != swizzle_inst.name]
+
+        # Create a copy of the current swizzle_inst equivlance class which excludes the context currently being used
+        sw_copy = copy.deepcopy(swizzle_inst)
+        sw_copy.contexts = [ctx for ctx in swizzle_inst.contexts if ctx.name != swizzle.name]
+        combined_list.append(sw_copy)
+
 
         base_prefix = "dict_"+ next(tempfile._get_candidate_names())
 

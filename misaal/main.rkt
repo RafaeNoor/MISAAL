@@ -38,6 +38,7 @@
 (require misaal/ir/halide/get_ops)
 (require misaal/ir/halide/cost_model)
 (require misaal/ir/halide/utils)
+(require misaal/ir/halide/semantics)
 
 
 ;; Synthesis Utilities
@@ -59,6 +60,7 @@
 (all-from-out misaal/ir/halide/get_ops)
 (all-from-out misaal/ir/halide/cost_model)
 (all-from-out misaal/ir/halide/utils)
+(all-from-out misaal/ir/halide/semantics)
 
 
 

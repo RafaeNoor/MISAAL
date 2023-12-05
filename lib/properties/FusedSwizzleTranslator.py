@@ -20,13 +20,18 @@ class FusedSwizzleTranslator(Translator):
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
 
+        testing_list = [
+                        #"hexagon_V6_vshuffh_128B",
+                        "hexagon_V6_vmpybv_128B",
+        ]
         # Temporary testing
-        #dsl_list = [dsl_inst for dsl_inst in dsl_list if "hexagon_V6_vmpybv_128B"  in dsl_inst.name]
+        #dsl_list = [dsl_inst for dsl_inst in dsl_list if  dsl_inst.name in testing_list]
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list ,
                          num_iterations = num_iterations, input_depth = input_depth, permute_limit = permute_limit, exhaustive = exhaustive)
         self.name = "FusedSwizzleTranslator"
         self.swizzles = swizzles
+
 
         # Maps names of swizzle contexts to source language contexts
         self.shuffle_deriviation_map = self.merge_derivation_map(json.load(open(shuffle_deriviation_map_path)))
@@ -34,20 +39,72 @@ class FusedSwizzleTranslator(Translator):
 
 
 
+
     def merge_derivation_map(self, d_map):
 
+
+        # If a swizzle S is derived from a context C, belonging to equivlance class E
+        # merge add all other contexts of in E for C.
+
+        for idx,swc in enumerate(d_map):
+            orig_contexts = copy.deepcopy(d_map[swc])
+            contexts = d_map[swc]
+
+
+
+            for c in orig_contexts:
+                ctx, dsl_inst = self.get_context_by_name(c)
+                if dsl_inst is None:
+                    continue
+                e_class_members = [dsl_ctx.name for dsl_ctx in dsl_inst.contexts]
+                contexts += e_class_members
+
+            contexts = list(set(contexts))
+
+            d_map[swc] = contexts
+
+
+
         pairs = []
-        # Merge hvx_swizzle_1 and hvx_swizzle_152
-        pairs.append(('hvx_swizzle_1', 'hvx_swizzle_152'))
 
-        # Merge hvx_swizzle_44 and hvx_swizzle_0
-        pairs.append(('hvx_swizzle_44', 'hvx_swizzle_0'))
 
+        name = lambda x : "hvx_swizzle_{}".format(x)
+
+        def add_pair(lhs, rhs):
+            pairs.append((name(lhs), name(rhs)))
+
+        hi_lo = [41, 0, 2, 29, 43]
+        even_odd = [1,3,16,18,122,124]
+
+        def gen_pairs(ls):
+            for i in range(len(ls)):
+                for j in range(i+1, len(ls)):
+                    add_pair(ls[i], ls[j])
+
+
+        gen_pairs(hi_lo)
+        gen_pairs(even_odd)
+
+
+        keys = []
         for (sw1, sw2) in pairs:
+            keys += [sw1, sw2]
             combined = d_map[sw1] + d_map[sw2]
             combined = list(set(combined))
             d_map[sw1] = combined
             d_map[sw2] = combined
+
+
+
+
+
+
+
+
+
+
+
+
 
         return d_map
 
@@ -86,6 +143,9 @@ class FusedSwizzleTranslator(Translator):
 
 
             for rin in relavent_insts_name:
+                #if rin != "hexagon_V6_vmpybv_128B":
+                #    continue
+
                 ctx, parent_inst = self.get_context_by_name(rin)
 
                 if ctx == None:

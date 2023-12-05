@@ -928,10 +928,10 @@ semantics = {
             "target_instructions" : {
               "hexagon_V6_pred_and_128B" : {
                   "args" : ["SYMBOLIC_BV_128","SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" : 1,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 2,
@@ -1741,12 +1741,12 @@ semantics = {
             "target_instructions" : {
               "hexagon_V6_vinsertwr_128B" : {
                   "args" : ["SYMBOLIC_BV_32","32","32","0","32","32","0","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 32,
                   "out_vectsize" : 1024,
                   "lanesize" : 32,
-                  "in_precision" : None,
+                  "in_precision" : 32,
                   "out_precision" : 32,
-                  "in_vectsize_index" : None,
+                  "in_vectsize_index" : 1,
                   "out_vectsize_index" : 1,
                   "in_lanesize_index" : 4,
                   "out_lanesize_index" : 2,
@@ -4295,10 +4295,10 @@ semantics = {
 
               "hexagon_V6_pred_or_128B" : {
                   "args" : ["SYMBOLIC_BV_128","SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" :1 ,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 2,
@@ -4648,10 +4648,10 @@ semantics = {
             "target_instructions" : {
               "hexagon_V6_pred_xor_128B" : {
                   "args" : ["SYMBOLIC_BV_128","SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" : 1,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 2,
@@ -5218,10 +5218,10 @@ semantics = {
             "target_instructions" : {
               "hexagon_V6_pred_and_n_128B" : {
                   "args" : ["SYMBOLIC_BV_128","SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" : 1,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 2,
@@ -6593,10 +6593,10 @@ semantics = {
 
               "hexagon_V6_pred_not_128B" : {
                   "args" : ["SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" : 1,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 1,
@@ -6618,10 +6618,10 @@ semantics = {
             "target_instructions" : {
               "hexagon_V6_pred_or_n_128B" : {
                   "args" : ["SYMBOLIC_BV_128","SYMBOLIC_BV_128","128","128","0","128","1","0"],
-                  "in_vectsize" : None,
+                  "in_vectsize" : 128,
                   "out_vectsize" : 128,
                   "lanesize" : 128,
-                  "in_precision" : None,
+                  "in_precision" : 1,
                   "out_precision" : 1,
                   "in_vectsize_index" : None,
                   "out_vectsize_index" : 2,
@@ -6737,6 +6737,59 @@ semantics = {
   },
     },
       "semantics" : ['"(define (hexagon_V6_vmpyhvsrs_128B  %arg3 %arg4 %arg5 %arg11 Vu Vv %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg0 %arg1 %arg2 %arg6 %arg7 %arg8 %arg9 %arg10 %arg12 %arg13 %arg14 %arg15 %arg16 )"','"(define Vd"','"(apply"','"concat"','"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"','"(apply"','"concat"','"(for/list ([i.new (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"','"(define %lastidx0 (- %elemsize0  1))"','"(define %1 (+  i.new  %lastidx0))"','"(define %2 (extract  %1 i.new Vu))"','"(define %3.ab0 (bvsizeext  %2 %arg0 %arg1))"','"(define %4 (extract  %1 i.new Vv))"','"(define %5.ab0 (bvsizeext  %4 %arg0 %arg2))"','"(define %6 (bvmul  %3.ab0 %5.ab0 )) "','"(define %7 (bvshl  %arg3 %arg4 ))"','"(define %8.ab0 (bvdiv  %7  %arg5 %arg6 ))"','"(define %9.ab0 (bvsizeext  %8.ab0 %arg7 %arg8))"','"(define %10.ab0 (bvsizeext  %6 %arg7 %arg9))"','"(define %11.ab0 (bvaddnw  %9.ab0 %10.ab0 %arg7 %arg10 ))"','"(define %12 (bvashr  %11.ab0 %arg11 ))"','"(define %13.ab0 (bvsaturate  %12 %arg7 %arg12 %arg14 ))"','"(define %14.ab0 (bvsaturate  %13.ab0 %arg12 %arg13 %arg15 ))"','"%14.ab0"','")"','")"','")"','")"','")"','"(bvpadhighbits  Vd %arg16)"','")"','""'],
+  },
+
+
+
+ "hexagon_V6_interleave_4_128B" : {
+        "target_instructions" : {
+          "hexagon_V6_interleave_4_128B" : {
+              "args" : ["SYMBOLIC_BV_8", "8", "32"],
+              "in_vectsize" : 8,
+              "out_vectsize" : 32,
+              "lanesize" : 8,
+              "in_precision" : 8,
+              "out_precision" : 8,
+              "in_vectsize_index" : 1,
+              "out_vectsize_index" : 2,
+              "in_lanesize_index" : 1,
+              "out_lanesize_index" : 1,
+              "in_precision_index" : 1,
+              "out_precision_index" : 1,
+              "arg_permute_map" : [-1,-1,-1,-1,0,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+              "Signedness" : 1,
+              "Cost" : "None",
+              "SIMD" : "True",
+              "Extensions" : "['hvx']",
+  },
+    },
+      "semantics" : ['"(define (hexagon_V6_interleave_4_128B %arg0  %num1 %num2 )"','"(concat %arg0 %arg0 %arg0 %arg0)"',  '")"'],
+  },
+
+
+ "hexagon_V6_interleave_2_128B" : {
+        "target_instructions" : {
+          "hexagon_V6_interleave_2_128B" : {
+              "args" : ["SYMBOLIC_BV_16" , "16", "32"],
+              "in_vectsize" : 16,
+              "out_vectsize" : 32,
+              "lanesize" : 16,
+              "in_precision" : 16,
+              "out_precision" : 16,
+              "in_vectsize_index" : 1,
+              "out_vectsize_index" : 2,
+              "in_lanesize_index" : 1,
+              "out_lanesize_index" : 1,
+              "in_precision_index" : 1,
+              "out_precision_index" : 1,
+              "arg_permute_map" : [-1,-1,-1,-1,0,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+              "Signedness" : 1,
+              "Cost" : "None",
+              "SIMD" : "True",
+              "Extensions" : "['hvx']",
+  },
+    },
+      "semantics" : ['"(define (hexagon_V6_interleave_2_128B %arg0  %num1 %num2 )"','"(concat %arg0 %arg0 )"', '")"'],
   },
 
         }

@@ -22,7 +22,15 @@ class Translator(Property):
         self.simplify_map = {}
         self.source_synth_desc = source_synth_desc
         self.target_synth_desc = target_synth_desc
-        self.input_dsl_list = dsl_list
+        self.input_dsl_list = []
+
+        for dsl_inst in dsl_list:
+            if dsl_inst.has_bounded_behavior():
+                self.input_dsl_list.append(convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst))
+            else:
+                self.input_dsl_list.append(dsl_inst)
+
+        self.dsl_list = self.input_dsl_list
         self.output_dsl_list = target_dsl_list
         self.exhaustive = exhaustive
 
@@ -43,40 +51,21 @@ class Translator(Property):
             [DSLExpressions]: _description_
         """
 
+        pruned = ["hexagon_V6_vdmpybus_128B","hexagon_V6_interleave_4_128B" ]
+        self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned]
+
+        for d in self.input_dsl_list:
+            d.contexts = d.contexts[:1]
+
+
 
         expressions = []
         accounted_for = []
 
         if self.exhaustive:
             print("Exhaustive")
-            for dsl_inst in self.dsl_list:
 
-                copy_inst = copy.deepcopy(dsl_inst)
-
-                for context in dsl_inst.contexts:
-                    copy_inst.contexts = [context]
-
-                    try:
-                        expr, discard = create_random_expression([copy_inst], depth = self.input_depth,
-                        required_output_precision = None, required_output_size = None)
-                        perm_expression = self.permute_ordering_of_registers(expr, limit = self.permute_limit)
-
-                        for expr in perm_expression:
-                            key = expr.emit_context_expr_string()
-                            if key in accounted_for:
-                                continue
-
-                            accounted_for.append(key)
-                            expressions.append(expr)
-
-                    except KeyboardInterrupt:
-                        sys.exit()
-
-
-                    except:
-                        continue
-
-
+            expressions = create_exhaustive_expressions(self.input_dsl_list, self.input_depth)
 
 
         else:
@@ -103,7 +92,6 @@ class Translator(Property):
                     except:
                         continue
 
-        random.shuffle(expressions)
         return expressions
 
 
