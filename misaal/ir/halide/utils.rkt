@@ -496,12 +496,12 @@
                     (define isigned? (is-halide-expr-signed? vec))
                     (cond 
                       [isigned?
-                        (typed:signed-vector_reduce op width vec (typed:halide:get-prec vec empty-vector) (typed:halide:get-length vec empty-vector) )
+                        (typed:signed-vector_reduce_add  width vec (typed:halide:get-prec vec empty-vector) (typed:halide:get-length vec empty-vector) )
                         ]
 
                       [else
 
-                        (typed:unsigned-vector_reduce op width vec (typed:halide:get-prec vec empty-vector) (typed:halide:get-length vec empty-vector) )
+                        (typed:unsigned-vector_reduce_add  width vec (typed:halide:get-prec vec empty-vector) (typed:halide:get-length vec empty-vector) )
                         ]
                       )
                    ]

@@ -316,6 +316,16 @@
              (fn ( typed:vec-eq v0-visited v1-visited prec_i size_i ))
              ]
 
+	[ (typed:signed-vector_reduce_add width vec iprec isize)
+             (define vec-visited (typed:halide:visitor vec fn))
+             (fn ( typed:signed-vector_reduce_add width vec-visited iprec isize))
+	]
+
+	[ (typed:unsigned-vector_reduce_add width vec iprec isize)
+             (define vec-visited (typed:halide:visitor vec fn))
+             (fn ( typed:unsigned-vector_reduce_add width vec-visited iprec isize))
+	]
+
             [_ (error "Unrecognized expression in typed:halide:visitor" prog)]
             )
   )

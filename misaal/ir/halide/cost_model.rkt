@@ -299,7 +299,15 @@
 		(+ cost_typed:signed-vec-lt (typed:halide:cost  v0)  (typed:halide:cost  v1)  
 		)
 	]
-	[v  (error "Unrecognized Term in cost model" v)]
+	[ (typed:signed-vector_reduce_add width vec iprec isize)
+		(+ 1 (typed:halide:cost  vec)    
+		)
+	]
+	[ (typed:unsigned-vector_reduce_add width vec iprec isize)
+		(+ 1 (typed:halide:cost  vec)    
+		)
+	]
+	[v  1]
  )
 )
 ;; ================================================================================

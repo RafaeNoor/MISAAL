@@ -287,7 +287,12 @@
              ;(halide:imm-ref data signed?) 
              data
              ]
-            [(buffer-index index elemT buffsize) (vector-ref env index)]
+            [(buffer-index index elemT buffsize) 
+             (define element (vector-ref env index))
+
+             ;(printf "Buffer Index ~a : bv length ~a\n" index (bvlength element))
+             element
+             ]
             [(lit v) v]
             [ (vector-two-input-swizzle_dsl v0 v1 num_2 prec_i_o num_4 num_5 num_6 num_7 num_8)
              (vector-two-input-swizzle (typed:halide:interpret-full v0 env) (typed:halide:interpret-full v1 env) num_2 
@@ -520,6 +525,9 @@
             [ (typed:xBroadcast v0 size_i prec_i_o num_3)
                 (do-typed:xBroadcast  (typed:halide:interpret-full v0 env) size_i prec_i_o num_3)
              ]
+            [ (typed:signed-vector_reduce_add width vec iprec isize)
+                (do-typed:signed-vector-reduce-add width (typed:halide:interpret-full vec env) iprec isize)
+            ]
             [v (error "Unrecognized Term in interpret-fuller" v)]
             )
   )

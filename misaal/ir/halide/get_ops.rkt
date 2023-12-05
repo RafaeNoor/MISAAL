@@ -1141,6 +1141,13 @@
 
 	]
 
+	[ (typed:signed-vector_reduce_add width vec iprec isize)
+     (append (list 'bvadd 'extract) (typed:halide:get-bv-ops vec))
+	]
+	[ (typed:unsigned-vector_reduce_add width vec iprec isize)
+     (append (list 'bvadd 'extract) (typed:halide:get-bv-ops vec))
+	]
+
     [_ (list)]
  )
 )

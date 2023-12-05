@@ -64,7 +64,7 @@
 (struct typed:signed-vec-rounding_shift_right (v1 v2 iprec isize) #:transparent #:mutable)
 (struct typed:signed-vec-rounding_halving_add (v1 v2 iprec isize) #:transparent #:mutable)
 (struct typed:signed-vec-halving_add (v1 v2 iprec isize) #:transparent #:mutable)
-(struct typed:signed-vector_reduce (op width vec iprec isize) #:transparent #:mutable)
+(struct typed:signed-vector_reduce_add (width vec iprec isize) #:transparent #:mutable)
 
 
 
@@ -89,4 +89,4 @@
 (struct typed:unsigned-vec-rounding_shift_right (v1 v2 iprec isize) #:transparent #:mutable)
 (struct typed:unsigned-vec-rounding_halving_add (v1 v2 iprec isize) #:transparent #:mutable)
 (struct typed:unsigned-vec-halving_add (v1 v2 iprec isize) #:transparent #:mutable)
-(struct typed:unsigned-vector_reduce (op width vec iprec isize) #:transparent #:mutable)
+(struct typed:unsigned-vector_reduce_add (width vec iprec isize) #:transparent #:mutable)
