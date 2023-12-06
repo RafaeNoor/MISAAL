@@ -12,6 +12,8 @@ from properties.IdentifySwizzles import IdentifySwizzles
 from properties.SwizzleTransferable import SwizzleTransferable
 from properties.SynthSwizzleTransferable import SynthSwizzleTransferable
 from properties.FusedSwizzleTranslator import FusedSwizzleTranslator
+from properties.Translator import Translator
+from properties.ScaledTranslator import ScaledTranslator
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
@@ -31,7 +33,7 @@ import sys
 import json
 
 TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
-test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
+test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator, Translator, ScaledTranslator]
 
 
 
@@ -69,8 +71,10 @@ TARGET_TO_DESC = {
 
 
 TARGETS = ["hvx"]
-test_properties = [SynthSwizzleTransferable, FusedSwizzleTranslator][1:]
+test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
+#test_properties = [SimplifyingSwizzles, FusedSwizzleTranslator]
 
+test_properties = [ScaledTranslator]
 
 for property in test_properties:
     for target in TARGETS:
@@ -100,6 +104,16 @@ for property in test_properties:
             print("Total Swizzle classes: ", len(swizzles))
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, shuffle_deriviation_map_path="hvx_swizzle_derivation_map.JSON", swizzles = swizzles )
+
+        elif property is ScaledTranslator:
+            halide_dsl_list = parse_dict(halide_semantics)
+
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 2, permute_limit = 1, scale_factor = 16)
+
+        elif property is Translator:
+            halide_dsl_list = parse_dict(halide_semantics)
+
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 2, permute_limit = 1)
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
         PropertyInstance.parallel = True
@@ -110,10 +124,10 @@ for property in test_properties:
         with open("{}.py".format(PropertyInstance.name+property_result_suffix), "w+") as DumpFile:
             DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
 
-        continue
 
         if "halide" in target:
             continue
+        continue
 
         egg_log_name = property_label+"_egg.egg"
 

@@ -8,7 +8,7 @@ import os
 import tempfile
 import glob
 
-REMOVE_RKT_FILES = False
+REMOVE_RKT_FILES = True
 HYDRIDE_HEADER =  """
         #lang rosette
         (require rosette/lib/synthax)
@@ -104,7 +104,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = int(2 * 60) # 15 mins
+    TIMEOUT = int(3 * 60) # 15 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -372,7 +372,7 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
 
     symbolic_flag = ["#f", "#t"][int(symbolic)]
     opt_flag = ["#f", "#t"][int(optimize)]
-    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 3 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
+    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 4 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
     statements.append(define_out_expr)
 
 
@@ -590,7 +590,8 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
 
     if key in memo:
         #print("Memo Hit:", key, len(memo[key]))
-        return copy.deepcopy(memo[key])
+        return memo[key]
+        #return copy.deepcopy(memo[key])
 
 
     relavent_ctx = []
@@ -600,7 +601,9 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
             relavent_ctx += dsl_inst.contexts
         else:
             for ctx in dsl_inst.contexts:
-                if ctx.get_output_size() == return_size and ctx.in_precision == return_prec:
+                loose_condition = ctx.get_output_size() == return_size
+                tight_condition = ctx.get_output_size() == return_size and ctx.in_precision == return_prec
+                if loose_condition:
                     relavent_ctx.append(ctx)
 
 
@@ -616,7 +619,7 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
                     copied_expressions += copy.deepcopy(partial_expressions)
 
                 for i in range(len(child_exprs)):
-                    child_expr = child_exprs[i]
+                    child_expr = copy.deepcopy(child_exprs[i])
                     for j in range(len(partial_expressions)):
                         actual_index = i * len(partial_expressions) + j
                         copied_expressions[actual_index].context_args[idx] = child_expr

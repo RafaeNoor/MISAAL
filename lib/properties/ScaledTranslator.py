@@ -1,21 +1,26 @@
 from properties.Property import *
+import time
 import random
+import tempfile
 import sys
 import json
 from  utils.DSLInstructionUtils import *
+from utils.CodeSynthesizerDesc import create_synth_desc
 from utils.GenerateRandomExpr import create_random_expression
 import copy
 from  common.Types import *
+from utils.WriteDSL import *
 
-class Translator(Property):
+class ScaledTranslator(Property):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [],   num_iterations = 1500, input_depth = 2, permute_limit = 3, exhaustive = False):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [],   num_iterations = 1500, input_depth = 2, permute_limit = 3, exhaustive = False, scale_factor = 1):
 
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
-        super().__init__(name = "Translator", dsl_list = dsl_list, synth_desc = source_synth_desc)
+        super().__init__(name = "ScaledTranslator", dsl_list = dsl_list, synth_desc = source_synth_desc)
+        self.scale_factor = scale_factor
         self.num_iterations = num_iterations
         self.input_depth = input_depth
         self.permute_limit = permute_limit
@@ -24,21 +29,63 @@ class Translator(Property):
         self.target_synth_desc = target_synth_desc
         self.input_dsl_list = []
 
+        self.debug = ["hexagon_V6_vdmpyhb_acc_128B"]
         for dsl_inst in dsl_list:
             if dsl_inst.has_bounded_behavior():
                 self.input_dsl_list.append(convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst))
             else:
                 self.input_dsl_list.append(dsl_inst)
 
+
+        self.input_dsl_list = self.scale_down_dsl(self.input_dsl_list)
+
+        dsl_names = [d.name for d in self.input_dsl_list]
+
+        assert "hexagon_V6_vdmpyhb_acc_128B"  in dsl_names, "Something went wrong!"
+
         self.dsl_list = self.input_dsl_list
         self.output_dsl_list = target_dsl_list
         self.exhaustive = exhaustive
 
-        random.shuffle(self.input_dsl_list)
 
 
 
 
+    def get_unscaled_ops(self):
+        return [
+            "hexagon_V6_interleave_4_128B",
+            "hexagon_V6_interleave_2_128B",
+        ]
+
+
+    def scale_down_dsl(self, dsl_list):
+        scaled_list = []
+
+        self.BASE_VECT_SIZE = 1024
+        BASE_SIZE = None
+        if self.BASE_VECT_SIZE != None:
+            BASE_SIZE = self.BASE_VECT_SIZE
+
+        include_unscaled = self.get_unscaled_ops()
+        for dsl_inst in dsl_list:
+            print_detail = (dsl_inst.name in self.debug)
+
+            if dsl_inst.name in include_unscaled:
+                scaled_list.append(dsl_inst)
+            elif dsl_inst.supports_scaling():
+                if print_detail:
+                    print(dsl_inst.name, "supports scaling!")
+                dsl_inst.scale_contexts(
+                    self.scale_factor, base_vector_size = BASE_SIZE)
+                scaled_list.append(dsl_inst)
+            else:
+                if print_detail:
+                    print(dsl_inst.name, "does not support scaling!")
+
+
+        print("Scaled down dsl using factor", self.scale_factor)
+        print("DSL List size went from {} to {}".format(len(dsl_list), len(scaled_list)))
+        return scaled_list
 
 
     def get_property_desc(self):
@@ -51,12 +98,21 @@ class Translator(Property):
             [DSLExpressions]: _description_
         """
 
-        pruned = ["hexagon_V6_interleave_2_128B", "hexagon_V6_vdmpyhb_acc_128B" ]
-        self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned]
 
+        pruned = ["hexagon_V6_interleave_4_128B", "hexagon_V6_vdmpyhb_acc_128B", "hexagon_V6_interleave_2_128B"]
+        self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned or "mpy" in d.name]
+
+        #self.input_dsl_list = self.input_dsl_list[:5] + self.input_dsl_list[-5:]
+
+        print("Pruned List size:", len(self.input_dsl_list))
+
+        total_contexts = 0
         for d in self.input_dsl_list:
-            d.contexts = d.contexts[:1]
+            max_contexts = min(2, len(d.contexts))
+            #d.contexts = d.contexts[:max_contexts]
+            total_contexts += len(d.contexts)
 
+        print("Total contexts:", total_contexts)
 
 
         expressions = []
@@ -65,7 +121,13 @@ class Translator(Property):
         if self.exhaustive:
             print("Exhaustive")
 
+            start_time = time.time()
+
             expressions = create_exhaustive_expressions(self.input_dsl_list, self.input_depth)
+
+            end_time = time.time()
+
+            print("Creating expressions took {} seconds...".format(end_time - start_time))
 
 
         else:
@@ -250,10 +312,20 @@ class Translator(Property):
         input_sizes = [str(reg.size) for reg in regs]
         input_precs = [str(reg.precision) for reg in regs]
 
-        # TODO: Change to translate expression with optional optimize flag
-        #(is_simplified, simplified_expr) =  simplify_expression(dsl_expression, self.synth_desc, input_sizes, input_precs)
 
-        (is_simplified, simplified_expr) =  translate_expression(dsl_expression, self.source_synth_desc, self.target_synth_desc,input_sizes, input_precs, src_language_dsl = self.input_dsl_list, target_language_dsl = self.output_dsl_list)
+        base_prefix = "dict_"+ next(tempfile._get_candidate_names())
+
+        dict_name = base_prefix+"_sema"
+        sema_path = "/tmp/"+base_prefix+".py"
+
+        converted_dict = convert_dsl_list_to_dict(self.input_dsl_list)
+        write_dsl_dict_to_file(converted_dict, sema_path, dict_name)
+
+        scaled_target_vector_sizes = [size // self.scale_factor for size in self.source_synth_desc.get_target_vector_sizes() if size // self.scale_factor > 0 ]
+
+        combined_synth_desc = create_synth_desc("scaled_ctx",True, scaled_target_vector_sizes, sema_path ,dict_name)
+        combined_synth_desc.emit_sema = False
+        (is_simplified, simplified_expr) =  translate_expression(dsl_expression, combined_synth_desc, self.target_synth_desc,input_sizes, input_precs, src_language_dsl = self.input_dsl_list, target_language_dsl = self.output_dsl_list)
 
 
 
