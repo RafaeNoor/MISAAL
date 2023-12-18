@@ -148,7 +148,7 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 256
+        BATCH_SIZE = 384
         POOL_SIZE = min(32, BATCH_SIZE)
 
         if self.parallel:
@@ -170,6 +170,7 @@ class Property:
 
                 pool.shutdown(wait=True)
                 print("Completed compiling pool...")
+                self.run_on_batch_completion()
 
                 with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
@@ -183,6 +184,8 @@ class Property:
                     candidate = self.candidates[j]
                     worker(candidate)
 
+                self.run_on_batch_completion()
+
                 with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
@@ -190,6 +193,7 @@ class Property:
 
         print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
         print(property_map)
+        self.run_on_completion()
         return property_map
 
 
@@ -255,5 +259,74 @@ class Property:
         raise NotImplementedError()
 
 
+    def get_registers(self, ctx):
+
+        regs = []
+
+        if isinstance(ctx, Context):
+            for arg in ctx.context_args:
+                regs += self.get_registers(arg)
+        elif isinstance(ctx, Reg):
+            return [ctx]
+        else:
+            return []
+        # Deduplicate and order according to increasing order
+
+        unique_regs = []
+
+        for reg in regs:
+            unique_regs.append(int(reg.index))
+        unique_regs = list(set(unique_regs))
+
+        unique_regs.sort()
+
+        # Sort in increasing order
+        ordered_regs = ['empty'] * len(unique_regs)
+
+        for reg in regs:
+            ordered_regs[unique_regs.index(int(reg.index))] = reg
+
+        return ordered_regs
+
+
+    def replace_reg_with_expr(self, dsl_expression, input_reg, insert_expr):
+        """Given a dsl expression, it traverses the arguments recursively and replaces all
+        instances of input reg with insert_expr
+
+        Args:
+            dsl_expression (DSLInstruction): _description_
+            input_reg (Reg): _description_
+            insert_expr (Reg or DSLInstruciton): _description_
+        """
+
+        if isinstance(dsl_expression, Context):
+
+            for i in range(len(dsl_expression.context_args)):
+                dsl_expression.context_args[i] = self.replace_reg_with_expr(dsl_expression.context_args[i],
+                input_reg, insert_expr)
+            return dsl_expression
+        elif isinstance(dsl_expression, Reg):
+            if input_reg.index == dsl_expression.index:
+                return insert_expr
+
+        return dsl_expression
+
+
+    def get_nested_contexts_name(self, ctx):
+        if not isinstance(ctx, Context):
+            return []
+
+        names = [ctx.name]
+
+        for arg in ctx.context_args:
+            names += self.get_nested_contexts_name(arg)
+        return list(set(names))
+
+    def run_on_completion(self):
+        return
+
+
+    def run_on_batch_completion(self):
+        return
 
 

@@ -87,7 +87,7 @@
 		[(and  (equal? prec_i 8) (equal? num_2 1) (equal? num_3 128) (equal? prec_o 16)); typed:cast-int_1_ip8_is1024_op16_os2048_signed_1
  
   (remove-duplicates (append (list  'extract 'sign-extend 'concat) (typed:halide:get-bv-ops v0)))]
-		[else (error "Unable to get ops  for typed:cast-int")]
+		[else (append (list  'extract 'sign-extend 'concat) (typed:halide:get-bv-ops v0))]
 )
 
 	]
@@ -324,7 +324,7 @@
 		[(and  (equal? num_2 8) (equal? prec_i_o 2048)); typed:signed-vec-mul_p8_s2048_signed_1
  
   (remove-duplicates (append (list  'bvmul 'extract 'sign-extend) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1)))]
-		[else (error "Unable to get ops  for typed:signed-vec-mul")]
+		[else (append (list  'bvmul 'extract 'sign-extend) (typed:halide:get-bv-ops v0) (typed:halide:get-bv-ops v1))]
 )
 
 	]

@@ -17,7 +17,7 @@
 
 
 (provide (all-defined-out))
-(define MISAAL_SRC (getenv "MISAAL_SRC"))
+(define MISAAL_SRC "/home/arnoor2/MISAAL/");(getenv "MISAAL_SRC"))
 (define MISAAL_LIB_PATH (if (equal? MISAAL_SRC #f) (error "MISAAL_SRC is undefined!") (string-append MISAAL_SRC "/lib/" )))
 (define MISAAL-GEN-GRAMMAR-SCRIPT-NAME "generate_grammar.py")
 (define MISAAL-GEN-GRAMMAR-SCRIPT (string-append MISAAL_LIB_PATH MISAAL-GEN-GRAMMAR-SCRIPT-NAME))
@@ -70,4 +70,17 @@
   (define interpreter (get-grammar mod-path (string-append base_name ":interpret")))
   (define cost-model (get-grammar mod-path (string-append base_name ":cost")))
   (values grammar interpreter cost-model)
+  )
+
+
+
+(define (assert-non-zero-env env)
+  (for/list ([i (range (vector-length env))])
+            (define value (vector-ref env i))
+            (cond 
+              [(symbolic? value)
+               (assert (not (equal? value (bv 0 (bitvector (bvlength value))))))
+               ]
+              )
+            )
   )

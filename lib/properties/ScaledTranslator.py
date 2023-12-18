@@ -19,6 +19,11 @@ class ScaledTranslator(Property):
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+        # TEMP
+
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if "rmpybv" in dsl_inst.name]
+
         super().__init__(name = "ScaledTranslator", dsl_list = dsl_list, synth_desc = source_synth_desc)
         self.scale_factor = scale_factor
         self.num_iterations = num_iterations
@@ -41,7 +46,7 @@ class ScaledTranslator(Property):
 
         dsl_names = [d.name for d in self.input_dsl_list]
 
-        assert "hexagon_V6_vdmpyhb_acc_128B"  in dsl_names, "Something went wrong!"
+        #assert "hexagon_V6_vdmpyhb_acc_128B"  in dsl_names, "Something went wrong!"
 
         self.dsl_list = self.input_dsl_list
         self.output_dsl_list = target_dsl_list
@@ -49,6 +54,14 @@ class ScaledTranslator(Property):
 
 
 
+    def temp_filter(self, dsl_list):
+
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if ("cast-int" in dsl_inst.name) or ("reduce" in dsl_inst.name)]
+
+        for dsl_inst in dsl_list:
+            dsl_inst.contexts = [ctx for ctx in dsl_inst.contexts if ctx.in_vectsize == 4096 or ctx.out_vectsize == 4096]
+
+        return dsl_list
 
 
     def get_unscaled_ops(self):
@@ -59,6 +72,8 @@ class ScaledTranslator(Property):
 
 
     def scale_down_dsl(self, dsl_list):
+        if self.scale_factor == 1:
+            return dsl_list
         scaled_list = []
 
         self.BASE_VECT_SIZE = 1024
@@ -98,21 +113,21 @@ class ScaledTranslator(Property):
             [DSLExpressions]: _description_
         """
 
+        if False:
+            pruned = ["hexagon_V6_interleave_4_128B", "hexagon_V6_vdmpyhb_acc_128B", "hexagon_V6_interleave_2_128B"]
+            self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned or any([substr in d.name for substr in ["_lo", "_ass", "mpy"] ])]
 
-        pruned = ["hexagon_V6_interleave_4_128B", "hexagon_V6_vdmpyhb_acc_128B", "hexagon_V6_interleave_2_128B"]
-        self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned or "mpy" in d.name]
+            #self.input_dsl_list = self.input_dsl_list[:5] + self.input_dsl_list[-5:]
 
-        #self.input_dsl_list = self.input_dsl_list[:5] + self.input_dsl_list[-5:]
+            print("Pruned List size:", len(self.input_dsl_list))
 
-        print("Pruned List size:", len(self.input_dsl_list))
+            total_contexts = 0
+            for d in self.input_dsl_list:
+                max_contexts = min(2, len(d.contexts))
+                #d.contexts = d.contexts[:max_contexts]
+                total_contexts += len(d.contexts)
 
-        total_contexts = 0
-        for d in self.input_dsl_list:
-            max_contexts = min(2, len(d.contexts))
-            #d.contexts = d.contexts[:max_contexts]
-            total_contexts += len(d.contexts)
-
-        print("Total contexts:", total_contexts)
+            print("Total contexts:", total_contexts)
 
 
         expressions = []

@@ -538,6 +538,10 @@
 )
 
 	]
+
+	[(typed:signed-vector_reduce_add width vec iprec isize)
+     (/ isize width)
+	]
  )
 )
 

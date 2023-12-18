@@ -1,5 +1,6 @@
 
 # Main driver for checking properites
+import argparse
 
 
 from common.DSLParser import parse_dict
@@ -14,6 +15,9 @@ from properties.SynthSwizzleTransferable import SynthSwizzleTransferable
 from properties.FusedSwizzleTranslator import FusedSwizzleTranslator
 from properties.Translator import Translator
 from properties.ScaledTranslator import ScaledTranslator
+from properties.EqualOnValues import EqualOnValues
+from properties.EqualOnValuesDepth import EqualOnValuesDepth
+from properties.LargeExpressionTranslator import LargeExpressionTranslator
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
@@ -32,8 +36,15 @@ import sys
 
 import json
 
+parser = argparse.ArgumentParser(prog='CheckProperties', description='Run properties on targets',epilog='Text at the bottom of help')
+
+parser.add_argument('-p', '--parallel',action='store_true', default = False)
+args = parser.parse_args()
+PARALLEL = args.parallel
+
+
 TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
-test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator, Translator, ScaledTranslator]
+test_properties = [Commutative, Associative, Distributive, SimplifyingIdentity, IdentifySwizzles, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator, Translator, ScaledTranslator, LargeExpressionTranslator]
 
 
 
@@ -74,7 +85,9 @@ TARGETS = ["hvx"]
 test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
 #test_properties = [SimplifyingSwizzles, FusedSwizzleTranslator]
 
-test_properties = [ScaledTranslator]
+test_properties = [EqualOnValues, ScaledTranslator]
+test_properties = [LargeExpressionTranslator]
+test_properties = [EqualOnValuesDepth]
 
 for property in test_properties:
     for target in TARGETS:
@@ -108,15 +121,32 @@ for property in test_properties:
         elif property is ScaledTranslator:
             halide_dsl_list = parse_dict(halide_semantics)
 
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 2, permute_limit = 1, scale_factor = 16)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 1, permute_limit = 1, scale_factor = 1, target_dsl_list = halide_dsl_list)
+
 
         elif property is Translator:
             halide_dsl_list = parse_dict(halide_semantics)
 
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 2, permute_limit = 1)
+            #PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, exhaustive = True, input_depth = 2, permute_limit = 1)
+
+            #reversed
+            PropertyInstance = property(target_dsl_list = dsl_list, target_synth_desc = synthesizer_desc, source_synth_desc = HALIDE_HVX_SYNTH_DESC, dsl_list=halide_dsl_list, exhaustive = True, input_depth = 2, permute_limit = 1)
+        elif property is EqualOnValues:
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list)
+
+        elif property is EqualOnValuesDepth:
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2)
+        elif property is LargeExpressionTranslator:
+            swizzle_dict = TARGET_TO_SWIZZLE[target]
+            swizzles = parse_dict(swizzle_dict, keep_duplicate = True)
+            print("Total Swizzle classes: ", len(swizzles))
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(target_dsl_list = dsl_list, target_synth_desc = synthesizer_desc, source_synth_desc = HALIDE_HVX_SYNTH_DESC, dsl_list = halide_dsl_list, shuffle_deriviation_map_path="hvx_swizzle_derivation_map.JSON", swizzles = swizzles, context_deriviation_map_path = "backward_map.json", input_depth = 2)
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
-        PropertyInstance.parallel = True
+        PropertyInstance.parallel = PARALLEL
         property_map = PropertyInstance.get_property()
 
 

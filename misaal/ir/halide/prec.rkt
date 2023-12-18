@@ -621,6 +621,10 @@
              1
              ]
 
+	[(typed:signed-vector_reduce_add width vec iprec isize)
+     iprec 
+	]
+
             [
              v
 

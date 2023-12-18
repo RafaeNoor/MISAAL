@@ -73,31 +73,32 @@
     )
 
 
+  ;; TODO: Pass in result output size and prec in parameters
   (define spec-expr-output-size (src-length-fn spec-expr (vector)))
   (define spec-expr-output-prec (src-prec-fn spec-expr (vector)))
   (define expr-VF (/ spec-expr-output-size spec-expr-output-prec))
 
 
   (define leaves-sizes input-sizes)
-  (define cost-bound 30)
+  (define cost-bound 8)
 
 
   (define (invoke-spec-lane lane-idx env-lane)
-    (debug-log (format "Invoked spec lane with src language ~a, env ~a and lane-idx ~a\n" src-language-desc env-lane lane-idx))
-    (define spec-result (src-interpreter spec-expr env-lane))
+    (debug-log (format "Invoked spec LANE with src language ~a, env ~a and lane-idx ~a\n" src-language-desc env-lane lane-idx))
     (define low (* spec-expr-output-prec lane-idx))
     (define high (+ low (- spec-expr-output-prec 1)))
+    (define spec-result (src-interpreter spec-expr env-lane))
 
     (define spec-result-slice (extract high low spec-result))
-    (debug-log (format "Src Language Spec produced: ~a\n" spec-result-slice))
+    (debug-log (format "Src Language (LANE) Spec produced: ~a\n" spec-result-slice))
     spec-result-slice
     )
 
 
   (define (invoke-spec env-lane)
-    (debug-log (format "Invoked spec full with src language ~a, env ~a \n" src-language-desc env-lane))
+    (debug-log (format "Invoked spec FULL with src language ~a, env ~a \n" src-language-desc env-lane))
     (define spec-result (src-interpreter spec-expr env-lane))
-    (debug-log (format "Src Language Spec produced: ~a\n" spec-result))
+    (debug-log (format "Src Language (FULL) Spec produced: ~a\n" spec-result))
     spec-result
     )
 
@@ -200,6 +201,8 @@
                                                                                 (debug-log target-symbol)
                                                                                 (define-values (inter-grammar inter-interpreter inter-cost-model)
                                                                                                (get-expr-grammar-step-hydride spec-expr base_name src-get-ops src-visitor src-length-fn src-prec-fn input-precs input-sizes (list) expr-VF t d scale-factor))
+                                                                                (debug-log "Fetched halide grammar")
+                                                                                (println inter-grammar)
                                                                                 (values inter-grammar target-interpreter target-cost-fn )
                                                                                 ]
                                                                         [else

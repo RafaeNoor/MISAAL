@@ -15,6 +15,9 @@ class Translator(Property):
         # Prune masked expression, handle masked property generation seperately
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
+
+        dsl_list = self.temp_filter(dsl_list)
+
         super().__init__(name = "Translator", dsl_list = dsl_list, synth_desc = source_synth_desc)
         self.num_iterations = num_iterations
         self.input_depth = input_depth
@@ -23,6 +26,7 @@ class Translator(Property):
         self.source_synth_desc = source_synth_desc
         self.target_synth_desc = target_synth_desc
         self.input_dsl_list = []
+
 
         for dsl_inst in dsl_list:
             if dsl_inst.has_bounded_behavior():
@@ -51,11 +55,7 @@ class Translator(Property):
             [DSLExpressions]: _description_
         """
 
-        pruned = ["hexagon_V6_interleave_2_128B", "hexagon_V6_vdmpyhb_acc_128B" ]
-        self.input_dsl_list = [d for d in self.input_dsl_list if d.name in pruned]
 
-        for d in self.input_dsl_list:
-            d.contexts = d.contexts[:1]
 
 
 
@@ -264,6 +264,21 @@ class Translator(Property):
 
         return is_simplified
 
+
+
+    def temp_filter(self, dsl_list):
+
+        print(len(dsl_list))
+        dsl_list = [dsl_inst for dsl_inst in dsl_list if ("cast-int" in dsl_inst.name) or ("reduce" in dsl_inst.name)]
+        print(len(dsl_list))
+
+        for dsl_inst in dsl_list:
+            dsl_inst.contexts = [ctx for ctx in dsl_inst.contexts if ctx.in_vectsize == 4096 or ctx.out_vectsize == 4096]
+            print("len ctx", len(dsl_inst.contexts))
+
+
+        print(len(dsl_list))
+        return dsl_list
 
     def serialize_candidate(self, candidate):
         return candidate.emit_context_expr_string()

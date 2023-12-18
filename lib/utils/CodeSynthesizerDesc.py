@@ -114,7 +114,8 @@ def create_synth_desc(base_prefix, emit_interpreter, target_sizes, sema_path, di
     return CodeSynthesizerDesc(target_name = base_prefix, interpreter_name = join("interpret"), cost_name = join("cost"),
                                bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), emit_interpreter = emit_interpreter, sema_path = sema_path, dict_name = dict_name)
 
-MISAAL_SRC =  os.getenv('MISAAL_SRC')
+MISAAL_SRC =  "/home/arnoor2/MISAAL/"#os.getenv('MISAAL_SRC',default = "/home/arnoor2/MISAAL/")
+
 
 
 X86_SYNTH_DESC = CodeSynthesizerDesc(target_name= "x86",interpreter_name="hydride:interpret", cost_name= "hydride:cost",

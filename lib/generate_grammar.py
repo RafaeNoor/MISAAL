@@ -137,7 +137,7 @@ with open(OUTPUT_GRAMMAR_FILE, "w+") as OutputFile:
 
 
 
-    syn_class =  [StepWiseSynthesizer, AllInstructionsSynthesizer][0]
+    syn_class =  [StepWiseSynthesizer, AllInstructionsSynthesizer][1]
 
     syn = syn_class(spec = sp, dsl_operators = dsl_list,
                   struct_definer = sd, grammar_generator = gg,

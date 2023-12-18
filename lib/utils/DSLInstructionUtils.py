@@ -1,4 +1,5 @@
 import common.Types
+import time
 import copy
 import sys
 from common.Types import *
@@ -104,7 +105,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = int(3 * 60) # 15 mins
+    TIMEOUT = int(2 * 60) # 2 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -304,6 +305,11 @@ def execute_racket_file_and_read_from_file(statements, fname_prefix):
 def cleanup_tmp_files():
     tmp_files = glob.glob("/tmp/base_*")
     print("Cleaning up {} tmp files ...".format(len(tmp_files)))
+
+    subprocess.call("rm -f /tmp/base_* /tmp/dict_*", shell = True)
+
+
+    tmp_files = glob.glob("/tmp/base_*")
     for f in tmp_files:
         subprocess.call("rm -f {}".format(f), shell = True)
 
@@ -565,12 +571,19 @@ def create_exhaustive_expressions(dsl_list, expr_depth):
     # the name of the registers would contain a place-holder name which would
     # need to be set correctly later.
     memo = {}
+    start_time = time.time()
     depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo)
+
 
     print("Setting Register Names")
 
 
     reg_set_expressions = set_reg_names_exprs(depth_expressions)
+
+    end_time = time.time()
+    elapsed = end_time - start_time
+
+    print("Elapsed time: ", elapsed)
 
 
     return reg_set_expressions
@@ -590,8 +603,11 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
 
     if key in memo:
         #print("Memo Hit:", key, len(memo[key]))
-        return memo[key]
-        #return copy.deepcopy(memo[key])
+        return copy.deepcopy(memo[key])
+    else:
+        #print("Memo Miss:", key)
+        pass
+
 
 
     relavent_ctx = []
@@ -619,7 +635,7 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
                     copied_expressions += copy.deepcopy(partial_expressions)
 
                 for i in range(len(child_exprs)):
-                    child_expr = copy.deepcopy(child_exprs[i])
+                    child_expr = child_exprs[i]
                     for j in range(len(partial_expressions)):
                         actual_index = i * len(partial_expressions) + j
                         copied_expressions[actual_index].context_args[idx] = child_expr
@@ -628,7 +644,7 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
         return_expressions += partial_expressions
 
     if return_size != None:
-        return_expressions += [Reg("placeholder", return_prec, return_size)]
+        return_expressions += [copy.deepcopy(Reg("placeholder", return_prec, return_size))]
 
     memo[key] = return_expressions
 
@@ -692,6 +708,8 @@ def convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst):
     updated_inst.contexts = new_ctxs
 
     return updated_inst
+
+
 
 
 
