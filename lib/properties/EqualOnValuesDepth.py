@@ -1,4 +1,7 @@
 from properties.Property import *
+import os
+import time
+import pickle
 from properties.EqualOnValues import EqualOnValues
 import random
 import sys
@@ -21,18 +24,49 @@ class EqualOnValuesDepth(EqualOnValues):
         print("Target DSL List size:", len(target_dsl_list))
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list)
+        self.name = "EqualOnValuesDepth"
         self.output_depth = output_depth
 
 
+
+    def prune_uniform_size_expr_depth(self, expr_list):
+        pruned_expr_list = []
+
+        for expr in expr_list:
+            expr_sizes = get_expr_intermediate_sizes(expr)
+
+            unique_sizes = list(set(expr_sizes))
+
+            if len(unique_sizes) == 1:
+                # If expression has the same bitvector sizes throughout, let the depth one case handle that.
+                continue
+
+            pruned_expr_list.append(expr)
+
+        print("Original # expressions {}, Pruned # expressions {}".format(len(expr_list), len(pruned_expr_list)))
+        with open("temp.log", "w+") as LogFile:
+            LogFile.write("Original # expressions {}, Pruned # expressions {}".format(len(expr_list), len(pruned_expr_list)))
+        return pruned_expr_list
 
 
     def filter_target_dsl_list(self, dsl_list):
         filtered = []
 
+        substrs = ["cast-int", "reduce"]#, "widen-mul"]
+        #substrs = ["typed:vec-bwand"]
+        contexts = ["typed:cast-int_0_ip8_is1024_op32_os4096_signed_1","typed:signed_vector_reduce_add_w4_4096_32_4096"]
+        #contexts = []
         for dsl_inst in dsl_list:
+            include = any([s in dsl_inst.name for s in substrs])
+            if not include:
+                continue
+
             dsl_inst_copy = copy.deepcopy(dsl_inst)
             dsl_inst_copy.contexts = []
             for ctx in dsl_inst.contexts:
+                if ctx.name not in contexts:
+                    continue
+
                 if "hvx" in self.source_synth_desc.target_name:
                     if ctx.out_vectsize not in [1024, 2048, 4096]:
                         continue
@@ -55,11 +89,13 @@ class EqualOnValuesDepth(EqualOnValues):
     def filter_source_dsl_list(self, dsl_list):
         filtered = []
 
-        substrs = ["rmpybv"]
+        ctxs = ["hexagon_V6_vrmpybv_acc_128B"]
+        substrs = ["hexagon_V6_vrmpybv_128B"]
         for dsl_inst in dsl_list:
             insert = any([s in dsl_inst.name for s in substrs])
 
             if insert:
+                dsl_inst.contexts = [c for c in dsl_inst.contexts if c.name in ctxs]
                 filtered.append(dsl_inst)
 
         return filtered
@@ -78,30 +114,59 @@ class EqualOnValuesDepth(EqualOnValues):
 
         candidates = []
 
-        self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
         print("Source DSL")
         print_dsl_list_summary(self.input_dsl_list)
+
+        print("Target DSL [Pre Filter]")
+        print_dsl_list_summary(self.output_dsl_list)
+        #self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
         print("Target DSL")
         print_dsl_list_summary(self.output_dsl_list)
 
-        expressions = create_exhaustive_expressions(self.output_dsl_list, self.output_depth)
+        expr_fname = "halide_exprs_d{}.pickle".format(self.output_depth)
+        read_from_file = os.path.exists(expr_fname)
+
+        expressions = []
+        if read_from_file:
+            start_time = time.time()
+            with open(expr_fname, "rb") as handle:
+                print("Reading expressions from", expr_fname)
+                expressions = pickle.load(handle)
+
+            end_time = time.time()
+            elapsed = end_time - start_time
+            print("Reading from file took {} seconds".format(elapsed))
+        else:
+            expressions = create_exhaustive_expressions(self.output_dsl_list, self.output_depth)
+            with open(expr_fname, "wb") as handle:
+                print("Saving expressions to", expr_fname)
+                pickle.dump(expressions, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         print("Number of output expressions: ", len(expressions))
 
+        expressions = self.prune_uniform_size_expr_depth(expressions)
+
+        #for expr in expressions:
+        #    print(expr.emit_context_expr_string())
+
+
+        compatible_out_size_map = {}
 
         for dsl_inst in self.input_dsl_list:
             for idx, src_ctx in enumerate(dsl_inst.contexts):
+                print(src_ctx.name)
                 num_src_ctx_args = self.get_context_num_sym_args(src_ctx)
                 input_sizes = self.get_context_input_sizes(src_ctx)
                 output_size = src_ctx.out_vectsize
                 precision = src_ctx.in_precision
-                compatible_contexts = expressions
+                if str(output_size) not in compatible_out_size_map:
+                    compatible_out_size_map[str(output_size)] = [exp for exp in expressions if exp.out_vectsize == output_size]
+
+                compatible_contexts = compatible_out_size_map[str(output_size)]
                 masks = map(list, itertools.product([1], repeat=num_src_ctx_args))
 
                 for mask in masks:
                     for dst_ctx in compatible_contexts:
-                        if src_ctx.out_vectsize != dst_ctx.out_vectsize:
-                            continue
                         if not self.has_common_operand_size(src_ctx, dst_ctx):
                             continue
                         candidate = (src_ctx, dst_ctx, mask)
@@ -117,6 +182,7 @@ class EqualOnValuesDepth(EqualOnValues):
         dst_regs = self.get_registers(dst_ctx)
         dst_sizes = [reg.size for reg in dst_regs]
         src_sizes = [arg.size for arg in src_ctx.context_args if isinstance(arg, BitVector)]
+
 
         for dst_size in dst_sizes:
             if dst_size in src_sizes:
@@ -238,6 +304,7 @@ class EqualOnValuesDepth(EqualOnValues):
         statements.append("(assert-non-zero-env env)")
 
 
+
         src_expression = "(define src-expr\n {}\n)".format(src_ctx.emit_context_expr_string())
         dst_expression = "(define dst-expr\n {}\n)".format(dst_ctx.emit_context_expr_string())
         statements.append(src_expression)
@@ -249,9 +316,24 @@ class EqualOnValuesDepth(EqualOnValues):
         statements.append(src_result)
         statements.append(dst_result)
 
-        statements.append("(assert (not (equal? src-result (bv 0 (bitvector (bvlength src-result))))))")
+        slice_size = min(64, src_ctx.out_vectsize)
 
-        get_cex = "(define cex {})".format(self.emit_verify_not_equal("src-result", "dst-result"))
+        src_slice = "(define src-slice (extract {} 0 src-result))".format(slice_size - 1)
+
+        dst_slice = "(define dst-slice (extract {} 0 dst-result))".format(slice_size - 1)
+
+        statements.append(src_slice)
+        statements.append(dst_slice)
+
+
+        statements.append("(assert (not (equal? src-slice (bv 0 (bitvector {})))))".format(slice_size))
+
+        # Assert result is not equal to any input operand (when types match)
+        statements.append("(assert-value-not-in-env src-result env)")
+
+
+
+        get_cex = "(define cex {})".format(self.emit_verify_not_equal("src-slice", "dst-slice"))
 
         statements.append(get_cex)
 

@@ -16,7 +16,7 @@ class Translator(Property):
 
         dsl_list = [dsl_inst for dsl_inst in dsl_list if "mask" not in dsl_inst.name]
 
-        dsl_list = self.temp_filter(dsl_list)
+        #dsl_list = self.temp_filter(dsl_list)
 
         super().__init__(name = "Translator", dsl_list = dsl_list, synth_desc = source_synth_desc)
         self.num_iterations = num_iterations
@@ -286,8 +286,6 @@ class Translator(Property):
     def get_property_on_candidate(self, candidate):
         property_t = {"candidate": candidate.emit_context_expr_string(), "simplified": self.simplify_map[candidate.emit_context_expr_string()]}
 
-        with open("Append_dict.py", "a+") as WriteFile:
-            WriteFile.write(json.dumps(property_t, indent = 4))
         return property_t
 
 

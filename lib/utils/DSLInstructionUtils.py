@@ -105,7 +105,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = int(2 * 60) # 2 mins
+    TIMEOUT = int(5 * 60) # 5 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -710,6 +710,27 @@ def convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst):
     return updated_inst
 
 
+def get_expr_intermediate_sizes(dsl_expr):
+
+    assert isinstance(dsl_expr, Context), "Expected context type "
+
+    sizes = [dsl_expr.out_vectsize]
+    for arg in dsl_expr.context_args:
+        if isinstance(arg, Context):
+            sizes += get_expr_intermediate_sizes(arg)
+        elif isinstance(arg, BitVector):
+            sizes.append(arg.size)
+    return sizes
 
 
+
+
+def print_dsl_list_summary(dsl_list):
+    num_eq_classes = len(dsl_list)
+    num_ctxs = sum([len(inst.contexts) for inst in dsl_list])
+
+    print("="*50)
+    print("Number of Eq Classes:\t", num_eq_classes)
+    print("Number of Target Contexts:\t", num_ctxs)
+    print("="*50)
 

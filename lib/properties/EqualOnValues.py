@@ -319,10 +319,10 @@ class EqualOnValues(Property):
             self.backward_map[key] = list(set(self.backward_map[key]))
 
 
-        with open("forward_map_intermediate.json", "w+") as SrcFile:
+        with open("forward_map_{}_intermediate.json".format(self.name), "w+") as SrcFile:
             SrcFile.write(json.dumps(self.forward_map, indent = 4))
 
-        with open("backward_map_intermediate.json", "w+") as DstFile:
+        with open("backward_map_{}_intermediate.json".format(self.name), "w+") as DstFile:
             DstFile.write(json.dumps(self.backward_map, indent = 4))
 
 

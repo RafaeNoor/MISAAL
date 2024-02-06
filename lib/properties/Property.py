@@ -1,4 +1,5 @@
 from common.Types import *
+import time
 from common.PredefinedDSL import *
 import concurrent.futures
 from  utils.DSLInstructionUtils import *
@@ -148,8 +149,10 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 384
-        POOL_SIZE = min(32, BATCH_SIZE)
+        BATCH_SIZE = 64 #384
+        POOL_SIZE = min(16, BATCH_SIZE)
+
+        start_time = time.time()
 
         if self.parallel:
             print("Running Property Inference in Parallel")
@@ -194,7 +197,15 @@ class Property:
         print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
         print(property_map)
         self.run_on_completion()
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        with open("property_time_log.txt","a+") as LogFile:
+            LogFile.write("{} : {} seconds\n".format(self.name, elapsed_time))
+
+
         return property_map
+
 
 
     def kill_remaining_child_processes(self):

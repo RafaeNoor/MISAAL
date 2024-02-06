@@ -87,7 +87,8 @@ test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSw
 
 test_properties = [EqualOnValues, ScaledTranslator]
 test_properties = [LargeExpressionTranslator]
-test_properties = [EqualOnValuesDepth]
+test_properties = [SimplifyingSwizzles , EqualOnValuesDepth]
+
 
 for property in test_properties:
     for target in TARGETS:
@@ -157,7 +158,6 @@ for property in test_properties:
 
         if "halide" in target:
             continue
-        continue
 
         egg_log_name = property_label+"_egg.egg"
 
