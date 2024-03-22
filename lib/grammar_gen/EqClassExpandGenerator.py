@@ -34,6 +34,8 @@ class EqClassExpandGenerator:
 
             if isinstance(ref_arg, Reg) and isinstance(f_arg, ConstBitVector):
                 return
+            elif isinstance(ref_arg, Reg) and f_arg.size != ref_arg.size:
+                return
             elif isinstance(ref_arg, Reg):
                 assert isinstance(f_arg, BitVector), "Corresponding argument must be a symbolic parameter"
                 clause_tokens.append(ref_arg.get_rkt_value())
@@ -150,6 +152,7 @@ class EqClassExpandGenerator:
 
 
         self.print_all_layer_contexts()
+        print("Took",iteration, "iterations...")
 
 
 
