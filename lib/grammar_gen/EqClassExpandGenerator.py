@@ -1,5 +1,7 @@
 from common.Types import *
 from common.Instructions import *
+from  utils.DSLInstructionUtils import *
+
 import math
 
 
@@ -41,6 +43,9 @@ class EqClassExpandGenerator:
                 clause_tokens.append(ref_arg.get_rkt_value())
 
             elif isinstance(ref_arg, Context) and isinstance(f_arg, ConstBitVector):
+                return
+
+            elif isinstance(ref_arg, ConstBitVector) and isinstance(f_arg, BitVector):
                 return
 
             elif isinstance(ref_arg, Context) :
@@ -100,6 +105,19 @@ class EqClassExpandGenerator:
         print("Visited:", layer_ctx['visited'])
 
 
+    def emit_all_layer_contexts(self):
+        defs = []
+        for key in self.grammar_clause_map:
+            definition = self.emit_layer_context(key)
+            defs.append(definition)
+        return "\n".join(defs)
+
+
+    def emit_layer_context(self, layer_name):
+        assert layer_name in self.grammar_clause_map, "Must be pre-initialized"
+        layer_ctx = self.grammar_clause_map[layer_name]
+        definition = "(define ({}) \n(choose* \n{}\n))".format(layer_name, "\n".join(layer_ctx['clauses']))
+        return definition
 
     def visit_expr(self, ctx, parent_name, layer_idx, output_size):
         eq_class = self.get_eq_class(ctx.dsl_name)
@@ -118,6 +136,7 @@ class EqClassExpandGenerator:
             self.process_ctx(f_ctx, ctx, current_layer_name, layer_idx)
 
         self.set_layer_context_visited(current_layer_name)
+        return current_layer_name
 
 
 
@@ -127,7 +146,7 @@ class EqClassExpandGenerator:
 
 
     def emit_grammar(self, ref_expr):
-        self.visit_expr(ref_expr, "output", 0, self.output_bitwidth)
+        output_expr_name = self.visit_expr(ref_expr, "output", 0, self.output_bitwidth)
 
 
         Terminate = False
@@ -152,6 +171,11 @@ class EqClassExpandGenerator:
 
 
         self.print_all_layer_contexts()
+        defs = self.emit_all_layer_contexts()
+
+        with open("Check.rkt", "w+") as WriteFile:
+            WriteFile.write(HYDRIDE_HEADER+"\n")
+            WriteFile.write(defs)
         print("Took",iteration, "iterations...")
 
 
