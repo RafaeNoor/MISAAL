@@ -8,6 +8,7 @@ import subprocess
 import os
 import tempfile
 import glob
+import numpy as np
 
 REMOVE_RKT_FILES = True
 HYDRIDE_HEADER =  """
@@ -378,7 +379,7 @@ def translate_expression(input_expr, src_language_desc, target_language_desc, in
 
     symbolic_flag = ["#f", "#t"][int(symbolic)]
     opt_flag = ["#f", "#t"][int(optimize)]
-    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 4 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
+    define_out_expr = "(define-values (solved? output-expr elapsed) (misaal-rewrite-ir hydride-expr 1 2 {} {} 'z3 input-sizes input-precs 1 src-language-desc target-language-desc 'regular target-language))".format(opt_flag , symbolic_flag)
     statements.append(define_out_expr)
 
 
@@ -564,7 +565,7 @@ def remove_redundant_extracts(lines, arg_size_map):
 
 
 
-def create_exhaustive_expressions(dsl_list, expr_depth):
+def create_exhaustive_expressions(dsl_list, expr_depth, use_eq_class = False):
 
     print("create_exhaustive_expressions with depth", expr_depth)
     # Creates exhaustively all expression up to given depth, however
@@ -572,11 +573,10 @@ def create_exhaustive_expressions(dsl_list, expr_depth):
     # need to be set correctly later.
     memo = {}
     start_time = time.time()
-    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo)
 
+    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo, use_eq_class = use_eq_class)
 
     print("Setting Register Names")
-
 
     reg_set_expressions = set_reg_names_exprs(depth_expressions)
 
@@ -585,25 +585,36 @@ def create_exhaustive_expressions(dsl_list, expr_depth):
 
     print("Elapsed time: ", elapsed)
 
-
     return reg_set_expressions
 
 
-def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size = None, return_prec = None, memo = {}):
+
+def get_num_symbolic_args(ctx):
+    return len([arg for arg in ctx.context_args if isinstance(arg, BitVector)])
+
+
+def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size = None, return_prec = None, memo = {}, use_eq_class = False):
+
+    USE_LOOSE = True
 
     key = str((expr_depth, return_size, return_prec))
 
-    #print("Create exhaustive invoked with:", key)
+    if USE_LOOSE:
+        key = str((expr_depth, return_size))
+
+
 
     if expr_depth == 0:
         assert (return_size != None) and (return_prec != None), "Invalid invokation of create_exhaustive_expressions_helper with 0 depth"
         return [Reg("placeholder", return_prec, return_size)]
 
 
+    copy_fn = copy.deepcopy
+    #copy_fn = lambda x : x
 
     if key in memo:
-        #print("Memo Hit:", key, len(memo[key]))
-        return copy.deepcopy(memo[key])
+        print("Memo Hit:", key, len(memo[key]))
+        return copy_fn(memo[key])
     else:
         #print("Memo Miss:", key)
         pass
@@ -612,39 +623,56 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
 
     relavent_ctx = []
     for dsl_inst in dsl_list:
-
+        inst_relavent_ctx = []
         if return_size == None:
-            relavent_ctx += dsl_inst.contexts
+            inst_relavent_ctx += dsl_inst.contexts
         else:
             for ctx in dsl_inst.contexts:
                 loose_condition = ctx.get_output_size() == return_size
                 tight_condition = ctx.get_output_size() == return_size and ctx.in_precision == return_prec
-                if loose_condition:
-                    relavent_ctx.append(ctx)
+                if USE_LOOSE and loose_condition:
+                    inst_relavent_ctx.append(ctx)
+                elif not USE_LOOSE and tight_condition:
+                    inst_relavent_ctx.append(ctx)
+
+
+        if use_eq_class and len(inst_relavent_ctx) != 0:
+            arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in inst_relavent_ctx])
+            eq_candidate = inst_relavent_ctx[arg_max]
+            print("Reduced {} relavent contexts to 1".format(len(inst_relavent_ctx)))
+            inst_relavent_ctx = [eq_candidate]
+
+
+        relavent_ctx += inst_relavent_ctx
 
 
 
     return_expressions = []
     for rctx in relavent_ctx:
-        partial_expressions = [copy.deepcopy(rctx)]
+        partial_expressions = [copy_fn(rctx)]
         for idx, rctx_arg in enumerate(rctx.context_args):
             if isinstance(rctx_arg, BitVector):
-                child_exprs = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth -1, return_size = rctx_arg.size, return_prec = rctx.in_precision, memo = memo)
+                child_exprs = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth -1, return_size = rctx_arg.size, return_prec = rctx.in_precision, memo = memo, use_eq_class = use_eq_class)
                 copied_expressions = []
+                print("Making deep copies")
                 for i in range(len(child_exprs)):
-                    copied_expressions += copy.deepcopy(partial_expressions)
+                    copied_expressions += copy_fn(partial_expressions)
+                print("Done Making deep copies")
 
+                print("Binding arguments")
                 for i in range(len(child_exprs)):
                     child_expr = child_exprs[i]
                     for j in range(len(partial_expressions)):
                         actual_index = i * len(partial_expressions) + j
                         copied_expressions[actual_index].context_args[idx] = child_expr
 
+                print("Done Binding arguments")
+
                 partial_expressions = copied_expressions
         return_expressions += partial_expressions
 
     if return_size != None:
-        return_expressions += [copy.deepcopy(Reg("placeholder", return_prec, return_size))]
+        return_expressions += [copy_fn(Reg("placeholder", return_prec, return_size))]
 
     memo[key] = return_expressions
 

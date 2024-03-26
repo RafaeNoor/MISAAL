@@ -132,5 +132,16 @@ def emit_enumo_emit_clause_to_rosette(dsl_inst):
 
 def define_enumo_egg_to_rosette(dsl_list):
 
-    for dsl_inst in dsl_list:
-        print(emit_enumo_emit_clause_to_rosette(dsl_inst))
+    prototype = "fn egg_to_rosette<'a>(expr: &[Pred]) ->  String {\n"
+    buffer_def = "let mut buf: Vec<String> = vec![];"
+    match_stmt = "for node in expr.as_ref().iter() { \n match node {\n"
+
+    emit_clauses = [emit_enumo_emit_clause_to_rosette(dsl_inst) for dsl_inst in dsl_list]
+
+    function = prototype + match_stmt + "\n".join(emit_clauses) + " }\n}\n"
+    function += "buf.pop().unwrap()\n}\n"
+
+    return function
+
+
+

@@ -39,7 +39,7 @@ def get_matching_context(nested_expr, dsl_list):
     # indices until we have a matching context
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
-    print("checking:", nested_expr[1:])
+    print("Checking:", nested_expr[1:])
     for idx, arg in enumerate(nested_expr[1:]):
 
         new_matching_context_indices = []
@@ -110,7 +110,9 @@ def get_matching_context(nested_expr, dsl_list):
     if len(matching_context_indices) != 1:
         print("MATCHING INDICES: ", matching_context_indices)
         print("Matching dsl_inst: ",matching_dsl_inst.name)
-    assert len(matching_context_indices) == 1, "Unable to find matching context in DSL Parsing"
+        matching_context_indices = [matching_context_indices[0]]
+
+    assert len(matching_context_indices) == 1, "Unable to find matching context in DSL Parsing: {}".format(matching_context_indices)
     ctx_copy =  copy.deepcopy(matching_dsl_inst.contexts[matching_context_indices[0]])
 
     return ctx_copy
