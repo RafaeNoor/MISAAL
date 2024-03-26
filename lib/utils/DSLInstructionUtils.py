@@ -9,6 +9,7 @@ import os
 import tempfile
 import glob
 import numpy as np
+import concurrent.futures
 
 REMOVE_RKT_FILES = True
 HYDRIDE_HEADER =  """
@@ -563,6 +564,12 @@ def remove_redundant_extracts(lines, arg_size_map):
 
 
 
+def create_exhaustive_expressions_generator(dsl_list, expr_depth, use_eq_class = False):
+    depth_expressions_generator = create_exhaustive_expressions_generator_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, use_eq_class = use_eq_class)
+
+    for expr in depth_expressions_generator:
+        new_expr, discard = set_reg_names_exprs_helper(expr, 0)
+        yield new_expr
 
 
 def create_exhaustive_expressions(dsl_list, expr_depth, use_eq_class = False):
@@ -574,7 +581,27 @@ def create_exhaustive_expressions(dsl_list, expr_depth, use_eq_class = False):
     memo = {}
     start_time = time.time()
 
-    depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo, use_eq_class = use_eq_class)
+    USE_GENERATOR = False
+
+    depth_expressions = []
+    if USE_GENERATOR:
+        depth_expressions_generator = create_exhaustive_expressions_generator_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, use_eq_class = use_eq_class)
+
+        for expr in depth_expressions_generator:
+            if isinstance(expr, Context):
+                depth_expressions.append(expr)
+    else:
+        depth_expressions = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, memo = memo, use_eq_class = use_eq_class)
+
+    print("DEBUG")
+    for idx, expr in enumerate(depth_expressions):
+        break
+        print(idx)
+        if isinstance(expr, Context):
+            print(expr.emit_context_expr_string_compact())
+            print(expr.emit_context_expr_string())
+        else:
+            print(expr.get_rkt_value())
 
     print("Setting Register Names")
 
@@ -654,9 +681,30 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
             if isinstance(rctx_arg, BitVector):
                 child_exprs = create_exhaustive_expressions_helper(dsl_list, expr_depth = expr_depth -1, return_size = rctx_arg.size, return_prec = rctx.in_precision, memo = memo, use_eq_class = use_eq_class)
                 copied_expressions = []
-                print("Making deep copies")
-                for i in range(len(child_exprs)):
-                    copied_expressions += copy_fn(partial_expressions)
+
+
+                print("Relavent contexts at ", key, ": ", len(relavent_ctx))
+                print(key)
+                print("Making deep copies for ", len(child_exprs) ,  len(partial_expressions))
+                PARALLEL = False
+
+                if PARALLEL:
+                    POOL_SIZE = 4
+                    pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
+                    results = [0] * len(child_exprs)
+                    def worker(idx):
+                        results[idx] = copy_fn(partial_expressions)
+
+                    for i in range(len(child_exprs)):
+                        pool.submit(worker, i)
+
+                    pool.shutdown(wait=True)
+                    for res in results:
+                        copied_expressions += res
+
+                else:
+                    for i in range(len(child_exprs)):
+                        copied_expressions += copy_fn(partial_expressions)
                 print("Done Making deep copies")
 
                 print("Binding arguments")
@@ -677,6 +725,123 @@ def create_exhaustive_expressions_helper(dsl_list, expr_depth = 1,  return_size 
     memo[key] = return_expressions
 
     return return_expressions
+
+class CountItemsWrapper:
+    def __init__(self, items):
+        self.items = iter(items)
+        self.count = 0
+
+    def __next__(self):
+        res = next(self.items)
+        self.count += 1
+        return res
+
+    def __iter__(self):
+        return self
+
+
+def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  return_size = None, return_prec = None, use_eq_class = False):
+
+
+    USE_LOOSE = True
+
+    key = str((expr_depth, return_size, return_prec))
+
+    if USE_LOOSE:
+        key = str((expr_depth, return_size))
+
+
+    copy_fn = copy.deepcopy
+
+    if expr_depth == 0:
+        assert (return_size != None) and (return_prec != None), "Invalid invokation of create_exhaustive_expressions_helper with 0 depth"
+        yield copy_fn(Reg("0_placeholder", return_prec, return_size))
+    else:
+        relavent_ctx = []
+        for dsl_inst in dsl_list:
+            inst_relavent_ctx = []
+            if return_size == None:
+                inst_relavent_ctx += dsl_inst.contexts
+            else:
+                for ctx in dsl_inst.contexts:
+                    loose_condition = ctx.get_output_size() == return_size
+                    tight_condition = ctx.get_output_size() == return_size and ctx.in_precision == return_prec
+                    if USE_LOOSE and loose_condition:
+                        inst_relavent_ctx.append(ctx)
+                    elif not USE_LOOSE and tight_condition:
+                        inst_relavent_ctx.append(ctx)
+
+
+            if use_eq_class and len(inst_relavent_ctx) != 0:
+                arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in inst_relavent_ctx])
+                eq_candidate = inst_relavent_ctx[arg_max]
+                inst_relavent_ctx = [eq_candidate]
+
+
+            relavent_ctx += inst_relavent_ctx
+
+
+        if return_size != None:
+            yield copy_fn(Reg("1_placeholder", return_prec, return_size))
+
+        for rctx in relavent_ctx:
+            get_arg = lambda j : rctx.context_args[j]
+            symbolic_indices = []
+            generators = []
+
+            for idx, c_arg in enumerate(rctx.context_args):
+                if isinstance(c_arg, BitVector):
+                    corresponding_exprs = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = c_arg.size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                    symbolic_indices.append(idx)
+                    gen = CountItemsWrapper(corresponding_exprs)
+                    generators.append(gen)
+
+            if len(symbolic_indices) == 3:
+
+                generator_0 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[0]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                for expr0 in generator_0:
+
+                    generator_1 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[1]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                    for expr1 in generator_1:
+
+                        generator_2 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[2]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                        for expr2 in generator_2:
+                            copied_rctx = copy.deepcopy(rctx)
+                            copied_rctx.context_args[symbolic_indices[0]] = expr0
+                            copied_rctx.context_args[symbolic_indices[1]] = expr1
+                            copied_rctx.context_args[symbolic_indices[2]] = expr2
+                            yield copied_rctx
+
+            elif len(symbolic_indices) == 2:
+
+                generator_0 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[0]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+
+                for expr0 in generator_0:
+                    generator_1 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[1]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                    for expr1 in generator_1:
+                        copied_rctx = copy.deepcopy(rctx)
+                        copied_rctx.context_args[symbolic_indices[0]] = expr0
+                        copied_rctx.context_args[symbolic_indices[1]] = expr1
+                        yield copied_rctx
+
+            elif len(symbolic_indices) == 1:
+                for expr0 in generators[0]:
+                    copied_rctx = copy.deepcopy(rctx)
+                    copied_rctx.context_args[symbolic_indices[0]] = expr0
+                    yield copied_rctx
+            else:
+                print(len(symbolic_indices))
+                print(rctx.name)
+                print(rctx.emit_context_expr_string())
+                assert False, "Unsupported"
+
+
+
+
+
+
+
+
 
 
 def set_reg_names_exprs(expressions):
