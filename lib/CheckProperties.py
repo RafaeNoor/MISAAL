@@ -18,6 +18,7 @@ from properties.ScaledTranslator import ScaledTranslator
 from properties.EqualOnValues import EqualOnValues
 from properties.EqualOnValuesDepth import EqualOnValuesDepth
 from properties.LargeExpressionTranslator import LargeExpressionTranslator
+from properties.EqClassEqualOnValuesDepth import EqClassEqualOnValuesDepth
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
@@ -87,7 +88,8 @@ test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSw
 
 test_properties = [EqualOnValues, ScaledTranslator]
 test_properties = [LargeExpressionTranslator]
-test_properties = [SimplifyingSwizzles , EqualOnValuesDepth]
+test_properties = [SimplifyingSwizzles , SwizzleTransferable, SynthSwizzleTransferable ,EqualOnValuesDepth][2:]
+test_properties = [EqClassEqualOnValuesDepth]
 
 
 for property in test_properties:
@@ -137,6 +139,10 @@ for property in test_properties:
             PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list)
 
         elif property is EqualOnValuesDepth:
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2)
+
+        elif property is EqClassEqualOnValuesDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2)
         elif property is LargeExpressionTranslator:
