@@ -12,10 +12,7 @@
 
 (provide (all-defined-out))
 
-(bitvector->integer (hexagon_V6_vdealb_128B (integer->bitvector 170141183460469231731687303715884105726 (bitvector 128)) 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)
-)
-(eq? (bvmul (bv 3 128) (bv 2 128)) (bvadd (bv 3 128) (bv 3 128)))
+(hexagon_V6_vdealb_128B (bv #x00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff 1024) 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)
 
-(eq? (hexagon_V6_vshuffh_128B (hexagon_V6_vdealb_128B (bv #x00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff 1024) 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0) 1024 16 0 16 8 16 8 0) (bv #x00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff 1024))
-
+(output-smt)
 

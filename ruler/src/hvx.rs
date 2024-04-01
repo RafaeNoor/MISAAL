@@ -144,8 +144,9 @@ impl<const N: Inner> From<Inner> for HVXVec<N> {
     }
 }
 
-/* impl<const N: Inner> HVXVec8_128<N> {
-    pub const ZERO: Self = Self(vec![HVXVec::ZERO; 8]);
+impl<const N: Inner> HVXVec8_128<N> {
+
+    pub const ZERO: Self = Self(vec![BV128::ZERO; 8]);
     pub const ALL_ONES: Self = Self( vec![(HVXVec::ZERO.wrapping_neg()).my_shr(HVXVec::ZERO);8]);
     pub const NEG_ONE: Self = Self::ALL_ONES;
     // pub const MIN: Self = Self(vec![HVXVec::from(1 << (N - 1)); 8]);
@@ -154,39 +155,7 @@ impl<const N: Inner> From<Inner> for HVXVec<N> {
     pub fn new(n: impl Into<Inner>) -> Self {
         Self(Self::ALL_ONES.0)
     }
-
-     pub fn wrapping_add(self, rhs: Self) -> Self {
-        Self::new(self.0.wrapping_add(rhs.0))
-    }
-
-    pub fn wrapping_sub(self, rhs: Self) -> Self {
-        Self::new(self.0.wrapping_sub(rhs.0))
-    }
-
-    pub fn wrapping_mul(self, rhs: Self) -> Self {
-        Self::new(self.0.wrapping_mul(rhs.0))
-    }
-
-    pub fn wrapping_neg(self) -> Self {
-        Self::new(self.0.wrapping_neg())
-    }
-
-    pub fn my_shl(self, rhs: Self) -> Self {
-        if rhs.0 >= N {
-            Self::ZERO
-        } else {
-            Self::new(self.0 << rhs.0)
-        }
-    }
-
-    pub fn my_shr(self, rhs: Self) -> Self {
-        if rhs.0 >= N {
-            Self::ZERO
-        } else {
-            Self::new(self.0 >> rhs.0)
-        }
-    } 
-} */
+}
 
 /* impl<const N: Inner> Not for HVXVec8_128<N> {
     type Output = Self;
@@ -266,7 +235,7 @@ impl<const N: Inner> std::str::FromStr for HVXVec8_128<N> {
     fn from(v: Inner) -> Self {
         Self::new(v)
     }
-} */
+} */    
 
 // Macro for specializing HVXVec to different sized bitvectors
 #[macro_export]
@@ -310,7 +279,7 @@ macro_rules! impl_hvx {
                     bv_code.push_str(&a.to_string());
                     bv_code.push_str(" (bitvector 128))");
                     let rkt_code = (&format!(r#"'(bitvector->integer (bvadd {} {}))'"#, bv_code, bv_code));
-                    let cmd = format!("/home/boron/bin/racket -I rosette -e {}", rkt_code);
+                    let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                     let output = run(&cmd);
                     assert!(output.status.success());
                     let mut so = get_stdout(&output).to_string();
@@ -328,7 +297,7 @@ macro_rules! impl_hvx {
                     (require hydride/utils/misc)
                     (require hydride/ir/hvx/semantics)
                     (bitvector->integer (hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0))'"#, bv_code));
-                    let cmd = format!("/home/boron/bin/racket -I rosette -e {}", rkt_code);
+                    let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                     print!("cmd to run: {}\n", cmd);
                     let output = run(&cmd);
                     //assert!(output.status.success());
@@ -347,7 +316,7 @@ macro_rules! impl_hvx {
                         bv_code.push_str(&a.to_string());
                         bv_code.push_str(" (bitvector 128))");
                         let rkt_code = (&format!(r#"'(bitvector->integer (bvmul {} (bv 2 128)))'"#, bv_code));
-                        let cmd = format!("/home/boron/bin/racket -I rosette -e {}", rkt_code);
+                        let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                         let output = run(&cmd);
                         assert!(output.status.success());
                         let mut so = get_stdout(&output).to_string();
@@ -359,13 +328,13 @@ macro_rules! impl_hvx {
                         print!("ret {:?}\n", ret); */
                         let mut bv_code = format!("((integer->bitvector ");
                         bv_code.push_str(&a.to_string());
-                        bv_code.push_str(" (bitvector 128))");
+                        bv_code.push_str(" (bitvector 1024))");
                         let rkt_code = (&format!(r#"'
                         (require hydride/utils/bvops)
                         (require hydride/utils/misc)
                         (require hydride/ir/hvx/semantics)
                         (bitvector->integer (hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0))'"#, bv_code));
-                        let cmd = format!("/home/boron/bin/racket -I rosette -e {}", rkt_code);
+                        let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                         let output = run(&cmd);
                         //assert!(output.status.success());
                         let mut so = get_stdout(&output).to_string();
@@ -420,10 +389,10 @@ macro_rules! impl_hvx {
 
                 for i in 0..2 {
                     let i = HVXVec::from(i);
-                    // consts.push(Some(HVXVec::MIN.wrapping_add(i)));
-                    // consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
+                    consts.push(Some(HVXVec::MIN.wrapping_add(i)));
+                    consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
                     consts.push(Some(i));
-                    // consts.push(Some(i.not()));
+                    consts.push(Some(i.not()));
                 }
                 consts.sort();
                 consts.dedup();
@@ -478,7 +447,7 @@ macro_rules! impl_hvx {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    type BV1024 = HVXVec<1024>;
+    type BV1024 = HVXVec<4>;
 
     #[test]
     fn test_bv() {

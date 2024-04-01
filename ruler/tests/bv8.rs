@@ -28,11 +28,11 @@ pub mod test {
         let lang = Lang::new(
             &["0", "1"],
             &["a", "b", "c"],
-            &[&["~", "-"], &["&", "|", "*", "--", "+", "<<", ">>"]],
+            &[&["vdeal", "vshuff"], &[]],
         );
         rules.extend(recursive_rules(
             enumo::Metric::Atoms,
-            5,
+            2,
             lang.clone(),
             Ruleset::default(),
         ));
@@ -65,12 +65,12 @@ pub mod test {
     fn compare() {
         let domain = "BV8";
         // Port the bv4 rules into domain
-        let actual_bv4_rules: Ruleset<_> = bv4_fancy_rules();
-        let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());
+        // let actual_bv4_rules: Ruleset<_> = bv4_fancy_rules();
+        // let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());
 
         // Generate the rules directly
         let (gen, gen_time): (Ruleset<Bv>, Duration) = gen();
 
-        logger::write_bv_derivability(domain, gen, gen_time, ported_bv4_rules)
+        // logger::write_bv_derivability(domain, gen, gen_time, ported_bv4_rules)
     }
 }

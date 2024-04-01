@@ -163,7 +163,7 @@ impl Lang {
 
 /// Incrementally construct a ruleset by running rule inference up to a size bound,
 /// using previously-learned rules at each step.
-pub fn recursive_rules<L: SynthLanguage>(
+pub fn  recursive_rules<L: SynthLanguage>(
     metric: Metric,
     n: usize,
     lang: Lang,

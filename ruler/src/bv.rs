@@ -102,18 +102,6 @@ impl<const N: Inner> fmt::Display for BV<N> {
     }
 }
 
-impl<const N: Inner> fmt::Binary for BV<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Binary::fmt(&self.0, f)
-    }
-}
-
-impl<const N: Inner> fmt::LowerHex for BV<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::LowerHex::fmt(&self.0, f)
-    }
-}
-
 impl<const N: Inner> Distribution<BV<N>> for rand::distributions::Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> BV<N> {
         let inner: Inner = rng.gen();
@@ -152,8 +140,6 @@ macro_rules! impl_bv {
 
         pub type BV = $crate::BV::<$n>;
 
-        pub type BV_VEC = Vec<BV>;
-
         egg::define_language! {
           pub enum Bv {
                   "+" = Add([Id; 2]),
@@ -162,6 +148,7 @@ macro_rules! impl_bv {
                   "-" = Neg(Id),
                   "~" = Not(Id),
                   "vdeal" = VDeal(Id),
+                  "vshuff" = VShuff(Id),
                   "<<" = Shl([Id; 2]),
                   ">>" = Shr([Id; 2]),
                   "&" = And([Id; 2]),
@@ -172,6 +159,7 @@ macro_rules! impl_bv {
               }
         }
 
+        use cli_runner::{run, get_stdout, get_stderr};
 
         impl SynthLanguage for Bv {
             type Constant = BV;
@@ -183,16 +171,108 @@ macro_rules! impl_bv {
                 match self {
                     Bv::Neg(a) => map!(get_cvec, a => Some(a.wrapping_neg())),
                     Bv::Not(a) => map!(get_cvec, a => Some(a.not())),
+
                     Bv::Add([a, b]) => map!(get_cvec, a, b => Some(a.wrapping_add(*b))),
                     Bv::Sub([a, b]) => map!(get_cvec, a, b => Some(a.wrapping_sub(*b))),
                     Bv::Mul([a, b]) => map!(get_cvec, a, b => Some(a.wrapping_mul(*b))),
-                    Bv::VDeal(a) => map!(get_cvec, a => {print!("(hexagon_V6_vdealb_128B (bv #x{:0128x} 1024) 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)\n", a.wrapping_add(*a)); Some(a.wrapping_add(*a))}),
+
                     Bv::Shl([a, b]) => map!(get_cvec, a, b => Some(a.my_shl(*b))),
                     Bv::Shr([a, b]) => map!(get_cvec, a, b => Some(a.my_shr(*b))),
 
                     Bv::And([a, b]) => map!(get_cvec, a, b => Some(*a & *b)),
                     Bv::Or([a, b]) => map!(get_cvec, a, b => Some(*a | *b)),
                     Bv::Xor([a, b]) => map!(get_cvec, a, b => Some(*a ^ *b)),
+                    Bv::VDeal(a) => map!(get_cvec, a => {
+                        /* let mut bv_code = format!("(integer->bitvector ");
+                        bv_code.push_str(&a.to_string());
+                        bv_code.push_str(&format!(" (bitvector {}))", $n));
+                        let rkt_code = (&format!(r#"'
+                        (require hydride/utils/bvops)
+                        (require hydride/utils/misc)
+                        (require hydride/ir/hvx/semantics)
+                        (bitvector->integer (bvadd {} {}))'"#, bv_code, bv_code));
+                        // let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+                        let cmd = format!(r#"/home/baronia3/bin/racket -e '(+ {} {})'"#, a, a);
+                        print!("cmd to run: {}\n", cmd);
+                        let output = run(&cmd);
+                        //assert!(output.status.success());
+                        let mut so = get_stdout(&output).to_string();
+                        let len = so.len();
+                        so.truncate(len - 1);
+                        assert!(!so.is_empty());
+                        // print!("{:?}  \n", so);
+                        let ret = so.parse::<i128>().unwrap();
+                        print!("ret {:?}\n\n\n", ret); */
+                        let tets_ret = a.0 as u128;
+                        Some(BV::from(tets_ret + tets_ret))
+                        }),
+                        Bv::VShuff(a) => map!(get_cvec, a => {
+                            /* let mut bv_code = format!("((integer->bitvector ");
+                            bv_code.push_str(&a.to_string());
+                            bv_code.push_str(&format!(" (bitvector {}))", $n));
+                            let rkt_code = (&format!(r#"'
+                            (require hydride/utils/bvops)
+                            (require hydride/utils/misc)
+                            (require hydride/ir/hvx/semantics)
+                            (bitvector->integer (bvmul {} (bitvector 2 {})))'"#, bv_code, $n));
+                            let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+                            let output = run(&cmd);
+                            //assert!(output.status.success());
+                            let mut so = get_stdout(&output).to_string();
+                            let len = so.len();
+                            so.truncate(len - 1);
+                            assert!(!so.is_empty());
+                            print!("{:?}", so);
+                            let ret = so.parse::<i128>().unwrap();
+                            print!("ret {:?}\n", ret); */
+                            let tets_ret = a.0 as u128;
+                            Some(BV::from(tets_ret * 2))
+
+                        }),
+                    /* Bv::VDeal(a) => map!(get_cvec, a => {
+                        let mut bv_code = format!("(integer->bitvector ");
+                        bv_code.push_str(&a.to_string());
+                        bv_code.push_str(" (bitvector 1024))");
+                        let rkt_code = (&format!(r#"'
+                        (require hydride/utils/bvops)
+                        (require hydride/utils/misc)
+                        (require hydride/ir/hvx/semantics)
+                        (bitvector->integer (hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0))'"#, bv_code));
+                        let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+                        print!("cmd to run: {}\n", cmd);
+                        let output = run(&cmd);
+                        //assert!(output.status.success());
+                        let mut so = get_stdout(&output).to_string();
+                        let len = so.len();
+                        so.truncate(len - 1);
+                        assert!(!so.is_empty());
+                        // print!("{:?}  \n", so);
+                        let ret = so.parse::<i128>().unwrap();
+                        print!("ret {:?}\n\n\n", ret);
+                        Some(BV::from(ret as u128))
+                        }),
+                        Bv::VShuff(a) => map!(get_cvec, a => {
+                            let mut bv_code = format!("((integer->bitvector ");
+                            bv_code.push_str(&a.to_string());
+                            bv_code.push_str(" (bitvector 128))");
+                            let rkt_code = (&format!(r#"'
+                            (require hydride/utils/bvops)
+                            (require hydride/utils/misc)
+                            (require hydride/ir/hvx/semantics)
+                            (bitvector->integer (hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0))'"#, bv_code));
+                            let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+                            let output = run(&cmd);
+                            //assert!(output.status.success());
+                            let mut so = get_stdout(&output).to_string();
+                            let len = so.len();
+                            so.truncate(len - 1);
+                            assert!(!so.is_empty());
+                            print!("{:?}", so);
+                            let ret = so.parse::<i128>().unwrap();
+                            print!("ret {:?}\n", ret);
+                            Some(BV::from(ret as u128))
+
+                        }), */
 
                     Bv::Lit(n) => vec![Some(n.clone()); cvec_len],
                     Bv::Var(_) => vec![],
@@ -267,7 +347,6 @@ macro_rules! impl_bv {
                             Bv::Var(v) => buf.push(z3::ast::BV::new_const(&ctx, v.to_string(), $n)),
                             Bv::Lit(c) => buf.push(z3::ast::BV::from_u64(&ctx, c.0 as u64, $n)),
                             Bv::Add([a, b]) => buf.push(buf[usize::from(*a)].bvadd(&buf[usize::from(*b)])),
-                            Bv::VDeal(a) => buf.push(buf[usize::from(*a)].bvadd(&buf[usize::from(*a)])),
                             Bv::Sub([a, b]) => buf.push(buf[usize::from(*a)].bvsub(&buf[usize::from(*b)])),
                             Bv::Mul([a, b]) => buf.push(buf[usize::from(*a)].bvmul(&buf[usize::from(*b)])),
                             Bv::Shl([a, b]) => buf.push(buf[usize::from(*a)].bvshl(&buf[usize::from(*b)])),
@@ -277,6 +356,10 @@ macro_rules! impl_bv {
                             Bv::Xor([a, b]) => buf.push(buf[usize::from(*a)].bvxor(&buf[usize::from(*b)])),
                             Bv::Not(a) => buf.push(buf[usize::from(*a)].bvnot()),
                             Bv::Neg(a) => buf.push(buf[usize::from(*a)].bvneg()),
+                            Bv::VDeal(a) => buf.push(buf[usize::from(*a)].bvadd(&buf[usize::from(*a)])),
+                            Bv::VShuff(a) => buf.push(buf[usize::from(*a)].bvmul(&buf[usize::from(*a)])),
+                            // Bv::VDeal(a) => buf.push(buf[usize::from(*a)].bvadd(&buf[usize::from(*a)])),
+                            // Bv::VShuff(a) => buf.push(buf[usize::from(*a)].bvmul(&buf[2 as usize])),
                         }
                     }
                     buf.pop().unwrap()
@@ -289,11 +372,41 @@ macro_rules! impl_bv {
                 let lexpr = egg_to_z3(&ctx, Self::instantiate(lhs).as_ref());
                 let rexpr = egg_to_z3(&ctx, Self::instantiate(rhs).as_ref());
                 solver.assert(&lexpr._eq(&rexpr).not());
+
+
+                /* fn egg_to_rostte(expr: &[Bv]) -> String {
+                    let mut buf: Vec<> = vec![];
+                    for node in expr.as_ref().iter() {
+                        match node {
+                            Bv::Var(v) => buf.push(z3::ast::BV::new_const(&ctx, v.to_string(), $n)),
+                            Bv::Lit(c) => buf.push(z3::ast::BV::from_u64(&ctx, c.0 as u64, $n)),
+                            Bv::Add([a, b]) => buf.push(buf[usize::from(*a)].bvadd(&buf[usize::from(*b)])),
+                            Bv::Sub([a, b]) => buf.push(buf[usize::from(*a)].bvsub(&buf[usize::from(*b)])),
+                            Bv::Mul([a, b]) => buf.push(buf[usize::from(*a)].bvmul(&buf[usize::from(*b)])),
+                            Bv::Shl([a, b]) => buf.push(buf[usize::from(*a)].bvshl(&buf[usize::from(*b)])),
+                            Bv::Shr([a, b]) => buf.push(buf[usize::from(*a)].bvlshr(&buf[usize::from(*b)])),
+                            Bv::And([a, b]) => buf.push(buf[usize::from(*a)].bvand(&buf[usize::from(*b)])),
+                            Bv::Or([a, b]) => buf.push(buf[usize::from(*a)].bvor(&buf[usize::from(*b)])),
+                            Bv::Xor([a, b]) => buf.push(buf[usize::from(*a)].bvxor(&buf[usize::from(*b)])),
+                            Bv::Not(a) => buf.push(buf[usize::from(*a)].bvnot()),
+                            Bv::Neg(a) => buf.push(buf[usize::from(*a)].bvneg()),
+                        }
+                    }
+                    buf.pop().unwrap()
+                } */
+
+                /* match ret.as_string() {
+                    "#t" => ValidationResult::Invalid,
+                    "#f" => ValidationResult::Valid,
+                    _ => ValidationResult::Unknown
+                } */
+
                 match solver.check() {
                     SatResult::Sat => ValidationResult::Invalid,
                     SatResult::Unsat => ValidationResult::Valid,
                     SatResult::Unknown => ValidationResult::Unknown
                 }
+                // ValidationResult::Valid
             }
         }
     };
@@ -302,19 +415,19 @@ macro_rules! impl_bv {
 #[cfg(test)]
 pub mod tests {
     use super::*;
-    type BV1024 = BV<1024>;
+    type BV4 = BV<4>;
 
     #[test]
     fn test_bv() {
-        // assert_eq!(BV1024::ALL_ONES.0, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
-        // assert_eq!(BV1024::MAX.0, 0b0111);
-        // assert_eq!(BV1024::MIN.0, 0b1000);
-        // print!("BV1024 All Ones #x{:?}\n", BV1024::ALL_ONES.0);
-        let one = BV1024::from(1);
+        assert_eq!(BV4::ALL_ONES.0, 0b1111);
+        assert_eq!(BV4::MAX.0, 0b0111);
+        assert_eq!(BV4::MIN.0, 0b1000);
 
-        // assert_eq!(BV1024::MAX.wrapping_add(one), BV::MIN);
-        // assert_eq!(BV1024::NEG_ONE.wrapping_neg(), one);
-        // assert_eq!(BV1024::MIN.wrapping_mul(BV::NEG_ONE), BV::MIN);
-        // assert_eq!(BV1024::MIN.wrapping_neg(), BV::MIN);
+        let one = BV4::from(1);
+
+        assert_eq!(BV4::MAX.wrapping_add(one), BV::MIN);
+        assert_eq!(BV4::NEG_ONE.wrapping_neg(), one);
+        assert_eq!(BV4::MIN.wrapping_mul(BV::NEG_ONE), BV::MIN);
+        assert_eq!(BV4::MIN.wrapping_neg(), BV::MIN);
     }
 }

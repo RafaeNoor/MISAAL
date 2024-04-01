@@ -1,4 +1,4 @@
-ruler::impl_hvx!(128);
+ruler::impl_hvx!(16);
 
 #[path = "./recipes/bv4_fancy.rs"]
 pub mod bv4_fancy;
