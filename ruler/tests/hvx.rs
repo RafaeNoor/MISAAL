@@ -1,14 +1,11 @@
-ruler::impl_hvx!(16);
+ruler::impl_hvx!(128);
 
 #[path = "./recipes/bv4_fancy.rs"]
 pub mod bv4_fancy;
-use std::process::Command;
 
 #[cfg(test)]
 pub mod test {
     use std::time::{Duration, Instant};
-
-    use crate::bv4_fancy::bv4_fancy_rules;
 
     use ruler::{
         enumo::{self, Ruleset},
@@ -28,7 +25,7 @@ pub mod test {
         );
         rules.extend(recursive_rules(
             enumo::Metric::Atoms,
-            2,
+            3,
             lang.clone(),
             Ruleset::default(),
         ));
@@ -65,7 +62,7 @@ pub mod test {
         // let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());
 
         // Generate the rules directly
-        let (gen, gen_time): (Ruleset<HvxLang>, Duration) = gen();
+        let (_gen, _gen_time): (Ruleset<HvxLang>, Duration) = gen();
 
         // logger::write_bv_derivability(domain, gen, gen_time, ported_bv4_rules)
     }

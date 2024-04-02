@@ -5,7 +5,6 @@ use std::str;
 
 use rand::prelude::Distribution;
 use rand::Rng;
-use rayon::vec;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -155,80 +154,6 @@ impl HVXVec8_128 {
         Self([BV128::from(n.into());8])
     }
 }
-
-/* impl<const N: Inner> Not for HVXVec8_128<N> {
-    type Output = Self;
-
-    fn not(self) -> Self::Output {
-        Self::new(self.0.not())
-    }
-}
-
-impl<const N: Inner> BitAnd for HVXVec8_128<N> {
-    type Output = Self;
-
-    fn bitand(self, rhs: Self) -> Self::Output {
-        Self::new(self.0.bitand(rhs.0))
-    }
-}
-
-impl<const N: Inner> BitOr for HVXVec8_128<N> {
-    type Output = Self;
-
-    fn bitor(self, rhs: Self) -> Self::Output {
-        Self::new(self.0.bitor(rhs.0))
-    }
-}
-
-impl<const N: Inner> BitXor for HVXVec8_128<N> {
-    type Output = Self;
-
-    fn bitxor(self, rhs: Self) -> Self::Output {
-        Self::new(self.0.bitxor(rhs.0))
-    }
-} */
-
-/* impl<const N: Inner> fmt::Debug for HVXVec8_128<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(&self.0, f)
-    }
-}
-
-impl<const N: Inner> fmt::Display for HVXVec8_128<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(&self.0, f)
-    }
-}
-
-impl<const N: Inner> fmt::Binary for HVXVec8_128<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Binary::fmt(&self.0, f)
-    }
-}
-
-impl<const N: Inner> fmt::LowerHex for HVXVec8_128<N> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::LowerHex::fmt(&self.0, f)
-    }
-}
-
-impl<const N: Inner> Distribution<HVXVec8_128<N>> for rand::distributions::Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> HVXVec8_128<N> {
-        let inner: Inner = rng.gen();
-        inner.into()
-    }
-}
-
-impl<const N: Inner> std::str::FromStr for HVXVec8_128<N> {
-    type Err = std::num::ParseIntError;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if let Some(stripped) = s.strip_prefix("#b") {
-            let i = Inner::from_str_radix(stripped, 2).unwrap();
-            return Ok(Self::new(i));
-        }
-        s.parse::<Inner>().map(Self::new)
-    }
-} */
 
 impl From<Inner> for HVXVec8_128 {
     fn from(v: Inner) -> Self {
