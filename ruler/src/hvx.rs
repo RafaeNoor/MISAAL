@@ -15,7 +15,7 @@ use serde::Serialize;
 pub struct HVXVec<const N: Inner>(pub Inner);
 
 type BV128 = HVXVec<128>;
-pub struct HVXVec8_128<const N: Inner>(Vec<BV128>);
+pub struct HVXVec8_128([BV128; 8]);
 
 type Inner = u128;
 const INNER_N: Inner = (core::mem::size_of::<Inner>() * 8) as Inner;
@@ -144,16 +144,15 @@ impl<const N: Inner> From<Inner> for HVXVec<N> {
     }
 }
 
-impl<const N: Inner> HVXVec8_128<N> {
-
-    pub const ZERO: Self = Self(vec![BV128::ZERO; 8]);
-    pub const ALL_ONES: Self = Self( vec![(HVXVec::ZERO.wrapping_neg()).my_shr(HVXVec::ZERO);8]);
+impl HVXVec8_128 {
+    pub const ZERO: Self = Self([BV128::ZERO; 8]);
+    pub const ALL_ONES: Self = Self([BV128::ALL_ONES;8]);
     pub const NEG_ONE: Self = Self::ALL_ONES;
     // pub const MIN: Self = Self(vec![HVXVec::from(1 << (N - 1)); 8]);
     // pub const MAX: Self = Self(vec![HVXVec::from(HVXVec::ALL_ONES.0 >> 1); 8]);
 
     pub fn new(n: impl Into<Inner>) -> Self {
-        Self(Self::ALL_ONES.0)
+        Self([BV128::from(n.into());8])
     }
 }
 
@@ -231,11 +230,11 @@ impl<const N: Inner> std::str::FromStr for HVXVec8_128<N> {
     }
 } */
 
-/* impl<const N: Inner> From<Inner> for HVXVec8_128<N> {
+impl From<Inner> for HVXVec8_128 {
     fn from(v: Inner) -> Self {
         Self::new(v)
     }
-} */    
+}    
 
 // Macro for specializing HVXVec to different sized bitvectors
 #[macro_export]
