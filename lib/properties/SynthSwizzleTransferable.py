@@ -67,7 +67,7 @@ class SynthSwizzleTransferable(SwizzleTransferable):
 
         input_precision = sample_ctx.in_precision
 
-        print("Checking if Swizzle Transferability holds for", dsl_inst.name, "on", pair, "with swizzle ", swizzle_inst.name, "which takes ", num_swizzle_operands, "operands")
+        print("Checking if Synth Swizzle Transferability holds for", dsl_inst.name, "on", pair, "with swizzle ", swizzle_inst.name, "which takes ", num_swizzle_operands, "operands")
 
         # TODO:  TYPECHECK if swizzle is compatible
 

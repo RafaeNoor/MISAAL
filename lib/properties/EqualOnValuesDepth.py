@@ -1,6 +1,7 @@
 from properties.Property import *
 import os
 import time
+import glob
 import pickle
 from properties.EqualOnValues import EqualOnValues
 import random
@@ -29,23 +30,26 @@ class EqualOnValuesDepth(EqualOnValues):
 
 
 
-    def prune_uniform_size_expr_depth(self, expr_list):
+    def prune_uniform_size_expr_depth(self, pickle_files_path):
         pruned_expr_list = []
 
-        for expr in expr_list:
-            expr_sizes = get_expr_intermediate_sizes(expr)
+        for path in pickle_files_path:
 
-            unique_sizes = list(set(expr_sizes))
+            with open(path, "rb") as handle:
+                expr = pickle.load(handle)
+                expr_sizes = get_expr_intermediate_sizes(expr)
 
-            if len(unique_sizes) == 1:
-                # If expression has the same bitvector sizes throughout, let the depth one case handle that.
-                continue
+                unique_sizes = list(set(expr_sizes))
 
-            pruned_expr_list.append(expr)
+                if len(unique_sizes) == 1:
+                    # If expression has the same bitvector sizes throughout, let the depth one case handle that.
+                    continue
 
-        print("Original # expressions {}, Pruned # expressions {}".format(len(expr_list), len(pruned_expr_list)))
+                pruned_expr_list.append(expr)
+
+        print("Original # expressions {}, Pruned # expressions {}".format(len(pickle_files_path), len(pruned_expr_list)))
         with open("temp.log", "w+") as LogFile:
-            LogFile.write("Original # expressions {}, Pruned # expressions {}".format(len(expr_list), len(pruned_expr_list)))
+            LogFile.write("Original # expressions {}, Pruned # expressions {}".format(len(pickle_files_path), len(pruned_expr_list)))
         return pruned_expr_list
 
 
@@ -123,12 +127,15 @@ class EqualOnValuesDepth(EqualOnValues):
         print("Target DSL")
         print_dsl_list_summary(self.output_dsl_list)
 
+        base_name = "halide_exprs_d{}".format(self.output_depth)
         expr_fname = "halide_exprs_d{}.pickle".format(self.output_depth)
-        read_from_file = os.path.exists(expr_fname)
+        read_from_file = os.path.exists(base_name)
 
         expressions = []
         if read_from_file:
             start_time = time.time()
+            print("Exhaustive expressions already generated")
+            """
             with open(expr_fname, "rb") as handle:
                 print("Reading expressions from", expr_fname)
                 expressions = pickle.load(handle)
@@ -136,18 +143,27 @@ class EqualOnValuesDepth(EqualOnValues):
             end_time = time.time()
             elapsed = end_time - start_time
             print("Reading from file took {} seconds".format(elapsed))
+            """
         else:
+            print("Generating new expressions path")
             expressions = create_exhaustive_expressions(self.output_dsl_list, self.output_depth)
-            with open(expr_fname, "wb") as handle:
-                print("Saving expressions to", expr_fname)
-                pickle.dump(expressions, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            os.makedirs(base_name)
 
-        print("Number of output expressions: ", len(expressions))
+            for idx, expr in enumerate(expressions):
 
-        expressions = self.prune_uniform_size_expr_depth(expressions)
+                expr_fname = "halide_exprs_d{}_e{}.pickle".format(self.output_depth,idx)
+                expr_path = os.path.join(base_name, expr_fname)
+                with open(expr_path, "wb") as handle:
+                    print("Saving expressions to", expr_path)
+                    pickle.dump(expr, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-        #for expr in expressions:
-        #    print(expr.emit_context_expr_string())
+
+        pickle_files = glob.glob(base_name+"/"+"*.pickle")
+        print("Number of output expressions: ", len(pickle_files))
+
+
+        expressions = self.prune_uniform_size_expr_depth(pickle_files)
+
 
 
         compatible_out_size_map = {}

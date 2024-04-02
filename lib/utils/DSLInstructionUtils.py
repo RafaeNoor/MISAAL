@@ -564,8 +564,8 @@ def remove_redundant_extracts(lines, arg_size_map):
 
 
 
-def create_exhaustive_expressions_generator(dsl_list, expr_depth, use_eq_class = False):
-    depth_expressions_generator = create_exhaustive_expressions_generator_helper(dsl_list, expr_depth = expr_depth, return_size = None,return_prec = None, use_eq_class = use_eq_class)
+def create_exhaustive_expressions_generator(dsl_list, expr_depth, use_eq_class = False, output_size = None):
+    depth_expressions_generator = create_exhaustive_expressions_generator_helper(dsl_list, expr_depth = expr_depth, return_size = output_size, return_prec = 8, use_eq_class = use_eq_class)
 
     for expr in depth_expressions_generator:
         new_expr, discard = set_reg_names_exprs_helper(expr, 0)

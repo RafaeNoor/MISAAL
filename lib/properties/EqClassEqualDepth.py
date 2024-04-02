@@ -15,19 +15,25 @@ import itertools
 import numpy as np
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 
-class EqClassEqualOnValuesDepth(EqualOnValues):
+class EqClassEqualDepth(EqualOnValues):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None):
 
 
         print("Source DSL List size:", len(dsl_list))
         print("Target DSL List size:", len(target_dsl_list))
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list)
-        self.name = "EqClassEqualOnValuesDepth"
+        self.name = "EqClassEqualDepth"
         self.output_depth = output_depth
         self.is_candidate_generator = True
+
+        self.forward_map = {}
+
+        if not forward_map_path is None:
+            with open(forward_map_path, "r") as JsonFile:
+                self.forward_map = json.load(JsonFile)
 
 
 
@@ -81,6 +87,43 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         return filtered
 
 
+    def get_testing_expression(self):
+        vec_add_dsl = self.get_eq_class("typed:vec-add")
+
+        vec_reduce_dsl = self.get_eq_class("typed:signed-vector_reduce_add")
+
+        cast_int_dsl = self.get_eq_class("typed:cast-int")
+
+        vec_widen_mul_dsl = self.get_eq_class("typed:signed-vec-widen-mul")
+
+        vec_add_ctx = [copy.deepcopy(ctx) for ctx in vec_add_dsl.contexts if ctx.name == 'typed:vec-add_p32_s1024_signed_None'][0]
+
+        vec_reduce_ctx = [copy.deepcopy(ctx) for ctx in vec_reduce_dsl.contexts if ctx.name == "typed:signed_vector_reduce_add_w4_4096_32_4096" ][0]
+
+        cast_int_ctx = [copy.deepcopy(ctx) for ctx in cast_int_dsl.contexts if ctx.name == 'typed:cast-int_0_ip16_is2048_op32_os4096_signed_1'][0]
+
+        vec_widen_mul_ctx = [copy.deepcopy(ctx) for ctx in vec_widen_mul_dsl.contexts if ctx.name == 'typed:signed-vec-widen-mul_p8_s1024_signed_1'][0]
+
+
+
+        reg_2 = Reg(str(2), 32, 1024)
+        reg_0 = Reg(str(0), 8, 1024)
+        reg_1 = Reg(str(1), 8, 1024)
+
+        vec_add_ctx.context_args[0] = vec_reduce_ctx
+        vec_add_ctx.context_args[1] = reg_2
+
+        vec_reduce_ctx.context_args[1] = cast_int_ctx
+
+        cast_int_ctx.context_args[0] = vec_widen_mul_ctx
+
+        vec_widen_mul_ctx.context_args[0] = reg_0
+        vec_widen_mul_ctx.context_args[1] = reg_1
+
+        return vec_add_ctx
+
+
+
 
     def get_property_desc(self):
         return "Identifies values for which two expressions in different dsls may be equal"
@@ -111,12 +154,18 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         # (Equivalence class expression from input DSL, Equivalence class expression from output DSL)
 
         for dsl_inst in self.input_dsl_list:
+            relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
             src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
-            expressions = create_exhaustive_expressions_generator(self.output_dsl_list, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
+            expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
+            expressions = [self.get_testing_expression()]
             for expr in expressions:
                 candidate = (dsl_inst, expr)
                 yield candidate
 
+
+    def get_relavent_output_dsl_subset(self, dsl_inst):
+        relavent_names = self.forward_map[dsl_inst.name]
+        return [d for d in self.output_dsl_list if d.name in relavent_names]
 
 
     def get_eq_class(self, eq_class_name):
@@ -137,7 +186,6 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
 
         src_eq_class = copy.deepcopy(candidate[0])
-
         arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in src_eq_class.contexts])
         src_ctx = src_eq_class.contexts[arg_max]
         dst_ctx = copy.deepcopy(candidate[1])
@@ -156,6 +204,9 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         if not matching_ctx:
             #print(dst_eq_class.name," has no context producing ", src_ctx.out_vectsize)
             return False
+
+
+
 
 
         num_src_ctx_args = self.get_context_num_sym_args(src_ctx)
@@ -201,6 +252,7 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
         common_param =  False
 
+
         for idx, arg in enumerate(dst_regs):
             reg = None
             key = str(arg.size)
@@ -226,8 +278,6 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             return False
 
 
-        #print(src_ctx.emit_context_expr_string())
-        #print(dst_ctx.emit_context_expr_string())
 
         language_to_symbol = {"hvx": "'hvx",
                               "x86": "'x86",
@@ -258,12 +308,6 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             env.append(value)
 
 
-        define_env = "(define env (vector {}))".format(" ".join(env))
-        statements.append(define_env)
-
-        # symbolic operands are non-zero
-        statements.append("(assert-non-zero-env env)")
-
 
 
         src_expression = "(define src-expr\n {}\n)".format(src_ctx.emit_context_expr_string())
@@ -272,47 +316,44 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
         # Define dst expression as a grammar of possible
         # concrete Eq class members in the same structure
-
         input_precs = [arg.precision for arg in src_ctx_regs]
-        GrammarGenerator = EqClassExpandGenerator(dsl_list = target_language_dsl, output_bitwidth = output_size, input_sizes = [arg.size for arg in src_ctx_regs])
+
+        GrammarGenerator = EqClassExpandGenerator(dsl_list = target_language_dsl, output_bitwidth = output_size, input_sizes = [arg.size for arg in src_ctx_regs], input_precs = input_precs)
         dst_expression_label ,dst_expression_grammar =  GrammarGenerator.emit_grammar(dst_ctx)
 
+
+
+
         statements.append(dst_expression_grammar)
-        dst_expression = "(define dst-expr\n ({})\n)".format(dst_expression_label)
-        statements.append(dst_expression)
 
-        src_result = "(define src-result {})".format(src_language_desc.interpret_expr("src-expr", "env"))
+        grammar_fn = "(define (grammar-fn i) ({}))".format(dst_expression_label)
+        statements.append(grammar_fn)
 
-        dst_result = "(define dst-result {})".format(target_language_desc.interpret_expr("dst-expr", "env"))
-        statements.append(src_result)
-        statements.append(dst_result)
+        statements.append(self.get_invoke_spec(spec_name = "src-expr"))
 
-        slice_size = min(64, src_ctx.out_vectsize)
+        statements.append(self.get_invoke_spec_lane(spec_name = "src-expr", output_prec = src_ctx.out_precision))
 
-        src_slice = "(define src-slice (extract {} 0 src-result))".format(slice_size - 1)
+        statements.append("(define optimize? #t)")
 
-        dst_slice = "(define dst-slice (extract {} 0 dst-result))".format(slice_size - 1)
+        statements.append("(define symbolic? #f)")
 
-        statements.append(src_slice)
-        statements.append(dst_slice)
+        statements.append("(define interpreter {})".format(target_language_desc.interpreter_name))
 
-
-        statements.append("(assert (not (equal? src-slice (bv 0 (bitvector {})))))".format(slice_size))
-
-        # Assert result is not equal to any input operand (when types match)
-        statements.append("(assert-value-not-in-env src-result env)")
+        statements.append("(define cost-model {})".format(target_language_desc.cost_name))
+        leaves_sizes = "(define leaves-sizes (list {}))".format(" ".join([str(arg.size) for arg in src_ctx_regs]))
+        statements.append(leaves_sizes)
 
 
 
-        get_cex = "(define cex {})".format(self.emit_verify_not_equal("src-slice", "dst-slice"))
+        execute_synthesis = "(define-values (satisfiable? mat el)  (synthesize-sol-with-depth {} {} invoke-spec invoke-spec-lane grammar-fn leaves-sizes optimize? interpreter cost-model  symbolic? 30 'z3))".format(self.output_depth, self.output_depth)
+        statements.append(execute_synthesis)
 
-        statements.append(get_cex)
 
 
         if_sat = "(exit 0)"
         if_unsat = "(exit 1)"
 
-        conditional = "(cond [(sat? cex) {}] [else {}])".format(if_sat, if_unsat)
+        conditional = "(cond [satisfiable? {}] [else {}])".format(if_sat, if_unsat)
         statements.append(conditional)
 
         result = execute_racket_file(statements)
@@ -326,6 +367,22 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             self.simplify_map[key] = pair
 
         return is_simplified
+
+
+    def get_invoke_spec(self, spec_name = "spec-expr", env_name = "env"):
+        interpret_name = self.source_synth_desc.interpreter_name
+        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+        return "(define (invoke-spec  {})\n {})".format(env_name, interpret_stmt)
+
+
+    def get_invoke_spec_lane(self, spec_name = "spec-expr", env_name = "env", output_prec = 8):
+        interpret_name = self.source_synth_desc.interpreter_name
+        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+        low_offset = "(define low (* {} lane-idx))".format(str(output_prec))
+        high_offset = "(define high (+ low (- {} 1)))".format(str(output_prec))
+        extract = "(define slice (extract high low {}))".format(interpret_stmt)
+        stmts = [low_offset, high_offset, extract, "slice"]
+        return "(define (invoke-spec-lane lane-idx {})\n {})".format(env_name, "\n".join(stmts))
 
     def get_ctx_expr_eq_class_names(self, expr):
 
@@ -345,23 +402,6 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         key = self.serialize_candidate(candidate)
         (src_ctx, dst_ctx) = self.simplify_map[key]
 
-        src_names = self.get_ctx_expr_eq_class_names(src_ctx)
-        dst_names = self.get_ctx_expr_eq_class_names(dst_ctx)
-
-        src_name = src_names[0]
-
-        if src_name not in self.forward_map:
-            self.forward_map[src_name] = []
-
-
-        for dst_name in dst_names:
-            if dst_name not in self.backward_map:
-                self.backward_map[dst_name] = []
-
-        for dst_name in dst_names:
-            self.forward_map[src_name].append(dst_name)
-            self.backward_map[dst_name].append(src_name)
-
 
 
         property_t = {"src": src_ctx.emit_context_expr_string(), "dst": dst_ctx.emit_context_expr_string()}
@@ -371,6 +411,20 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
 
 
+    def run_on_batch_completion(self):
+
+        for key in self.forward_map:
+            self.forward_map[key] = list(set(self.forward_map[key]))
+
+        for key in self.backward_map:
+            self.backward_map[key] = list(set(self.backward_map[key]))
+
+
+        with open("forward_map_{}_intermediate.json".format(self.name), "w+") as SrcFile:
+            SrcFile.write(json.dumps(self.forward_map, indent = 4))
+
+        with open("backward_map_{}_intermediate.json".format(self.name), "w+") as DstFile:
+            DstFile.write(json.dumps(self.backward_map, indent = 4))
     def emit_property_to_egg(self, property_map):
         return []
 

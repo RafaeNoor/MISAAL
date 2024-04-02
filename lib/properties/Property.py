@@ -22,7 +22,7 @@ class Property:
 
     """
 
-    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True):
+    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True, is_candidate_generator = False):
         """Class constructor for base class
 
         Args:
@@ -38,10 +38,13 @@ class Property:
         # analyzed.
         self.candidates = []
         self.support_dsl = default_structs
+        self.is_candidate_generator = is_candidate_generator
 
     def set_candidates(self, candidates):
         self.candidates = candidates
-        random.shuffle(self.candidates)
+
+        if not self.is_candidate_generator:
+            random.shuffle(self.candidates)
 
     def generate_candidates(self):
         raise NotImplementedError()
@@ -122,7 +125,10 @@ class Property:
         #global property_map
         property_map = {}
 
-        print("Total Number of Candidates: ", len(self.candidates))
+        if self.is_candidate_generator:
+            print("Candidates are generated using generator: indefinite number of candidates")
+        else:
+            print("Total Number of Candidates: ", len(self.candidates))
 
 
 
@@ -138,7 +144,6 @@ class Property:
                 key = self.serialize_candidate(candidate)
 
                 global candidate_count
-
                 candidate_count += 1
 
                 if key not in property_map:
@@ -149,12 +154,12 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 64 #384
+        BATCH_SIZE = 384
         POOL_SIZE = min(16, BATCH_SIZE)
 
         start_time = time.time()
 
-        if self.parallel:
+        if self.parallel and not self.is_candidate_generator:
             print("Running Property Inference in Parallel")
 
             # Issue candidates in batches so that we can routinely garbage collect
@@ -181,7 +186,7 @@ class Property:
                 cleanup_tmp_files()
                 self.kill_remaining_child_processes()
 
-        else:
+        elif not self.is_candidate_generator:
             for i in range(0, len(self.candidates), BATCH_SIZE):
                 for j in range(i, min(len(self.candidates), i + BATCH_SIZE)):
                     candidate = self.candidates[j]
@@ -194,7 +199,65 @@ class Property:
 
                 cleanup_tmp_files()
 
-        print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
+        elif self.parallel and self.is_candidate_generator:
+            count = 0
+            while True:
+
+                print("Completed executing {} / {}  jobs   ...".format(count, "INDEFINITE"))
+                # create a thread pool with 4 threads
+                pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
+                j = 0
+
+                for candidate in self.candidates:
+                    count += 1
+                    j+= 1
+                    pool.submit(worker, candidate)
+                    if j == BATCH_SIZE:
+                        break
+
+                if j == 0:
+                    # No additional candidate appended, so we have exhausted generator
+                    break
+
+                pool.shutdown(wait=True)
+                print("Completed compiling pool...")
+                self.run_on_batch_completion()
+
+                print("Property", self.name, "holds on", candidate_count,  " candidates ...")
+
+                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                    WriteFile.write(json.dumps(property_map, indent = 4))
+
+                cleanup_tmp_files()
+                self.kill_remaining_child_processes()
+
+        elif self.is_candidate_generator:
+
+            while True:
+
+                j = 0
+                for candidate in self.candidates:
+                    j+= 1
+                    worker(candidate)
+                    if j == BATCH_SIZE:
+                        break
+
+                if j == 0:
+                    break
+
+                self.run_on_batch_completion()
+
+                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                    WriteFile.write(json.dumps(property_map, indent = 4))
+
+                cleanup_tmp_files()
+
+
+        if self.is_candidate_generator:
+            print("Property", self.name, "holds on", candidate_count,  " candidates ...")
+        else:
+            print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
+
         print(property_map)
         self.run_on_completion()
         end_time = time.time()
