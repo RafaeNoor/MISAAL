@@ -20,12 +20,12 @@ pub mod test {
         let mut rules: Ruleset<HvxLang> = Ruleset::default();
         let lang = Lang::new(
             &["0", "1"],
-            &["a", "b", "c"],
+            &["reg_0", "reg_1", "reg_2"],
             &[&["vdeal", "vshuff"], &[]],
         );
         rules.extend(recursive_rules(
             enumo::Metric::Atoms,
-            3,
+            2,
             lang.clone(),
             Ruleset::default(),
         ));

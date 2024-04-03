@@ -133,6 +133,7 @@ impl<const N: Inner> Distribution<HVXVec<N>> for rand::distributions::Standard {
 impl<const N: Inner> std::str::FromStr for HVXVec<N> {
     type Err = std::num::ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        print!("Here is the string: {}", s);
         if let Some(stripped) = s.strip_prefix("#b") {
             let i = Inner::from_str_radix(stripped, 2).unwrap();
             return Ok(Self::new(i));
@@ -195,6 +196,7 @@ impl fmt::Display for HVXVec8_128 {
 impl std::str::FromStr for HVXVec8_128 {
     type Err = std::num::ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        print!("Here is the string: {}\n", s);
         let mut s = s.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
         let len = s.len();
         s.truncate(len - 1);
@@ -349,7 +351,7 @@ macro_rules! impl_hvx {
                 F: FnMut(&'a Id) -> &'a Interval<Self::Constant>,
             {
                 match self {
-                    // HvxLang::Lit(c) => Interval::new(Some(*c), Some(*c)),
+                    HvxLang::Lit(c) => Interval::new(Some(*c), Some(*c)),
                     // Todo- proper interval analysis. For now it's just constant folding
                     _ => Interval::default()
                 }
@@ -396,16 +398,28 @@ macro_rules! impl_hvx {
                     consts.push(Some(i_3));
                     consts.push(Some(i_4));
                 }
+
+                for i in &consts {
+                    print!("elem in constvec {:?}\n\n", i);
+                }
+
                 consts.sort();
-                consts.dedup();
+                // consts.dedup();
 
                 let mut cvecs = self_product(&consts, vars.len());
+                // let mut cvecs = &consts;
+
+                print!("cvecs {:?}\n", cvecs);
+                print!("vars len {:?}\n", vars.len());
+
 
                 egraph.analysis.cvec_len = cvecs[0].len();
 
                 for (i, v) in vars.iter().enumerate() {
+                    print!("i in vars {}\n", i);
                     let id = egraph.add(HvxLang::Var(Symbol::from(v.clone())));
-                    egraph[id].data.cvec = cvecs[i].clone()
+                    egraph[id].data.cvec = cvecs[i].clone();
+                    print!("elem in egraph {:?}\n\n", &egraph[id].data.cvec);
                 }
             }
 
