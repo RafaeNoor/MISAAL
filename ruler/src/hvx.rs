@@ -3,6 +3,7 @@ use std::fmt;
 use std::ops::*;
 use std::str;
 
+use num::traits::ConstZero;
 use rand::prelude::Distribution;
 use rand::Rng;
 use serde::Deserialize;
@@ -14,9 +15,12 @@ use serde::Serialize;
 pub struct HVXVec<const N: Inner>(pub Inner);
 
 type BV128 = HVXVec<128>;
+
+#[derive(Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
 pub struct HVXVec8_128([BV128; 8]);
 
-type Inner = u128;
+type Inner = i128;
 const INNER_N: Inner = (core::mem::size_of::<Inner>() * 8) as Inner;
 
 impl<const N: Inner> HVXVec<N> {
@@ -147,17 +151,44 @@ impl HVXVec8_128 {
     pub const ZERO: Self = Self([BV128::ZERO; 8]);
     pub const ALL_ONES: Self = Self([BV128::ALL_ONES;8]);
     pub const NEG_ONE: Self = Self::ALL_ONES;
-    // pub const MIN: Self = Self(vec![HVXVec::from(1 << (N - 1)); 8]);
-    // pub const MAX: Self = Self(vec![HVXVec::from(HVXVec::ALL_ONES.0 >> 1); 8]);
+    pub const MIN: Self = Self([BV128::MIN; 8]);
+    pub const MAX: Self = Self([BV128::MAX; 8]);
 
-    pub fn new(n: impl Into<Inner>) -> Self {
+    /* pub fn new(n: impl Into<Inner>) -> Self {
         Self([BV128::from(n.into());8])
+    } */
+    pub fn new(from_arr: [Inner;8]) -> Self {
+        let mut array: [BV128; 8] = Self::ZERO.0;
+        for (pos, &e) in from_arr.iter().enumerate() {
+            array[pos] = BV128::from(e);
+        }
+        Self(array)
     }
 }
 
-impl From<Inner> for HVXVec8_128 {
-    fn from(v: Inner) -> Self {
-        Self::new(v)
+impl fmt::Debug for HVXVec8_128 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Values:\n")?;
+        for v in &self.0 {
+            write!(f, "\t{}", v)?;
+        }
+        Ok(())
+    }
+}
+
+impl fmt::Display for HVXVec8_128 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Values:\n")?;
+        for v in &self.0 {
+            write!(f, "\t{}", v)?;
+        }
+        Ok(())
+    }
+}
+
+impl From<[Inner;8]> for HVXVec8_128 {
+    fn from(arr: [Inner;8]) -> Self {
+        Self::new(arr)
     }
 }    
 
@@ -179,6 +210,7 @@ macro_rules! impl_hvx {
           pub enum HvxLang {
                   "vdeal" = VDeal(Id),
                   "vshuff" = VShuff(Id),
+                  // Lit(HVXVec8_128),
                   Lit(HVXVec),
                   Var(egg::Symbol),
               }
@@ -191,7 +223,8 @@ macro_rules! impl_hvx {
         use cli_runner::{run, get_stdout, get_stderr};
 
         impl SynthLanguage for HvxLang {
-            type Constant = HVXVec;
+            // type Constant = HVXVec;
+            type Constant = HVXVec8_128;
 
             fn eval<'a, F>(&'a self, cvec_len: usize, mut get_cvec: F) -> CVec<Self>
             where
@@ -220,19 +253,27 @@ macro_rules! impl_hvx {
                     (require hydride/utils/bvops)
                     (require hydride/utils/misc)
                     (require hydride/ir/hvx/semantics)
-                    (bitvector->integer (hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0))'"#, bv_code));
+                    (for/list ([%i (range 0 8 1)]) 
+                        (bitvector->integer (extract (* (+ %i 1) 127) (* %i 128) (hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)))
+                    )'
+                    "#, bv_code));
                     let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                     print!("cmd to run: {}\n", cmd);
                     let output = run(&cmd);
                     //assert!(output.status.success());
                     let mut so = get_stdout(&output).to_string();
                     let len = so.len();
+                    let mut so = so.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
                     so.truncate(len - 1);
                     assert!(!so.is_empty());
-                    // print!("{:?}  \n", so);
-                    let ret = so.parse::<i128>().unwrap();
-                    print!("ret {:?}\n\n\n", ret);
-                    Some(HVXVec::from(ret as u128))
+                    print!("{:?}  \n", so);
+                    let nums = so.trim().split(' ').flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                    for num in nums {
+                        println!("num from bv {}", num);
+                    }
+                    // let ret = so.parse::<i128>().unwrap();
+                    // print!("ret {:?}\n\n\n", ret);
+                    // Some(HVXVec::from(5 as i128))
                     }),
                     HvxLang::VShuff(a) => map!(get_cvec, a => {
 
@@ -257,18 +298,23 @@ macro_rules! impl_hvx {
                         (require hydride/utils/bvops)
                         (require hydride/utils/misc)
                         (require hydride/ir/hvx/semantics)
-                        (bitvector->integer (hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0))'"#, bv_code));
+                        (for/list ([%i (range 0 8 1)]) 
+                            (bitvector->integer (extract (* (+ %i 1) 127) (* %i 128) (hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0)))
+                        )'
+                        "#, bv_code));
                         let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                         let output = run(&cmd);
                         //assert!(output.status.success());
                         let mut so = get_stdout(&output).to_string();
                         let len = so.len();
-                        so.truncate(len - 1);
+                        let mut so = so.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
+                        so.truncate(0);
                         assert!(!so.is_empty());
                         print!("{:?}", so);
-                        let ret = so.parse::<i128>().unwrap();
-                        print!("ret {:?}\n", ret);
-                        Some(HVXVec::from(ret as u128))
+                        let nums = so.trim().split(' ').flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                        // let ret = so.parse::<i128>().unwrap();
+                        // print!("ret {:?}\n", ret);
+                        Some(HVXVec::from(5 as i128))
 
                     }),
                     HvxLang::Lit(n) => vec![Some(n.clone()); cvec_len],
@@ -281,7 +327,7 @@ macro_rules! impl_hvx {
                 F: FnMut(&'a Id) -> &'a Interval<Self::Constant>,
             {
                 match self {
-                    HvxLang::Lit(c) => Interval::new(Some(*c), Some(*c)),
+                    // HvxLang::Lit(c) => Interval::new(Some(*c), Some(*c)),
                     // Todo- proper interval analysis. For now it's just constant folding
                     _ => Interval::default()
                 }
@@ -312,11 +358,21 @@ macro_rules! impl_hvx {
                 let mut consts = vec![];
 
                 for i in 0..2 {
-                    let i = HVXVec::from(i);
+                    /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
                     consts.push(Some(i));
-                    consts.push(Some(i.not()));
+                    consts.push(Some(i.not())); */
+                    let i_1 = HVXVec8_128::from([i;8]);
+                    let i_2 = HVXVec8_128::from([i.not();8]);
+                    let i_3 = HVXVec8_128::from([i128::MIN + 1;8]);
+                    let i_4 = HVXVec8_128::from([i128::MAX - 1;8]);
+                    // consts.push(Some(HVXVec::MIN.wrapping_add(i)));
+                    // consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
+                    consts.push(Some(i_1));
+                    consts.push(Some(i_2));
+                    consts.push(Some(i_3));
+                    consts.push(Some(i_4));
                 }
                 consts.sort();
                 consts.dedup();
