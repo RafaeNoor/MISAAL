@@ -149,7 +149,7 @@ impl<const N: Inner> From<Inner> for HVXVec<N> {
 
 impl HVXVec8_128 {
     pub const ZERO: Self = Self([BV128::ZERO; 8]);
-    pub const ALL_ONES: Self = Self([BV128::ALL_ONES;8]);
+    pub const ALL_ONES: Self = Self([BV128::ALL_ONES; 8]);
     pub const NEG_ONE: Self = Self::ALL_ONES;
     pub const MIN: Self = Self([BV128::MIN; 8]);
     pub const MAX: Self = Self([BV128::MAX; 8]);
@@ -157,9 +157,17 @@ impl HVXVec8_128 {
     /* pub fn new(n: impl Into<Inner>) -> Self {
         Self([BV128::from(n.into());8])
     } */
-    pub fn new(from_arr: [Inner;8]) -> Self {
+    pub fn new(from_arr: [Inner; 8]) -> Self {
         let mut array: [BV128; 8] = Self::ZERO.0;
         for (pos, &e) in from_arr.iter().enumerate() {
+            array[pos] = BV128::from(e);
+        }
+        Self(array)
+    }
+
+    pub fn new_from_vec(from_vec: Vec<Inner>) -> Self {
+        let mut array: [BV128; 8] = Self::ZERO.0;
+        for (pos, &e) in from_vec.iter().enumerate() {
             array[pos] = BV128::from(e);
         }
         Self(array)
@@ -168,7 +176,6 @@ impl HVXVec8_128 {
 
 impl fmt::Debug for HVXVec8_128 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Values:\n")?;
         for v in &self.0 {
             write!(f, "\t{}", v)?;
         }
@@ -178,7 +185,6 @@ impl fmt::Debug for HVXVec8_128 {
 
 impl fmt::Display for HVXVec8_128 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Values:\n")?;
         for v in &self.0 {
             write!(f, "\t{}", v)?;
         }
@@ -186,11 +192,26 @@ impl fmt::Display for HVXVec8_128 {
     }
 }
 
-impl From<[Inner;8]> for HVXVec8_128 {
-    fn from(arr: [Inner;8]) -> Self {
+impl std::str::FromStr for HVXVec8_128 {
+    type Err = std::num::ParseIntError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut s = s.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
+        let len = s.len();
+        s.truncate(len - 1);
+        Ok(HVXVec8_128::new_from_vec(
+            s.trim()
+                .split(' ')
+                .flat_map(str::parse::<i128>)
+                .collect::<Vec<_>>(),
+        ))
+    }
+}
+
+impl From<[Inner; 8]> for HVXVec8_128 {
+    fn from(arr: [Inner; 8]) -> Self {
         Self::new(arr)
     }
-}    
+}
 
 // Macro for specializing HVXVec to different sized bitvectors
 #[macro_export]
@@ -204,14 +225,14 @@ macro_rules! impl_hvx {
         use std::fmt;
         use std::ops::*;
 
-        pub type HVXVec = $crate::HVXVec::<$n>;
+        // pub type HVXVec = $crate::HVXVec::<$n>;
 
         egg::define_language! {
           pub enum HvxLang {
                   "vdeal" = VDeal(Id),
                   "vshuff" = VShuff(Id),
-                  // Lit(HVXVec8_128),
-                  Lit(HVXVec),
+                  Lit(HVXVec8_128),
+                  // Lit(HVXVec),
                   Var(egg::Symbol),
               }
         }
@@ -268,12 +289,13 @@ macro_rules! impl_hvx {
                     assert!(!so.is_empty());
                     print!("{:?}  \n", so);
                     let nums = so.trim().split(' ').flat_map(str::parse::<i128>).collect::<Vec<_>>();
-                    for num in nums {
+                    /* for num in nums {
                         println!("num from bv {}", num);
-                    }
+                    } */
                     // let ret = so.parse::<i128>().unwrap();
                     // print!("ret {:?}\n\n\n", ret);
                     // Some(HVXVec::from(5 as i128))
+                    Some(HVXVec8_128::new_from_vec(nums))
                     }),
                     HvxLang::VShuff(a) => map!(get_cvec, a => {
 
@@ -314,7 +336,7 @@ macro_rules! impl_hvx {
                         let nums = so.trim().split(' ').flat_map(str::parse::<i128>).collect::<Vec<_>>();
                         // let ret = so.parse::<i128>().unwrap();
                         // print!("ret {:?}\n", ret);
-                        Some(HVXVec::from(5 as i128))
+                        Some(HVXVec8_128::new_from_vec(nums))
 
                     }),
                     HvxLang::Lit(n) => vec![Some(n.clone()); cvec_len],
