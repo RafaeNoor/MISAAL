@@ -8,9 +8,9 @@ pub mod test {
     use std::time::{Duration, Instant};
 
     use ruler::{
-        enumo::{self, Ruleset},
-        logger,
-        recipe_utils::{recursive_rules, Lang},
+        enumo::{self, Filter, Metric, Ruleset, Workload},
+        recipe_utils::{base_lang, recursive_rules, run_workload, Lang,iter_metric},
+        Limits
     };
 
     use crate::HvxLang;
@@ -31,24 +31,24 @@ pub mod test {
         ));
 
         // too slow for 128
-        // let a6_canon = iter_metric(base_lang(2), "EXPR", enumo::Metric::Atoms, 6)
-        //     .plug("VAR", &Workload::new(lang.vars))
-        //     .plug("VAL", &Workload::empty())
-        //     .plug("OP1", &Workload::new(lang.uops))
-        //     .plug("OP2", &Workload::new(lang.bops))
-        //     .filter(Filter::Canon(vec![
-        //         "a".to_string(),
-        //         "b".to_string(),
-        //         "c".to_string(),
-        //     ]));
-        // let consts = Workload::new(["0", "1"]);
-        // let wkld = Workload::Append(vec![a6_canon, consts]);
-        // rules.extend(run_workload(
-        //     wkld,
-        //     rules.clone(),
-        //     Limits::rulefinding(),
-        //     true,
-        // ));
+        let a6_canon = iter_metric(base_lang(2), "EXPR", enumo::Metric::Atoms, 6)
+            .plug("VAR", &Workload::new(lang.vars))
+            .plug("VAL", &Workload::empty())
+            .plug("OP", &Workload::new(lang.ops[0].clone()))
+            .filter(Filter::Canon(vec![
+                "a".to_string(),
+                "b".to_string(),
+                "c".to_string(),
+            ]));
+        let consts = Workload::new(["0", "1"]);
+        let wkld = Workload::Append(vec![a6_canon, consts]);
+        rules.extend(run_workload(
+            wkld,
+            rules.clone(),
+            Limits::synthesis(),
+            Limits::minimize(),
+            true,
+        ));
 
         let duration = start.elapsed();
         (rules, duration)
@@ -56,7 +56,7 @@ pub mod test {
 
     #[test]
     fn compare() {
-        let domain = "BV128";
+        // let domain = "BV128";
         // Port the bv4 rules into domain
         // let actual_bv4_rules: Ruleset<_> = bv4_fancy_rules();
         // let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());

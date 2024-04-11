@@ -342,7 +342,7 @@ macro_rules! impl_hvx {
 
                     }),
                     HvxLang::Lit(n) => vec![Some(n.clone()); cvec_len],
-                    HvxLang::Var(_) => vec![],
+                    HvxLang::Var(_) => vec![]
                 }
             }
 
@@ -359,6 +359,7 @@ macro_rules! impl_hvx {
 
             fn to_var(&self) -> Option<Symbol> {
                 if let HvxLang::Var(sym) = self {
+                    println!("to_var {:?}", *sym);
                     Some(*sym)
                 } else {
                     None
@@ -366,6 +367,7 @@ macro_rules! impl_hvx {
             }
 
             fn mk_var(sym: Symbol) -> Self {
+                println!("mk_var {:?}", sym);
                 HvxLang::Var(sym)
             }
 
@@ -379,6 +381,7 @@ macro_rules! impl_hvx {
 
             fn initialize_vars(egraph: &mut EGraph<Self, SynthAnalysis>, vars: &[String]) {
                 //   let mut consts: Vec<Option<HVXVec>> = (0..1u64 << $n).map(|i| Some((i as u32).into())).collect();
+                println!("vars vec {:?}", vars);
                 let mut consts = vec![];
 
                 for i in 0..2 {
