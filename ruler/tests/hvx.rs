@@ -8,7 +8,7 @@ pub mod test {
     use std::time::{Duration, Instant};
 
     use ruler::{
-        enumo::{self, Filter, Metric, Ruleset, Workload},
+        enumo::{self, Filter, Ruleset, Workload},
         recipe_utils::{base_lang, recursive_rules, run_workload, Lang,iter_metric},
         Limits
     };
