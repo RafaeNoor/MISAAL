@@ -8,19 +8,19 @@ pub mod test {
     use std::time::{Duration, Instant};
 
     use ruler::{
-        enumo::{self, Filter, Ruleset, Workload},
-        recipe_utils::{base_lang, recursive_rules, run_workload, Lang,iter_metric},
-        Limits
+        enumo::{self, Filter, Metric, Ruleset, Workload},
+        recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, Lang},
+        Limits,
     };
 
     use crate::HvxLang;
 
     fn gen() -> (Ruleset<HvxLang>, Duration) {
         let start = Instant::now();
-        let mut rules: Ruleset<HvxLang> = Ruleset::default();
+        /* let mut rules: Ruleset<HvxLang> = Ruleset::default();
         let lang = Lang::new(
             &["0", "1"],
-            &["reg_0", "reg_1", "reg_2"],
+            &["val_0", "val_1", "val_2"],
             &[&["vdeal", "vshuff"], &[]],
         );
         rules.extend(recursive_rules(
@@ -28,28 +28,22 @@ pub mod test {
             2,
             lang.clone(),
             Ruleset::default(),
-        ));
+        )); */
 
-        // too slow for 128
-        let a6_canon = iter_metric(base_lang(2), "EXPR", enumo::Metric::Atoms, 6)
-            .plug("VAR", &Workload::new(lang.vars))
-            .plug("VAL", &Workload::empty())
-            .plug("OP", &Workload::new(lang.ops[0].clone()))
-            .filter(Filter::Canon(vec![
-                "a".to_string(),
-                "b".to_string(),
-                "c".to_string(),
-            ]));
-        let consts = Workload::new(["0", "1"]);
-        let wkld = Workload::Append(vec![a6_canon, consts]);
-        rules.extend(run_workload(
-            wkld,
+        println!("Generating vec rules!");
+        let mut rules = Ruleset::default();
+        let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
+        let depth3 = iter_metric(lang, "EXPR", Metric::Depth, 3)
+            .plug("VAL", &Workload::new(["val_0", "val_1", "val_2"]));
+        let get_rules = run_workload(
+            depth3,
             rules.clone(),
             Limits::synthesis(),
             Limits::minimize(),
             true,
-        ));
+        );
 
+        rules.extend(get_rules);
         let duration = start.elapsed();
         (rules, duration)
     }
