@@ -1,5 +1,5 @@
 
-// ruler/tests/vec.rs
+// ruler/tests/misaal.rs
 
 use num::{ToPrimitive, Zero};
 use ruler::*;
@@ -115,7 +115,7 @@ fn egg_to_external_prog<'a>(expr: &[Pred]) ->  String {
 
 
 #[cfg(test)]
-#[path = "./recipes/vec.rs"]
+#[path = "./recipes/misaal.rs"]
 mod vec;
 
 mod test {

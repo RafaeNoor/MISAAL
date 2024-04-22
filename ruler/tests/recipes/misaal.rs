@@ -1,18 +1,20 @@
+// ruler/tests/recipes/misaal.rs
+
 use ruler::{
     enumo::{Filter, Metric, Ruleset, Workload},
     recipe_utils::{iter_metric, recursive_rules, run_workload, Lang},
     Limits,
 };
 
-use crate::HvxLang;
+use crate::Pred;
 fn iter_grammar(n: usize) -> Workload {
-    let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
+    let lang = Workload::new(["(vec_d EXPR)", "(vec_s EXPR)", "VAL"]);
     let depth3 = iter_metric(lang, "EXPR", Metric::Depth, 3)
-        .plug("VAL", &Workload::new(["reg_0_1024", "reg_1_1024"]));
+        .plug("VAL", &Workload::new(["val_0", "val_1", "val_2"]));
     depth3
 }
 
-pub fn vec_rules() -> Ruleset<HvxLang> {
+pub fn vec_rules() -> Ruleset<Pred> {
     println!("Generating vec rules!");
     let mut all = Ruleset::default();
     let canon = iter_grammar(3);
