@@ -84,6 +84,41 @@
                (repair:interpret v2 env)  
                iprec oprec size)
              ]
+
+            [(repair-sdiv_dsl v1 v2 prec size)
+             (repair-sdiv 
+               (repair:interpret v1 env)  
+               (repair:interpret v2 env)  
+               prec size)
+             ]
+
+            [(repair-udiv_dsl v1 v2 prec size)
+             (repair-udiv 
+               (repair:interpret v1 env)  
+               (repair:interpret v2 env)  
+               prec size)
+             ]
+
+            [(repair-bvor_dsl v1 v2 prec size)
+             (repair-bvor 
+               (repair:interpret v1 env)  
+               (repair:interpret v2 env)  
+               prec size)
+             ]
+
+            [(repair-bvand_dsl v1 v2 prec size)
+             (repair-bvand
+               (repair:interpret v1 env)  
+               (repair:interpret v2 env)  
+               prec size)
+             ]
+
+            [(repair-bvmod_dsl v1 v2 prec size)
+             (repair-bvmod
+               (repair:interpret v1 env)  
+               (repair:interpret v2 env)  
+               prec size)
+             ]
             [_
               (println expr)
               (error "Unsupported op")

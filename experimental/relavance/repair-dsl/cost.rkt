@@ -82,6 +82,41 @@
                (repair:cost v2)  
                )
              ]
+
+            [(repair-sdiv_dsl v1 v2 prec size)
+             (+ 1
+               (repair:cost v1)  
+               (repair:cost v2)  
+               )
+             ]
+
+            [(repair-udiv_dsl v1 v2 prec size)
+             (+ 1
+               (repair:cost v1)  
+               (repair:cost v2)  
+               )
+             ]
+
+            [(repair-bvor_dsl v1 v2 prec size)
+             (+ 1
+               (repair:cost v1)  
+               (repair:cost v2)  
+               )
+             ]
+
+            [(repair-bvand_dsl v1 v2 prec size)
+             (+ 1
+               (repair:cost v1)  
+               (repair:cost v2)  
+               )
+             ]
+
+            [(repair-bvmod_dsl v1 v2 prec size)
+             (+ 1
+               (repair:cost v1)  
+               (repair:cost v2)  
+               )
+             ]
             [_
               (println expr)
               (error "Unsupported op")

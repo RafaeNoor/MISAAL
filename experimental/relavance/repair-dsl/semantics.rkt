@@ -62,6 +62,83 @@
   )
 
 
+
+(define (repair-sdiv v1 v2 prec size)
+  (define result
+    (apply concat
+           (for/list ([i (reverse (range 0 size prec))])
+                     (define low i)
+                     (define high (+ low (- prec 1)))
+                     (define v1.i (extract high low v1))
+                     (define v2.i (extract high low v2))
+                     (bvsdiv v1.i v2.i)
+                     )
+           )
+    )
+  result
+  )
+
+(define (repair-udiv v1 v2 prec size)
+  (define result
+    (apply concat
+           (for/list ([i (reverse (range 0 size prec))])
+                     (define low i)
+                     (define high (+ low (- prec 1)))
+                     (define v1.i (extract high low v1))
+                     (define v2.i (extract high low v2))
+                     (bvsdiv v1.i v2.i)
+                     )
+           )
+    )
+  result
+  )
+
+(define (repair-bvor v1 v2 prec size)
+  (define result
+    (apply concat
+           (for/list ([i (reverse (range 0 size prec))])
+                     (define low i)
+                     (define high (+ low (- prec 1)))
+                     (define v1.i (extract high low v1))
+                     (define v2.i (extract high low v2))
+                     (bvor v1.i v2.i)
+                     )
+           )
+    )
+  result
+  )
+
+(define (repair-bvand v1 v2 prec size)
+  (define result
+    (apply concat
+           (for/list ([i (reverse (range 0 size prec))])
+                     (define low i)
+                     (define high (+ low (- prec 1)))
+                     (define v1.i (extract high low v1))
+                     (define v2.i (extract high low v2))
+                     (bvand v1.i v2.i)
+                     )
+           )
+    )
+  result
+  )
+
+(define (repair-bvmod v1 v2 prec size)
+  (define result
+    (apply concat
+           (for/list ([i (reverse (range 0 size prec))])
+                     (define low i)
+                     (define high (+ low (- prec 1)))
+                     (define v1.i (extract high low v1))
+                     (define v2.i (extract high low v2))
+                     (bvsmod v1.i v2.i)
+                     )
+           )
+    )
+  result
+  )
+
+
 (define (repair-max v1 v2 prec size)
   (define result
     (apply concat

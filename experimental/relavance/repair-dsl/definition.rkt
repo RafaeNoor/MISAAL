@@ -20,4 +20,9 @@
 (struct repair-build-vector_dsl (num-ele indices) #:transparent #:mutable)
 (struct repair-max_dsl (v1 v2 prec size) #:transparent #:mutable)
 (struct repair-min_dsl (v1 v2 prec size) #:transparent #:mutable)
+(struct repair-sdiv_dsl (v1 v2 prec size) #:transparent #:mutable)
+(struct repair-udiv_dsl (v1 v2 prec size) #:transparent #:mutable)
+(struct repair-bvor_dsl (v1 v2 prec size) #:transparent #:mutable)
+(struct repair-bvand_dsl (v1 v2 prec size) #:transparent #:mutable)
+(struct repair-bvmod_dsl (v1 v2 prec size) #:transparent #:mutable)
          

@@ -9,6 +9,9 @@
 (require "./definition.rkt")
 (require "./interpreter.rkt")
 (require "./cost.rkt")
+(require "./contains.rkt")
+
+(require "./contains_non_identity.rkt")
 
 
 (define (spec-expr env)
@@ -31,13 +34,6 @@
 
 (define vfull (concat v1 v2))
 
-(define (extract-fn i)
-  (define low (* i 8))
-  (define high (+ low 7))
-  (extract high low vfull)
-  )
-
-(define env (build-vector 256 extract-fn))
 
 
 
@@ -60,6 +56,13 @@
 
   [expr-4-32b-vec
     (choose 
+
+      (repair-sdiv_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
+      (repair-udiv_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
+      (repair-bvor_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
+      (repair-bvand_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
+      (repair-bvmod_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
+
       (repair-max_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
       (repair-min_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
       (repair-add_dsl (expr-4-32b-vec) (expr-4-32b-vec) 32 128)
@@ -77,6 +80,13 @@
 
   [expr-4-16b-vec
     (choose 
+
+      (repair-sdiv_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
+      (repair-udiv_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
+      (repair-bvor_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
+      (repair-bvand_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
+      (repair-bvmod_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
+
       (repair-max_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
       (repair-min_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
       (repair-add_dsl (expr-4-16b-vec) (expr-4-16b-vec) 16 64)
@@ -91,13 +101,19 @@
 
   [expr-4-8b-vec
     (choose 
-      (repair-max_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-min_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-add_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-sub_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-sat-add_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-sat-sub_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
-      (repair-mul_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 64)
+
+      (repair-sdiv_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-udiv_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-bvor_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-bvand_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-bvmod_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-max_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-min_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-add_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-sub_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-sat-add_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-sat-sub_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
+      (repair-mul_dsl (expr-4-8b-vec) (expr-4-8b-vec) 8 32)
       (repair-build-vector_dsl 4 (list 252 253 254 255))
       (repair-build-vector_dsl 4 (list 124 125 126 127))
       )
@@ -109,6 +125,18 @@
 (define (test-grammar-depth k) (test-grammar  #:depth k #:start expr_start))
 (define repair-synth (test-grammar-depth 3))
 
+
+
+(define (extract-fn i)
+  (define low (* i 8))
+  (define high (+ low 7))
+  (extract high low vfull)
+  )
+
+(define env (build-vector 256 extract-fn))
+
+;; Enforce program must contain required repair operation?
+
 (define synth-result (repair:interpret repair-synth env))
 
 (define spec-result-full (spec-expr spec-env))
@@ -117,21 +145,11 @@
 (define adjusted_i (- 31 i))
 (define result.i.low (* adjusted_i 32))
 (define result.i.high (+ result.i.low 31))
+
 (define result.i (extract result.i.high result.i.low spec-result-full))
 (printf "Result i ~a\n" (bitvector->integer result.i))
 
-(define test-expr 
-  (repair-build-vector_dsl 4 (list 252 253 254 255))
-  )
-(define test-check (repair:interpret test-expr env))
-(print-mat test-check 1 4 8)
-
-(define test-expr-2 
-  (repair-build-vector_dsl 4 (list 124 125 126 127))
-  )
-
-(define test-check-2 (repair:interpret test-expr-2 env))
-(print-mat test-check-2 1 4 8)
+(define query-ref 8)
 
 (displayln "Launching synthesis")
 (define start (current-seconds))
@@ -141,7 +159,12 @@
     [optimize?
       (optimize #:minimize (list (repair:cost repair-synth ))
                   #:guarantee (begin
-                                (assert (equal? synth-result result.i))
+                                (assert 
+                                  (and 
+                                    (equal? synth-result result.i)
+                                    (repair:contains-non-identity repair-synth query-ref env)
+                                    )
+                                  )
                                 )
                   )
      ]
@@ -150,6 +173,7 @@
       (synthesize #:forall (list env)
                   #:guarantee (begin
                                 (assert (equal? synth-result result.i))
+                                (assert (repair:contains-non-identity repair-synth query-ref env))
                                 )
                   )
       ]
@@ -160,7 +184,16 @@
 (define end (current-seconds))
 (printf "Synthesis took ~a seconds ...\n" (- end start))
 
+(cond
+  [(unsat? sol?)
+   (displayln "Unsatisfiable")
+   (exit)
+   
+   ]
+  )
 
 (define synth-expr (evaluate repair-synth sol?))
 (pretty-print synth-expr)
-(println (repair:cost synth-expr))
+(printf "Cost: ~a\n" (repair:cost synth-expr))
+
+(printf "Contains: ~a\n" (repair:contains synth-expr query-ref))
