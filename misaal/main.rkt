@@ -41,6 +41,27 @@
 (require misaal/ir/halide/semantics)
 
 
+;; Typed Repair IR:
+
+
+(require misaal/ir/repair/binder)
+(require misaal/ir/repair/const_fold)
+(require misaal/ir/repair/definition)
+(require misaal/ir/repair/extract)
+(require misaal/ir/repair/get_name)
+(require misaal/ir/repair/get_ops)
+(require misaal/ir/repair/sub_expr)
+(require misaal/ir/repair/get_variants)
+(require misaal/ir/repair/scale)
+(require misaal/ir/repair/length)
+(require misaal/ir/repair/prec)
+(require misaal/ir/repair/printer)
+(require misaal/ir/repair/visitor)
+(require misaal/ir/repair/interpreter)
+(require misaal/ir/repair/cost_model)
+(require misaal/ir/repair/semantics)
+
+
 ;; Synthesis Utilities
 
 (require misaal/synthesis/ir_to_ir_transform)
@@ -61,6 +82,24 @@
 (all-from-out misaal/ir/halide/cost_model)
 (all-from-out misaal/ir/halide/utils)
 (all-from-out misaal/ir/halide/semantics)
+
+
+(all-from-out  misaal/ir/repair/binder)
+(all-from-out  misaal/ir/repair/const_fold)
+(all-from-out  misaal/ir/repair/definition)
+(all-from-out  misaal/ir/repair/extract)
+(all-from-out  misaal/ir/repair/get_name)
+(all-from-out  misaal/ir/repair/get_ops)
+(all-from-out  misaal/ir/repair/sub_expr)
+(all-from-out  misaal/ir/repair/get_variants)
+(all-from-out  misaal/ir/repair/scale)
+(all-from-out  misaal/ir/repair/length)
+(all-from-out  misaal/ir/repair/prec)
+(all-from-out  misaal/ir/repair/printer)
+(all-from-out  misaal/ir/repair/visitor)
+(all-from-out  misaal/ir/repair/interpreter)
+(all-from-out  misaal/ir/repair/cost_model)
+(all-from-out  misaal/ir/repair/semantics)
 
 
 
