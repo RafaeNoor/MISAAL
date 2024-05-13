@@ -1,4 +1,5 @@
 from properties.Property import *
+from utils.ContainsDef import ContainsDef
 from properties.IdentifySwizzles import IdentifySwizzles
 from  utils.DSLInstructionUtils import *
 import copy
@@ -6,7 +7,8 @@ from  common.Types import *
 from synthesizer.AllInstructionsSynthesizer import AllInstructionsSynthesizer
 from Specification import Specification
 from common.StructDef import StructDef
-from grammar_generator.TypedSimpleGrammarGenerator import TypedSimpleGrammarGenerator
+from grammar_gen.TypedSimpleGrammarGeneratorV2 import TypedSimpleGrammarGeneratorV2
+from utils.CodeSynthesizerDesc import create_synth_desc
 import sys
 
 class RepairRelavance(IdentifySwizzles):
@@ -21,12 +23,15 @@ class RepairRelavance(IdentifySwizzles):
         self.repair_dsl_list = repair_dsl_list
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
+        self.input_dsl_list = [d for d in self.input_dsl_list if d.name == "hexagon_V6_vdmpyhvsat_acc_128B"]
         self.target_synth_desc = target_synth_desc
+        self.optimize = True
 
         self.output_dsl_list = self.output_dsl_list[:1]
+        test_list = ["typed:signed-vec-mul"]
+        #self.output_dsl_list = [d for d in self.output_dsl_list if d.name in test_list]
 
-        self.input_dsl_list = [d for d in self.input_dsl_list if d.name == "hexagon_V6_vrmpybv_128B"]
-
+        self.context_map = {}
 
 
 
@@ -37,14 +42,22 @@ class RepairRelavance(IdentifySwizzles):
         for input_dsl in self.input_dsl_list:
             for output_dsl in self.output_dsl_list:
                 yield (input_dsl, output_dsl)
-                return
         return
 
 
 
     def get_reducing_factor(self, stream):
         # TODO: implement functionality
-        return 4
+        extract_count = {}
+
+        for extract in stream:
+            arg = extract.strip().split(" ")[-1]
+            if arg not in extract_count:
+                extract_count[arg] = 0
+            extract_count[arg] +=1
+
+
+        return max([c for a,c in extract_count.items()])
 
 
 
@@ -57,6 +70,17 @@ class RepairRelavance(IdentifySwizzles):
 
         return env_func
 
+
+    def get_scaled_context(self, ctx, num_lanes = 1):
+
+
+        scaled_ctx = copy.deepcopy(ctx)
+        current_lanes = ctx.out_vectsize // ctx.out_precision
+        scale_factor = current_lanes // num_lanes
+        if scale_factor == 1:
+            return scaled_ctx
+        scaled_ctx.scale_context(scale_factor)
+        return scaled_ctx
 
 
 
@@ -82,7 +106,19 @@ class RepairRelavance(IdentifySwizzles):
         return funcs
 
 
-    def get_stream_bitvector_sizes(self, stream):
+    def get_stream_bitvector_sizes(self, stream, modified_sema, ctx ):
+
+        prototype = modified_sema.split("\n")[0].strip().split("(define")[-1].strip().replace("(","")
+        # Skip the name of the context
+        prototype = prototype.replace(")","").split()[1:]
+
+        sorted_args = []
+
+        for idx, arg in enumerate(prototype):
+            if isinstance(ctx.context_args[idx], BitVector) or isinstance(ctx.context_args[idx], Reg) :
+                sorted_args.append(arg)
+
+
         prep_arg_slices = {}
 
         for line in stream:
@@ -99,6 +135,9 @@ class RepairRelavance(IdentifySwizzles):
         funcs = {}
 
         for arg in prep_arg_slices:
+            # If it's a constant value do not include in grammar
+            if not arg in sorted_args:
+                continue
             total_sizes = 0
             for (high,low) in prep_arg_slices[arg]:
                 total_sizes += int(high) - int(low) + 1
@@ -118,7 +157,6 @@ class RepairRelavance(IdentifySwizzles):
         prototype = modified_sema.split("\n")[0].strip().split("(define")[-1].strip().replace("(","")
         # Skip the name of the context
         prototype = prototype.replace(")","").split()[1:]
-        print(prototype)
 
         sorted_args = []
 
@@ -150,24 +188,53 @@ class RepairRelavance(IdentifySwizzles):
     def get_context_input_sizes(self, ctx):
         return sorted([arg.size for arg in ctx.context_args if isinstance(arg, BitVector)])
 
-    def get_grammar_desc(self,out_precision, reduce_factor, input_sizes, input_precs, input_signedness):
+    def get_grammar_desc(self,out_precision, reduce_factor, input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst):
         print("Output precision: ", out_precision)
         print("Input precision: ", input_precs)
         print("Input sizes: ", input_sizes)
         print("Input Signedness: ", input_signedness)
+
         relavent_dsls = []
         count = 0
+
+        FAST = True
+        src_bv_ops = src_ctx.get_bv_ops()
+        #print("SRC BV OPS", src_bv_ops)
 
         for dsl_inst in self.repair_dsl_list:
             dsl_inst_copy = copy.deepcopy(dsl_inst)
             dsl_inst_copy.contexts = []
 
             for ctx in dsl_inst.contexts:
+                if "div" in ctx.name:
+                    continue
+                ctx_lanes = ctx.in_vectsize // ctx.in_precision
+
+                if ctx_lanes != 1 and ctx_lanes != reduce_factor:
+                    continue
+
+
+                if FAST:
+                    ctx_bv_ops = ctx.get_bv_ops()
+                    def intersection(lst1, lst2):
+                        return list(set(lst1) & set(lst2))
+
+                    #print("CTX BV OP",ctx_bv_ops)
+                    common = intersection(ctx_bv_ops, src_bv_ops)
+                    #print(common)
+                    if len(common) == 0:
+                        continue
+                    else:
+                        #print("Common!")
+                        pass
+
+
                 if input_signedness == 1 and ctx.signedness == 0:
                     continue
 
                 if input_signedness == 0 and ctx.signedness == 1:
                     continue
+
                 if all([ctx.in_vectsize < input_size for input_size in input_sizes]) and ctx.in_vectsize < out_precision:
                     continue
 
@@ -197,6 +264,34 @@ class RepairRelavance(IdentifySwizzles):
             count += len(dsl_inst_copy.contexts)
 
 
+        # Including contexts from must include equivlance class
+        output_eq_class = copy.deepcopy(output_dsl_inst)
+        output_eq_class.contexts = []
+        for ctx in output_dsl_inst.contexts:
+            current_lanes = ctx.out_vectsize // ctx.out_precision
+            if current_lanes == 1 or current_lanes == reduce_factor:
+                output_eq_class.contexts.append(ctx)
+            elif ctx.can_scale_context() and not (ctx.extensions is None) and 'halide' not in ctx.extensions:
+                # Scale down the instruction to required size
+                scalar_case = self.get_scaled_context(ctx, num_lanes = 1)
+
+                output_eq_class.contexts.append(scalar_case)
+
+                if reduce_factor != 1:
+                    reduce_factor_case = self.get_scaled_context(ctx, num_lanes = reduce_factor)
+                    output_eq_class.contexts.append(reduce_factor_case)
+
+
+
+
+        relavent_dsls.append(output_eq_class)
+        count += len(output_eq_class.contexts)
+
+
+
+        relavent_dsls = [d for d in relavent_dsls if len(d.contexts) != 0]
+
+        print("Including number of contexts:", count)
         input_shapes = []
         for i in range(len(input_sizes)):
             input_shapes.append([1, input_sizes[i]// input_precs[i]])
@@ -204,7 +299,7 @@ class RepairRelavance(IdentifySwizzles):
         spec = Specification(semantics = [], output_shape = [1, 1], input_shapes = input_shapes, args = ["SYMBOLIC_BV_{}".format(i_size) for i_size in input_sizes], input_precision = input_precs, output_precision = out_precision)
         spec.print_spec()
 
-        gg = TypedSimpleGrammarGenerator()
+        gg = TypedSimpleGrammarGeneratorV2()
         sd = StructDef()
         syn = AllInstructionsSynthesizer(spec= spec, dsl_operators = relavent_dsls, grammar_generator = gg, step = 0, scale_factor = 1, target = "repair")
 
@@ -212,24 +307,26 @@ class RepairRelavance(IdentifySwizzles):
         grammar_def = syn.emit_synthesis_grammar(main_grammar_name = grammar_name)
 
 
-        return grammar_name, grammar_def
+        return grammar_name, grammar_def, relavent_dsls
 
     def property_holds_on_candidate(self, candidate):
         input_dsl_inst = candidate[0]
         modified_sema = self.get_instrumented_semantics(input_dsl_inst)
 
         statements = []
-        statements.append(HYDRIDE_HEADER)
 
         arg_id = np.argmin([get_num_symbolic_args(ctx) for ctx in input_dsl_inst.contexts])
 
         src_ctx = input_dsl_inst.contexts[int(arg_id)]
+        src_ctx = copy.deepcopy(src_ctx)
         bv_streams = self.get_bv_streams(input_dsl_inst, modified_sema, 0, src_ctx)
         streams = bv_streams.split("STORE")
         stream_0 = streams[0].strip().split("\n")
+        print(stream_0)
 
 
         reduce_factor = self.get_reducing_factor(stream_0)
+        print("Reduction factor:", reduce_factor)
 
         modified_env_func = self.emit_prepare_repair_env(stream_0, modified_sema, input_dsl_inst, src_ctx)
 
@@ -278,19 +375,19 @@ class RepairRelavance(IdentifySwizzles):
         bw_list_def = "(define bitwidth-list (list {}))".format(" ".join(bitwidth_sizes))
         statements.append(bw_list_def)
 
-        stream_bv_sizes = self. get_stream_bitvector_sizes(stream_0)
+        stream_bv_sizes = self.get_stream_bitvector_sizes(stream_0, modified_sema, src_ctx )
         synth_input_sizes = [size for arg, size in stream_bv_sizes.items()]
         input_precs = [in_precision] * len(synth_input_sizes)
 
 
         input_signedness = src_ctx.signedness
-        grammar_name, grammar_def = self.get_grammar_desc(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness)
+        grammar_name, grammar_def, target_dsl = self.get_grammar_desc(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst)
 
 
         statements.append(grammar_def)
 
         prepare_env = "prepare-env"
-        target_interpreter_def = self.emit_create_updated_interpreter(prepare_env)
+        target_interpreter_def = self.emit_create_updated_interpreter(prepare_env, target_dsl, query_inst_name = output_dsl_inst.name)
 
         statements.append(target_interpreter_def)
 
@@ -302,22 +399,40 @@ class RepairRelavance(IdentifySwizzles):
 
         statements.append(invoke_ref_def)
         statements.append(invoke_ref_lane_def)
-        statements.append("(define optimize? #t)")
+
+        optimize_flag = ["#f", "#t"][int(self.optimize)]
+        statements.append("(define optimize? {})".format(optimize_flag))
+
+        statements.append("(define grammar (test_grammar 3))")
 
         synth_query = self.emit_synthesis_query()
         results = "(define-values (sat? mat elapsed) {})".format(synth_query)
 
         statements.append(results)
+
+        fname_prefix = get_random_tempfile_name()
+        read_from_fname = fname_prefix+".log"+".rkt"
+
+        test = "(cond [sat? (write-str-to-file (~v mat) \"{}\") (exit 0)] [else (exit 1)])".format(read_from_fname)
+        statements.append(test)
+
+
         joined_stmt = "\n".join(statements)
-        print(joined_stmt)
-        with open("repair.test.rkt", "w+") as WriteFile:
-            WriteFile.write(joined_stmt)
 
 
+        ret_code = execute_racket_file(statements)
+
+        success = ret_code.returncode == 0
 
         key = self.serialize_candidate(candidate)
-        return True
+        if success:
+            with open(read_from_fname, "r") as ReadFile:
+                self.context_map[key] = ReadFile.read()
+            os.remove(read_from_fname)
 
+
+
+        return success
 
     def invoke_ref(self, output_precision, outvect_size, invoke_name = "invoke-ref", interpreter_name= "hvx:interpreter", index = 0, is_lane_func = False):
         full_result = "(define spec-result-full ({} spec-expr env))".format(interpreter_name)
@@ -343,18 +458,53 @@ class RepairRelavance(IdentifySwizzles):
 
 
 
-    def emit_synthesis_query(self, grammar_name = "grammar", interpreter_name = "rel-rep-interpret", cost_name = "repair:cost"):
+    def emit_synthesis_query(self, grammar_name = "grammar", interpreter_name = "rel-rep-interpret", cost_name = "test_:cost"):
         return "(synthesize-sol-iterative invoke-ref invoke-ref-lane {} bitwidth-list optimize? {} {} (list) (list) 25 'z3 (list))".format(grammar_name, interpreter_name, cost_name)
 
-    def emit_create_updated_interpreter(self, prepare_func_name , wrapper_interpreter_name = "rel-rep-interpret", inner_interpreter_name = "repair:interpret"):
-        return "(define ({} expr env)\n({} expr ({} env)\n)\n)".format(wrapper_interpreter_name, inner_interpreter_name, prepare_func_name)
+    def emit_create_updated_interpreter(self, prepare_func_name , target_dsl, wrapper_interpreter_name = "rel-rep-interpret", inner_interpreter_name = "repair:interpret", query_inst_name = ""):
+
+        contains_prop = ContainsDef()
+
+
+        synth_desc = create_synth_desc("test_", True, [], "", "")
+        synth_desc.emit_sema = False
+
+        statements = []
+
+        interpreter_fw = synth_desc.emit_interpreter_framework(target_dsl)
+        statements.append(interpreter_fw)
+
+        contains_name = "test_:contains"
+        sd = StructDef()
+        contains_def = contains_prop.emit_contains(target_dsl ,sd,  interpreter_name = synth_desc.interpreter_name, contains_name = contains_name)
+        statements.append(contains_def)
+
+        query_inst_id = 0
+        for dsl_inst in target_dsl:
+            if dsl_inst.name == query_inst_name:
+                query_inst_id = dsl_inst.dsl_id
+
+        contains_query = "(assert ({} expr {} ({} env)))".format(contains_name, query_inst_id, prepare_func_name)
+        interpret_cmd = "({} expr ({} env)\n)".format(synth_desc.interpreter_name, prepare_func_name)
+
+        interpreter_body = [contains_query, interpret_cmd]
+
+        outer_interpret = "(define ({} expr env)\n{}\n)".format(wrapper_interpreter_name, "\n".join(interpreter_body))
+
+        statements.append(outer_interpret)
+
+        return "\n".join(statements)
+
+    def emit_create_updated_cost_model(self, target_dsl, cost_name):
+        pass
 
     def serialize_candidate(self, candidate):
         return candidate[0].name + candidate[1].name
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
-        return {"candidate": candidate[0].name, "output_expression" : candidate[1].name }
+        synth_expr = self.context_map[key]
+        return {"candidate": candidate[0].name, "output_expression" : candidate[1].name, "synth_expression": synth_expr }
 
 
 
