@@ -1,4 +1,5 @@
 import common.Types
+import sys
 import time
 import copy
 import sys
@@ -107,7 +108,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = int(5 * 60) # 5 mins
+    TIMEOUT = int(15 * 60) # 15 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -740,6 +741,36 @@ class CountItemsWrapper:
         return self
 
 
+
+def get_eq_class_relavent_contexts(possible_contexts, tight = True):
+
+    if tight:
+        arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in possible_contexts])
+        eq_candidate = possible_contexts[arg_max]
+        return [eq_candidate]
+    else:
+        # Include minimal number of contexts covering input sizes
+
+        # First sort contexts according to most number of symbolic arguments
+        sorted_ctxs = sorted(possible_contexts, key = lambda x : get_num_symbolic_args(x))
+
+        accounted_for = []
+        candidates = []
+        for ctx in sorted_ctxs:
+            include = False
+            for arg in ctx.context_args:
+                if isinstance(arg, BitVector) and arg.size not in accounted_for:
+                    include = True
+                    accounted_for.append(arg.size)
+            if include:
+                candidates.append(ctx)
+        return candidates
+
+
+
+
+
+
 def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  return_size = None, return_prec = None, use_eq_class = False):
 
 
@@ -773,9 +804,11 @@ def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  r
 
 
             if use_eq_class and len(inst_relavent_ctx) != 0:
-                arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in inst_relavent_ctx])
-                eq_candidate = inst_relavent_ctx[arg_max]
-                inst_relavent_ctx = [eq_candidate]
+                #arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in inst_relavent_ctx])
+                #eq_candidate = inst_relavent_ctx[arg_max]
+                #inst_relavent_ctx = [eq_candidate]
+
+                inst_relavent_ctx = get_eq_class_relavent_contexts(inst_relavent_ctx, tight = False)
 
 
             relavent_ctx += inst_relavent_ctx
@@ -915,6 +948,13 @@ def get_expr_intermediate_sizes(dsl_expr):
             sizes.append(arg.size)
     return sizes
 
+def get_expr_depth(dsl_expr):
+
+    if isinstance(dsl_expr, Context):
+        return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
+
+    else:
+        return 0
 
 
 

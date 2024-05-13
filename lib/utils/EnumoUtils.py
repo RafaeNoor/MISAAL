@@ -180,7 +180,10 @@ def define_enumo_grammar_clauses(dsl_list):
                     if isinstance(arg, BitVector):
                         clause.append(CLAUSE_NAME(arg.size))
                     elif isinstance(arg,ConstBitVector):
-                        clause.append("(BVLit {} {})".format(int(arg.value[2:],16), arg.size))
+                        if arg.value.startswith("#"):
+                            clause.append("(BVLit {} {})".format(int(arg.value[2:],16), arg.size))
+                        else:
+                            clause.append("(BVLit {} {})".format(arg.value, arg.size))
                     else:
                         clause.append(str(arg.value))
 
