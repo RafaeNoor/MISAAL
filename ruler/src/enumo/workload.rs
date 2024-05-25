@@ -72,6 +72,7 @@ impl Workload {
         let mut vars: Vec<String> = vec![];
         for sexp in sexps.iter() {
             let expr: RecExpr<L> = sexp.to_string().parse().unwrap();
+            println!("expr from workload {}", expr);
             for node in expr.as_ref() {
                 if let ENodeOrVar::Var(v) = node.clone().to_enode_or_var() {
                     let mut v = v.to_string();

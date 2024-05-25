@@ -17,46 +17,50 @@ pub mod test {
 
     fn gen() -> (Ruleset<HvxLang>, Duration) {
         let start = Instant::now();
-        /* let mut rules: Ruleset<HvxLang> = Ruleset::default();
-        let lang = Lang::new(
-            &["0", "1"],
-            &["val_0", "val_1", "val_2"],
-            &[&["vdeal", "vshuff"], &[]],
-        );
+        let mut rules: Ruleset<HvxLang> = Ruleset::default();
+        let lang = Lang::new(&["0", "1"], &["a", "b", "c"], &[&["vdeal", "vshuff"]]);
         rules.extend(recursive_rules(
             enumo::Metric::Atoms,
             2,
             lang.clone(),
             Ruleset::default(),
-        )); */
+        ));
 
-        println!("Generating vec rules!");
-        let mut rules = Ruleset::default();
-        let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
-        let depth3 = iter_metric(lang, "EXPR", Metric::Depth, 3)
-            .plug("VAL", &Workload::new(["val_0", "val_1", "val_2"]));
-        let get_rules = run_workload(
-            depth3,
+        let a6_canon = iter_metric(base_lang(2), "EXPR", enumo::Metric::Atoms, 6)
+            .plug("VAR", &Workload::new(lang.vars))
+            .plug("VAL", &Workload::empty())
+            .plug("OP1", &Workload::new(lang.ops[0].clone()))
+            .filter(Filter::Canon(vec![
+                "a".to_string(),
+                "b".to_string(),
+                "c".to_string(),
+            ]));
+        let consts = Workload::new(["0", "1"]);
+        let wkld = Workload::Append(vec![a6_canon, consts]);
+
+        wkld.pretty_print();
+
+        rules.extend(run_workload(
+            wkld,
             rules.clone(),
             Limits::synthesis(),
             Limits::minimize(),
             true,
-        );
+        ));
 
-        rules.extend(get_rules);
         let duration = start.elapsed();
         (rules, duration)
     }
 
     #[test]
     fn compare() {
-        // let domain = "BV128";
+        let domain = "HVX";
         // Port the bv4 rules into domain
         // let actual_bv4_rules: Ruleset<_> = bv4_fancy_rules();
         // let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());
 
         // Generate the rules directly
-        let (_gen, _gen_time): (Ruleset<HvxLang>, Duration) = gen();
+        let (gen, gen_time): (Ruleset<HvxLang>, Duration) = gen();
 
         // logger::write_bv_derivability(domain, gen, gen_time, ported_bv4_rules)
     }

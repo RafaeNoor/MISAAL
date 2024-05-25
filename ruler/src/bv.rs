@@ -112,10 +112,18 @@ impl<const N: Inner> Distribution<BV<N>> for rand::distributions::Standard {
 impl<const N: Inner> std::str::FromStr for BV<N> {
     type Err = std::num::ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        /* println!("FromStr bv raw string: {}", s);
         if let Some(stripped) = s.strip_prefix("#b") {
             let i = Inner::from_str_radix(stripped, 2).unwrap();
+            println!("FromStr bv int: {}", i);
             return Ok(Self::new(i));
-        }
+        } */
+        let res = s.parse::<Inner>().map(Self::new);
+
+        match res {
+            Ok(bv) =>  println!("FromStr bv parsed: {}", bv),
+            Err(err) => {}
+          }
         s.parse::<Inner>().map(Self::new)
     }
 }
@@ -310,9 +318,11 @@ macro_rules! impl_bv {
                 Bv::Lit(c)
             }
 
+            #[track_caller]
             fn initialize_vars(egraph: &mut EGraph<Self, SynthAnalysis>, vars: &[String]) {
                 //   let mut consts: Vec<Option<BV>> = (0..1u64 << $n).map(|i| Some((i as u32).into())).collect();
                 let mut consts = vec![];
+                println!("vars vec from bv {:?}", vars);
 
                 for i in 0..2 {
                     let i = BV::from(i);
@@ -323,6 +333,9 @@ macro_rules! impl_bv {
                 }
                 consts.sort();
                 consts.dedup();
+
+                println!("consts vec from bv {:?}", consts);
+
 
                 let mut cvecs = self_product(&consts, vars.len());
 

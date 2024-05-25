@@ -1,5 +1,7 @@
 use std;
 use std::fmt;
+use std::num::IntErrorKind;
+use std::num::ParseIntError;
 use std::ops::*;
 use std::str;
 
@@ -173,6 +175,11 @@ impl HVXVec8_128 {
         }
         Self(array)
     }
+
+    pub fn new_from_hvx_vec(bv128: BV128) -> Self {
+        let mut array: [BV128; 8] = [bv128; 8];
+        Self(array)
+    }
 }
 
 impl fmt::Debug for HVXVec8_128 {
@@ -194,18 +201,59 @@ impl fmt::Display for HVXVec8_128 {
 }
 
 impl std::str::FromStr for HVXVec8_128 {
+    // is this for val or var?
+
+    // workload.rs L58 says that e-graph construction will crash if terms are not parsable in the domain
+    // this function faulty, but not sure if we need parsing for consts like (  1       1       1       1       1       1       1       1)
+    // or vars like bv_val_0
+
+    // current idea -> bv_val_0 should output a HVXVec8_128 of all 0s
+    // bv_val_1 should output a HVXVec8_128 of all 1s, etc.
+    // TODO: try printing FromStr for bv
+
+    // conclusion: correct hypothesis, instantiate HVXVec8_128 from int32 consts
+    // create map of strs
+
+    // workload.rs L74 is where FromStr is used in parse()
+
+    // enode is constant, var is variable for enumeration
+
     type Err = std::num::ParseIntError;
+    // fn from_str(s: &str) -> Result<Self, Self::Err> {
+    //     print!("Here is the string: {}\n", s);
+    //     let num: i128 = s.parse().unwrap();
+    //     print!("Here is the num {}", num);
+    //     let mut s = s.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
+    //     let len = s.len();
+    //     s.truncate(len - 1);
+    //     Ok(HVXVec8_128::new_from_vec(
+    //         s.trim()
+    //             .split(' ')
+    //             .flat_map(str::parse::<i128>)
+    //             .collect::<Vec<_>>(),
+    //     ))
+    // }
+
+    // type ParseErr = std::num::ParseIntError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         print!("Here is the string: {}\n", s);
-        let mut s = s.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
-        let len = s.len();
-        s.truncate(len - 1);
-        Ok(HVXVec8_128::new_from_vec(
-            s.trim()
-                .split(' ')
-                .flat_map(str::parse::<i128>)
-                .collect::<Vec<_>>(),
-        ))
+        let res = s.parse::<Inner>().map(HVXVec::new);
+        match res {
+            Ok(i_128) => {
+                print!("Here is the I: {}", i_128);
+                Ok(HVXVec8_128::new_from_hvx_vec(i_128))
+                /* match i_128 {
+                    0 => Ok(Self::new([0; 8])),
+                    1 => Ok(Self::new([1; 8])),
+                    _ => Ok(Self::new([2; 8])),
+                } */
+            }
+            Err(e) => {
+                // Ok(Self::new([2; 8]))
+                Err(e)
+            }
+        }
+        //s.parse::<Inner>().map(Self::new)
     }
 }
 
@@ -384,7 +432,7 @@ macro_rules! impl_hvx {
                 println!("vars vec {:?}", vars);
                 let mut consts = vec![];
 
-                for i in 0..2 {
+                for i in 0..1 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -397,9 +445,9 @@ macro_rules! impl_hvx {
                     // consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     // consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
                     consts.push(Some(i_1));
-                    consts.push(Some(i_2));
-                    consts.push(Some(i_3));
-                    consts.push(Some(i_4));
+                    // consts.push(Some(i_2));
+                    // consts.push(Some(i_3));
+                    // consts.push(Some(i_4));
                 }
 
                 for i in &consts {
@@ -407,7 +455,7 @@ macro_rules! impl_hvx {
                 }
 
                 consts.sort();
-                // consts.dedup();
+                consts.dedup();
 
                 let mut cvecs = self_product(&consts, vars.len());
                 // let mut cvecs = &consts;
