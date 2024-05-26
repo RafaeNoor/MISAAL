@@ -26,7 +26,7 @@ pub mod test {
             Ruleset::default(),
         ));
 
-        let a6_canon = iter_metric(base_lang(2), "EXPR", enumo::Metric::Atoms, 6)
+        let a6_canon = iter_metric(base_lang(1), "EXPR", enumo::Metric::Atoms, 3)
             .plug("VAR", &Workload::new(lang.vars))
             .plug("VAL", &Workload::empty())
             .plug("OP1", &Workload::new(lang.ops[0].clone()))

@@ -368,6 +368,15 @@ macro_rules! impl_hvx {
                     }),
                     HvxLang::VShuff(a) => map!(get_cvec, a => {
 
+
+                        print!("The value of a for VShuff is {}\n", a.to_string());
+                        let mut nums_str = a.to_string();
+                        // let len_nums = nums_str.len();
+                        // nums_str.truncate(len_nums - 1);
+                        let nums_init = nums_str.trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                        print!("nums_init vshuff {:?}\n\n", nums_init);
+
+
                         /* let mut bv_code = format!("(integer->bitvector ");
                         bv_code.push_str(&a.to_string());
                         bv_code.push_str(" (bitvector 128))");
@@ -382,9 +391,15 @@ macro_rules! impl_hvx {
                         print!("{:?}", so);
                         let ret = so.parse::<i32>().unwrap();
                         print!("ret {:?}\n", ret); */
-                        let mut bv_code = format!("((integer->bitvector ");
-                        bv_code.push_str(&a.to_string());
-                        bv_code.push_str(" (bitvector 1024))");
+                        let mut bv_code = format!("(concat ");
+                        for i in nums_init {
+                            bv_code.push_str("(integer->bitvector ");
+                            bv_code.push_str(&i.to_string());
+                            bv_code.push_str(" (bitvector 128)) ");
+                        }
+
+                        bv_code.push_str(")");
+
                         let rkt_code = (&format!(r#"'
                         (require hydride/utils/bvops)
                         (require hydride/utils/misc)
@@ -394,12 +409,12 @@ macro_rules! impl_hvx {
                         )'
                         "#, bv_code));
                         let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
-                        let output = run(&cmd);
-                        //assert!(output.status.success());
+                        print!("cmd to run: {}\n", cmd);
+                        let output = run(&cmd);                        //assert!(output.status.success());
                         let mut so = get_stdout(&output).to_string();
                         let len = so.len();
                         let mut so = so.replace(&['(', ')', ',', '\"', '.', ';', ':', '\''][..], "");
-                        so.truncate(0);
+                        so.truncate(len - 1);
                         assert!(!so.is_empty());
                         print!("{:?}", so);
                         let nums = so.trim().split(' ').flat_map(str::parse::<i128>).collect::<Vec<_>>();
