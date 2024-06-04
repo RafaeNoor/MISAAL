@@ -28,37 +28,18 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         self.name = "EqClassEqualOnValuesDepth"
         self.output_depth = output_depth
         self.is_candidate_generator = True
+        self.forward_collection_map = {}
 
 
 
     def filter_target_dsl_list(self, dsl_list):
         filtered = []
 
-        substrs = ["cast-int", "reduce"]#, "widen-mul"]
-        #substrs = ["typed:vec-bwand"]
-        contexts = ["typed:cast-int_0_ip8_is1024_op32_os4096_signed_1","typed:signed_vector_reduce_add_w4_4096_32_4096"]
-        #contexts = []
         for dsl_inst in dsl_list:
-            include = any([s in dsl_inst.name for s in substrs])
+            include = "typed:unsigned" not in dsl_inst.name
             if not include:
                 continue
-
             dsl_inst_copy = copy.deepcopy(dsl_inst)
-
-            if False:
-                dsl_inst_copy.contexts = []
-                for ctx in dsl_inst.contexts:
-                    if ctx.name not in contexts:
-                        continue
-
-                    if "hvx" in self.source_synth_desc.target_name:
-                        if ctx.out_vectsize not in [1024, 2048, 4096]:
-                            continue
-
-                        dsl_inst_copy.contexts.append(ctx)
-
-
-
             filtered.append(dsl_inst_copy)
 
 
@@ -99,12 +80,11 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
         print("Target DSL [Pre Filter]")
         print_dsl_list_summary(self.output_dsl_list)
-        # self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
+        self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
         print("Target DSL")
         print_dsl_list_summary(self.output_dsl_list)
 
 
-        self.input_dsl_list = self.filter_source_dsl_list(self.input_dsl_list)
 
 
         # Candidate will be defined as:
@@ -114,8 +94,9 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
             expressions = create_exhaustive_expressions_generator(self.output_dsl_list, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
             for expr in expressions:
-                candidate = (dsl_inst, expr)
-                yield candidate
+                if get_expr_depth(expr) == self.output_depth:
+                    candidate = (dsl_inst, expr)
+                    yield candidate
 
 
 
@@ -155,6 +136,7 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
 
         if not matching_ctx:
             #print(dst_eq_class.name," has no context producing ", src_ctx.out_vectsize)
+            print("Not Matching Context")
             return False
 
 
@@ -223,6 +205,7 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             arg.signed = reg.signed
 
         if not common_param:
+            #print("No common param")
             return False
 
 
@@ -287,7 +270,8 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         statements.append(src_result)
         statements.append(dst_result)
 
-        slice_size = min(64, src_ctx.out_vectsize)
+        SLICE_SIZE = src_ctx.out_vectsize
+        slice_size = min(SLICE_SIZE , src_ctx.out_vectsize)
 
         src_slice = "(define src-slice (extract {} 0 src-result))".format(slice_size - 1)
 
@@ -353,6 +337,9 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
         if src_name not in self.forward_map:
             self.forward_map[src_name] = []
 
+        if src_name not in self.forward_collection_map:
+            self.forward_collection_map[src_name] = []
+
 
         for dst_name in dst_names:
             if dst_name not in self.backward_map:
@@ -362,12 +349,33 @@ class EqClassEqualOnValuesDepth(EqualOnValues):
             self.forward_map[src_name].append(dst_name)
             self.backward_map[dst_name].append(src_name)
 
+        self.forward_collection_map[src_name].append(str(sorted(dst_names)))
 
 
         property_t = {"src": src_ctx.emit_context_expr_string(), "dst": dst_ctx.emit_context_expr_string()}
         return property_t
 
 
+    def run_on_batch_completion(self):
+
+        for key in self.forward_collection_map:
+            self.forward_collection_map[key] = list(set(self.forward_collection_map[key]))
+
+        for key in self.forward_map:
+            self.forward_map[key] = list(set(self.forward_map[key]))
+
+        for key in self.backward_map:
+            self.backward_map[key] = list(set(self.backward_map[key]))
+
+
+        with open("forward_map_{}_intermediate.json".format(self.name), "w+") as SrcFile:
+            SrcFile.write(json.dumps(self.forward_map, indent = 4))
+
+        with open("forward_collection_map_{}_intermediate.json".format(self.name), "w+") as SrcFile:
+            SrcFile.write(json.dumps(self.forward_collection_map, indent = 4))
+
+        with open("backward_map_{}_intermediate.json".format(self.name), "w+") as DstFile:
+            DstFile.write(json.dumps(self.backward_map, indent = 4))
 
 
 

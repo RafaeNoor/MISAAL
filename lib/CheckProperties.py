@@ -5,6 +5,7 @@ import argparse
 
 from common.DSLParser import parse_dict
 
+from properties.RepairRelavance import RepairRelavance
 from properties.Commutative import *
 from properties.Distributive import *
 from properties.Associative import *
@@ -19,6 +20,8 @@ from properties.EqualOnValues import EqualOnValues
 from properties.EqualOnValuesDepth import EqualOnValuesDepth
 from properties.LargeExpressionTranslator import LargeExpressionTranslator
 from properties.EqClassEqualOnValuesDepth import EqClassEqualOnValuesDepth
+from properties.EqClassEqualDepth import EqClassEqualDepth
+from properties.ExtractLaneSlice import ExtractLaneSlice
 
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
@@ -26,9 +29,11 @@ from sema.halide_sema import halide_semantics
 from sema.hex_swizzles import hvx_swizzles
 from sema.x86_swizzles import x86_swizzles
 from sema.ARMSema import arm_semantics
+from sema.repairs_sema import repair_semantics
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc
 
+import os
 
 from properties.SimplifyingSwizzles import SimplifyingSwizzles
 
@@ -36,6 +41,14 @@ import json
 import sys
 
 import json
+
+cleanup_files = [
+    "property_time_log.txt"
+]
+
+for f in cleanup_files:
+    if os.path.exists(f):
+        os.remove(f)
 
 parser = argparse.ArgumentParser(prog='CheckProperties', description='Run properties on targets',epilog='Text at the bottom of help')
 
@@ -145,12 +158,27 @@ for property in test_properties:
         elif property is EqClassEqualOnValuesDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2)
+
+            #PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = synthesizer_desc, target_dsl_list = dsl_list, output_depth = 2)
+
+        elif property is RepairRelavance:
+            repairs_sema = parse_dict(repair_semantics)
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema)
+        elif property is EqClassEqualDepth:
+            halide_dsl_list = parse_dict(halide_semantics)
+            target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target])
+            forward_path_name = "repair_forward_map.json"
+            swizzle_forward_path = "hvx_swizzle_derivation_map.JSON"
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2, forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path)
+
         elif property is LargeExpressionTranslator:
             swizzle_dict = TARGET_TO_SWIZZLE[target]
             swizzles = parse_dict(swizzle_dict, keep_duplicate = True)
             print("Total Swizzle classes: ", len(swizzles))
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(target_dsl_list = dsl_list, target_synth_desc = synthesizer_desc, source_synth_desc = HALIDE_HVX_SYNTH_DESC, dsl_list = halide_dsl_list, shuffle_deriviation_map_path="hvx_swizzle_derivation_map.JSON", swizzles = swizzles, context_deriviation_map_path = "backward_map.json", input_depth = 2)
+
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
         PropertyInstance.parallel = PARALLEL

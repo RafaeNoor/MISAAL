@@ -9,6 +9,7 @@ import sys
 import json
 from  utils.DSLInstructionUtils import *
 from utils.GenerateRandomExpr import create_random_expression
+from utils.CodeSynthesizerDesc import *
 import copy
 from  common.Types import *
 import itertools
@@ -18,7 +19,7 @@ from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 class EqClassEqualDepth(EqualOnValues):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None):
 
 
         print("Source DSL List size:", len(dsl_list))
@@ -26,6 +27,16 @@ class EqClassEqualDepth(EqualOnValues):
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list)
         self.name = "EqClassEqualDepth"
+        self.swizzle_dsl_list = swizzle_dsl_list
+        self.swizzle_forward_map = {}
+
+        if not swizzle_map_path is None:
+            with open(swizzle_map_path, "r") as JsonFile:
+                self.swizzle_forward_map = json.load(JsonFile)
+
+
+
+
         self.output_depth = output_depth
         self.is_candidate_generator = True
 
@@ -40,7 +51,9 @@ class EqClassEqualDepth(EqualOnValues):
     def filter_target_dsl_list(self, dsl_list):
         filtered = []
 
-        substrs = ["cast-int", "reduce"]#, "widen-mul"]
+        substrs = ["cast-int", "reduce", ":signed-vec-widen-mul",  "vec-add" ]
+
+        substrs = ['typed:signed-vec-le', 'typed:signed-vec-lt', 'typed:vec-eq', 'typed:signed-vec-widen-mul', 'typed:concat_vectors', 'typed:signed-vector_reduce_add', 'typed:xBroadcast', 'typed:vec-saturate', 'typed:slice_vectors', 'typed:cast-uint', 'typed:cast-int', 'typed:signed-vec-abs', 'typed:vec-bwnot', 'typed:signed-vec-rounding_halving_add', 'typed:signed-vec-sat-sub', 'typed:signed-vec-sat-add', 'typed:vec-add', 'typed:vec-bwand', 'typed:signed-vec-div', 'typed:signed-vec-mul', 'typed:signed-vec-mod', 'typed:vec-shl', 'typed:vec-sub', 'typed:signed-vec-max', 'typed:signed-vec-shr', 'typed:signed-vec-absd', 'typed:signed-vec-min', 'typed:signed-vec-halving_add']
         #substrs = ["typed:vec-bwand"]
         contexts = ["typed:cast-int_0_ip8_is1024_op32_os4096_signed_1","typed:signed_vector_reduce_add_w4_4096_32_4096"]
         #contexts = []
@@ -50,21 +63,6 @@ class EqClassEqualDepth(EqualOnValues):
                 continue
 
             dsl_inst_copy = copy.deepcopy(dsl_inst)
-
-            if False:
-                dsl_inst_copy.contexts = []
-                for ctx in dsl_inst.contexts:
-                    if ctx.name not in contexts:
-                        continue
-
-                    if "hvx" in self.source_synth_desc.target_name:
-                        if ctx.out_vectsize not in [1024, 2048, 4096]:
-                            continue
-
-                        dsl_inst_copy.contexts.append(ctx)
-
-
-
             filtered.append(dsl_inst_copy)
 
 
@@ -75,11 +73,13 @@ class EqClassEqualDepth(EqualOnValues):
     def filter_source_dsl_list(self, dsl_list):
         filtered = []
 
-        ctxs = ["hexagon_V6_vrmpybv_acc_128B"]
-        substrs = ["hexagon_V6_vrmpybv_128B"]
+        ctxs = ["hexagon_V6_vmpybv_acc_128B"]
+        substrs = ["hexagon_V6_vmpybv_acc_128B"]
+
+        ctxs = ["hexagon_V6_vmpybv_128B"]
+        substrs = ["hexagon_V6_vmpybv_128B"]
         for dsl_inst in dsl_list:
             insert = any([s in dsl_inst.name for s in substrs])
-
             if insert:
                 dsl_inst.contexts = [c for c in dsl_inst.contexts if c.name in ctxs]
                 filtered.append(dsl_inst)
@@ -142,7 +142,7 @@ class EqClassEqualDepth(EqualOnValues):
 
         print("Target DSL [Pre Filter]")
         print_dsl_list_summary(self.output_dsl_list)
-        # self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
+        #self.output_dsl_list = self.filter_target_dsl_list(self.output_dsl_list)
         print("Target DSL")
         print_dsl_list_summary(self.output_dsl_list)
 
@@ -155,22 +155,49 @@ class EqClassEqualDepth(EqualOnValues):
 
         for dsl_inst in self.input_dsl_list:
             relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
+            print("Relavent set for ",dsl_inst.name)
+            for ros in relavent_output_subset:
+                print(ros.name)
+
             src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
             expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
-            expressions = [self.get_testing_expression()]
+            #expressions = [self.get_testing_expression()]
             for expr in expressions:
-                candidate = (dsl_inst, expr)
-                yield candidate
+
+                if get_expr_depth(expr) == self.output_depth:
+                    candidate = (dsl_inst, expr, relavent_output_subset)
+                    yield candidate
+
+
+
+    def get_swizzle_by_name(self, name):
+        for dsl_inst in self.swizzle_dsl_list:
+            if dsl_inst.name == name:
+                return dsl_inst
+            for ctx in dsl_inst.contexts:
+                if ctx.name == name:
+                    return dsl_inst
+        assert False, "Could not find {}".format(name)
 
 
     def get_relavent_output_dsl_subset(self, dsl_inst):
         relavent_names = self.forward_map[dsl_inst.name]
-        return [d for d in self.output_dsl_list if d.name in relavent_names]
+        relavent_outputs = [d for d in self.output_dsl_list if d.name in relavent_names]
+        relavent_swizzles = []
+
+        for swizzle_ty in self.swizzle_forward_map:
+            if dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+                swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
+                relavent_swizzles.append(swizzle_inst)
+
+
+
+        return relavent_outputs + relavent_swizzles
 
 
     def get_eq_class(self, eq_class_name):
         eq_class_name = eq_class_name.split("_dsl")[0]
-        for dsl_inst in self.input_dsl_list+self.output_dsl_list:
+        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list:
             if dsl_inst.name == eq_class_name:
                 return dsl_inst
         print("Unable to find", eq_class_name)
@@ -186,9 +213,13 @@ class EqClassEqualDepth(EqualOnValues):
 
 
         src_eq_class = copy.deepcopy(candidate[0])
+
         arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in src_eq_class.contexts])
         src_ctx = src_eq_class.contexts[arg_max]
         dst_ctx = copy.deepcopy(candidate[1])
+        relavent_output_subset = candidate[2]
+
+
 
         if isinstance(dst_ctx, Reg):
             return False
@@ -289,17 +320,25 @@ class EqClassEqualDepth(EqualOnValues):
         statements = []
 
         src_language_desc = self.source_synth_desc
-        target_language_desc = self.target_synth_desc
+        # Need to create a new desc for swizzles and target inst comined
+        #target_language_desc = self.target_synth_desc
+        target_language_desc = create_synth_desc("base_", True, self.target_synth_desc.target_vector_sizes, "", "")
+        target_language_desc.emit_sema = False
 
-        target_language_dsl = self.output_dsl_list
+        target_language_dsl =  relavent_output_subset #self.output_dsl_list + self.swizzle_dsl_list
         src_language_dsl = self.input_dsl_list
 
         if src_language_desc.emit_interpreter:
             statements.append(src_language_desc.emit_interpreter_framework(src_language_dsl))
 
+        for swizzle in self.swizzle_dsl_list:
+            statements.append(swizzle.get_semantics())
+
 
         if target_language_desc.emit_interpreter and src_language_desc.target_name != target_language_desc.target_name:
-            statements.append(target_language_desc.emit_interpreter_framework(target_language_dsl))
+            statements.append(target_language_desc.emit_struct_def(self.swizzle_dsl_list))
+            statements.append(target_language_desc.emit_interpreter_def(target_language_dsl))
+            statements.append(target_language_desc.emit_cost_def(target_language_dsl))
 
 
         env = []
@@ -318,7 +357,7 @@ class EqClassEqualDepth(EqualOnValues):
         # concrete Eq class members in the same structure
         input_precs = [arg.precision for arg in src_ctx_regs]
 
-        GrammarGenerator = EqClassExpandGenerator(dsl_list = target_language_dsl, output_bitwidth = output_size, input_sizes = [arg.size for arg in src_ctx_regs], input_precs = input_precs)
+        GrammarGenerator = EqClassExpandGenerator(dsl_list = target_language_dsl  , output_bitwidth = output_size, input_sizes = [arg.size for arg in src_ctx_regs], input_precs = input_precs)
         dst_expression_label ,dst_expression_grammar =  GrammarGenerator.emit_grammar(dst_ctx)
 
 

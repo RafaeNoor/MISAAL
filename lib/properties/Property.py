@@ -1,5 +1,6 @@
 from common.Types import *
 import time
+import psutil
 from common.PredefinedDSL import *
 import concurrent.futures
 from  utils.DSLInstructionUtils import *
@@ -154,8 +155,8 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 384
-        POOL_SIZE = min(16, BATCH_SIZE)
+        BATCH_SIZE = 512
+        POOL_SIZE = min(32, BATCH_SIZE)
 
         start_time = time.time()
 
@@ -302,13 +303,15 @@ class Property:
             ids = get_process_id(cmd)
 
             for _id in ids:
-                if (owner(_id) == "arnoor2"):
+                #if os.path.exists('/proc/%d/status' % _id) and  (owner(_id) == "arnoor2"):
+                if  (owner(_id) == "arnoor2"):
                     pid_to_kill.append(_id)
 
         print("Need to kill {} child processes".format(len(pid_to_kill)))
 
         for pid in pid_to_kill:
-            os.kill(pid, signal.SIGKILL)
+            if psutil.pid_exists(pid):
+                os.kill(pid, signal.SIGKILL)
 
 
 

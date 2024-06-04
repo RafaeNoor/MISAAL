@@ -23,12 +23,20 @@ class RepairRelavance(IdentifySwizzles):
         self.repair_dsl_list = repair_dsl_list
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
-        self.input_dsl_list = [d for d in self.input_dsl_list if d.name == "hexagon_V6_vdmpyhvsat_acc_128B"]
+        input_test_list = [
+            #"hexagon_V6_vdmpyhvsat_acc_128B",
+            #"hexagon_V6_vmpybv_128B",
+            "hexagon_V6_vmpybv_acc_128B",
+        ]
+        #self.input_dsl_list = [d for d in self.input_dsl_list if d.name in input_test_list]
         self.target_synth_desc = target_synth_desc
         self.optimize = True
+        self.target_depth = 3
 
-        self.output_dsl_list = self.output_dsl_list[:1]
-        test_list = ["typed:signed-vec-mul"]
+        test_list = [
+            "typed:vec-add",
+            #"typed:signed-vec-mul",
+        ]
         #self.output_dsl_list = [d for d in self.output_dsl_list if d.name in test_list]
 
         self.context_map = {}
@@ -41,8 +49,29 @@ class RepairRelavance(IdentifySwizzles):
     def generate_candidates(self):
         for input_dsl in self.input_dsl_list:
             for output_dsl in self.output_dsl_list:
-                yield (input_dsl, output_dsl)
+                yield (input_dsl, output_dsl , True)
+                yield (input_dsl, output_dsl , False)
         return
+
+
+
+    def emit_get_constraints_function(self, target_dsl, constraint_fn_name = "constraint-fn", query_inst_name = ""):
+
+        self.contains_name = "test_:contains"
+        contains_name = self.contains_name
+        sd = StructDef()
+
+        query_inst_id = -1
+        for dsl_inst in target_dsl:
+            if dsl_inst.name == query_inst_name:
+                query_inst_id = dsl_inst.dsl_id
+
+
+        contains_query = "({} (test_:const-fold expr) {} ({} env))".format(contains_name, query_inst_id, "prepare-env")
+
+        func = "(define ({} expr env)\n{}\n)".format(constraint_fn_name , contains_query)
+
+        return func
 
 
 
@@ -312,12 +341,24 @@ class RepairRelavance(IdentifySwizzles):
     def property_holds_on_candidate(self, candidate):
         input_dsl_inst = candidate[0]
         modified_sema = self.get_instrumented_semantics(input_dsl_inst)
+        is_arg_max = candidate[2]
 
         statements = []
 
         arg_id = np.argmin([get_num_symbolic_args(ctx) for ctx in input_dsl_inst.contexts])
+        if is_arg_max:
+            arg_max  = np.argmax([get_num_symbolic_args(ctx) for ctx in input_dsl_inst.contexts])
+            if arg_max == arg_id:
+                # If the same context is being tested, skip re-testing
+                return False
+            arg_id = arg_max
+
 
         src_ctx = input_dsl_inst.contexts[int(arg_id)]
+        print(src_ctx.name)
+        if src_ctx.get_bv_ops() == []:
+            return False
+        #print(src_ctx.get_bv_ops())
         src_ctx = copy.deepcopy(src_ctx)
         bv_streams = self.get_bv_streams(input_dsl_inst, modified_sema, 0, src_ctx)
         streams = bv_streams.split("STORE")
@@ -391,6 +432,9 @@ class RepairRelavance(IdentifySwizzles):
 
         statements.append(target_interpreter_def)
 
+        constraints = self.emit_get_constraints_function(target_dsl, query_inst_name = output_dsl_inst.name)
+        statements.append(constraints)
+
 
 
         invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = "invoke-ref", interpreter_name = "hvx:interpret", index = 0, is_lane_func = False)
@@ -403,7 +447,7 @@ class RepairRelavance(IdentifySwizzles):
         optimize_flag = ["#f", "#t"][int(self.optimize)]
         statements.append("(define optimize? {})".format(optimize_flag))
 
-        statements.append("(define grammar (test_grammar 3))")
+        statements.append("(define grammar (test_grammar {}))".format(self.target_depth))
 
         synth_query = self.emit_synthesis_query()
         results = "(define-values (sat? mat elapsed) {})".format(synth_query)
@@ -413,7 +457,10 @@ class RepairRelavance(IdentifySwizzles):
         fname_prefix = get_random_tempfile_name()
         read_from_fname = fname_prefix+".log"+".rkt"
 
-        test = "(cond [sat? (write-str-to-file (~v mat) \"{}\") (exit 0)] [else (exit 1)])".format(read_from_fname)
+        holes = ["(?? (bitvector {}))".format(size) for size in bitwidth_sizes]
+        folded_satisfies = "(constraint-fn (aggressive-test_:const-fold mat) (vector {}))".format(" ".join(holes))
+
+        test = "(cond [\n(and sat? {}) (write-str-to-file (~v mat) \"{}\") (exit 0)]\n [else (exit 1)])".format(folded_satisfies, read_from_fname)
         statements.append(test)
 
 
@@ -459,7 +506,7 @@ class RepairRelavance(IdentifySwizzles):
 
 
     def emit_synthesis_query(self, grammar_name = "grammar", interpreter_name = "rel-rep-interpret", cost_name = "test_:cost"):
-        return "(synthesize-sol-iterative invoke-ref invoke-ref-lane {} bitwidth-list optimize? {} {} (list) (list) 25 'z3 (list))".format(grammar_name, interpreter_name, cost_name)
+        return "(synthesize-sol-iterative-constraints invoke-ref invoke-ref-lane {} bitwidth-list optimize? {} {} (list) (list) 25 'z3 (list) constraint-fn)".format(grammar_name, interpreter_name, cost_name)
 
     def emit_create_updated_interpreter(self, prepare_func_name , target_dsl, wrapper_interpreter_name = "rel-rep-interpret", inner_interpreter_name = "repair:interpret", query_inst_name = ""):
 
@@ -474,12 +521,13 @@ class RepairRelavance(IdentifySwizzles):
         interpreter_fw = synth_desc.emit_interpreter_framework(target_dsl)
         statements.append(interpreter_fw)
 
-        contains_name = "test_:contains"
+        self.contains_name = "test_:contains"
+        contains_name = self.contains_name
         sd = StructDef()
         contains_def = contains_prop.emit_contains(target_dsl ,sd,  interpreter_name = synth_desc.interpreter_name, contains_name = contains_name)
         statements.append(contains_def)
 
-        query_inst_id = 0
+        query_inst_id = -1
         for dsl_inst in target_dsl:
             if dsl_inst.name == query_inst_name:
                 query_inst_id = dsl_inst.dsl_id
@@ -487,7 +535,11 @@ class RepairRelavance(IdentifySwizzles):
         contains_query = "(assert ({} expr {} ({} env)))".format(contains_name, query_inst_id, prepare_func_name)
         interpret_cmd = "({} expr ({} env)\n)".format(synth_desc.interpreter_name, prepare_func_name)
 
-        interpreter_body = [contains_query, interpret_cmd]
+        #interpreter_body = [contains_query, interpret_cmd]
+        # Temporarily seperating out contains query
+        interpreter_body = [interpret_cmd]
+
+
 
         outer_interpret = "(define ({} expr env)\n{}\n)".format(wrapper_interpreter_name, "\n".join(interpreter_body))
 
@@ -499,7 +551,7 @@ class RepairRelavance(IdentifySwizzles):
         pass
 
     def serialize_candidate(self, candidate):
-        return candidate[0].name + candidate[1].name
+        return candidate[0].name + "+" + candidate[1].name + "+" + str(candidate[2])
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)

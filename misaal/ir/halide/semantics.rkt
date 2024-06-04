@@ -230,6 +230,7 @@
   )
 
 
+
 (define (do-typed:sub v1 v2  iprec isize)
   ;(printf "bvlength sub input ~a ~a\n" (bvlength v1) (bvlength v2))
   (define vals 
@@ -783,3 +784,228 @@
   (do-typed:saturate shift-right (* iprec 2) (* isize 2) #f (/ isize iprec) iprec #f)
   )
 
+
+
+
+;; Function name alias
+
+(define (do-typed:vec-xBroadcast sca prec size factor)
+
+  (do-typed:xBroadcast sca prec size factor)
+
+  )
+(define (do-typed:vec-ramp base stride len)
+
+  (do-typed:ramp base stride len)
+
+  )
+(define (do-typed:vec-cast-int vec iprec isigned? olane oprec)
+
+  (do-typed:cast-int vec iprec isigned? olane oprec)
+
+  )
+(define (do-typed:vec-cast-uint vec iprec isigned? olane oprec)
+
+  (do-typed:cast-uint vec iprec isigned? olane oprec)
+
+  )
+(define (do-typed:vec-saturate vec  iprec isigned? olane oprec signed?)
+
+  (do-typed:saturate vec  iprec isigned? olane oprec signed?)
+
+  )
+(define (do-typed:vec-if v1 v2 v3 iprec isize)
+
+  (do-typed:if v1 v2 v3 iprec isize)
+
+  )
+(define (do-typed:vec-eq v1 v2  iprec isize)
+
+  (do-typed:eq v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-add v1 v2  iprec isize)
+
+  (do-typed:add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-sub v1 v2  iprec isize)
+
+  (do-typed:sub v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-shl v1 v2  iprec isize)
+
+  (do-typed:shl v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-widen-add v1 v2  iprec isize)
+
+  (do-typed:signed-widen-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-rounding-halving-add v1 v2  iprec isize)
+
+  (do-typed:signed-rounding-halving-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-halving-add v1 v2  iprec isize)
+
+  (do-typed:signed-halving-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-widen-sub v1 v2  iprec isize)
+
+  (do-typed:signed-widen-sub v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-sat-add v1 v2  iprec isize)
+
+  (do-typed:signed-sat-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-sat-sub v1 v2  iprec isize)
+
+  (do-typed:signed-sat-sub v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-mul v1 v2  iprec isize)
+
+  (do-typed:signed-mul v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-widen-mul v1 v2  iprec isize)
+
+  (do-typed:signed-widen-mul v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-div v1 v2  iprec isize)
+
+  (do-typed:signed-div v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-mod v1 v2  iprec isize)
+
+  (do-typed:signed-mod v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-max v1 v2  iprec isize)
+
+  (do-typed:signed-max v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-min v1 v2  iprec isize)
+
+  (do-typed:signed-min v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-lt v1 v2  iprec isize)
+
+  (do-typed:signed-lt v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-le v1 v2  iprec isize)
+
+  (do-typed:signed-le v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-shr v1 v2  iprec isize)
+
+  (do-typed:signed-shr v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-signed-rounding_mul_shift_right v1 v2 v3  iprec isize)
+
+  (do-typed:signed-rounding_mul_shift_right v1 v2 v3  iprec isize)
+
+  )
+(define (do-typed:vec-signed-rounding_shift_right v1 v2  iprec isize)
+
+  (do-typed:signed-rounding_shift_right v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-widen-add v1 v2  iprec isize)
+
+  (do-typed:unsigned-widen-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-rounding-halving-add v1 v2  iprec isize)
+
+  (do-typed:unsigned-rounding-halving-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-halving-add v1 v2  iprec isize)
+
+  (do-typed:unsigned-halving-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-widen-sub v1 v2  iprec isize)
+
+  (do-typed:unsigned-widen-sub v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-sat-add v1 v2  iprec isize)
+
+  (do-typed:unsigned-sat-add v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-sat-sub v1 v2  iprec isize)
+
+  (do-typed:unsigned-sat-sub v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-mul v1 v2  iprec isize)
+
+  (do-typed:unsigned-mul v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-widen-mul v1 v2  iprec isize)
+
+  (do-typed:unsigned-widen-mul v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-div v1 v2  iprec isize)
+
+  (do-typed:unsigned-div v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-mod v1 v2  iprec isize)
+
+  (do-typed:unsigned-mod v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-max v1 v2  iprec isize)
+
+  (do-typed:unsigned-max v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-min v1 v2  iprec isize)
+
+  (do-typed:unsigned-min v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-lt v1 v2  iprec isize)
+
+  (do-typed:unsigned-lt v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-le v1 v2  iprec isize)
+
+  (do-typed:unsigned-le v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-shr v1 v2  iprec isize)
+
+  (do-typed:unsigned-shr v1 v2  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-rounding_mul_shift_right v1 v2 v3  iprec isize)
+
+  (do-typed:unsigned-rounding_mul_shift_right v1 v2 v3  iprec isize)
+
+  )
+(define (do-typed:vec-unsigned-rounding_shift_right v1 v2  iprec isize)
+
+  (do-typed:unsigned-rounding_shift_right v1 v2  iprec isize)
+
+  )

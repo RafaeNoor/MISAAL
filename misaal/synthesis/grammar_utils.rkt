@@ -84,3 +84,32 @@
               )
             )
   )
+
+
+(define (assert-value-not-in-env key env)
+  (for/list ([i (range (vector-length env))])
+            (define value (vector-ref env i))
+            (cond 
+              [(and (symbolic? value) (equal? (bvlength key) (bvlength value)))
+               (assert (not (equal? value key)))
+               ]
+              )
+            )
+  )
+
+(define (assert-each-byte-non-zero env)
+  (for/list ([i (range (vector-length env))])
+            (define value (vector-ref env i))
+            (cond 
+              [(and (symbolic? value))
+
+               (for/list ([j (range 0 (/ (bvlength value) 8))])
+                         (define low (* 8 j))
+                         (define high (+ low 7))
+                         (define slice (extract high low value))
+                         (assert (not (equal? slice (bv 0 8))))
+                         )
+               ]
+              )
+            )
+  )

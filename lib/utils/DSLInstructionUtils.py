@@ -108,7 +108,7 @@ def execute_racket_file(statements):
         for statement in statements:
             write_line(statement)
 
-    TIMEOUT = int(15 * 60) # 15 mins
+    TIMEOUT = int(20 * 60) # 20 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -124,6 +124,7 @@ def execute_racket_file(statements):
         result = HelperCompletedProcess(returncode = 1)
     except :
         print("Unknown error for", filename, ":\t")
+        sys.exit()
         result = HelperCompletedProcess(returncode = 1)
 
 

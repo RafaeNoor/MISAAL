@@ -289,8 +289,6 @@
              ]
             [(buffer-index index elemT buffsize) 
              (define element (vector-ref env index))
-
-             ;(printf "Buffer Index ~a : bv length ~a\n" index (bvlength element))
              element
              ]
             [(lit v) v]
@@ -539,9 +537,6 @@
        (define length-expr (typed:halide:get-length expr env) )
        (define prec-expr (typed:halide:get-prec expr env) )
        (define vec-len (quotient length-expr prec-expr))
-       (printf "vec-length: ~a \n" length-expr )
-       (printf "vec-prec: ~a \n"  prec-expr)
-       (printf "vec-len: ~a \n" vec-len)
        (halide:assemble-bitvector (typed:halide:interpret expr env) vec-len)
        ]
       [else

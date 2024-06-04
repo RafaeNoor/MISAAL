@@ -19,6 +19,7 @@ from utils.ScaleDef import ScaleDef
 from utils.GetTargetSpecificNames import GetTargetNames
 from utils.GetSubExpressions import GetSubExpressions
 from utils.ExtractExprDepth import ExtractExprDepth
+from utils.ConstFold import ConstFold
 from utils.GetVariants import GetVariants
 
 class CodeSynthesizerDesc:
@@ -27,7 +28,7 @@ class CodeSynthesizerDesc:
     """
     def __init__(self, target_name = "" ,interpreter_name = "",
     cost_name = "", bind_name = "", printer_name = "",
-    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = "", emit_interpreter = False, sema_path = None, dict_name = None):
+    get_prec_name = "", get_length_name = "" , target_vector_sizes = [], visitor_name = "", get_ops_name = "", const_fold_name = "", emit_interpreter = False, sema_path = None, dict_name = None):
         """Constructor
 
         Args:
@@ -47,6 +48,7 @@ class CodeSynthesizerDesc:
         self.get_length_name = get_length_name
         self.target_vector_sizes = target_vector_sizes
         self.visitor_name = visitor_name
+        self.const_fold_name = const_fold_name
         self.get_ops_name = get_ops_name
         self.set_target_name = "(set-target-{})".format(self.target_name)
         self.emit_interpreter = emit_interpreter
@@ -72,6 +74,8 @@ class CodeSynthesizerDesc:
         bd = BindDef(bind_name = self.bind_name)
         vd = VisitorDef()
         gbo = GetBVOps(get_ops_name = self.get_ops_name)
+        const_fold = ConstFold(aggressive = False)
+        agg_const_fold = ConstFold(aggressive = True)
 
         statements = []
 
@@ -95,12 +99,26 @@ class CodeSynthesizerDesc:
         statements.append(vd.emit_visitor(dsl_list, sd, visitor_name = self.visitor_name))
 
         statements.append(gbo.emit_get_bv_ops(dsl_list, sd))
+        statements.append(const_fold.emit_const_fold(dsl_list, sd, const_fold_name = self.const_fold_name, interpret_name = self.interpreter_name))
+        statements.append(agg_const_fold.emit_const_fold(dsl_list, sd, const_fold_name = "aggressive-"+self.const_fold_name, interpret_name = self.interpreter_name))
 
 
         return "\n".join(statements)
 
 
+    def emit_struct_def(self, dsl_list):
+        sd = StructDef(emit_default = False)
+        return sd.emit_struct_defs(dsl_list)
 
+    def emit_interpreter_def(self, dsl_list):
+        sd = StructDef(emit_default = False)
+        idd = InterpreterDef()
+        return idd.emit_interpreter(dsl_list, sd, add_assertions = False, interpret_name = self.interpreter_name)
+
+    def emit_cost_def(self, dsl_list):
+        sd = StructDef(emit_default = False)
+        cd = CostDef()
+        return cd.emit_cost_model(dsl_list, sd, cost_name = self.cost_name, use_label = self.emit_sema)
 
 
 
@@ -112,7 +130,7 @@ def create_synth_desc(base_prefix, emit_interpreter, target_sizes, sema_path, di
         return base_prefix +":"+string
 
     return CodeSynthesizerDesc(target_name = base_prefix, interpreter_name = join("interpret"), cost_name = join("cost"),
-                               bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), emit_interpreter = emit_interpreter, sema_path = sema_path, dict_name = dict_name)
+                               bind_name = join("bind-expr"), printer_name = join("hydride-printer"), get_prec_name = join("get-prec"), get_length_name = join("get-length"), target_vector_sizes = target_sizes, visitor_name = join("visitor"), get_ops_name = join("get-bv-ops"), const_fold_name = join("const-fold") , emit_interpreter = emit_interpreter, sema_path = sema_path, dict_name = dict_name)
 
 MISAAL_SRC =  "/home/arnoor2/MISAAL/"#os.getenv('MISAAL_SRC',default = "/home/arnoor2/MISAAL/")
 

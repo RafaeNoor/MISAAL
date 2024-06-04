@@ -250,6 +250,9 @@ class IdentifySwizzles(Property):
                 args.append("(bv 0 {})".format(arg.size))
             elif isinstance(arg, ConstBitVector):
                 args.append(arg.get_rkt_value())
+            elif isinstance(arg, Reg):
+                print(sample_context.emit_context_expr_string())
+                assert False, "Unreachable"
             else:
                 args.append(str(arg.value))
 

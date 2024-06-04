@@ -9,13 +9,14 @@ import math
 
 class EqClassExpandGenerator:
 
-    def __init__(self, dsl_list = [], output_bitwidth = None, input_sizes = [], input_precs = []):
+    def __init__(self, dsl_list = [], output_bitwidth = None, input_sizes = [], input_precs = [], use_any_reg = True):
         self.dsl_list = dsl_list
         self.output_bitwidth = output_bitwidth
         self.input_sizes = input_sizes
         self.grammar_clause_map = {}
-        self.use_buffer_id = True
+        self.use_buffer_id = False
         self.input_precs = input_precs
+        self.use_any_reg = use_any_reg
 
 
     def emit_choose_buffer(self, reg_id, precision = 8, signedness = True):
@@ -72,7 +73,11 @@ class EqClassExpandGenerator:
                 if not f_ctx.signedness is None:
                     sign = [False, True][f_ctx.signedness]
 
-                clause_tokens.append(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign))
+                if self.use_any_reg:
+                    choose_any_clauses = [self.emit_choose_reg(i, precision = f_ctx.in_precision, signedness = sign) for i in range(len(self.input_sizes)) if self.input_sizes[i] == ref_arg.size]
+                    clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
+                else:
+                    clause_tokens.append(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign))
 
             elif isinstance(ref_arg, Context) and isinstance(f_arg, ConstBitVector):
                 return
