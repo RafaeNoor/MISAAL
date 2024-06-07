@@ -240,7 +240,7 @@ impl std::str::FromStr for HVXVec8_128 {
         let res = s.parse::<Inner>().map(HVXVec::new);
         match res {
             Ok(i_128) => {
-                print!("Here is the I: {}", i_128);
+                // print!("Here is the I: {}", i_128);
                 Ok(HVXVec8_128::new_from_hvx_vec(i_128))
                 /* match i_128 {
                     0 => Ok(Self::new([0; 8])),
@@ -512,6 +512,12 @@ macro_rules! impl_hvx {
                 lhs: &Pattern<Self>,
                 rhs: &Pattern<Self>,
             ) -> ValidationResult {
+
+                // TODO: Add calls to Rosette
+
+                print!("lhs expr {}\n", lhs);
+                print!("rhs expr {}\n", rhs);
+
                 /* use z3::{*, ast::Ast};
 
                 fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[HvxLang]) -> z3::ast::HVXVec<'a> {
