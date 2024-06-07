@@ -28,7 +28,7 @@ pub mod test {
 let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
          let a6_canon = iter_metric(base_lang(1), "EXPR", enumo::Metric::Atoms, 3)
              .plug("VAR", &Workload::new(&["a", "b", "c"]))
-             .plug("VAL", &Workload::empty())
+             .plug("VAL", &Workload::new(&["0", "1"]))
              .plug("OP1", &Workload::new(&["vdeal", "vshuff"]))
              .filter(Filter::Canon(vec![
                  "a".to_string(),
