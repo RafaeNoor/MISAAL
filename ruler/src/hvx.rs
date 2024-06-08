@@ -466,7 +466,7 @@ macro_rules! impl_hvx {
                 println!("vars vec {:?}", vars);
                 let mut consts = vec![];
 
-                for i in 0..2 {
+                /* for i in 0..2 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -482,6 +482,26 @@ macro_rules! impl_hvx {
                     consts.push(Some(i_2));
                     consts.push(Some(i_3));
                     consts.push(Some(i_4));
+                } */
+
+                // reduced constants for testing
+
+                for i in 0..2 {
+                    /* let i = HVXVec::from(i);
+                    consts.push(Some(HVXVec::MIN.wrapping_add(i)));
+                    consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
+                    consts.push(Some(i));
+                    consts.push(Some(i.not())); */
+                    let i_1 = HVXVec8_128::from([i;8]);
+                    // let i_2 = HVXVec8_128::from([i.not();8]);
+                    // let i_3 = HVXVec8_128::from([i128::MIN + 1;8]);
+                    // let i_4 = HVXVec8_128::from([i128::MAX - 1;8]);
+                    // consts.push(Some(HVXVec::MIN.wrapping_add(i)));
+                    // consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
+                    consts.push(Some(i_1));
+                    // consts.push(Some(i_2));
+                    // consts.push(Some(i_3));
+                    // consts.push(Some(i_4));
                 }
 
                 for i in &consts {
@@ -518,7 +538,87 @@ macro_rules! impl_hvx {
                 print!("lhs expr {}\n", lhs);
                 print!("rhs expr {}\n", rhs);
 
+                let nums_init_lhs = lhs.to_string().trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                print!("nums_in_lhs {:?}\n\n", nums_init_lhs);
+
+
+                let nums_init_rhs = rhs.to_string().trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                print!("nums_init vdeal {:?}\n\n", nums_init_rhs);
+
+                let mut bv_code_lhs = format!("(concat ");
+                    for i in nums_init_lhs {
+                        bv_code_lhs.push_str("(integer->bitvector ");
+                        bv_code_lhs.push_str(&i.to_string());
+                        bv_code_lhs.push_str(" (bitvector 128)) ");
+                    }
+
+                bv_code_lhs.push_str(")");
+
+                let mut bv_code_rhs = format!("(concat ");
+                    for i in nums_init_rhs {
+                        bv_code_rhs.push_str("(integer->bitvector ");
+                        bv_code_rhs.push_str(&i.to_string());
+                        bv_code_rhs.push_str(" (bitvector 128)) ");
+                    }
+
+                bv_code_rhs.push_str(")");
+
+                for node in Self::instantiate(lhs).as_ref().iter() {
+                    print!{"node in lhs {}\n", node};
+                }
+
+                // verify with symbolic bv, this is mainly for handling strings
+
+                fn egg_to_rosette(expr: &[HvxLang]) -> std::string::String {
+                    let mut buf = "".to_string();
+                    let mut inner_str = "";
+                    for node in expr.as_ref().iter() {
+                    // terminal is guaranteed to be a BV
+                        match node {
+                            HvxLang::Var(v) => print!("var found {}\n", v),
+                            HvxLang::Lit(c) => {
+                                let mut nums_str = c.to_string();
+                                let nums_init = nums_str.trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
+                                let mut bv_code = "(concat ".to_string();
+                                for i in nums_init {
+                                    bv_code.push_str("(integer->bitvector ");
+                                    bv_code.push_str(&i.to_string());
+                                    bv_code.push_str(" (bitvector 128)) ");
+                                }
+                                bv_code.push_str(")");
+                                buf.push_str(&bv_code);
+                            },
+                            HvxLang::VDeal(a) => {
+                                let bv_code = format!("(hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)", buf);
+                                // buf.push_str(&bv_code);
+                                buf = bv_code;
+                            },
+                            HvxLang::VShuff(a) => {
+                                let bv_code = format!("(hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0)", buf);
+                                // buf.push_str(&bv_code);
+                                buf = bv_code;
+                            },
+                        }
+                    }
+                    return buf;
+                }
+                let lexpr = egg_to_rosette(Self::instantiate(lhs).as_ref());
+                let rexpr = egg_to_rosette(Self::instantiate(rhs).as_ref());
+
+                let rkt_code = (&format!(r#"'
+                        (require hydride/utils/bvops)
+                        (require hydride/utils/misc)
+                        (require hydride/ir/hvx/semantics)
+                        (bveq {} {})
+                        '
+                        "#, lexpr, rexpr));
+                let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+                print!("cmd to run: {}\n", cmd);
+                let output = run(&cmd);                        //assert!(output.status.success());
+                let mut so = get_stdout(&output).to_string();
+                print!("output of cmd = {}", so);
                 /* use z3::{*, ast::Ast};
+
 
                 fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[HvxLang]) -> z3::ast::HVXVec<'a> {
                     let mut buf: Vec<z3::ast::HVXVec> = vec![];
@@ -545,7 +645,7 @@ macro_rules! impl_hvx {
                     SatResult::Unsat => ValidationResult::Valid,
                     SatResult::Unknown => ValidationResult::Unknown
                 } */
-                ValidationResult::Valid
+                ValidationResult::Unknown
             }
         }
     };

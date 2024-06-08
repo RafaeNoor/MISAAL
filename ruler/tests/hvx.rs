@@ -25,7 +25,7 @@ pub mod test {
         //     lang.clone(),
         //     Ruleset::default(),
         // ));
-let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
+        // let lang = Workload::new(["(vdeal EXPR 54)", "(vshuff EXPR)", "VAL"]);
          let a6_canon = iter_metric(base_lang(1), "EXPR", enumo::Metric::Atoms, 3)
              .plug("VAR", &Workload::new(&["a", "b", "c"]))
              .plug("VAL", &Workload::new(&["0", "1"]))
