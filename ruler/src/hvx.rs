@@ -466,7 +466,7 @@ macro_rules! impl_hvx {
                 println!("vars vec {:?}", vars);
                 let mut consts = vec![];
 
-                /* for i in 0..2 {
+                for i in 0..2 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -482,11 +482,11 @@ macro_rules! impl_hvx {
                     consts.push(Some(i_2));
                     consts.push(Some(i_3));
                     consts.push(Some(i_4));
-                } */
+                }
 
                 // reduced constants for testing
 
-                for i in 0..2 {
+                /* for i in 0..2 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -502,7 +502,7 @@ macro_rules! impl_hvx {
                     // consts.push(Some(i_2));
                     // consts.push(Some(i_3));
                     // consts.push(Some(i_4));
-                }
+                } */
 
                 for i in &consts {
                     print!("elem in constvec {:?}\n\n", i);
@@ -535,7 +535,7 @@ macro_rules! impl_hvx {
 
                 // TODO: Add calls to Rosette
 
-                print!("lhs expr {}\n", lhs);
+                /* print!("lhs expr {}\n", lhs);
                 print!("rhs expr {}\n", rhs);
 
                 let nums_init_lhs = lhs.to_string().trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
@@ -565,7 +565,7 @@ macro_rules! impl_hvx {
 
                 for node in Self::instantiate(lhs).as_ref().iter() {
                     print!{"node in lhs {}\n", node};
-                }
+                } */
 
                 // verify with symbolic bv, this is mainly for handling strings
 
@@ -579,13 +579,14 @@ macro_rules! impl_hvx {
                             HvxLang::Lit(c) => {
                                 let mut nums_str = c.to_string();
                                 let nums_init = nums_str.trim().split_whitespace().flat_map(str::parse::<i128>).collect::<Vec<_>>();
-                                let mut bv_code = "(concat ".to_string();
+                                /* let mut bv_code = "(concat ".to_string();
                                 for i in nums_init {
                                     bv_code.push_str("(integer->bitvector ");
                                     bv_code.push_str(&i.to_string());
                                     bv_code.push_str(" (bitvector 128)) ");
                                 }
-                                bv_code.push_str(")");
+                                bv_code.push_str(")"); */
+                                let bv_code = "i";
                                 buf.push_str(&bv_code);
                             },
                             HvxLang::VDeal(a) => {
@@ -609,7 +610,9 @@ macro_rules! impl_hvx {
                         (require hydride/utils/bvops)
                         (require hydride/utils/misc)
                         (require hydride/ir/hvx/semantics)
-                        (bveq {} {})
+                        (define-symbolic i (bitvector 1024))
+                        (assert (bveq {} {}))
+                        (vc-asserts (vc))
                         '
                         "#, lexpr, rexpr));
                 let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
@@ -617,6 +620,13 @@ macro_rules! impl_hvx {
                 let output = run(&cmd);                        //assert!(output.status.success());
                 let mut so = get_stdout(&output).to_string();
                 print!("output of cmd = {}", so);
+
+                match so.as_ref() {
+                    "#t" => ValidationResult::Valid,
+                    _ => ValidationResult::Invalid
+                }
+
+
                 /* use z3::{*, ast::Ast};
 
 
@@ -645,7 +655,6 @@ macro_rules! impl_hvx {
                     SatResult::Unsat => ValidationResult::Valid,
                     SatResult::Unknown => ValidationResult::Unknown
                 } */
-                ValidationResult::Unknown
             }
         }
     };
