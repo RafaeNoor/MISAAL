@@ -15,14 +15,17 @@ PREC_EXPONENT_2 = 6 + 1
 simd_sizes = [pow(2, i) for i in range(3, SIZE_EXPONENT_2)]
 simd_precs = [pow(2, i) for i in range(3, PREC_EXPONENT_2)]
 
+ARITH_PREFIX = "arith:"
+VECTOR_PREFIX = "vector:"
+
 
 
 
 # Signedness one applies to both
 mlir_binary_simd_ops_contexts = [
-    {"name": "add", "bvops": ["bvadd", "extract"],
+    {"name": "addi", "bvops": ["bvadd", "extract"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": None},
-    {"name": "sub", "bvops": ["bvsub", "extract"],
+    {"name": "subi", "bvops": ["bvsub", "extract"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": None},
     {"name": "andi", "bvops": ["bvand", "extract"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": None},
@@ -42,9 +45,9 @@ mlir_binary_simd_ops_contexts = [
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 1},
     {"name": "divsi", "bvops": ["bvsdiv", "extract", "sign-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 1},
-    {"name": "sat-add", "bvops": ["bvaddnsw", "extract", "sign-extend"],
+    {"name": "sat-addi", "bvops": ["bvaddnsw", "extract", "sign-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 1},
-    {"name": "sat-sub", "bvops": ["bvsubnsw", "extract", "sign-extend"],
+    {"name": "sat-subi", "bvops": ["bvsubnsw", "extract", "sign-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 1},
     {"name": "modsi", "bvops": ["bvsrem", "extract"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 1},
@@ -61,9 +64,9 @@ mlir_binary_simd_ops_contexts = [
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 0},
     {"name": "divui", "bvops": ["bvudiv", "extract", "zero-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 0},
-    {"name": "sat-add", "bvops": ["bvaddnuw", "extract", "zero-extend"],
+    {"name": "sat-addui", "bvops": ["bvaddnuw", "extract", "zero-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 0},
-    {"name": "sat-sub", "bvops": ["bvsubnuw", "extract", "zero-extend"],
+    {"name": "sat-subui", "bvops": ["bvsubnuw", "extract", "zero-extend"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 0},
     {"name": "modui", "bvops": ["bvurem", "extract"],
         "sizes": simd_sizes, "precs": simd_precs, "signedness": 0},
@@ -144,12 +147,12 @@ mlir_concat_vector_contexts = [
 
 
 
-mlir_broadcast_contexts = [
-    {"name": "xBroadcast", "bvops": ["extract", "concat"], "input_sizes": input_broadcast_sizes,
-        "output_sizes": output_broadcast_sizes, "signedness": None},
-]
 
 """
+
+mlir_broadcast_contexts = [
+    {"name": "broadcast", "bvops": ["extract", "concat"], "sizes": simd_sizes, "precs": simd_precs, "signedness": None},
+]
 
 def create_broadcast_mlir_dict_entry(classes):
 
@@ -158,27 +161,34 @@ def create_broadcast_mlir_dict_entry(classes):
     for desc in classes:
 
         target_desc = {"target_instructions": {}, "semantics": desc["bvops"]}
-        for is_idx in range(len(desc['input_sizes'])):
-            for os_idx in range(len(desc['output_sizes'])):
-                input_size = desc['input_sizes'][is_idx]
-                output_size = desc['output_sizes'][os_idx]
+        for input_size in desc['sizes']:
+            for input_prec in desc['precs']:
 
-                args = ["SYMBOLIC_BV_{}".format(
-                    input_size), str(output_size // input_size)]
+                broadcast_input_size = input_prec
+
+                broadcast_output_size = input_size
+
+                if broadcast_input_size >= broadcast_output_size:
+                    continue
+
+                if broadcast_output_size % broadcast_input_size != 0:
+                    continue
+
+                args = ["SYMBOLIC_BV_{}".format(broadcast_input_size), str(broadcast_input_size), str(broadcast_output_size // broadcast_input_size)]
 
                 entry = copy.deepcopy({
                     "args": args,
-                    "in_vectsize": input_size,
-                    "out_vectsize": output_size,
-                    "lanesize": input_size,
-                    "in_precision": input_size,
-                    "out_precision": input_size,
-                    "in_vectsize_index": None,
+                    "in_vectsize": broadcast_input_size,
+                    "out_vectsize": broadcast_output_size,
+                    "lanesize": broadcast_input_size,
+                    "in_precision": broadcast_input_size,
+                    "out_precision": broadcast_input_size,
+                    "in_vectsize_index": 1,
                     "out_vectsize_index": None,
-                    "in_lanesize_index": None,
-                    "out_lanesize_index": None,
-                    "in_precision_index": None,
-                    "out_precision_index": None,
+                    "in_lanesize_index": 1,
+                    "out_lanesize_index": 1,
+                    "in_precision_index": 1,
+                    "out_precision_index": 1,
                     "arg_permute_map": [],
                     "Signedness": desc['signedness'],
                     "Cost": "None",
@@ -187,7 +197,7 @@ def create_broadcast_mlir_dict_entry(classes):
                     "ctx_sema": desc["bvops"],
                 })
                 target_desc['target_instructions'][desc['name']+"_is"+str(
-                    input_size)+"_os"+str(output_size)+"_signed_"+str(desc['signedness'])] = entry
+                    input_prec)+"_os"+str(input_size)+"_signed_"+str(desc['signedness'])] = entry
 
         if desc['name'] in semantics_dict:
             semantics_dict[desc['name']]['semantics'] += desc['bvops']
@@ -603,7 +613,6 @@ ternary_dict = create_select_mlir_dict_entry(mlir_ternary_ops_contexts)
 widen_dict = create_widening_mlir_dict_entry(mlir_widening_ops_contexts)
 cast_dict = create_cast_mlir_dict_entry(mlir_cast_ops_contexts)
 """
-broadcast_dict = create_broadcast_mlir_dict_entry(mlir_broadcast_contexts)
 slice_dict = create_slice_mlir_dict_entry(mlir_slice_vector_contexts)
 concat_dict = create_concat_mlir_dict_entry(mlir_concat_vector_contexts)
 
@@ -612,14 +621,25 @@ mlir_dicts = [concat_dict, slice_dict, broadcast_dict,
 
 """
 
-mlir_dicts = [simd_dict, unary_dict, ternary_dict, widen_dict, cast_dict]
+arith_dicts = [simd_dict, unary_dict, ternary_dict, widen_dict, cast_dict]
+
+
+
+broadcast_dict = create_broadcast_mlir_dict_entry(mlir_broadcast_contexts)
+vector_dicts = [broadcast_dict]
 
 combined_dict = {}
 
 
-for dict in mlir_dicts:
+for dict in arith_dicts:
     for key in dict:
-        combined_dict[key] = dict[key]
+        outer_name = ARITH_PREFIX + key
+        combined_dict[outer_name] = dict[key]
+
+for dict in vector_dicts:
+    for key in dict:
+        outer_name = VECTOR_PREFIX + key
+        combined_dict[outer_name] = dict[key]
 
 
 print("mlir_semantics = ", end=" ")
