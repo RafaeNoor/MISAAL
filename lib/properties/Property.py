@@ -1,4 +1,5 @@
 from common.Types import *
+from datetime import datetime
 import time
 import psutil
 from common.PredefinedDSL import *
@@ -15,6 +16,7 @@ from os import getpid
 import signal
 import pwd
 from subprocess import check_output
+from utils.NotificationUtil import send_email
 
 import random
 
@@ -34,6 +36,17 @@ class Property:
         self.dsl_list = dsl_list
         self.synth_desc = synth_desc
         self.parallel = parallel
+
+
+        self.BATCH_SIZE = 1024
+        self.POOL_SIZE = 64
+
+        self.notify_enabled = True
+        self.notify_count = self.BATCH_SIZE * 4
+        self.notify_to = 'arnoor2@illinois.edu'
+        self.notify_iter = 0
+
+
 
         # Candidates refer to expressions (usually tree's) on which the property will be
         # analyzed.
@@ -155,8 +168,10 @@ class Property:
                 })
 
 
-        BATCH_SIZE = 512
-        POOL_SIZE = min(32, BATCH_SIZE)
+        BATCH_SIZE = self.BATCH_SIZE
+        POOL_SIZE = min(self.POOL_SIZE, self.BATCH_SIZE)
+
+        count = 0
 
         start_time = time.time()
 
@@ -201,8 +216,10 @@ class Property:
                 cleanup_tmp_files()
 
         elif self.parallel and self.is_candidate_generator:
-            count = 0
             while True:
+
+                if self.should_notify(count):
+                    self.notify(count,candidate_count, start_time)
 
                 print("Completed executing {} / {}  jobs   ...".format(count, "INDEFINITE"))
                 # create a thread pool with 4 threads
@@ -226,18 +243,22 @@ class Property:
 
                 print("Property", self.name, "holds on", candidate_count,  " candidates ...")
 
+
                 with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
+
 
                 cleanup_tmp_files()
                 self.kill_remaining_child_processes()
 
         elif self.is_candidate_generator:
 
+            num_processed = 0
             while True:
 
                 j = 0
                 for candidate in self.candidates:
+                    num_processed += 1
                     j+= 1
                     worker(candidate)
                     if j == BATCH_SIZE:
@@ -251,13 +272,22 @@ class Property:
                 with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
+                if self.should_notify(num_processed):
+                    self.notify(num_processed,candidate_count, start_time)
+
+
+
                 cleanup_tmp_files()
 
 
         if self.is_candidate_generator:
             print("Property", self.name, "holds on", candidate_count,  " candidates ...")
         else:
+            count = len(self.candidates)
             print("Property", self.name, "holds on", candidate_count, "/", len(self.candidates), "candidates ...")
+
+        if self.notify_enabled:
+            self.notify(count,candidate_count, start_time)
 
         print(property_map)
         self.run_on_completion()
@@ -405,5 +435,46 @@ class Property:
 
     def run_on_batch_completion(self):
         return
+
+    def should_notify(self, count):
+        return self.notify_enabled and (count % self.notify_count == 0)
+
+    def get_notify_subject(self):
+        current_date = datetime.today().strftime('%Y-%m-%d')
+        self.notify_iter += 1
+        return '[MISAAL] {} | {} Iteration {} '.format(self.name, current_date, self.notify_iter)
+
+
+    def get_notify_body(self, count, success_count, start_time):
+        processed_str = "Processed {} candidates , with {} successes".format(count, success_count)
+
+
+        elapsed_time = time.time() - start_time
+        hours = elapsed_time / (60 * 60)
+
+        time_str_sec = "Elapsed time since start: {} seconds".format(elapsed_time)
+        time_str_hour = "Elapsed time since start: {} hours".format(hours)
+
+        candidates_per_second = count / elapsed_time
+
+        candidate_rate_str = "Candidate rate: {} candidates per second".format(candidates_per_second)
+
+        BANNER = "======================================="
+        HEADER = BANNER + "\n"+ " "*25 + "MISAAL\n" + BANNER
+
+        FOOTER = BANNER
+
+        items = [HEADER, processed_str, time_str_sec, time_str_hour ,candidate_rate_str , FOOTER]
+
+        return "\n".join(items)
+
+
+    def notify(self, count, success_count ,start_time):
+        msg_subject = self.get_notify_subject()
+        msg_body = self.get_notify_body(count, success_count,  start_time)
+        send_email(self.notify_to, msg_subject, msg_body)
+
+
+
 
 

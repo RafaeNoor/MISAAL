@@ -10,6 +10,7 @@ import json
 from  utils.DSLInstructionUtils import *
 from utils.GenerateRandomExpr import create_random_expression
 from utils.CodeSynthesizerDesc import *
+from utils.CanonicalizeExpressions import CanonicalizeExpression
 import copy
 from  common.Types import *
 import itertools
@@ -19,7 +20,7 @@ from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 class EqClassEqualDepth(EqualOnValues):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None):
 
 
         print("Source DSL List size:", len(dsl_list))
@@ -29,6 +30,10 @@ class EqClassEqualDepth(EqualOnValues):
         self.name = "EqClassEqualDepth"
         self.swizzle_dsl_list = swizzle_dsl_list
         self.swizzle_forward_map = {}
+
+        self.canonicalizer = CanonicalizeExpression(commutative_map_path = commutative_map_path)
+
+        self.absolute_expr_count = 0
 
         if not swizzle_map_path is None:
             with open(swizzle_map_path, "r") as JsonFile:
@@ -45,6 +50,54 @@ class EqClassEqualDepth(EqualOnValues):
         if not forward_map_path is None:
             with open(forward_map_path, "r") as JsonFile:
                 self.forward_map = json.load(JsonFile)
+
+
+
+    def isCanonical(self, expr, canonical_expr):
+        if isinstance(expr, Context) and not isinstance(canonical_expr, Context):
+            return False
+
+        if not isinstance(expr, Context) and isinstance(canonical_expr, Context):
+            return False
+
+        if isinstance(expr, Reg) and not isinstance(canonical_expr, Reg):
+            return False
+
+        if not isinstance(expr, Reg) and isinstance(canonical_expr, Reg):
+            return False
+
+        if isinstance(expr, Reg) and  isinstance(canonical_expr, Reg):
+            return True
+
+
+        if isinstance(expr, Context) and isinstance(canonical_expr, Context):
+            same_name = expr.dsl_name == canonical_expr.dsl_name
+
+            if not same_name:
+                return False
+
+            condition = True
+
+            for idx in range(len(expr.context_args)):
+                arg = expr.context_args[idx]
+                canon_arg = canonical_expr.context_args[idx]
+
+
+                if isinstance(arg, Reg):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(canon_arg, Reg):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(arg, Context):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(canon_arg, Context):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+            return condition
+
+        return True
+
 
 
 
@@ -76,8 +129,6 @@ class EqClassEqualDepth(EqualOnValues):
         ctxs = ["hexagon_V6_vmpybv_acc_128B"]
         substrs = ["hexagon_V6_vmpybv_acc_128B"]
 
-        ctxs = ["hexagon_V6_vmpybv_128B"]
-        substrs = ["hexagon_V6_vmpybv_128B"]
         for dsl_inst in dsl_list:
             insert = any([s in dsl_inst.name for s in substrs])
             if insert:
@@ -162,13 +213,56 @@ class EqClassEqualDepth(EqualOnValues):
             src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
             expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
             #expressions = [self.get_testing_expression()]
+            counter = 0
             for expr in expressions:
 
                 if get_expr_depth(expr) == self.output_depth:
+                    canonical_expr = self.canonicalizer.canonicalize(expr)
+
+
+                    # Hacky way
+                    #if canonical_expr.emit_context_expr_string(use_reg_only = True) != expr.emit_context_expr_string(use_reg_only = True):
+                    if not self.isCanonical(expr, canonical_expr):
+                        continue
+
+                    self.absolute_expr_count += self.get_absolute_count(canonical_expr)
                     candidate = (dsl_inst, expr, relavent_output_subset)
+
+
+
+
+
                     yield candidate
 
 
+    def get_absolute_count(self, expr):
+        if isinstance(expr, Context):
+
+            current_dsl = None
+            """
+            if 'swizzle' in expr.name:
+                swizzle_name = self.get_swizzle_by_name(expr.dsl_name).split("_dsl")[0]
+
+                current_dsl = self.get_swizzle_by_name(swizzle_name)
+            else:
+                for dsl_inst in self.output_dsl_list:
+                    if dsl_inst.name == expr.dsl_name:
+                        current_dsl = dsl_inst
+                        break
+            """
+            current_dsl = self.get_eq_class(expr.dsl_name)
+
+            count = len([ctx for ctx in current_dsl.contexts if ctx.out_vectsize == expr.out_vectsize])
+
+
+            for arg in expr.context_args:
+                count = count * self.get_absolute_count(arg)
+            return count
+
+
+
+
+        return 1
 
     def get_swizzle_by_name(self, name):
         for dsl_inst in self.swizzle_dsl_list:
@@ -446,6 +540,45 @@ class EqClassEqualDepth(EqualOnValues):
         property_t = {"src": src_ctx.emit_context_expr_string(), "dst": dst_ctx.emit_context_expr_string()}
         return property_t
 
+    def get_notify_body(self, count, success_count, start_time):
+        processed_str = "Processed {} candidates , with {} successes".format(count, success_count)
+
+
+        elapsed_time = time.time() - start_time
+        hours = elapsed_time / (60 * 60)
+
+        time_str_sec = "Elapsed time since start: {} seconds".format(elapsed_time)
+        time_str_hour = "Elapsed time since start: {} hours".format(hours)
+
+        candidates_per_second = count / elapsed_time
+
+
+        candidate_rate_str = "Candidate rate: {} candidates per second".format(candidates_per_second)
+
+
+        processed_abs_str = "Processed {} absolute candidates ".format(self.absolute_expr_count)
+
+        abs_candidates_per_second = self.absolute_expr_count / elapsed_time
+
+        abs_candidates_rate = "Absolute Candidate rate: {} candidates per second".format(abs_candidates_per_second)
+
+        average_exprs_per_candidate = 0
+
+        if count != 0:
+            average_exprs_per_candidate = self.absolute_expr_count / count
+
+        avg_candidates_rate = "Average # Expression rate: {} expressions per candidate".format(average_exprs_per_candidate)
+
+
+
+        BANNER = "======================================="
+        HEADER = BANNER + "\n"+ " "*25 + "MISAAL\n" + BANNER
+
+        FOOTER = BANNER
+
+        items = [HEADER, processed_str, time_str_sec, time_str_hour ,candidate_rate_str ,processed_abs_str , abs_candidates_rate, avg_candidates_rate , FOOTER]
+
+        return "\n".join(items)
 
 
 

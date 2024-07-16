@@ -102,8 +102,11 @@ test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSw
 test_properties = [EqualOnValues, ScaledTranslator]
 test_properties = [LargeExpressionTranslator]
 test_properties = [SimplifyingSwizzles , SwizzleTransferable, SynthSwizzleTransferable ,EqualOnValuesDepth][2:]
-test_properties = [EqClassEqualOnValuesDepth]
+test_properties = [EqClassEqualDepth, EqClassEqualOnValuesDepth]
 
+
+test_properties = [RepairRelavance]
+test_properties = [EqClassEqualDepth]
 
 for property in test_properties:
     for target in TARGETS:
@@ -168,9 +171,10 @@ for property in test_properties:
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target])
-            forward_path_name = "repair_forward_map.json"
+            forward_path_name = "repair_forward_map_true.json"
             swizzle_forward_path = "hvx_swizzle_derivation_map.JSON"
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2, forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path)
+            commutative_path = "commutative_map.json"
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 3, forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path)
 
         elif property is LargeExpressionTranslator:
             swizzle_dict = TARGET_TO_SWIZZLE[target]
