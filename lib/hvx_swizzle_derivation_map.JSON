@@ -1,0 +1,762 @@
+{
+    "hvx_swizzle_0": [
+        "hexagon_V6_vshuffh_128B",
+        "hexagon_V6_vdealh_128B"
+    ],
+    "hvx_swizzle_1": [
+        "hexagon_V6_vmpyuhv_acc_128B",
+        "hexagon_V6_vaddhw_128B",
+        "hexagon_V6_vmpyhsat_acc_128B",
+        "hexagon_V6_vmpyuh_acc_128B",
+        "hexagon_V6_vsubhw_128B",
+        "hexagon_V6_vsh_128B",
+        "hexagon_V6_vshuffh_128B",
+        "hexagon_V6_vmpyh_acc_128B",
+        "hexagon_V6_vmpyhus_acc_128B",
+        "hexagon_V6_vdealh_128B",
+        "hexagon_V6_vmpyhv_acc_128B",
+        "hexagon_V6_vadduhw_128B",
+        "hexagon_V6_vsubuhw_128B",
+        "hexagon_V6_vzh_128B",
+        "hexagon_V6_vmpyhv_128B",
+        "hexagon_V6_vmpyhus_128B",
+        "hexagon_V6_vmpyh_128B",
+        "hexagon_V6_vmpyuh_128B",
+        "hexagon_V6_vmpyuhv_128B",
+        "hexagon_V6_vadduhw_acc_128B"
+    ],
+    "hvx_swizzle_2": [
+        "hexagon_V6_vshuffh_128B",
+        "hexagon_V6_vdealh_128B"
+    ],
+    "hvx_swizzle_3": [
+        "hexagon_V6_vmpyuhv_acc_128B",
+        "hexagon_V6_vaddhw_128B",
+        "hexagon_V6_vmpyhsat_acc_128B",
+        "hexagon_V6_vmpyuh_acc_128B",
+        "hexagon_V6_vsubhw_128B",
+        "hexagon_V6_vsh_128B",
+        "hexagon_V6_vshuffh_128B",
+        "hexagon_V6_vmpyh_acc_128B",
+        "hexagon_V6_vmpyhus_acc_128B",
+        "hexagon_V6_vdealh_128B",
+        "hexagon_V6_vmpyhv_acc_128B",
+        "hexagon_V6_vadduhw_128B",
+        "hexagon_V6_vsubuhw_128B",
+        "hexagon_V6_vzh_128B",
+        "hexagon_V6_vmpyhv_128B",
+        "hexagon_V6_vmpyhus_128B",
+        "hexagon_V6_vmpyh_128B",
+        "hexagon_V6_vmpyuh_128B",
+        "hexagon_V6_vmpyuhv_128B",
+        "hexagon_V6_vadduhw_acc_128B"
+    ],
+    "hvx_swizzle_16": [
+        "hexagon_V6_vsb_128B",
+        "hexagon_V6_vmpybusv_128B",
+        "hexagon_V6_vdealb_128B",
+        "hexagon_V6_vsububh_128B",
+        "hexagon_V6_vmpyub_128B",
+        "hexagon_V6_vmpybv_acc_128B",
+        "hexagon_V6_vmpyub_acc_128B",
+        "hexagon_V6_vmpyubv_acc_128B",
+        "hexagon_V6_vmpybusv_acc_128B",
+        "hexagon_V6_vshuffb_128B",
+        "hexagon_V6_vaddubh_128B",
+        "hexagon_V6_vaddubh_acc_128B",
+        "hexagon_V6_vmpybv_128B",
+        "hexagon_V6_vmpybus_acc_128B",
+        "hexagon_V6_vmpyubv_128B",
+        "hexagon_V6_vmpybus_128B",
+        "hexagon_V6_vzb_128B"
+    ],
+    "hvx_swizzle_17": [
+        "hexagon_V6_vsb_128B",
+        "hexagon_V6_vmpybusv_128B",
+        "hexagon_V6_vsububh_128B",
+        "hexagon_V6_vmpyub_acc_128B",
+        "hexagon_V6_vmpyub_128B",
+        "hexagon_V6_vmpybv_acc_128B",
+        "hexagon_V6_vmpybusv_acc_128B",
+        "hexagon_V6_vmpyubv_acc_128B",
+        "hexagon_V6_vaddubh_128B",
+        "hexagon_V6_vaddubh_acc_128B",
+        "hexagon_V6_vmpybv_128B",
+        "hexagon_V6_vmpybus_acc_128B",
+        "hexagon_V6_vmpyubv_128B",
+        "hexagon_V6_vmpybus_128B",
+        "hexagon_V6_vzb_128B"
+    ],
+    "hvx_swizzle_18": [
+        "hexagon_V6_vsb_128B",
+        "hexagon_V6_vmpybusv_128B",
+        "hexagon_V6_vdealb_128B",
+        "hexagon_V6_vsububh_128B",
+        "hexagon_V6_vmpyub_128B",
+        "hexagon_V6_vmpybv_acc_128B",
+        "hexagon_V6_vmpyub_acc_128B",
+        "hexagon_V6_vmpyubv_acc_128B",
+        "hexagon_V6_vmpybusv_acc_128B",
+        "hexagon_V6_vshuffb_128B",
+        "hexagon_V6_vaddubh_128B",
+        "hexagon_V6_vaddubh_acc_128B",
+        "hexagon_V6_vmpybv_128B",
+        "hexagon_V6_vmpybus_acc_128B",
+        "hexagon_V6_vmpyubv_128B",
+        "hexagon_V6_vmpybus_128B",
+        "hexagon_V6_vzb_128B"
+    ],
+    "hvx_swizzle_29": [
+        "hexagon_V6_vmpyuhv_acc_128B",
+        "hexagon_V6_vaddhw_128B",
+        "hexagon_V6_vmpyhsat_acc_128B",
+        "hexagon_V6_vmpyuh_acc_128B",
+        "hexagon_V6_vsubhw_128B",
+        "hexagon_V6_vsh_128B",
+        "hexagon_V6_vmpyewuh_64_128B",
+        "hexagon_V6_vmpyh_acc_128B",
+        "hexagon_V6_vmpyhus_acc_128B",
+        "hexagon_V6_vmpyhv_acc_128B",
+        "hexagon_V6_vadduhw_128B",
+        "hexagon_V6_vsubuhw_128B",
+        "hexagon_V6_vzh_128B",
+        "hexagon_V6_vmpyhv_128B",
+        "hexagon_V6_vmpyhus_128B",
+        "hexagon_V6_vmpyh_128B",
+        "hexagon_V6_vmpyuh_128B",
+        "hexagon_V6_vmpyuhv_128B",
+        "hexagon_V6_vadduhw_acc_128B"
+    ],
+    "hvx_swizzle_41": [
+        "hexagon_V6_vshuffb_128B",
+        "hexagon_V6_vdealb_128B"
+    ],
+    "hvx_swizzle_43": [
+        "hexagon_V6_vshuffb_128B",
+        "hexagon_V6_vdealb_128B"
+    ],
+    "hvx_swizzle_68": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_69": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_70": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_71": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_72": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_73": [
+        "hexagon_V6_vdmpyhb_128B",
+        "hexagon_V6_vdmpyhsusat_128B",
+        "hexagon_V6_vdmpyhsat_acc_128B",
+        "hexagon_V6_vdmpyhvsat_acc_128B",
+        "hexagon_V6_vdmpyhsusat_acc_128B",
+        "hexagon_V6_vdmpyhsat_128B",
+        "hexagon_V6_vdmpyhvsat_128B",
+        "hexagon_V6_vdmpyhb_acc_128B"
+    ],
+    "hvx_swizzle_88": [
+        "hexagon_V6_vpackob_128B",
+        "hexagon_V6_vpackeb_128B",
+        "hexagon_V6_vshuffob_128B",
+        "hexagon_V6_vshuffeb_128B"
+    ],
+    "hvx_swizzle_113": [
+        "hexagon_V6_vmpauhb_128B",
+        "hexagon_V6_vmpahb_acc_128B"
+    ],
+    "hvx_swizzle_114": [
+        "hexagon_V6_vmpauhb_128B",
+        "hexagon_V6_vmpahb_acc_128B"
+    ],
+    "hvx_swizzle_115": [
+        "hexagon_V6_vmpauhb_128B",
+        "hexagon_V6_vmpahb_acc_128B"
+    ],
+    "hvx_swizzle_122": [
+        "hexagon_V6_vmpyewuh_64_128B"
+    ],
+    "hvx_swizzle_124": [
+        "hexagon_V6_vmpyewuh_64_128B"
+    ],
+    "hvx_swizzle_196": [
+        "hexagon_V6_vshufeh_128B",
+        "hexagon_V6_vpackoh_128B",
+        "hexagon_V6_vpackeh_128B",
+        "hexagon_V6_vshufoh_128B"
+    ],
+    "hvx_swizzle_218": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_219": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_220": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_221": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_222": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_223": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_224": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_225": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_226": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_227": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_228": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_229": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_230": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_231": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_232": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_233": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_234": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_235": [
+        "hexagon_V6_vrmpyub_acc_128B",
+        "hexagon_V6_vrmpybusv_acc_128B",
+        "hexagon_V6_vrmpyubv_128B",
+        "hexagon_V6_vrmpybus_acc_128B",
+        "hexagon_V6_vrmpybusv_128B",
+        "hexagon_V6_vrmpyubv_acc_128B",
+        "hexagon_V6_vrmpybv_acc_128B",
+        "hexagon_V6_vrmpyub_128B",
+        "hexagon_V6_vrmpybv_128B",
+        "hexagon_V6_vrmpybus_128B"
+    ],
+    "hvx_swizzle_236": [
+        "hexagon_V6_vmpabuu_128B",
+        "hexagon_V6_vmpabusv_128B",
+        "hexagon_V6_vmpabus_128B",
+        "hexagon_V6_vmpabuu_acc_128B",
+        "hexagon_V6_vmpabus_acc_128B"
+    ],
+    "hvx_swizzle_237": [
+        "hexagon_V6_vmpabuu_128B",
+        "hexagon_V6_vmpabusv_128B",
+        "hexagon_V6_vmpabus_128B",
+        "hexagon_V6_vmpabuu_acc_128B",
+        "hexagon_V6_vmpabus_acc_128B"
+    ],
+    "hvx_swizzle_238": [
+        "hexagon_V6_vmpabuu_128B",
+        "hexagon_V6_vmpabusv_128B",
+        "hexagon_V6_vmpabus_128B",
+        "hexagon_V6_vmpabuu_acc_128B",
+        "hexagon_V6_vmpabus_acc_128B"
+    ],
+    "hvx_swizzle_263": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_264": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_265": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_266": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_267": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_268": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_269": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_270": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_271": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_272": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_273": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_274": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_275": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_276": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_277": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_278": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_279": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_280": [
+        "hexagon_V6_vaddhnq",
+        "hexagon_V6_vsubhnq_128B"
+    ],
+    "hvx_swizzle_281": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_282": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_283": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_284": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_285": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_286": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_287": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_288": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_289": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_290": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_291": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_292": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_293": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_294": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_295": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_296": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_297": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_298": [
+        "hexagon_V6_vsubbnq_128B",
+        "hexagon_V6_vandvqv_128B",
+        "hexagon_V6_vmux_128B",
+        "hexagon_V6_vandqrt_acc_128B",
+        "hexagon_V6_vaddbq_128B"
+    ],
+    "hvx_swizzle_530": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_531": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_532": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_533": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_534": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_535": [
+        "hexagon_V6_vdmpybus_acc_128B",
+        "hexagon_V6_vdmpybus_128B"
+    ],
+    "hvx_swizzle_628": [
+        "hexagon_V6_vdealb4w_128B"
+    ],
+    "hvx_swizzle_650": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_651": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_652": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_653": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_654": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_655": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_656": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_657": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_658": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_659": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_660": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_661": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_662": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_663": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_664": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_665": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_666": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ],
+    "hvx_swizzle_667": [
+        "hexagon_V6_vaddwq_128B",
+        "hexagon_V6_vsubwq_128B"
+    ]
+}

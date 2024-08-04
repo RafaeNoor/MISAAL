@@ -1,0 +1,352 @@
+{
+    "arm_swizzle_1": [
+        "vaba_u32",
+        "vtrn2_u32",
+        "vzip2_u32",
+        "vaba_s32"
+    ],
+    "arm_swizzle_8": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_9": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_10": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_11": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_12": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_13": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_14": [
+        "vpaddl_s16",
+        "vpadal_s16",
+        "vpadal_u16",
+        "vpaddl_u16"
+    ],
+    "arm_swizzle_16": [
+        "vtrn1q_s8",
+        "vtrn2q_s8",
+        "vzip2q_u8"
+    ],
+    "arm_swizzle_19": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_20": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_21": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_22": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_23": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_24": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_25": [
+        "vpaddl_u32",
+        "vpadal_s32",
+        "vpadal_u32",
+        "vpaddl_s32"
+    ],
+    "arm_swizzle_26": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_27": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_28": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_29": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_30": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_31": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_32": [
+        "vpaddl_s8",
+        "vpadal_s8",
+        "vpaddl_u8",
+        "vpadal_u8"
+    ],
+    "arm_swizzle_33": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_34": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_35": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_36": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_37": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_38": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_39": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_40": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_41": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_42": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_43": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_44": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_45": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_46": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_47": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_48": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_49": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_50": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_51": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_52": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_53": [
+        "vdot_s32",
+        "vdot_u32"
+    ],
+    "arm_swizzle_76": [
+        "vzip2_s8",
+        "vtrn1_u8",
+        "vtrn2_s8"
+    ],
+    "arm_swizzle_78": [
+        "vtrn1q_u16",
+        "vzip2_s8",
+        "vtrn1_u8",
+        "vzip2q_u16",
+        "vtrn2_s8",
+        "vtrn2q_s16"
+    ],
+    "arm_swizzle_91": [
+        "vpadalq_s32",
+        "vpadalq_u32",
+        "vpaddlq_s32",
+        "vpaddlq_u32"
+    ],
+    "arm_swizzle_92": [
+        "vpadalq_s32",
+        "vpadalq_u32",
+        "vpaddlq_s32",
+        "vpaddlq_u32"
+    ],
+    "arm_swizzle_93": [
+        "vpadalq_s32",
+        "vpadalq_u32",
+        "vpaddlq_s32",
+        "vpaddlq_u32"
+    ],
+    "arm_swizzle_94": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_95": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_96": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_97": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_98": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_99": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_100": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_101": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_102": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_103": [
+        "vdotq_s32",
+        "vdotq_u32"
+    ],
+    "arm_swizzle_105": [
+        "vtrn1_u16",
+        "vzip2_s16",
+        "vtrn2_u16"
+    ],
+    "arm_swizzle_107": [
+        "vtrn1q_s32",
+        "vtrn2q_s32",
+        "vzip2_s16",
+        "vtrn1_u16",
+        "vtrn2_u16",
+        "vzip2q_s32"
+    ],
+    "arm_swizzle_204": [
+        "vpadalq_s16",
+        "vpaddlq_s16",
+        "vpaddlq_u16",
+        "vpadalq_u16"
+    ],
+    "arm_swizzle_205": [
+        "vpadalq_s16",
+        "vpaddlq_s16",
+        "vpaddlq_u16",
+        "vpadalq_u16"
+    ],
+    "arm_swizzle_206": [
+        "vpadalq_s16",
+        "vpaddlq_s16",
+        "vpaddlq_u16",
+        "vpadalq_u16"
+    ],
+    "arm_swizzle_224": [
+        "vzip2q_s64",
+        "vshrq_n_s64",
+        "vtrn2q_u64"
+    ],
+    "arm_swizzle_257": [
+        "vpaddlq_u8",
+        "vpadalq_u8",
+        "vpaddlq_s8",
+        "vpadalq_s8"
+    ],
+    "arm_swizzle_258": [
+        "vpaddlq_u8",
+        "vpadalq_u8",
+        "vpaddlq_s8",
+        "vpadalq_s8"
+    ],
+    "arm_swizzle_259": [
+        "vpaddlq_u8",
+        "vpadalq_u8",
+        "vpaddlq_s8",
+        "vpadalq_s8"
+    ],
+    "arm_swizzle_293": [
+        "vabaq_s32",
+        "vabaq_u32"
+    ]
+}
