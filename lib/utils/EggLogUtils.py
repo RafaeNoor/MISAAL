@@ -15,6 +15,10 @@ HYDRIDE_EXPR_LABEL = "HydrideExpr"
 def emit_egg_decl_bv():
     return "(datatype BV (LIT i64 i64) (SYMBV i64))"
 
+def emit_egg_define_reg(reg):
+    reg_name = "reg_{}".format(reg.index)
+    return reg_name , "(let {} (SYMBV {}))".format(reg_name, reg.index)
+
 
 def emit_egg_decl_scalar():
     return "" #"(datatype SCALAR (INT i64))"
@@ -33,6 +37,18 @@ def emit_egg_datatypes(dsl_list, cost = 1):
 
 
 
+def emit_egg_datatypes_two_dsl(input_dsl_list, output_dsl_list,  input_cost = 1, output_cost = 1):
+
+    symbolic_bvs = emit_egg_decl_bv()
+    scalars = emit_egg_decl_scalar()
+
+    input_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = input_cost) for dsl_inst in input_dsl_list]
+    output_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = output_cost) for dsl_inst in output_dsl_list]
+
+    comment = "; Declaring constructs for instructions"
+
+    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join( input_dsl_decls + output_dsl_decls))
+    return  "\n".join([comment, symbolic_bvs, scalars ,decl_insts])
 
 
 
