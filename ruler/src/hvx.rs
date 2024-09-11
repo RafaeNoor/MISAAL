@@ -466,7 +466,7 @@ macro_rules! impl_hvx {
                 println!("vars vec {:?}", vars);
                 let mut consts = vec![];
 
-                for i in 0..2 {
+                /* for i in 0..2 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -482,11 +482,11 @@ macro_rules! impl_hvx {
                     consts.push(Some(i_2));
                     consts.push(Some(i_3));
                     consts.push(Some(i_4));
-                }
+                } */
 
                 // reduced constants for testing
 
-                /* for i in 0..2 {
+                for i in 0..2 {
                     /* let i = HVXVec::from(i);
                     consts.push(Some(HVXVec::MIN.wrapping_add(i)));
                     consts.push(Some(HVXVec::MAX.wrapping_sub(i)));
@@ -502,7 +502,7 @@ macro_rules! impl_hvx {
                     // consts.push(Some(i_2));
                     // consts.push(Some(i_3));
                     // consts.push(Some(i_4));
-                } */
+                }
 
                 for i in &consts {
                     print!("elem in constvec {:?}\n\n", i);
@@ -611,18 +611,17 @@ macro_rules! impl_hvx {
                         (require hydride/utils/misc)
                         (require hydride/ir/hvx/semantics)
                         (define-symbolic i (bitvector 1024))
-                        (assert (bveq {} {}))
-                        (vc-asserts (vc))
+                        (verify (assert (bveq {} {})))
                         '
                         "#, lexpr, rexpr));
                 let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
                 print!("cmd to run: {}\n", cmd);
                 let output = run(&cmd);                        //assert!(output.status.success());
                 let mut so = get_stdout(&output).to_string();
-                print!("output of cmd = {}", so);
-
+                so = so.trim().to_owned();
+                print!("output of cmd = {}", &so);
                 match so.as_ref() {
-                    "#t" => ValidationResult::Valid,
+                    "(unsat)" => ValidationResult::Valid,
                     _ => ValidationResult::Invalid
                 }
 

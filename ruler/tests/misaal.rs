@@ -3,6 +3,11 @@
 use num::{ToPrimitive, Zero};
 use ruler::*;
 use z3::ast::Ast;
+use std::io::BufReader;
+use std::io::BufRead;
+use std::process::Stdio;
+
+use cli_runner::{run, get_stdout, get_stderr};
 
 use ruler::{
     enumo::{Filter, Metric, Ruleset, Workload},
@@ -83,17 +88,95 @@ impl SynthLanguage for Pred {
     }
 
     fn validate(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> ValidationResult {
+
+        fn egg_to_rosette(expr: &[Pred]) -> std::string::String {
+            let mut buf = "".to_string();
+            let mut inner_str = "";
+            for node in expr.as_ref().iter() {
+                // terminal is guaranteed to be a BV
+                match node {
+                    Pred::Var(v) => {
+
+                        let bv_code = "i";
+                        print!("var found {}\n", v);
+                        buf.push_str(&bv_code);
+
+                    }, 
+                    Pred::BVLit(c) => {
+                        let mut nums_str = c.to_string();
+                        let nums_init = nums_str
+                            .trim()
+                            .split_whitespace()
+                            .flat_map(str::parse::<i128>)
+                            .collect::<Vec<_>>();
+                        /* let mut bv_code = "(concat ".to_string();
+                        for i in nums_init {
+                            bv_code.push_str("(integer->bitvector ");
+                            bv_code.push_str(&i.to_string());
+                            bv_code.push_str(" (bitvector 128)) ");
+                        }
+                        bv_code.push_str(")"); */
+                        let bv_code = "i";
+                        print!("bvlit found {}\n", c);
+                        buf.push_str(&bv_code);
+                    }
+                    Pred::vec_d(a) => {
+                        let bv_code = format!(
+                            "(hexagon_V6_vdealb_128B {} 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0)",
+                            buf
+                        );
+                        // buf.push_str(&bv_code);
+                        buf = bv_code;
+                    }
+                    Pred::vec_s(a) => {
+                        let bv_code =
+                            format!("(hexagon_V6_vshuffh_128B {} 1024 16 0 16 8 16 8 0)", buf);
+                        // buf.push_str(&bv_code);
+                        buf = bv_code;
+                    }
+                }
+            }
+            return buf;
+        }
+        let lexpr = egg_to_rosette(Self::instantiate(lhs).as_ref());
+        let rexpr = egg_to_rosette(Self::instantiate(rhs).as_ref());
+
+        let rkt_code = (&format!(
+            r#"'
+                (require hydride/utils/bvops)
+                (require hydride/utils/misc)
+                (require hydride/ir/hvx/semantics)
+                (define-symbolic i (bitvector 1024))
+                (verify (assert (bveq {} {})))
+                '
+                "#,
+            lexpr, rexpr
+        ));
+        let cmd = format!("/home/baronia3/bin/racket -I rosette -e {}", rkt_code);
+        print!("cmd to run: {}\n", cmd);
+        let output = run(&cmd); //assert!(output.status.success());
+        let mut so = get_stdout(&output).to_string();
+        so = so.trim().to_owned();
+        print!("output of cmd = {}", &so);
+
+        match so.as_ref() {
+            "(unsat)" => ValidationResult::Valid,
+            _ => ValidationResult::Invalid,
+        }
+    }
+
+    /* fn validate(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> ValidationResult {
         let lexpr = egg_to_external_prog(Self::instantiate(lhs).as_ref());
         let rexpr = egg_to_external_prog(Self::instantiate(rhs).as_ref());
         println!("LEFT EXPRESSION");
         println!("{}", lexpr);
         println!("RIGHT EXPRESSION");
         println!("{}", rexpr);
-        ValidationResult::Invalid
-    }
+        ValidationResult::Valid
+    } */
 }
 
-fn egg_to_external_prog<'a>(expr: &[Pred]) -> String {
+/* fn egg_to_external_prog<'a>(expr: &[Pred]) -> String {
     let mut buf: Vec<String> = vec![];
     for node in expr.as_ref().iter() {
         match node {
@@ -111,7 +194,7 @@ fn egg_to_external_prog<'a>(expr: &[Pred]) -> String {
         }
     }
     buf.pop().unwrap()
-}
+} */
 
 #[cfg(test)]
 #[path = "./recipes/misaal.rs"]
@@ -131,22 +214,17 @@ mod test {
 
     #[test]
     fn run() {
-        // Skip this test in github actions
-        if std::env::var("CI").is_ok() && std::env::var("SKIP_RECIPES").is_ok() {
-            return;
-        }
-
         let start = Instant::now();
         // Runs the actual search
         let all_rules = vec_rules();
         let duration = start.elapsed();
     }
 
-    #[test]
+    /* #[test]
     fn wkld_test() {
         let lang = Workload::new(["(vec_d EXPR)", "(vec_s EXPR)", "VAL"]);
         let depth3 = iter_metric(lang, "EXPR", Metric::Depth, 3)
             .plug("VAL", &Workload::new(["val_0", "val_1", "val_2"]));
         depth3.pretty_print();
-    }
+    } */
 }

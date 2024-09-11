@@ -17,13 +17,14 @@ fn iter_grammar(n: usize) -> Workload {
 pub fn vec_rules() -> Ruleset<Pred> {
     println!("Generating vec rules!");
     let mut all = Ruleset::default();
+    print!("Initial Default Ruleset {:?} \n", all);
     let canon = iter_grammar(3);
     let get_rules = run_workload(
         canon,
         all.clone(),
         Limits::synthesis(),
         Limits::minimize(),
-        true,
+        false,
     );
 
     all.extend(get_rules);
