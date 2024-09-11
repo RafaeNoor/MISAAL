@@ -12,7 +12,7 @@ class IdentifySwizzles(Property):
         self.num_input_sources = num_input_sources
         self.swizzle_context_map = {}
         self.profile_only_params = True
-        self.elem_bitwidths = [8, 16, 32]
+        self.elem_bitwidths = [8, 16, 32, 64]
 
 
 

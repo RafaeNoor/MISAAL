@@ -59,6 +59,7 @@ class Swizzle:
         return bits_accounted_for == self.result_size
 
     def merge_swizzle_context(self, swizzle):
+        print("Merging swizzle ", self.name , "with", swizzle.name)
         combined_names = self.names + swizzle.names
         self.names = list(set(combined_names))
 

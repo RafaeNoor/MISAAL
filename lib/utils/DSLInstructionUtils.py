@@ -958,6 +958,16 @@ def get_expr_depth(dsl_expr):
     else:
         return 0
 
+def get_expr_bv_ops(ctx):
+    if not isinstance(ctx, Context):
+        return []
+
+    ctx_ops = ctx.get_bv_ops()
+
+    for arg in ctx.context_args:
+        ctx_ops += get_expr_bv_ops(arg)
+    return sorted(list(set(ctx_ops)))
+
 
 
 def print_dsl_list_summary(dsl_list):

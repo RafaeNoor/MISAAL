@@ -39,10 +39,10 @@ class Property:
 
 
         self.BATCH_SIZE = 1024
-        self.POOL_SIZE = 64
+        self.POOL_SIZE = 16
 
         self.notify_enabled = True
-        self.notify_count = self.BATCH_SIZE * 4
+        self.notify_count = self.BATCH_SIZE * 2
         self.notify_to = 'arnoor2@illinois.edu'
         self.notify_iter = 0
 
@@ -320,6 +320,8 @@ class Property:
         EUID  = 2
         def owner(pid):
             '''Return username of UID of process pid'''
+            if not os.path.exists('/proc/%d/status' % pid):
+                return "-1"
             for ln in open('/proc/%d/status' % pid):
                 if ln.startswith('Uid:'):
                     uid = int(ln.split()[UID])
@@ -442,7 +444,7 @@ class Property:
     def get_notify_subject(self):
         current_date = datetime.today().strftime('%Y-%m-%d')
         self.notify_iter += 1
-        return '[MISAAL] {} | {} Iteration {} '.format(self.name, current_date, self.notify_iter)
+        return '[MISAAL] {}_{} | {} Iteration {} '.format(self.synth_desc.target_name, self.name, current_date, self.notify_iter)
 
 
     def get_notify_body(self, count, success_count, start_time):

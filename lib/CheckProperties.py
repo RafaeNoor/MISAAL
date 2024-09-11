@@ -28,10 +28,11 @@ from sema.x86SemanticsAllArgs import semantcs as x86_semantics
 from sema.halide_sema import halide_semantics
 from sema.hex_swizzles import hvx_swizzles
 from sema.x86_swizzles import x86_swizzles
+from sema.arm_swizzles import arm_swizzles
+
 from sema.ARMSema import arm_semantics
 from sema.repairs_sema import repair_semantics
-from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC
-from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc
+from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc, HALIDE_SYNTH_DESC
 
 import os
 
@@ -75,7 +76,13 @@ TARGET_TO_SWIZZLE = {
     "x86": x86_swizzles,
     "hvx": hvx_swizzles,
     "halide_hvx": {},
-    "arm" : {},
+    "arm" : arm_swizzles,
+}
+
+TARGET_TO_SWIZZLE_DMAP = {
+    "hvx": "hvx_swizzle_derivation_map.JSON",
+    "arm": "arm_swizzle_derivation_map.JSON",
+    "x86": "x86_swizzle_derivation_map.JSON",
 }
 
 
@@ -95,7 +102,7 @@ TARGET_TO_DESC = {
 
 
 
-TARGETS = ["hvx"]
+TARGETS = ["x86"]
 test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
 #test_properties = [SimplifyingSwizzles, FusedSwizzleTranslator]
 
@@ -106,7 +113,7 @@ test_properties = [EqClassEqualDepth, EqClassEqualOnValuesDepth]
 
 
 test_properties = [RepairRelavance]
-test_properties = [EqClassEqualDepth]
+#test_properties = [EqClassEqualDepth]
 
 for property in test_properties:
     for target in TARGETS:
@@ -135,7 +142,7 @@ for property in test_properties:
             swizzles = parse_dict(swizzle_dict)
             print("Total Swizzle classes: ", len(swizzles))
             halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, shuffle_deriviation_map_path="hvx_swizzle_derivation_map.JSON", swizzles = swizzles )
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, shuffle_deriviation_map_path=TARGET_TO_SWIZZLE_DMAP[target], swizzles = swizzles )
 
         elif property is ScaledTranslator:
             halide_dsl_list = parse_dict(halide_semantics)
@@ -167,12 +174,13 @@ for property in test_properties:
         elif property is RepairRelavance:
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
-            target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target])
-            forward_path_name = "repair_forward_map_true.json"
-            swizzle_forward_path = "hvx_swizzle_derivation_map.JSON"
+            target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
+            #forward_path_name = "repair_forward_map_true.json"
+            forward_path_name = "repair_forward_map_{}.json".format(target)
+            swizzle_forward_path = TARGET_TO_SWIZZLE_DMAP[target]#"hvx_swizzle_derivation_map.JSON"
             commutative_path = "commutative_map.json"
             PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 3, forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path)
 

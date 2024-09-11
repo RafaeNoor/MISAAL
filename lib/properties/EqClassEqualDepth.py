@@ -126,8 +126,8 @@ class EqClassEqualDepth(EqualOnValues):
     def filter_source_dsl_list(self, dsl_list):
         filtered = []
 
-        ctxs = ["hexagon_V6_vmpybv_acc_128B"]
-        substrs = ["hexagon_V6_vmpybv_acc_128B"]
+        ctxs = ["_mm256_maddubs_epi16"]
+        substrs = ["_mm256_maddubs_epi16"]
 
         for dsl_inst in dsl_list:
             insert = any([s in dsl_inst.name for s in substrs])
@@ -212,7 +212,6 @@ class EqClassEqualDepth(EqualOnValues):
 
             src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
             expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
-            #expressions = [self.get_testing_expression()]
             counter = 0
             for expr in expressions:
 
@@ -275,6 +274,8 @@ class EqClassEqualDepth(EqualOnValues):
 
 
     def get_relavent_output_dsl_subset(self, dsl_inst):
+        if not dsl_inst.name in self.forward_map:
+            return []
         relavent_names = self.forward_map[dsl_inst.name]
         relavent_outputs = [d for d in self.output_dsl_list if d.name in relavent_names]
         relavent_swizzles = []

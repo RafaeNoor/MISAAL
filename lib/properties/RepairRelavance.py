@@ -15,7 +15,7 @@ class RepairRelavance(IdentifySwizzles):
 
 
 
-    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None):
+    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False):
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc)
         self.name = "RepairRelavance"
@@ -24,14 +24,16 @@ class RepairRelavance(IdentifySwizzles):
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
         input_test_list = [
-            #"hexagon_V6_vdmpyhvsat_acc_128B",
-            #"hexagon_V6_vmpybv_128B",
-            "hexagon_V6_vmpybv_acc_128B",
+            "_mm256_maddubs_epi16"
         ]
         #self.input_dsl_list = [d for d in self.input_dsl_list if d.name in input_test_list]
+
         self.target_synth_desc = target_synth_desc
         self.optimize = True
-        self.target_depth = 3
+        self.target_start_depth = target_start_depth
+        self.target_depth = target_depth
+        self.const_fold = const_fold
+       
 
         test_list = [
             "typed:vec-add",
@@ -47,10 +49,30 @@ class RepairRelavance(IdentifySwizzles):
         return "Test if a given output dsl instruction may be used to generate target expression"
 
     def generate_candidates(self):
-        for input_dsl in self.input_dsl_list:
-            for output_dsl in self.output_dsl_list:
-                yield (input_dsl, output_dsl , True)
-                yield (input_dsl, output_dsl , False)
+        start_depth = self.target_depth
+        if not self.target_start_depth is None:
+            start_depth = self.target_start_depth
+        for depth in range(start_depth, self.target_depth + 1):
+            for input_dsl in self.input_dsl_list:
+                for output_dsl in self.output_dsl_list:
+                    visited_bv_ops = []
+                    
+                    for idx,ctx in enumerate(input_dsl.contexts):
+                        ops = get_expr_bv_ops(ctx)
+
+                        if ops in visited_bv_ops:
+                            continue
+
+                        visited_bv_ops.append(ops)
+
+                        candidate = (input_dsl, output_dsl, depth, idx)
+                        candidate_key = self.serialize_candidate(candidate)
+                        # If property already holds on shallower depths then continue
+                        if candidate_key in self.context_map:
+                            continue
+
+
+                        yield candidate
         return
 
 
@@ -67,7 +89,10 @@ class RepairRelavance(IdentifySwizzles):
                 query_inst_id = dsl_inst.dsl_id
 
 
-        contains_query = "({} (test_:const-fold expr) {} ({} env))".format(contains_name, query_inst_id, "prepare-env")
+
+        contains_query = "({}  expr {} ({} env))".format(contains_name, query_inst_id, "prepare-env")
+        if self.const_fold:
+            contains_query = "({} (test_:const-fold expr) {} ({} env))".format(contains_name, query_inst_id, "prepare-env")
 
         func = "(define ({} expr env)\n{}\n)".format(constraint_fn_name , contains_query)
 
@@ -338,21 +363,27 @@ class RepairRelavance(IdentifySwizzles):
 
         return grammar_name, grammar_def, relavent_dsls
 
+
+
+
+
+
+
+
     def property_holds_on_candidate(self, candidate):
         input_dsl_inst = candidate[0]
         modified_sema = self.get_instrumented_semantics(input_dsl_inst)
-        is_arg_max = candidate[2]
+        depth = candidate[2]
+        arg_id = candidate[3]
+
+        key = self.serialize_candidate(candidate)
+
+        if key in self.context_map:
+            return False
 
         statements = []
 
-        arg_id = np.argmin([get_num_symbolic_args(ctx) for ctx in input_dsl_inst.contexts])
-        if is_arg_max:
-            arg_max  = np.argmax([get_num_symbolic_args(ctx) for ctx in input_dsl_inst.contexts])
-            if arg_max == arg_id:
-                # If the same context is being tested, skip re-testing
-                return False
-            arg_id = arg_max
-
+    
 
         src_ctx = input_dsl_inst.contexts[int(arg_id)]
         print(src_ctx.name)
@@ -436,10 +467,11 @@ class RepairRelavance(IdentifySwizzles):
         statements.append(constraints)
 
 
+        interpret_name= self.synth_desc.interpreter_name
 
-        invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = "invoke-ref", interpreter_name = "hvx:interpret", index = 0, is_lane_func = False)
+        invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = "invoke-ref", interpreter_name = interpret_name, index = 0, is_lane_func = False)
 
-        invoke_ref_lane_def = self.invoke_ref(out_precision, output_size, invoke_name = "invoke-ref-lane", interpreter_name = "hvx:interpret", index = 0, is_lane_func = True)
+        invoke_ref_lane_def = self.invoke_ref(out_precision, output_size, invoke_name = "invoke-ref-lane", interpreter_name = interpret_name, index = 0, is_lane_func = True)
 
         statements.append(invoke_ref_def)
         statements.append(invoke_ref_lane_def)
@@ -447,7 +479,7 @@ class RepairRelavance(IdentifySwizzles):
         optimize_flag = ["#f", "#t"][int(self.optimize)]
         statements.append("(define optimize? {})".format(optimize_flag))
 
-        statements.append("(define grammar (test_grammar {}))".format(self.target_depth))
+        statements.append("(define grammar (test_grammar {}))".format(depth))
 
         synth_query = self.emit_synthesis_query()
         results = "(define-values (sat? mat elapsed) {})".format(synth_query)
@@ -471,7 +503,7 @@ class RepairRelavance(IdentifySwizzles):
 
         success = ret_code.returncode == 0
 
-        key = self.serialize_candidate(candidate)
+ 
         if success:
             with open(read_from_fname, "r") as ReadFile:
                 self.context_map[key] = ReadFile.read()
@@ -551,7 +583,7 @@ class RepairRelavance(IdentifySwizzles):
         pass
 
     def serialize_candidate(self, candidate):
-        return candidate[0].name + "+" + candidate[1].name + "+" + str(candidate[2])
+        return candidate[0].name + "+" + candidate[1].name #+ "+" + str(candidate[2])
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
