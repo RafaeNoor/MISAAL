@@ -38,12 +38,27 @@ class CompilerBase:
     def convert_reg_to_compiler_datastructure(self, expr_regs):
         raise NotImplementedError()
 
+    def get_unique_registers(self, expr_regs):
+        included = []
+        pruned_regs = []
+        for reg in expr_regs:
+            if reg.index in included:
+                continue
+            pruned_regs.append(reg)
+            included.append(reg.index)
+        return pruned_regs
+
+
     def compile_expr(self, expr):
         self.initialize_class_map()
         self.initialize_lit_class()
         self.initialize_reg_class()
 
         expr_regs = get_context_registers(expr)
+        expr_regs = self.get_unique_registers(expr_regs)
+
+
+
 
         reg_data_structures = self.convert_reg_to_compiler_datastructure(expr_regs)
 

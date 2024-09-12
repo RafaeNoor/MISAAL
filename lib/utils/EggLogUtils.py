@@ -10,14 +10,21 @@ from utils.DSLInstructionUtils import get_context_registers
 
 HYDRIDE_EXPR_LABEL = "HydrideExpr"
 
+def emit_egg_extract_expr(label):
+    return "(extract {})".format(label)
 
+def emit_egg_run_iter(iterations):
+    return "(run {})".format(iterations)
 
 def emit_egg_decl_bv():
-    return "(datatype BV (LIT i64 i64) (SYMBV i64))"
+    return "(LIT i64 i64) (SYMBV i64)"
 
 def emit_egg_define_reg(reg):
     reg_name = "reg_{}".format(reg.index)
     return reg_name , "(let {} (SYMBV {}))".format(reg_name, reg.index)
+
+def emit_egg_define_var(label, defn):
+    return "(let {} {})".format(label, defn)
 
 
 def emit_egg_decl_scalar():
@@ -32,8 +39,8 @@ def emit_egg_datatypes(dsl_list, cost = 1):
 
     comment = "; Declaring constructs for instructions"
 
-    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join( dsl_decls))
-    return  "\n".join([comment, symbolic_bvs, scalars ,decl_insts])
+    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join( [symbolic_bvs] +  dsl_decls))
+    return  "\n".join([comment,  scalars ,decl_insts])
 
 
 
@@ -47,16 +54,21 @@ def emit_egg_datatypes_two_dsl(input_dsl_list, output_dsl_list,  input_cost = 1,
 
     comment = "; Declaring constructs for instructions"
 
-    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join( input_dsl_decls + output_dsl_decls))
-    return  "\n".join([comment, symbolic_bvs, scalars ,decl_insts])
+    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join([symbolic_bvs] +  input_dsl_decls + output_dsl_decls))
+    return  "\n".join([comment, scalars ,decl_insts])
 
 
 
+def egg_sanatize_name(name):
+    rem_col = name.replace(":","_")
+    remove_dsl =  rem_col.replace("_dsl","")
+
+    return remove_dsl
 
 def emit_egg_dsl_decl(dsl_inst, cost = 1):
     tokens = []
 
-    tokens.append(dsl_inst.name)
+    tokens.append(egg_sanatize_name(dsl_inst.name))
 
     sample_ctx = dsl_inst.get_sample_context()
     for arg in sample_ctx.context_args:
@@ -125,7 +137,7 @@ def emit_expr_to_egg(expr, param_map = {}):
 def emit_ctx_to_egg(expr, param_map = {}):
     tokens = []
 
-    tokens.append(expr.dsl_name)
+    tokens.append(egg_sanatize_name(expr.dsl_name))
 
     for arg in expr.context_args:
 
