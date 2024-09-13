@@ -54,9 +54,10 @@ def get_matching_context(nested_expr, dsl_list):
                     ctx = matching_dsl_inst.contexts[ci]
                     is_signed = int(not 'u' in arg[2])
 
-                    if ctx.signedness != None and ctx.signedness != is_signed:
-                        print("Signedness does not match")
-                        continue
+                    # TODO: Should this be removed?
+                    #if ctx.signedness != None and ctx.signedness != is_signed:
+                    #    print("Signedness does not match")
+                    #    continue
 
                     ctx_arg =  ctx.context_args[idx]
 

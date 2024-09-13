@@ -1,0 +1,5 @@
+CUR_DIR=$(pwd)
+
+export MISAAL_SRC=$CUR_DIR
+export PYTHONPATH=${CUR_DIR}/lib/:$PYTHONPATH
+
