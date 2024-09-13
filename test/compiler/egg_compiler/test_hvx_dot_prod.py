@@ -7,6 +7,10 @@ from utils.ReadDSL import read_string_to_dsl
 from egg_config import EGG_PKG_PATH
 
 from EqClassEqualDepth_hvx_results import hvx_EqClassEqualDepth
+from SimplifyingSwizzles_hvx_results import hvx_SimplifyingSwizzles
+from FusedSwizzleTranslator_hvx_results import hvx_FusedSwizzleTranslator
+
+
 from sema.hex_swizzles import hvx_swizzles
 
 import os
@@ -17,17 +21,30 @@ hvx_swizzles_dsl_list = parse_dict(hvx_swizzles)
 
 current_file_base = os.path.basename(__file__).split(".")[0]
 
+props = [
+    #hvx_EqClassEqualDepth,
+    hvx_FusedSwizzleTranslator,
+    #hvx_SimplifyingSwizzles,
+]
 
 patterns = []
 
-for key, value in hvx_EqClassEqualDepth.items():
-    hvx_expr = value[0]['property']['src']
-    halide_expr = value[0]['property']['dst']
+for prop in props:
+    for key, value in prop.items():
+        src_key_name = 'src'
+        if src_key_name not in value[0]['property']:
+            src_key_name = 'candidate'
 
-    pattern = parse_pattern_from_string(halide_expr, hvx_expr, halide_dsl_list + hvx_swizzles_dsl_list, hvx_dsl_list, src_language = "halide", target_language = "hvx")
-    pattern.print_pattern()
+        dst_key_name = 'dst'
+        if dst_key_name not in value[0]['property']:
+            dst_key_name = 'simplified'
 
-    patterns.append(pattern)
+        hvx_expr = value[0]['property'][src_key_name]
+        halide_expr = value[0]['property'][dst_key_name]
+
+        pattern = parse_pattern_from_string(halide_expr, hvx_expr, halide_dsl_list + hvx_swizzles_dsl_list, hvx_dsl_list + hvx_swizzles_dsl_list, src_language = "halide", target_language = "hvx", bidirectional = False)
+
+        patterns.append(pattern)
 
 
 
@@ -50,12 +67,17 @@ test_expr = """
 
 
 
+
+
+
 src_expr = read_string_to_dsl(test_expr, halide_dsl_list)
 
+patterns = patterns[4:5]
 
 egg_log_compiler = EggLogCompiler(patterns, src_dsl_list = halide_dsl_list + hvx_swizzles_dsl_list, target_dsl_list = hvx_dsl_list, run_iterations = 5, egg_file_name = f"{current_file_base}.egg", egg_pkg_path = EGG_PKG_PATH)
 
 
+print("Number of Patterns:\t", len(patterns))
 egg_log_compiler.compile_expr(src_expr)
 
 
