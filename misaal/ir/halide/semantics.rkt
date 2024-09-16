@@ -306,6 +306,12 @@
   (do-typed:cast-int divided (* iprec 2) #t (/ isize iprec) iprec)
   )
 
+(define (do-typed:signed-rounding_halving_add v1 v2  iprec isize)
+    (do-typed:signed-rounding-halving-add v1 v2  iprec isize)
+  )
+
+
+
 ;narrow((widen(a) + widen(b) + 0) / 2)
 
 (define (do-typed:signed-halving-add v1 v2  iprec isize)
@@ -317,6 +323,10 @@
   (define  two (create-splat-bv (bv 2 (* 2 iprec))  (/ isize iprec)))
   (define divided (do-typed:signed-div sum-addened two (* iprec 2) (* isize 2)))
   (do-typed:cast-int divided (* iprec 2) #t (/ isize iprec) iprec)
+  )
+
+(define (do-typed:signed-halving_add v1 v2  iprec isize)
+(do-typed:signed-halving-add v1 v2  iprec isize)
   )
 
 (define (do-typed:signed-widen-sub v1 v2  iprec isize)
@@ -575,6 +585,10 @@
   (do-typed:cast-uint divided (* iprec 2) #f (/ isize iprec) iprec)
   )
 
+(define (do-typed:unsigned-rounding_halving_add v1 v2  iprec isize)
+(do-typed:unsigned-rounding-halving-add v1 v2  iprec isize)
+  )
+
 ;narrow((widen(a) + widen(b) + 0) / 2)
 (define (do-typed:unsigned-halving-add v1 v2  iprec isize)
   (define widen-v1 (do-typed:cast-uint v1 iprec #f (/ isize iprec) (* 2 iprec)))
@@ -585,6 +599,10 @@
   (define  two (create-splat-bv (bv 2 (* 2 iprec))  (/ isize iprec)))
   (define divided (do-typed:unsigned-div sum-addened two (* iprec 2) (* isize 2)))
   (do-typed:cast-uint divided (* iprec 2) #f (/ isize iprec) iprec)
+  )
+
+(define (do-typed:unsigned-halving_add v1 v2  iprec isize)
+  (do-typed:unsigned-halving-add v1 v2  iprec isize)
   )
 
 (define (do-typed:unsigned-widen-sub v1 v2  iprec isize)

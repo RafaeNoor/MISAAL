@@ -130,14 +130,15 @@ with open(OUTPUT_GRAMMAR_FILE, "w+") as OutputFile:
 
 
     for dsl_inst in dsl_list:
-        write_to_file(dsl_inst.get_semantics())
+        if "typed" not in dsl_inst.name:
+            write_to_file(dsl_inst.get_semantics())
 
 
     write_to_file(sd.emit_struct_defs(dsl_list))
 
 
 
-    syn_class =  [StepWiseSynthesizer, AllInstructionsSynthesizer][1]
+    syn_class =  [StepWiseSynthesizer, AllInstructionsSynthesizer][0]
 
     syn = syn_class(spec = sp, dsl_operators = dsl_list,
                   struct_definer = sd, grammar_generator = gg,
@@ -154,7 +155,10 @@ with open(OUTPUT_GRAMMAR_FILE, "w+") as OutputFile:
 
     grammar_name = spec['name']
 
-    write_to_file(syn.emit_synthesis_grammar(main_grammar_name = grammar_name, include_manual_swizzles = False))
+
+    grammar_content =  syn.emit_synthesis_grammar(main_grammar_name = grammar_name, include_manual_swizzles = False)
+    print("Grammar Content: ", grammar_content)
+    write_to_file(grammar_content)
 
     dsl_subset = syn.dsl_subset
 

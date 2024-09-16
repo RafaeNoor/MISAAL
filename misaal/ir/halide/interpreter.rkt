@@ -366,7 +366,7 @@
              (do-typed:signed-min  (typed:halide:interpret-full v0 env) (typed:halide:interpret-full v1 env) num_2 prec_i_o)
              ]
             [ (typed:signed-vec-mod v0 v1 num_2 prec_i_o)
-
+              ; fix me
              (do-typed:signed-max  (typed:halide:interpret-full v0 env) (typed:halide:interpret-full v1 env) num_2 prec_i_o)
 
              ]
