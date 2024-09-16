@@ -16,15 +16,18 @@ def emit_egg_extract_expr(label):
 def emit_egg_run_iter(iterations):
     return "(run {})".format(iterations)
 
+def emit_egg_atom(expr):
+    return "(ATOM {})".format(expr)
+
 def emit_egg_decl_bv():
-    return "(LIT i64 i64) (SYMBV i64)"
+    return "(LIT i64 i64 :cost 1) (SYMBV i64 :cost 1) (ATOM {} :cost 1)".format(HYDRIDE_EXPR_LABEL)
 
 def emit_egg_define_reg(reg):
     reg_name = "reg_{}".format(reg.index)
     return reg_name , "(let {} (SYMBV {}))".format(reg_name, reg.index)
 
 def emit_egg_define_var(label, defn):
-    return "(let {} {})".format(label, defn)
+    return "(let {}\n {})".format(label, defn)
 
 
 def emit_egg_decl_scalar():
@@ -65,12 +68,15 @@ def egg_sanatize_name(name):
 
     return remove_dsl
 
-def emit_egg_dsl_decl(dsl_inst, cost = 1):
+def emit_egg_dsl_decl(dsl_inst, cost = 1, swizzle_cost = 1):
     tokens = []
 
     tokens.append(egg_sanatize_name(dsl_inst.name))
 
     sample_ctx = dsl_inst.get_sample_context()
+
+    is_swizzle = "swizzle" in dsl_inst.name
+
     for arg in sample_ctx.context_args:
         if isinstance(arg, BitVector):
             tokens.append(HYDRIDE_EXPR_LABEL)
@@ -95,7 +101,11 @@ def emit_egg_dsl_decl(dsl_inst, cost = 1):
             assert False, "Unable to emit egg declaration for dsl_inst"
 
 
-    return "({} :cost {})".format(" ".join(tokens), cost)
+    decl_cost = cost
+    if is_swizzle:
+        decl_cost = swizzle_cost
+
+    return "({} :cost {})".format(" ".join(tokens), decl_cost)
 
 
 
@@ -159,6 +169,9 @@ def emit_const_bv_to_egg(expr):
     if "#x" in expr.value:
         hex_str = "0x"+ expr.value.split("#x")[-1]
         return "(LIT {} {})".format(int(hex_str, 16), expr.size)
+    elif "#b" in expr.value:
+        binary_str = expr.value.split("#b")[-1]
+        return "(LIT {} {})".format(int(binary_str, 2), expr.size)
     else:
         return "(LIT {} {})".format(expr.value, expr.size)
 
@@ -195,10 +208,28 @@ def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = 
     candidate_expr = emit_expr_to_egg(candidate, param_map = param_map)
     simplified_expr = emit_expr_to_egg(simplified, param_map = param_map)
 
+    if isinstance(candidate, Reg):
+        candidate_expr = emit_egg_atom(emit_reg_to_egg(candidate))
+
+    if isinstance(simplified, Reg) and  bidirectional:
+        simplified_expr = emit_egg_atom(emit_reg_to_egg(simplified))
+
     if bidirectional:
         return "(birewrite \n{}\n {}\n)".format(candidate_expr, simplified_expr)
     else:
         return "(rewrite \n{}\n{}\n)".format(candidate_expr, simplified_expr)
+
+
+def emit_egglog_base_patterns():
+    base_patterns = []
+
+    atom_pattern = "(rewrite {} a)".format(emit_egg_atom('a'))
+
+    base_patterns.append(atom_pattern)
+
+
+    return "\n".join(base_patterns)
+
 
 
 
@@ -209,7 +240,9 @@ def is_birewrite_valid(expr1, expr2):
     if isinstance(expr2, Reg):
         # Currently egg log doesn't
         # allow these simplifications
-        return False
+        #return False
+
+        pass
 
     regs_expr1 = get_context_registers(expr1)
 
