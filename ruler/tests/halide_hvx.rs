@@ -9,7 +9,7 @@ type Constant = i64;
 egg::define_language! {
   pub enum MISAAL {
     Lit(Constant),
-    "halide_add" = HalideAdd([Id; 2]),
+    "halide_+" = HalideAdd([Id; 2]),
     "halide_-" = HalideSub([Id; 2]),
     "halide_*" = HalideMul([Id; 2]),
     "halide_/" = HalideDiv([Id; 2]),
@@ -208,6 +208,7 @@ mod test {
         recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, run_fast_forwarding, Lang},
         Limits,
     };
+    use symbolic_expressions::Rules;
 
     use super::*;
 
@@ -229,12 +230,7 @@ mod test {
         // let start = Instant::now();
         // let all_rules = halide_hvx_rules();
         // let duration = start.elapsed();
-        /* let init_rules = [
-            "(halide_+ ?b ?a) ==> (hvx_+ ?a ?b)",
-            "(halide_* ?b ?a) ==> (hvx_* ?a ?b)",
-        ];
 
-        let mut prior= Ruleset::new(&init_rules); */
 
         let misaal_wkld = Workload::new(&[
             "(bop e e)",
@@ -245,7 +241,7 @@ mod test {
             "bop",
             &Workload::new(&["halide_+", "halide_-", "halide_*", "halide_/", "hvx_+", "hvx_-", "hvx_*", "hvx_/"]),
         )
-        .plug("v", &Workload::new(&["a", "b", "c"]))
+        .plug("v", &Workload::new(&["a", "b", "c", "0", "1", "2"]))
         .filter(Filter::Canon(vec![
             "a".to_string(),
             "b".to_string(),
@@ -258,43 +254,20 @@ mod test {
             match_: 200_000,
         };
 
-        let init = MISAAL::get_exploratory_rules();
+        // let init = MISAAL::get_exploratory_rules();
+        let init = [
+        "(halide_* ?a ?b) ==> (hvx_* ?a ?b)",
+        "(halide_/ ?a ?b) ==> (hvx_/ ?a ?b)",
+        ];
+        let mut all_rules: Ruleset<MISAAL> =  Ruleset::default();
+        all_rules.extend(Ruleset::new(&init));
 
-        let mut all_rules = Ruleset::default();
-        all_rules.extend(init);
-
-        let atoms3 = iter_pos(8);
-        // let rules_out = run_fast_forwarding_misaal(misaal_wkld, all_rules.clone(), limits, limits);
-        let rules_out = run_fast_forwarding_misaal(atoms3, all_rules.clone(), limits, limits);
+        let rules_out = run_fast_forwarding_misaal(misaal_wkld, all_rules.clone(), limits, limits);
         all_rules.extend(rules_out);
 
         for r in all_rules.0.values() {
             println!("{}", r.name)
         } 
-
-       /*  let eg_init = misaal_wkld.to_egraph();
-        // println!("EG INIT for misaal {:?}", eg_init);
-        // Allowed rules: run on clone, apply unions, no candidates
-        let (allowed, _) = prior.partition(|eq| MISAAL::is_allowed_misaal_rewrite(&eq.lhs, &eq.rhs));
-
-        let eg_allowed = Scheduler::Compress(limits).run(&eg_init, &allowed);
-
-        // Translation rules: grow egraph, extract candidates, assert!(saturated)
-        let lifting_rules = MISAAL::get_exploratory_rules();
-        let eg_denote = Scheduler::Simple(limits).run(&eg_allowed, &lifting_rules);
-        let mut candidates = Ruleset::extract_candidates(&eg_allowed, &eg_denote);
-
-        // All rules: clone/no clone doesn't matter, extract candidates
-        let mut all_rules = prior;
-        all_rules.extend(lifting_rules);
-        let eg_final = Scheduler::Compress(limits).run(&eg_denote, &all_rules);
-        candidates.extend(Ruleset::extract_candidates(&eg_denote, &eg_final));
-
-        let rules = candidates;
-        for r in rules.0.values() {
-            println!("{}", r.name)
-        } */
-
 
     }
 }
