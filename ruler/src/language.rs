@@ -237,11 +237,23 @@ pub trait SynthLanguage: Language + Send + Sync + Display + FromOp + 'static {
         true
     }
 
+    fn is_halide_allowed_op(&self) -> bool {
+        // matches!(
+        //    self,
+        //    MISAAL::halide_mul | MISAAL::halide_add
+        // )
+       false 
+    }
+
+    fn is_hvx_allowed_op(&self) -> bool {
+        false
+    }
     /// Used by fast-forwarding
     ///
     /// Determines whether a rewrite rule may be selected.
     /// A rewrite rule is allowed if it only contains allowed nodes on both sides.
     fn is_allowed_rewrite(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> bool {
+        println!("Inside the rewrite rule");
         let pattern_is_extractable = |pat: &Pattern<Self>| {
             pat.ast.as_ref().iter().all(|n| match n {
                 ENodeOrVar::ENode(n) => n.is_allowed_op(),
@@ -249,6 +261,26 @@ pub trait SynthLanguage: Language + Send + Sync + Display + FromOp + 'static {
             })
         };
         pattern_is_extractable(lhs) && pattern_is_extractable(rhs)
+    }
+
+    fn is_allowed_misaal_rewrite(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> bool {
+        print!("are we in this func ever????\n");
+        let halide_pattern_is_extractable = |pat: &Pattern<Self>| {
+            pat.ast.as_ref().iter().all(|n| match n {
+                ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
+                ENodeOrVar::Var(_) => true,
+            })            
+        };
+        let hvx_pattern_is_extractable = |pat: &Pattern<Self>| {
+            pat.ast.as_ref().iter().all(|n| match n {
+                ENodeOrVar::ENode(n) => n.is_hvx_allowed_op(),
+                ENodeOrVar::Var(_) => true,
+            })
+        };
+        
+        print!("halide pattern is extractable {:?} \n", halide_pattern_is_extractable(lhs));
+        print!("hvx pattern is extractable {:?} \n", hvx_pattern_is_extractable(rhs));
+        halide_pattern_is_extractable(lhs) && hvx_pattern_is_extractable(rhs)
     }
 
     fn generalize(expr: &RecExpr<Self>, map: &mut HashMap<Symbol, Var>) -> Pattern<Self> {

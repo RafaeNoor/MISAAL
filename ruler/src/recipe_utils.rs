@@ -141,6 +141,52 @@ pub fn run_fast_forwarding<L: SynthLanguage>(
     chosen
 }
 
+
+pub fn run_fast_forwarding_misaal<L: SynthLanguage>(
+    workload: Workload,
+    prior: Ruleset<L>,
+    prior_limits: Limits,
+    minimize_limits: Limits,
+) -> Ruleset<L> {
+    let t = Instant::now();
+
+    let eg_init = workload.to_egraph::<L>();
+    let num_prior = prior.len();
+
+    // Allowed rules: compress e-graph, no candidates
+    // let (allowed, _) = prior.partition(|rule| L::is_allowed_rewrite(&rule.lhs, &rule.rhs));
+    let (allowed, _) = prior.partition(|rule| L::is_allowed_misaal_rewrite(&rule.lhs, &rule.rhs));
+    let eg_allowed = Scheduler::Compress(prior_limits).run(&eg_init, &allowed);
+
+    // Translation rules: grow egraph, extract candidates, assert!(saturated)
+    let exploratory = L::get_exploratory_rules();
+    let eg_denote = Scheduler::Simple(prior_limits).run(&eg_allowed, &exploratory);
+    let mut candidates = Ruleset::extract_candidates(&eg_allowed, &eg_denote);
+
+    // All rules: compress e-graph, extract candidates
+    let mut all_rules = prior.clone();
+    all_rules.extend(exploratory);
+    let eg_final = Scheduler::Compress(prior_limits).run(&eg_denote, &all_rules);
+    candidates.extend(Ruleset::extract_candidates(&eg_denote, &eg_final));
+
+    let chosen = candidates
+        .minimize(prior, Scheduler::Compress(minimize_limits))
+        .0;
+    let time = t.elapsed().as_secs_f64();
+
+    println!(
+        "Learned {} bidirectional rewrites ({} total rewrites) in {} using {} prior rewrites",
+        chosen.bidir_len(),
+        chosen.len(),
+        time,
+        num_prior
+    );
+
+    chosen.pretty_print();
+
+    chosen
+}
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Lang {
     pub vals: Vec<String>,
