@@ -14,7 +14,7 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
         self.input_depth = input_depth
         self.name = "SynthSwizzleTransferableV2"
         self.depth_range = depth_range
-        self.useCanon = False
+        self.useCanon = True
 
 
 
@@ -78,17 +78,11 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
                     if (not self.expr_contains_swizzles(src_expr)) and (not self.expr_contains_swizzles(target_expr)):
                         continue
 
-                    if (not self.expr_contains_swizzles(src_expr)) or (not self.expr_contains_swizzles(target_expr)):
-                        continue
 
                     if src_expr.emit_context_expr_string() == target_expr.emit_context_expr_string():
                         continue
 
-                    if self.expr_count_swizzles(src_expr) != 2 or self.expr_count_swizzles(target_expr) != 1:
-                        continue
 
-                    if "swizzle" not in target_expr.name :
-                        continue
 
                     self.absolute_expr_count += self.get_absolute_count(src_expr) * self.get_absolute_count(target_expr)
 
@@ -259,7 +253,7 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
 
 
 
-        execute_synthesis = "(define-values (satisfiable? mat el)  (synthesize-sol-with-depth {} {} invoke-spec invoke-spec-lane grammar-fn leaves-sizes optimize? interpreter cost-model  symbolic? 30 'z3))".format(self.output_depth, self.output_depth)
+        execute_synthesis = "(define-values (satisfiable? mat-src mat-dst)  (expanded-grammar-synthesize invoke-spec invoke-spec-lane src-expr ({}) leaves-sizes optimize? interpreter cost-model  symbolic? 30 'z3))".format(dst_expression_label)
         statements.append(execute_synthesis)
 
 
@@ -286,6 +280,23 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
 
     def serialize_candidate(self, candidate):
         return candidate[0].emit_context_expr_string() +"_"+candidate[1].emit_context_expr_string()
+
+
+    def get_invoke_spec(self, spec_name = "spec-expr", env_name = "env"):
+        interpret_name = self.source_synth_desc.interpreter_name
+        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+        return "(define (invoke-spec {}  {})\n {})".format(spec_name, env_name, interpret_stmt)
+
+
+    def get_invoke_spec_lane(self, spec_name = "spec-expr", env_name = "env", output_prec = 8):
+        interpret_name = self.source_synth_desc.interpreter_name
+        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+        low_offset = "(define low (* {} lane-idx))".format(str(output_prec))
+        high_offset = "(define high (+ low (- {} 1)))".format(str(output_prec))
+        extract = "(define slice (extract high low {}))".format(interpret_stmt)
+        stmts = [low_offset, high_offset, extract, "slice"]
+        return "(define (invoke-spec-lane {} lane-idx {})\n {})".format(spec_name, env_name, "\n".join(stmts))
+
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
