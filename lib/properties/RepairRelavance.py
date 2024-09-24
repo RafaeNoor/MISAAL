@@ -295,6 +295,15 @@ class RepairRelavance(IdentifySwizzles):
                 if (ctx.in_precision > out_precision and all([ctx.in_precision > input_prec for input_prec in input_precs])) or (ctx.out_precision > out_precision and all([ctx.out_precision > input_prec for input_prec in input_precs])):
                     continue
 
+                # Skip no-op operations
+                if "cast" in ctx.name and ctx.in_precision == ctx.out_precision:
+                    continue
+
+                if "saturate" in ctx.name and ctx.in_precision == ctx.out_precision:
+                    continue
+
+
+
                 # If operating on scalars with required scalar sizes
                 if ctx.in_precision in input_precs and ctx.in_vectsize == ctx.in_precision:
                     dsl_inst_copy.contexts.append(ctx)

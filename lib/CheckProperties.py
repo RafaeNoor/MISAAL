@@ -6,6 +6,7 @@ import argparse
 from common.DSLParser import parse_dict
 
 from properties.RepairRelavance import RepairRelavance
+from properties.RepairRelavanceV2 import RepairRelavanceV2
 from properties.Commutative import *
 from properties.Distributive import *
 from properties.Associative import *
@@ -13,6 +14,7 @@ from properties.SimplifyingIdentity import SimplifyingIdentity
 from properties.IdentifySwizzles import IdentifySwizzles
 from properties.SwizzleTransferable import SwizzleTransferable
 from properties.SynthSwizzleTransferable import SynthSwizzleTransferable
+from properties.SynthSwizzleTransferableV2 import SynthSwizzleTransferableV2
 from properties.FusedSwizzleTranslator import FusedSwizzleTranslator
 from properties.Translator import Translator
 from properties.ScaledTranslator import ScaledTranslator
@@ -33,6 +35,7 @@ from sema.arm_swizzles import arm_swizzles
 from sema.ARMSema import arm_semantics
 from sema.repairs_sema import repair_semantics
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc, HALIDE_SYNTH_DESC
+from utils.DSLInstructionUtils import get_random_tempfile_name
 
 import os
 
@@ -137,6 +140,13 @@ for property in test_properties:
             swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = swizzle_synth_desc, swizzles = parse_dict(hvx_swizzles))
 
+        elif property is SynthSwizzleTransferableV2:
+
+            commutative_path = "commutative_map.json"
+            swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "/home/arnoor2/MISAAL/lib/sema/hex_swizzles.py","hvx_swizzles")
+            PropertyInstance = property(dsl_list = dsl_list, swizzle_dsl_list = parse_dict(hvx_swizzles), input_depth = 2, output_depth = 2, depth_range = False, synth_desc = swizzle_synth_desc, commutative_map_path=  commutative_path)
+
+
         elif property is FusedSwizzleTranslator:
             swizzle_dict = TARGET_TO_SWIZZLE[target]
             swizzles = parse_dict(swizzle_dict)
@@ -175,6 +185,11 @@ for property in test_properties:
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
+
+        elif property is RepairRelavanceV2:
+            repairs_sema = parse_dict(repair_semantics)
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1 )
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
@@ -198,7 +213,14 @@ for property in test_properties:
 
 
         property_label = target+"_"+PropertyInstance.name
-        with open("{}.py".format(PropertyInstance.name+property_result_suffix), "w+") as DumpFile:
+        fname = "{}.py".format(PropertyInstance.name+property_result_suffix)
+
+        if os.path.exists(fname):
+            prepend = get_random_tempfile_name()
+            # If file exists then append prefix
+            fname = prepend +"_"+fname
+            property_label = prepend + "_"+property_label
+        with open(fname, "w+") as DumpFile:
             DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
 
 

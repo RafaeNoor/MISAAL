@@ -125,7 +125,7 @@
       (define word-size (bvlength lane-sol))
       (define num-lanes (/ output-size word-size))
 
-      (define failing-ls (if (equal? (length failing-lanes) 0) (list 0 (- num-lanes 1)) failing-lanes))
+      (define failing-ls (if (equal? (length failing-lanes) 0) (list 0 0) failing-lanes))
 
       (debug-log "Concrete counter examples:")
       (debug-log cex-ls)
@@ -152,10 +152,12 @@
 
         (debug-log "Spec Produced:")
         (debug-log halide-res)
+        (debug-log (bvlength halide-res))
 
         (debug-log "Spec Produced (full):")
         (define full-spec-res (invoke_ref grammar-fn-src  env))
         (debug-log full-spec-res)
+        (debug-log (bvlength full-spec-res))
 
         (if synthesize-by-lane
           (debug-log "Synthesize by lane...")

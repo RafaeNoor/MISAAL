@@ -8,7 +8,6 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
 
     def __init__(self, dsl_list = [],  swizzle_dsl_list = [], input_depth = 1, output_depth = 1, depth_range = True, synth_desc = None, commutative_map_path = None):
 
-        swizzle_dsl_list =[d for d in swizzle_dsl_list if d.name =="hvx_swizzle_18"]
 
         super().__init__(dsl_list = dsl_list, output_depth = output_depth, swizzle_dsl_list = swizzle_dsl_list, source_synth_desc = synth_desc, target_synth_desc = synth_desc, commutative_map_path = commutative_map_path)
         self.input_depth = input_depth
@@ -47,8 +46,6 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
 
     def generate_candidates(self):
         for dsl_inst in self.input_dsl_list:
-            if "vec-add" not in dsl_inst.name:
-                continue
             eq_class_copy = copy.deepcopy(dsl_inst)
             arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in eq_class_copy.contexts])
 
@@ -123,7 +120,6 @@ class SynthSwizzleTransferableV2(EqClassEqualDepth):
 
 
 
-        num_src_ctx_args = self.get_context_num_sym_args(src_ctx)
         input_sizes = self.get_context_input_sizes(src_ctx)
         output_size = src_ctx.out_vectsize
         precision = src_ctx.in_precision
