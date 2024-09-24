@@ -831,7 +831,27 @@ def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  r
                     gen = CountItemsWrapper(corresponding_exprs)
                     generators.append(gen)
 
-            if len(symbolic_indices) == 3:
+
+            if len(symbolic_indices) == 4:
+
+                generator_0 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[0]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                for expr0 in generator_0:
+
+                    generator_1 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[1]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                    for expr1 in generator_1:
+
+                        generator_2 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[2]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                        for expr2 in generator_2:
+
+                            generator_3 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[3]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
+                            for expr3 in generator_3:
+                                copied_rctx = copy.deepcopy(rctx)
+                                copied_rctx.context_args[symbolic_indices[0]] = expr0
+                                copied_rctx.context_args[symbolic_indices[1]] = expr1
+                                copied_rctx.context_args[symbolic_indices[2]] = expr2
+                                copied_rctx.context_args[symbolic_indices[3]] = expr3
+                                yield copied_rctx
+            elif len(symbolic_indices) == 3:
 
                 generator_0 = create_exhaustive_expressions_generator_helper(dsl_list,   expr_depth = expr_depth - 1,  return_size = get_arg(symbolic_indices[0]).size, return_prec = rctx.in_precision, use_eq_class = use_eq_class)
                 for expr0 in generator_0:
@@ -979,3 +999,28 @@ def print_dsl_list_summary(dsl_list):
     print("Number of Target Contexts:\t", num_ctxs)
     print("="*50)
 
+
+def emit_compact_context_expr_str(expr):
+    if isinstance(expr, Reg):
+        return "(Reg)"
+    elif isinstance(expr, Context):
+        tokens = ["(",expr.dsl_name +";"+expr.name]
+        for arg in expr.context_args:
+            if not isinstance(arg, Context) and not isinstance(arg, Reg):
+                continue
+            tokens.append(emit_compact_context_expr_str(arg))
+        tokens.append(")")
+
+        return "\n".join(tokens)
+    else:
+        return ""
+
+def process_dict(d):
+    for key, val in d.items():
+        prop = val[0]['property']
+        src_ = prop['src_compact']
+        dst_ = prop['dst_compact']
+        print("=*="*50)
+        print(src_)
+        print("-------->")
+        print(dst_)
