@@ -65,6 +65,8 @@
 ;; Synthesis Utilities
 
 (require misaal/synthesis/ir_to_ir_transform)
+(require misaal/synthesis/iterative_synthesis_v2)
+(require misaal/synthesis/expanded_grammar_iterative_synthesis)
 (require misaal/synthesis/target_desc)
 (require misaal/synthesis/grammar_utils)
 
@@ -103,6 +105,9 @@
 
 
 
+
+(all-from-out misaal/synthesis/expanded_grammar_iterative_synthesis)
+(all-from-out misaal/synthesis/iterative_synthesis_v2)
 (all-from-out misaal/synthesis/ir_to_ir_transform)
 (all-from-out misaal/synthesis/target_desc)
 (all-from-out misaal/synthesis/grammar_utils)

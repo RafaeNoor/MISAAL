@@ -144,6 +144,7 @@
   (concat v1 v2)
   )
 
+
 (define (do-typed:saturate vec  iprec isigned? olane oprec signed?)
   ;(printf "bvlength saturate input ~a\n" (bvlength vec))
   (define vals 
@@ -527,7 +528,8 @@
   (define widened-product (do-typed:signed-widen-mul v1 v2 iprec isize))
   (define sext-q (do-typed:cast-int v3 iprec #t (/ isize iprec) (* iprec 2)))
   (define rounding-shr (do-typed:signed-rounding_shift_right widened-product sext-q (* iprec 2) (* isize 2) ))
-  (do-typed:saturate rounding-shr (* iprec 2) (* isize 2) #t (/ isize iprec) iprec #t)
+  ;(do-typed:saturate rounding-shr (* iprec 2) (* isize 2) #t (/ isize iprec) iprec #t)
+  (do-typed:saturate rounding-shr (* iprec 2)  #t (/ isize iprec) iprec #t)
   )
 
 
@@ -543,7 +545,8 @@
   (define widened-add (do-typed:signed-widen-add v1 shifted-div-two iprec isize))
   (define widen-b (do-typed:cast-int v2 iprec #t (/ isize iprec) (* 2 iprec)))
   (define shift-right (do-typed:signed-shr widened-add widen-b (* 2 iprec) (* isize 2)))
-  (do-typed:saturate shift-right (* iprec 2) (* isize 2) #t (/ isize iprec) iprec #t)
+  ;(do-typed:saturate shift-right (* iprec 2) (* isize 2) #t (/ isize iprec) iprec #t)
+  (do-typed:saturate shift-right (* iprec 2)  #t (/ isize iprec) iprec #t)
   )
 
 (define (do-typed:signed-vector-reduce-add width v1 iprec isize)
@@ -615,6 +618,10 @@
   (define max_operands (do-typed:unsigned-max v1 v2 iprec isize))
   (define min_operands (do-typed:unsigned-min v1 v2 iprec isize))
   (do-typed:sub max_operands min_operands iprec isize)
+  )
+
+(define (do-typed:unsigned-absd v1 v2  iprec isize)
+    (do-typed:unsigned-vec-absd v1 v2  iprec isize)
   )
 
 (define (do-typed:unsigned-sat-add v1 v2  iprec isize)
@@ -783,7 +790,8 @@
   (define widened-product (do-typed:unsigned-widen-mul v1 v2 iprec isize))
   (define sext-q (do-typed:cast-uint v3 iprec #f (/ isize iprec) (* iprec 2)))
   (define rounding-shr (do-typed:unsigned-rounding_shift_right widened-product sext-q (* iprec 2) (* isize 2) ))
-  (do-typed:saturate rounding-shr (* iprec 2) (* isize 2) #f (/ isize iprec) iprec #f)
+  ;(do-typed:saturate rounding-shr (* iprec 2) (* isize 2) #f (/ isize iprec) iprec #f)
+  (do-typed:saturate rounding-shr (* iprec 2)  #f (/ isize iprec) iprec #f)
   )
 
 
@@ -799,7 +807,8 @@
   (define widened-add (do-typed:unsigned-widen-add v1 shifted-div-two iprec isize))
   (define widen-b (do-typed:cast-uint v2 iprec #f (/ isize iprec) (* 2 iprec)))
   (define shift-right (do-typed:unsigned-shr widened-add widen-b (* 2 iprec) (* isize 2)))
-  (do-typed:saturate shift-right (* iprec 2) (* isize 2) #f (/ isize iprec) iprec #f)
+  ;(do-typed:saturate shift-right (* iprec 2) (* isize 2) #f (/ isize iprec) iprec #f)
+  (do-typed:saturate shift-right (* iprec 2)  #f (/ isize iprec) iprec #f)
   )
 
 
