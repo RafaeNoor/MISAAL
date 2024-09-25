@@ -226,6 +226,8 @@ class RepairRelavanceV2(RepairRelavance):
         print("Reduction factor:", reduce_factor)
 
         modified_env_func = self.emit_prepare_repair_env(stream_0, modified_sema, input_dsl_inst, src_ctx)
+        sliced_sizes = self.ctx_slice_sizes_operand_map[src_ctx.name]
+        print("Sliced sizes:\t",sliced_sizes)
 
         statements = []
         statements.append(modified_env_func)
@@ -294,7 +296,7 @@ class RepairRelavanceV2(RepairRelavance):
             invoke_target_def = "(define ({} expr env) ({} expr (prepare-env env)))".format(invoke_target_name, interpreter_name)
             return invoke_target_name, invoke_target_def
 
-        target_input_sizes =  src_regs_count * [src_ctx.in_precision * reduce_factor]
+        target_input_sizes =  sliced_sizes  #src_regs_count * [src_ctx.in_precision * reduce_factor]
 
         for expr in enumerate_target_program:
             if get_expr_depth(expr) != depth:

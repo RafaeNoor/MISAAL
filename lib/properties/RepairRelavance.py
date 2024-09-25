@@ -42,6 +42,7 @@ class RepairRelavance(IdentifySwizzles):
         #self.output_dsl_list = [d for d in self.output_dsl_list if d.name in test_list]
 
         self.context_map = {}
+        self.ctx_slice_sizes_operand_map = {}
 
 
 
@@ -140,6 +141,7 @@ class RepairRelavance(IdentifySwizzles):
 
     def create_prepare_repair_env_funcs(self, stream):
         prep_arg_slices = {}
+        slice_sizes = {}
 
         for line in stream:
             tokens = line.strip().split()
@@ -148,8 +150,12 @@ class RepairRelavance(IdentifySwizzles):
             if arg_name not in prep_arg_slices:
                 prep_arg_slices[arg_name] = []
 
+            if arg_name not in slice_sizes:
+                slice_sizes[arg_name] = 0
+
             high = tokens[1]
             low = tokens[2]
+            slice_sizes[arg_name] += (int(high) - int(low) + 1)
             prep_arg_slices[arg_name].append((high,low))
 
         funcs = {}
@@ -157,7 +163,7 @@ class RepairRelavance(IdentifySwizzles):
         for arg in prep_arg_slices:
             funcs[arg] = self.create_prepare_repair_env_func(arg, prep_arg_slices[arg])
 
-        return funcs
+        return funcs , slice_sizes
 
 
     def get_stream_bitvector_sizes(self, stream, modified_sema, ctx ):
@@ -206,7 +212,7 @@ class RepairRelavance(IdentifySwizzles):
         return False
 
     def emit_prepare_repair_env(self, slice_stream, modified_sema, input_dsl_inst, ctx):
-        funcs = self.create_prepare_repair_env_funcs(slice_stream)
+        funcs, slice_sizes  = self.create_prepare_repair_env_funcs(slice_stream)
 
         prototype = modified_sema.split("\n")[0].strip().split("(define")[-1].strip().replace("(","")
         # Skip the name of the context
@@ -219,11 +225,18 @@ class RepairRelavance(IdentifySwizzles):
                 sorted_args.append(arg)
 
 
+
         prepare_clauses = []
+
+        if ctx.name not in self.ctx_slice_sizes_operand_map:
+            self.ctx_slice_sizes_operand_map[ctx.name] = [0] * len(sorted_args)
+
+
 
         for idx , arg in enumerate(sorted_args):
             clause = "({} (vector-ref env {}))".format(arg, idx)
             prepare_clauses.append(clause)
+            self.ctx_slice_sizes_operand_map[ctx.name][idx] = slice_sizes[arg]
 
         env_function_clauses = [defs for arg, defs in funcs.items()]
         env_function_clauses.append("(vector {})".format(" ".join(prepare_clauses)))
@@ -323,6 +336,8 @@ class RepairRelavance(IdentifySwizzles):
                 if ctx.out_vectsize // ctx.out_precision == reduce_factor:
                     dsl_inst_copy.contexts.append(ctx)
                     continue
+
+
             relavent_dsls.append(dsl_inst_copy)
             count += len(dsl_inst_copy.contexts)
 
@@ -392,7 +407,7 @@ class RepairRelavance(IdentifySwizzles):
 
         statements = []
 
-    
+
 
         src_ctx = input_dsl_inst.contexts[int(arg_id)]
         print(src_ctx.name)
@@ -512,7 +527,7 @@ class RepairRelavance(IdentifySwizzles):
 
         success = ret_code.returncode == 0
 
- 
+
         if success:
             with open(read_from_fname, "r") as ReadFile:
                 self.context_map[key] = ReadFile.read()
