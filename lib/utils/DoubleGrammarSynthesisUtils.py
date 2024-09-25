@@ -8,10 +8,11 @@ import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = []):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = []):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
+        self.auxilary_dsl_list = auxilary_dsl_list
 
 
     def get_registers(self, ctx):
@@ -295,7 +296,7 @@ class DoubleGrammarSynthesisUtils:
 
     def get_eq_class(self, eq_class_name):
         eq_class_name = eq_class_name.split("_dsl")[0]
-        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list:
+        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list + self.auxilary_dsl_list:
             if dsl_inst.name == eq_class_name:
                 return dsl_inst
         print("Unable to find", eq_class_name)

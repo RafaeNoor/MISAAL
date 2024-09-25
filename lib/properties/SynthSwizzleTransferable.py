@@ -16,10 +16,11 @@ class SynthSwizzleTransferable(SwizzleTransferable):
 
         testing_list = [
                         "hexagon_V6_vmpybv_128B",
+                        "typed:vec-saturate",
         ]
 
         # Temporary testing
-        #dsl_list = [dsl_inst for dsl_inst in dsl_list if  dsl_inst.name in testing_list]
+        # dsl_list = [dsl_inst for dsl_inst in dsl_list if  dsl_inst.name in testing_list]
 
         super().__init__( dsl_list = dsl_list, synth_desc = synth_desc, swizzles = swizzles)
         self.name = "SynthSwizzleTransfer"

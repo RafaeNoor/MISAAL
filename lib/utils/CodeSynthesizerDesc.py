@@ -81,6 +81,10 @@ class CodeSynthesizerDesc:
 
         if self.emit_sema:
             for dsl_inst in dsl_list:
+                sema = dsl_inst.get_semantics()
+
+                if "define" not in sema:
+                    continue
                 statements.append(dsl_inst.get_semantics())
 
             statements.append(sd.emit_struct_defs(dsl_list))

@@ -39,10 +39,10 @@ class Property:
 
 
         self.BATCH_SIZE = 1024
-        self.POOL_SIZE = 16
+        self.POOL_SIZE = 64
 
         self.notify_enabled = True
-        self.notify_count = self.BATCH_SIZE * 2
+        self.notify_count = self.BATCH_SIZE
         self.notify_to = 'arnoor2@illinois.edu'
         self.notify_iter = 0
 
@@ -143,6 +143,9 @@ class Property:
             print("Candidates are generated using generator: indefinite number of candidates")
         else:
             print("Total Number of Candidates: ", len(self.candidates))
+
+        print("BATCH_SIZE:\t{}".format(self.BATCH_SIZE))
+        print("POOL_SIZE:\t{}".format(self.POOL_SIZE))
 
 
 

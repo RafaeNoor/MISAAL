@@ -109,7 +109,7 @@ def execute_racket_file(statements):
             write_line(statement)
 
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
-    TIMEOUT = int(2 * 60) # 20 mins
+    TIMEOUT = int(2* 60) # 20 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],
@@ -1002,7 +1002,7 @@ def print_dsl_list_summary(dsl_list):
 
 def emit_compact_context_expr_str(expr):
     if isinstance(expr, Reg):
-        return "(Reg)"
+        return "(Reg {})".format(expr.index)
     elif isinstance(expr, Context):
         tokens = ["(",expr.dsl_name +";"+expr.name]
         for arg in expr.context_args:

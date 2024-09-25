@@ -151,11 +151,11 @@ class RepairRelavance(IdentifySwizzles):
                 prep_arg_slices[arg_name] = []
 
             if arg_name not in slice_sizes:
-                slice_sizes[arg_name] = 0
+                slice_sizes[arg_name] = []
 
             high = tokens[1]
             low = tokens[2]
-            slice_sizes[arg_name] += (int(high) - int(low) + 1)
+            slice_sizes[arg_name] += [(high, low)]
             prep_arg_slices[arg_name].append((high,low))
 
         funcs = {}
@@ -163,7 +163,19 @@ class RepairRelavance(IdentifySwizzles):
         for arg in prep_arg_slices:
             funcs[arg] = self.create_prepare_repair_env_func(arg, prep_arg_slices[arg])
 
-        return funcs , slice_sizes
+        total_slice_map = {}
+
+        for key in prep_arg_slices:
+            total_slice_map[key] = 0
+
+            #prep_arg_slices[key] = list(set(prep_arg_slices[key]))
+            for high,low in prep_arg_slices[key]:
+                total_slice_map[key] += int(high) - int(low) + 1
+
+
+
+
+        return funcs , total_slice_map
 
 
     def get_stream_bitvector_sizes(self, stream, modified_sema, ctx ):

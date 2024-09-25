@@ -57,8 +57,12 @@ for f in cleanup_files:
 parser = argparse.ArgumentParser(prog='CheckProperties', description='Run properties on targets',epilog='Text at the bottom of help')
 
 parser.add_argument('-p', '--parallel',action='store_true', default = False)
+parser.add_argument('--batch', type = int, default = 1024)
+parser.add_argument('--pool', type = int, default = 16)
 args = parser.parse_args()
 PARALLEL = args.parallel
+BATCH_SIZE = args.batch
+POOL_SIZE = args.pool
 
 
 TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
@@ -189,7 +193,7 @@ for property in test_properties:
         elif property is RepairRelavanceV2:
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1 )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
@@ -209,6 +213,8 @@ for property in test_properties:
         else:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc= synthesizer_desc)
         PropertyInstance.parallel = PARALLEL
+        PropertyInstance.POOL_SIZE = POOL_SIZE
+        PropertyInstance.BATCH_SIZE = BATCH_SIZE
         property_map = PropertyInstance.get_property()
 
 

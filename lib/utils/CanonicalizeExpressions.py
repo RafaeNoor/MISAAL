@@ -23,7 +23,7 @@ class CanonicalizeExpression:
         self.commutative_map_path = commutative_map_path
         self.commutative_map = {}
 
-        if self.commutative_map_path != "":
+        if self.commutative_map_path != "" and not self.commutative_map_path  is None:
             with open(self.commutative_map_path, "r") as JSONFile:
                 self.commutative_map = json.load(JSONFile)
 
@@ -36,7 +36,7 @@ class CanonicalizeExpression:
         return canonical_expression
 
     def is_expr_commutable(self, expr):
-        return expr.dsl_name in self.commutative_map
+        return expr.dsl_name.split("_dsl")[0] in self.commutative_map
 
 
 
@@ -69,6 +69,52 @@ class CanonicalizeExpression:
             return max_reg
 
         return -1
+
+
+    def isCanonical(self, expr, canonical_expr):
+        if isinstance(expr, Context) and not isinstance(canonical_expr, Context):
+            return False
+
+        if not isinstance(expr, Context) and isinstance(canonical_expr, Context):
+            return False
+
+        if isinstance(expr, Reg) and not isinstance(canonical_expr, Reg):
+            return False
+
+        if not isinstance(expr, Reg) and isinstance(canonical_expr, Reg):
+            return False
+
+        if isinstance(expr, Reg) and  isinstance(canonical_expr, Reg):
+            return True
+
+
+        if isinstance(expr, Context) and isinstance(canonical_expr, Context):
+            same_name = expr.dsl_name == canonical_expr.dsl_name
+
+            if not same_name:
+                return False
+
+            condition = True
+
+            for idx in range(len(expr.context_args)):
+                arg = expr.context_args[idx]
+                canon_arg = canonical_expr.context_args[idx]
+
+
+                if isinstance(arg, Reg):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(canon_arg, Reg):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(arg, Context):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+
+                if isinstance(canon_arg, Context):
+                    condition = condition and self.isCanonical(arg, canon_arg)
+            return condition
+
+        return True
 
     def canonicalize_helper(self, expr):
 

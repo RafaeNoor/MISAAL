@@ -26,13 +26,13 @@ class RepairRelavanceV2(RepairRelavance):
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_depth = target_depth, target_start_depth = target_start_depth)
         self.name = "RepairRelavanceV2"
-        self.synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = dsl_list, output_dsl_list = output_dsl_list, swizzle_dsl_list = [])
+        self.synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = dsl_list, output_dsl_list = output_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = repair_dsl_list)
 
         self.canonicalizer = CanonicalizeExpression(commutative_map_path = commutative_map_path)
         self.useCanon = True
 
-        self.POOL_SIZE = 16
-        self.BATCH_SIZE = 1024
+        #self.POOL_SIZE = 16
+        #self.BATCH_SIZE = 1024
         self.contains_reg_def = ContainsRegDef()
         self.struct_def = StructDef()
         self.force_contains_all_regs = force_contains_all_regs

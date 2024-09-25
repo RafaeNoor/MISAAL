@@ -139,6 +139,7 @@ class IdentifySwizzles(Property):
             dsl_inst.semantics = inline_nested_extracts_in_sema(dsl_inst.semantics)
             dsl_inst.semantics = remove_redundant_extracts(dsl_inst.semantics, arg_map)
         except:
+            print("Exception encountered in profiling semantics")
             dsl_inst.semantics = original_sema
 
         apply_cond = False
