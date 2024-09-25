@@ -278,8 +278,8 @@ pub trait SynthLanguage: Language + Send + Sync + Display + FromOp + 'static {
             })
         };
         
-        print!("halide pattern is extractable {:?} \n", halide_pattern_is_extractable(lhs));
-        print!("hvx pattern is extractable {:?} \n", hvx_pattern_is_extractable(rhs));
+        print!("halide pattern is extractable {:?} for {:?} \n", halide_pattern_is_extractable(lhs), lhs);
+        print!("hvx pattern is extractable {:?} for {:?} \n", hvx_pattern_is_extractable(rhs), rhs);
         halide_pattern_is_extractable(lhs) && hvx_pattern_is_extractable(rhs)
     }
 

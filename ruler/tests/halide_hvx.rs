@@ -30,8 +30,8 @@ impl SynthLanguage for MISAAL {
 
     fn get_exploratory_rules() -> Ruleset<Self> {
         Ruleset::new(&[
-        "(halide_+ ?a ?b) <==> (hvx_+ ?a ?b)",
-        "(halide_- ?a ?b) <==> (hvx_- ?a ?b)",
+        "(halide_+ ?a ?b) ==> (hvx_+ ?b ?a)",
+        "(halide_+ ?a ?a) ==> (hvx_* 2 ?a)"
         //"(halide_* ?a ?b) ==> (hvx_* ?a ?b)",
         //"(halide_/ ?a ?b) ==> (hvx_/ ?a ?b)",
         ])
@@ -215,7 +215,7 @@ mod test {
     fn iter_pos(n: usize) -> Workload {
         iter_metric(base_lang(2), "EXPR", Metric::Atoms, n)
             .filter(Filter::Contains("VAR".parse().unwrap()))
-            .plug("VAL", &Workload::new([""]))
+            .plug("VAL", &Workload::new(["0", "1", "2"]))
             .plug("VAR", &Workload::new(["a", "b", "c"]))
             .plug("OP1", &Workload::new([""]))
             .plug("OP2", &Workload::new(["halide_+", "halide_*", "halide_/", "halide_-", "hvx_+", "hvx_*", "hvx_/", "hvx_-" ]))
@@ -228,11 +228,11 @@ mod test {
     fn run() {
 
         // let start = Instant::now();
-        // let all_rules = halide_hvx_rules();
+        let all_rules = halide_hvx_rules();
         // let duration = start.elapsed();
 
 
-        let misaal_wkld = Workload::new(&[
+       /*  let misaal_wkld = Workload::new(&[
             "(bop e e)",
             "v",
         ])
@@ -267,7 +267,7 @@ mod test {
 
         for r in all_rules.0.values() {
             println!("{}", r.name)
-        } 
+        }  */
 
     }
 }

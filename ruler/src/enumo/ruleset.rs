@@ -411,14 +411,6 @@ impl<L: SynthLanguage> Ruleset<L> {
                 })
             };
 
-            print!(
-                "halide pattern is extractable {:?} \n",
-                halide_pattern_is_extractable(&rule.lhs)
-            );
-            print!(
-                "hvx pattern is extractable {:?} \n",
-                hvx_pattern_is_extractable(&rule.rhs)
-            );
             if halide_pattern_is_extractable(&rule.lhs) && hvx_pattern_is_extractable(&rule.rhs) {
                 let lhs = egraph.add_expr(&L::instantiate(&rule.lhs));
                 let rhs = egraph.add_expr(&L::instantiate(&rule.rhs));

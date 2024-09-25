@@ -45,7 +45,7 @@ pub mod test {
             //     "c".to_string(),
             // ]));
 
-         let consts = Workload::new(["0", "1"]);
+         let consts = Workload::new(["0", "1", "2"]);
          let wkld = Workload::Append(vec![a6_canon, consts]);
 
          wkld.pretty_print();
