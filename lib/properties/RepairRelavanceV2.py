@@ -13,15 +13,30 @@ from properties.RepairRelavance import RepairRelavance
 import sys
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 
+from utils.CanonicalizeExpressions import CanonicalizeExpression
+from utils.ContainsRegDef import ContainsRegDef
+from common.StructDef import StructDef
+
 class RepairRelavanceV2(RepairRelavance):
 
 
 
-    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False):
+    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True):
+
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_depth = target_depth, target_start_depth = target_start_depth)
         self.name = "RepairRelavanceV2"
         self.synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = dsl_list, output_dsl_list = output_dsl_list, swizzle_dsl_list = [])
+
+        self.canonicalizer = CanonicalizeExpression(commutative_map_path = commutative_map_path)
+        self.useCanon = True
+
+        self.POOL_SIZE = 16
+        self.BATCH_SIZE = 1024
+        self.contains_reg_def = ContainsRegDef()
+        self.struct_def = StructDef()
+        self.force_contains_all_regs = force_contains_all_regs
+
 
 
 
@@ -261,15 +276,17 @@ class RepairRelavanceV2(RepairRelavance):
         target_dsl = self.get_grammar_relevant_dsl(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst)
 
 
+        statements.append(self.contains_reg_def.emit_contains([input_dsl_inst] ,self.struct_def))
+
         # Output size must be the output precision since we're testing on one lane
         enumerate_target_program = create_exhaustive_expressions_generator(target_dsl, depth, use_eq_class = True, output_size = out_precision)
 
         def invoke_ref_custom(interpreter_name, invoke_ref_name = "invoke-spec"):
-            invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = invoke_ref_name, interpreter_name = interpreter_name, index = 0, is_lane_func = False)
+            invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = invoke_ref_name, interpreter_name = interpreter_name, index = 0, is_lane_func = False, num_regs = src_regs_count)
             return invoke_ref_name, invoke_ref_def
 
         def invoke_ref_lane_custom(interpreter_name, invoke_ref_name = "invoke-spec-lane"):
-            invoke_ref_lane_def = self.invoke_ref(out_precision, output_size, invoke_name = invoke_ref_name, interpreter_name = interpreter_name, index = 0, is_lane_func = True)
+            invoke_ref_lane_def = self.invoke_ref(out_precision, output_size, invoke_name = invoke_ref_name, interpreter_name = interpreter_name, index = 0, is_lane_func = True, num_regs = src_regs_count)
             return invoke_ref_name, invoke_ref_lane_def
 
         def invoke_target_custom(interpreter_name):
@@ -284,6 +301,10 @@ class RepairRelavanceV2(RepairRelavance):
                 continue
 
             if not self.expr_contains(expr, output_dsl_inst.name):
+                continue
+
+            canon_target = self.canonicalizer.canonicalize(expr)
+            if self.useCanon and  not self.canonicalizer.isCanonical(expr, canon_target):
                 continue
 
 
@@ -301,16 +322,34 @@ class RepairRelavanceV2(RepairRelavance):
         return False
 
 
-    def invoke_ref(self, output_precision, outvect_size, invoke_name = "invoke-ref", interpreter_name= "hvx:interpreter", index = 0, is_lane_func = False):
+    def emit_contains_assertion(self, expr_name = "spec-expr", num_regs = 1):
+        if self.force_contains_all_regs:
+            is_symbolic = "(not (concrete? {}))".format(expr_name)
+            contains_regs = ["({} {} {})".format(self.contains_reg_def.contains_name, expr_name, idx) for idx in range(0, num_regs)]
+            contains_all = "(assert (and {}))".format(" ".join(contains_regs))
+
+            condition = "(cond [{} {}])".format(is_symbolic, contains_all)
+            return condition
+
+        else:
+            return ""
+
+    def invoke_ref(self, output_precision, outvect_size, invoke_name = "invoke-ref", interpreter_name= "hvx:interpreter", index = 0, is_lane_func = False, num_regs = 1):
+
+        constraint = self.emit_contains_assertion(expr_name = "spec-expr", num_regs = num_regs)
+
         full_result = "(define spec-result-full ({} spec-expr env))".format(interpreter_name)
         output_lanes = outvect_size / output_precision
+
+
+
 
         adjusted_index = int(output_lanes - index - 1)
         low_offset = "(define result.i.low (* {} {}))".format(adjusted_index, output_precision)
         high_offset = "(define result.i.high (+ result.i.low (- {} 1)))".format(output_precision)
         extract_slice = "(extract result.i.high result.i.low spec-result-full)"
 
-        body = [full_result, low_offset, high_offset, extract_slice, "\n"]
+        body = [constraint,full_result, low_offset, high_offset, extract_slice, "\n"]
 
         body = "\n".join(body)
 
