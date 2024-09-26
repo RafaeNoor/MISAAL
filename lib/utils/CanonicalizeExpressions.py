@@ -27,6 +27,11 @@ class CanonicalizeExpression:
             with open(self.commutative_map_path, "r") as JSONFile:
                 self.commutative_map = json.load(JSONFile)
 
+        self.print_canon_map()
+
+    def print_canon_map(self):
+        print("Commutative Map")
+        print(json.dumps(self.commutative_map, indent = 4))
 
     def canonicalize(self, expr):
         canonical_expression = copy.deepcopy(expr)
@@ -37,6 +42,10 @@ class CanonicalizeExpression:
 
     def is_expr_commutable(self, expr):
         return expr.dsl_name.split("_dsl")[0] in self.commutative_map
+
+    def get_commutable_indices(self, expr):
+        key = expr.dsl_name.split("_dsl")[0]
+        return self.commutative_map[key]
 
 
 
@@ -123,7 +132,7 @@ class CanonicalizeExpression:
 
         args = self.get_sym_or_ctx_args(expr)
 
-        if len(args) != 2 or (not self.is_expr_commutable(expr)):
+        if (not self.is_expr_commutable(expr)):
             for idx, arg in args:
                 self.canonicalize_helper(arg)
         elif len(args) == 2 and self.is_expr_commutable(expr):
@@ -142,16 +151,22 @@ class CanonicalizeExpression:
                 expr.context_args[rhs_idx] = lhs_term
                 expr.context_args[lhs_idx] = rhs_term
 
-            if (num_rhs_terms == num_lhs_terms):
-                # Get maximum register count on both sides, then set the maximum register count on the left hand side expression
-                """
-                lhs_max_reg_index = self.get_max_reg_index(lhs_term)
-                rhs_max_reg_index = self.get_max_reg_index(rhs_term)
+        elif len(args) == 3 and self.is_expr_commutable(expr):
+            # Count number of nodes on both sides and then set accordingly. Recursively
+            # canoncialize operands
+            commutable_indices = self.get_commutable_indices(expr)
+            lhs_idx, lhs_term = args[commutable_indices[0]]
+            rhs_idx, rhs_term = args[commutable_indices[1]]
+            num_lhs_terms = self.count_terms(lhs_term)
+            num_rhs_terms = self.count_terms(rhs_term)
 
-                if rhs_max_reg_index > lhs_max_reg_index:
-                    expr.context_args[rhs_idx] = lhs_term
-                    expr.context_args[lhs_idx] = rhs_term
-                """
+            self.canonicalize_helper(lhs_term)
+            self.canonicalize_helper(rhs_term)
+
+            if num_rhs_terms > num_lhs_terms:
+                # Swap terms
+                expr.context_args[rhs_idx] = lhs_term
+                expr.context_args[lhs_idx] = rhs_term
 
 
 

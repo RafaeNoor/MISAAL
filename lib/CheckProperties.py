@@ -7,6 +7,7 @@ from common.DSLParser import parse_dict
 
 from properties.RepairRelavance import RepairRelavance
 from properties.RepairRelavanceV2 import RepairRelavanceV2
+from properties.RepairRelavanceV3 import RepairRelavanceV3
 from properties.Commutative import *
 from properties.Distributive import *
 from properties.Associative import *
@@ -190,10 +191,11 @@ for property in test_properties:
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
 
-        elif property is RepairRelavanceV2:
+        elif property is RepairRelavanceV2 or property is RepairRelavanceV3:
+            commutative_path = "commutative_map.json"
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4, commutative_map_path = commutative_path )
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
