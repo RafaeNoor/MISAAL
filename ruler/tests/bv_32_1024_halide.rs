@@ -1,15 +1,15 @@
+use cli_runner::{get_stderr, get_stdout, run};
 use num::{ToPrimitive, Zero};
 use ruler::*;
 use z3::ast::Ast;
-use cli_runner::{run, get_stdout, get_stderr};
 
 type Constant = i32; // Set this to desired precision; can extend i32 to BV of given size (1024 for initial experiments)
 
 egg::define_language! {
     pub enum MISAALLang {       // Flat grammar, will contain both Halide and HVX terms for relevance sets
         Lit(Constant),          // Constants will be stored as i32, but interpreter will convert to BV of desired length
-        "hexagon_V6_vminuh_128B" = HVXMin([Id;2]),            
-        "typed:unsigned-vec-sat-sub" = HalideVecSatSub([Id;2]),              // 10 - 12 is one relevance set                                    
+        "hexagon_V6_vminuh_128B" = HVXMin([Id;2]),
+        "typed:unsigned-vec-sat-sub" = HalideVecSatSub([Id;2]),              // 10 - 12 is one relevance set
         "typed:unsigned-vec-min" = HalideVecMin([Id;2]),
         /*"hexagon_V6_vandvrt_128B" = HVXAvg([Id;2]),
         "typed:unsigned-vec-shr" = HalideVecShr([Id;2]),                        // 13 - 15 is one relevance set
@@ -19,6 +19,14 @@ egg::define_language! {
 }
 
 impl SynthLanguage for MISAALLang {
+    fn is_halide_allowed_op(&self) -> bool {
+       matches!(self, MISAALLang::HalideVecMin(_) | MISAALLang::HalideVecSatSub(_)) && !matches!(self, MISAALLang::HVXMin(_))
+    }
+
+    fn is_hvx_allowed_op(&self) -> bool {
+       matches!(self, MISAALLang::HVXMin(_)) && !(matches!(self, MISAALLang::HalideVecMin(_) | MISAALLang::HalideVecSatSub(_)))
+    }
+
     type Constant = Constant;
     fn eval<'a, F>(&'a self, cvec_len: usize, mut get_cvec: F) -> CVec<Self>
     where
@@ -27,36 +35,36 @@ impl SynthLanguage for MISAALLang {
         match self {
             MISAALLang::Lit(c) => vec![Some(c.clone()); cvec_len],
             MISAALLang::HVXMin([x, y]) => {
-                map!(get_cvec, x, y => 
+                map!(get_cvec, x, y =>
                     {
                         let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                        println!("x for HVXMin is {:?}", bv_x);
-                        println!("y for HVXMin is {:?}", bv_y);
+                        // println!("x for HVXMin is {:?}", bv_x);
+                        // println!("y for HVXMin is {:?}", bv_y);
                         Some(x.min(y).clone())
                     }
                 )
             }
 
             MISAALLang::HalideVecMin([x, y]) => {
-                map!(get_cvec, x, y => 
+                map!(get_cvec, x, y =>
                     {
                         let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                        println!("x for HalideVecMin is {:?}", bv_x);
-                        println!("y for HalideVecMin is {:?}", bv_y);
+                        // println!("x for HalideVecMin is {:?}", bv_x);
+                        // println!("y for HalideVecMin is {:?}", bv_y);
                         Some(x.min(y).clone())
                     }
                 )
             }
 
             MISAALLang::HalideVecSatSub([x, y]) => {
-                map!(get_cvec, x, y => 
+                map!(get_cvec, x, y =>
                     {
                         let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                        println!("x for HalideVecSatSub is {:?}", bv_x);
-                        println!("y for HalideVecSatSub is {:?}", bv_y);
+                        // println!("x for HalideVecSatSub is {:?}", bv_x);
+                        // println!("y for HalideVecSatSub is {:?}", bv_y);
                         x.checked_sub(*y)
                     }
                 )
@@ -158,46 +166,42 @@ mod test {
     use ruler::{
         enumo::{Filter, Metric, Ruleset, Workload},
         logger,
-        recipe_utils::{recursive_rules, run_workload, Lang},
+        recipe_utils::{recursive_rules, base_lang, iter_metric, run_workload, Lang},
         Limits,
     };
 
     #[test]
     fn run() {
-
-        let mut all_rules = Ruleset::<MISAALLang>::default();
-        let rat_only = recursive_rules(
-            Metric::Atoms,
-            5,
-            Lang::new(
-                &["-1", "0", "1"],
-                &["a", "b", "c"],
-                &[&[""], &["hexagon_V6_vminuh_128B", "typed:unsigned-vec-sat-sub", "typed:unsigned-vec-min"]],
-            ),
-            all_rules.clone(),
+        let mut rules: Ruleset<MISAALLang> = Ruleset::default();
+        let lang = Lang::new(
+            &["0", "1", "-1", "2"],
+            &["a", "b", "c"],
+            &[&[], &["hexagon_V6_vminuh_128B", "typed:unsigned-vec-sat-sub", "typed:unsigned-vec-min"]],
         );
-        all_rules.extend(rat_only.clone());
-        let nested_bops_full = Workload::new(&["(bop e e)", "v"])
-        .plug("e", &Workload::new(&["(bop v v)", "v"]))
-        .plug(
-            "bop",
-            &Workload::new(&["hexagon_V6_vminuh_128B", "typed:unsigned-vec-sat-sub", "typed:unsigned-vec-min"]),
-        )
-        .plug("v", &Workload::new(&["a", "b", "c"]))
-        .filter(Filter::Canon(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-        ]));
+        rules.extend(recursive_rules(
+            Metric::Atoms,
+            6,
+            lang.clone(),
+            Ruleset::default(),
+        ));
 
-    let new = run_workload(
-        nested_bops_full,
-        all_rules.clone(),
-        Limits::synthesis(),
-        Limits::minimize(),
-        true,
-    );
-    all_rules.extend(new.clone());
-
+        let a6_canon = iter_metric(base_lang(2), "EXPR", Metric::Atoms, 6)
+            .plug("VAR", &Workload::new(lang.vars))
+            .plug("VAL", &Workload::empty())
+            .plug("OP2", &Workload::new(lang.ops[1].clone()))
+            .filter(Filter::Canon(vec![
+                "a".to_string(),
+                "b".to_string(),
+                "c".to_string(),
+            ]));
+        let consts = Workload::new(["0", "1", "-1", "2"]);
+        let wkld = Workload::Append(vec![a6_canon, consts]);
+        rules.extend(run_workload(
+            wkld,
+            rules.clone(),
+            Limits::synthesis(),
+            Limits::minimize(),
+            true,
+        ));
     }
 }

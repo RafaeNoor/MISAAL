@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use egg::{Rewrite, Runner};
+use egg::{Rewrite, Runner, AstSize, EClass, ENodeOrVar, Extractor, Pattern, RecExpr};
 
 use crate::{EGraph, Id, Limits, SynthAnalysis, SynthLanguage};
 
@@ -50,23 +50,40 @@ impl Scheduler {
                 .with_time_limit(Duration::from_secs(600))
                 .with_egraph(egraph);
             if let Some(rule) = rule {
-                let lexpr = L::instantiate(&rule.lhs);
-                let rexpr = L::instantiate(&rule.rhs);
+                let halide_pattern_is_extractable = |pat: &Pattern<L>| {
+                    pat.ast.as_ref().iter().all(|n| match n {
+                        ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
+                        ENodeOrVar::Var(_) => true,
+                    })
+                };
+                let hvx_pattern_is_extractable = |pat: &Pattern<L>| {
+                    pat.ast.as_ref().iter().all(|n| match n {
+                        ENodeOrVar::ENode(n) => n.is_hvx_allowed_op(),
+                        ENodeOrVar::Var(_) => true,
+                    })
+                };
+                if halide_pattern_is_extractable(&rule.lhs) && hvx_pattern_is_extractable(&rule.rhs)
+                {
+                    let lexpr = L::instantiate(&rule.lhs);
+                    let rexpr = L::instantiate(&rule.rhs);
 
-                base_runner.with_hook(move |r| {
-                    let lhs = r.egraph.lookup_expr(&lexpr);
-                    let rhs = r.egraph.lookup_expr(&rexpr);
-                    match (lhs, rhs) {
-                        (Some(l), Some(r)) => {
-                            if l == r {
-                                Err("Done".to_owned())
-                            } else {
-                                Ok(())
+                    base_runner.with_hook(move |r| {
+                        let lhs = r.egraph.lookup_expr(&lexpr);
+                        let rhs = r.egraph.lookup_expr(&rexpr);
+                        match (lhs, rhs) {
+                            (Some(l), Some(r)) => {
+                                if l == r {
+                                    Err("Done".to_owned())
+                                } else {
+                                    Ok(())
+                                }
                             }
+                            _ => Ok(()),
                         }
-                        _ => Ok(()),
-                    }
-                })
+                    })
+                } else {
+                    base_runner
+                }
             } else {
                 base_runner
             }
