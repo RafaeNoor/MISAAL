@@ -398,23 +398,9 @@ impl<L: SynthLanguage> Ruleset<L> {
         let mut initial = vec![];
         // 2. insert lhs and rhs of all candidates as roots
         for rule in self.0.values() {
-            let halide_pattern_is_extractable = |pat: &Pattern<L>| {
-                pat.ast.as_ref().iter().all(|n| match n {
-                    ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
-                    ENodeOrVar::Var(_) => true,
-                })
-            };
-            let hvx_pattern_is_extractable = |pat: &Pattern<L>| {
-                pat.ast.as_ref().iter().all(|n| match n {
-                    ENodeOrVar::ENode(n) => n.is_hvx_allowed_op(),
-                    ENodeOrVar::Var(_) => true,
-                })
-            };
-            if halide_pattern_is_extractable(&rule.lhs) && hvx_pattern_is_extractable(&rule.rhs) {
-                let lhs = egraph.add_expr(&L::instantiate(&rule.lhs));
-                let rhs = egraph.add_expr(&L::instantiate(&rule.rhs));
-                initial.push((lhs, rhs, rule.clone()));
-            }
+            let lhs = egraph.add_expr(&L::instantiate(&rule.lhs));
+            let rhs = egraph.add_expr(&L::instantiate(&rule.rhs));
+            initial.push((lhs, rhs, rule.clone()));
         }
 
         // 3. compress with the rules we've chosen so far
@@ -461,7 +447,7 @@ impl<L: SynthLanguage> Ruleset<L> {
             let selected = self.select(step_size, &mut invalid);
             chosen.extend(selected.clone());
             self.shrink(&chosen, scheduler);
-            print!("chosen rules at {:?} are : {:?}", iter_cnt, &chosen)
+            // print!("chosen rules at {:?} are : {:?}", iter_cnt, &chosen)
         }
         // Return only the new rules
         chosen.remove_all(prior);

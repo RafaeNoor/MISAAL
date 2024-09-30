@@ -210,6 +210,7 @@ mod test {
     use crate::MISAALLang;
     use std::time::{Duration, Instant};
 
+    use env_logger::filter;
     use ruler::{
         enumo::{Filter, Metric, Ruleset, Workload},
         logger,
