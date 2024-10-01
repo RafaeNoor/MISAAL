@@ -21,11 +21,13 @@ class RepairRelavanceV2(RepairRelavance):
 
 
 
-    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True):
+    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True, memo_path = None):
+
 
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_depth = target_depth, target_start_depth = target_start_depth)
         self.name = "RepairRelavanceV2"
+        self.memo_path = memo_path
         self.synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = dsl_list, output_dsl_list = output_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = repair_dsl_list)
 
         self.canonicalizer = CanonicalizeExpression(commutative_map_path = commutative_map_path)
