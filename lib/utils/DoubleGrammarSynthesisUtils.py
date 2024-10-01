@@ -129,6 +129,7 @@ class DoubleGrammarSynthesisUtils:
         src_regs_count = len(src_ctx_regs)
 
 
+
         # Bind expression to target expression
         reg_arg_idx_map = {}
         for key in reg_arg_map:
@@ -168,9 +169,10 @@ class DoubleGrammarSynthesisUtils:
         """
 
 
+        statements = []
 
 
-        statements = additional_statements
+        statements += additional_statements
 
         # Need to create a new desc for swizzles and target inst comined
         double_grammar_desc = create_synth_desc("double_target_", True, [], "", "")
@@ -204,6 +206,9 @@ class DoubleGrammarSynthesisUtils:
         if not custom_target_input_sizes is None:
             dst_input_sizes = custom_target_input_sizes
 
+        print("Dst Output Size:", dst_output_size)
+        print("Dst Input Sizes:", dst_input_sizes)
+        print("Dst Input Precs:", input_precs)
         GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
         dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 
@@ -244,7 +249,10 @@ class DoubleGrammarSynthesisUtils:
             statements.append("(define interpreter {})".format(double_grammar_desc.interpreter_name))
 
         statements.append("(define cost-model {})".format(double_grammar_desc.cost_name))
-        leaves_sizes = "(define leaves-sizes (list {}))".format(" ".join([str(arg.size) for arg in src_ctx_regs]))
+        leaves_sizes_vals = [str(arg.size) for arg in src_ctx_regs]
+        if not custom_src_input_sizes is None:
+            leaves_sizes_vals = [str(size) for size in custom_src_input_sizes]
+        leaves_sizes = "(define leaves-sizes (list {}))".format(" ".join(leaves_sizes_vals))
         statements.append(leaves_sizes)
 
 

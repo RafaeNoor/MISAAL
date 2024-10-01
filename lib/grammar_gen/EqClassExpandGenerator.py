@@ -17,6 +17,10 @@ class EqClassExpandGenerator:
         self.use_buffer_id = False
         self.input_precs = input_precs
         self.use_any_reg = use_any_reg
+        self.prefix = ""
+
+    def cleanup_state(self):
+        self.grammar_clause_map = {}
 
 
     def emit_choose_buffer(self, reg_id, precision = 8, signedness = True):
@@ -50,22 +54,25 @@ class EqClassExpandGenerator:
         assert False,"Unreachable"
 
     def get_layer_name(self, eq_class, parent_name, layer_idx, output_size):
-        return "_".join([parent_name, eq_class.name,"layer" ,str(layer_idx), "bv", str(output_size) ])
+        return "_".join([self.prefix, parent_name, eq_class.name,"layer" ,str(layer_idx), "bv", str(output_size) ])
 
 
     def add_zero_imm(self, current_layer_name):
         self.add_clause_to_layer_context(current_layer_name,"'()")
 
+    def emit_choose_lit(self, val, size):
+        return "(lit (bv {} {}))".format(val, size)
+
     def process_ctx(self, f_ctx, ref_ctx, current_layer_name, layer_index):
 
-        clause_tokens = [f_ctx.dsl_name]
+        clause_tokens = [f_ctx.dsl_name + "\t;"+f_ctx.name]
         for idx, f_arg in enumerate(f_ctx.context_args):
             ref_arg = ref_ctx.context_args[idx]
 
             if isinstance(ref_arg, Reg) and isinstance(f_arg, ConstBitVector):
                 return
-            elif isinstance(ref_arg, Reg) and f_arg.size != ref_arg.size:
-                return
+            #elif isinstance(ref_arg, Reg) and f_arg.size != ref_arg.size:
+            #    return
             elif isinstance(ref_arg, Reg):
                 assert isinstance(f_arg, BitVector), "Corresponding argument must be a symbolic parameter"
                 sign = True
@@ -74,7 +81,15 @@ class EqClassExpandGenerator:
                     sign = [False, True][f_ctx.signedness]
 
                 if self.use_any_reg:
-                    choose_any_clauses = [self.emit_choose_reg(i, precision = f_ctx.in_precision, signedness = sign) for i in range(len(self.input_sizes)) if self.input_sizes[i] == ref_arg.size]
+                    #choose_any_clauses = [self.emit_choose_reg(i, precision = f_ctx.in_precision, signedness = sign) for i in range(len(self.input_sizes)) if self.input_sizes[i] == ref_arg.size]
+
+                    choose_any_clauses = [self.emit_choose_reg(i, precision = f_ctx.in_precision, signedness = sign) for i in range(len(self.input_sizes)) if self.input_sizes[i] == f_arg.size]
+
+                    # To allow program to compile, insert a lit hole zero
+                    if len(choose_any_clauses) == 0:
+                        choose_any_clauses += [self.emit_choose_lit(0, ref_arg.size)]
+
+
                     clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
                 else:
                     clause_tokens.append(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign))
@@ -190,7 +205,9 @@ class EqClassExpandGenerator:
 
 
 
-    def emit_grammar(self, ref_expr):
+    def emit_grammar(self, ref_expr, prefix = ""):
+        self.prefix = prefix
+        self.cleanup_state()
         output_expr_name = self.visit_expr(ref_expr, "output", 0, self.output_bitwidth)
 
 
