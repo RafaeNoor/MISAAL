@@ -164,7 +164,7 @@ class Property:
 
 
         global candidate_count
-        candidate_count = 0
+        candidate_count = len([key for key in property_map])
         def worker(candidate):
             """Parallelizable method on each candidate
 
