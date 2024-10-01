@@ -25,7 +25,7 @@ class Property:
 
     """
 
-    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True, is_candidate_generator = False):
+    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True, is_candidate_generator = False, keep_temp_files = False):
         """Class constructor for base class
 
         Args:
@@ -40,6 +40,8 @@ class Property:
 
         self.BATCH_SIZE = 1024
         self.POOL_SIZE = 64
+
+        self.keep_temp_files = keep_temp_files
 
         self.notify_enabled = True
         self.notify_count = self.BATCH_SIZE
@@ -146,6 +148,13 @@ class Property:
 
         print("BATCH_SIZE:\t{}".format(self.BATCH_SIZE))
         print("POOL_SIZE:\t{}".format(self.POOL_SIZE))
+        print("Keep temp files:\t{}".format(self.keep_temp_files))
+
+        if self.keep_temp_files:
+            keep_temporary_files()
+        else:
+            delete_temporary_files()
+
 
 
 

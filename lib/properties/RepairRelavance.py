@@ -19,13 +19,15 @@ class RepairRelavance(IdentifySwizzles):
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc)
         self.name = "RepairRelavance"
+        self.deduplicate_slices = True
         self.is_candidate_generator = True
         self.repair_dsl_list = repair_dsl_list
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
         input_test_list = [
-            "_mm256_maddubs_epi16"
+            "_mm512_andnot_epi32",
         ]
+
         #self.input_dsl_list = [d for d in self.input_dsl_list if d.name in input_test_list]
 
         self.target_synth_desc = target_synth_desc
@@ -33,13 +35,19 @@ class RepairRelavance(IdentifySwizzles):
         self.target_start_depth = target_start_depth
         self.target_depth = target_depth
         self.const_fold = const_fold
-       
+
 
         test_list = [
-            "typed:vec-add",
-            #"typed:signed-vec-mul",
+            "typed:vec-bwand",
+
         ]
         #self.output_dsl_list = [d for d in self.output_dsl_list if d.name in test_list]
+
+        repair_test_list = [
+            "repair-bwnot",
+        ]
+
+        #self.repair_dsl_list = [d for d in self.repair_dsl_list if d.name in repair_test_list]
 
         self.context_map = {}
         self.ctx_slice_sizes_operand_map = {}
@@ -57,7 +65,7 @@ class RepairRelavance(IdentifySwizzles):
             for input_dsl in self.input_dsl_list:
                 for output_dsl in self.output_dsl_list:
                     visited_bv_ops = []
-                    
+
                     for idx,ctx in enumerate(input_dsl.contexts):
                         ops = get_expr_bv_ops(ctx)
 
@@ -119,6 +127,10 @@ class RepairRelavance(IdentifySwizzles):
     def create_prepare_repair_env_func(self, name, slices):
         create_extract = lambda x: "(extract {} {} arg)".format(x[0], x[1])
 
+        if self.deduplicate_slices:
+            unique_slices = list(set(slices))
+            unique_slices = sorted(unique_slices, key = lambda x : slices.index(x))
+            slices = unique_slices
         concat_expr = "(concat \n{}\n)".format("\n".join([create_extract(s) for s in slices]))
 
         env_func = "(define ({} arg)\n{}\n)".format(name, concat_expr)
@@ -142,6 +154,8 @@ class RepairRelavance(IdentifySwizzles):
     def create_prepare_repair_env_funcs(self, stream):
         prep_arg_slices = {}
         slice_sizes = {}
+
+
 
         for line in stream:
             tokens = line.strip().split()
@@ -168,7 +182,8 @@ class RepairRelavance(IdentifySwizzles):
         for key in prep_arg_slices:
             total_slice_map[key] = 0
 
-            #prep_arg_slices[key] = list(set(prep_arg_slices[key]))
+            if self.deduplicate_slices:
+                prep_arg_slices[key] = list(set(prep_arg_slices[key]))
             for high,low in prep_arg_slices[key]:
                 total_slice_map[key] += int(high) - int(low) + 1
 

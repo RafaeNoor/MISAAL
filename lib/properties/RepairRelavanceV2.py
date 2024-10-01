@@ -65,10 +65,11 @@ class RepairRelavanceV2(RepairRelavance):
 
 
     def get_grammar_relevant_dsl(self,out_precision, reduce_factor, input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst):
-        print("Output precision: ", out_precision)
-        print("Input precision: ", input_precs)
-        print("Input sizes: ", input_sizes)
-        print("Input Signedness: ", input_signedness)
+
+        #print("Output precision: ", out_precision)
+        #print("Input precision: ", input_precs)
+        #print("Input sizes: ", input_sizes)
+        #print("Input Signedness: ", input_signedness)
 
         relavent_dsls = []
         count = 0
