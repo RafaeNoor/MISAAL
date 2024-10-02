@@ -192,20 +192,22 @@ class RepairRelavanceV2(RepairRelavance):
 
 
         return_idx = relavent_indices[0]
-        if False:
-            min_prec = dsl_expr.contexts[return_idx].in_precision
-            for idx in relavent_indices:
-                cur_prec = dsl_expr.contexts[idx].in_precision
-                if cur_prec < min_prec:
-                    min_prec = cur_prec
-                    return_idx = idx
-        else:
-            max_prec = dsl_expr.contexts[return_idx].in_precision
-            for idx in relavent_indices:
-                cur_prec = dsl_expr.contexts[idx].in_precision
-                if cur_prec > max_prec:
-                    max_prec = cur_prec
-                    return_idx = idx
+        if dsl_expr.contexts[return_idx].in_precision is None:
+            return return_idx
+
+        max_prec = dsl_expr.contexts[return_idx].in_precision
+        for idx in relavent_indices:
+            cur_prec = dsl_expr.contexts[idx].in_precision
+
+            if cur_prec is None:
+                continue
+
+            if max_prec is None:
+                max_prec = cur_prec
+
+            if cur_prec > max_prec:
+                max_prec = cur_prec
+                return_idx = idx
 
         return return_idx
 

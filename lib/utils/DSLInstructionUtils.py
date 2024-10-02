@@ -326,7 +326,8 @@ def cleanup_tmp_files():
 
     tmp_files = glob.glob("/tmp/base_*")
     for f in tmp_files:
-        subprocess.call("rm -f {}".format(f), shell = True)
+        if os.path.exists(f):
+            subprocess.call("rm -f {}".format(f), shell = True)
 
 
 def ordered_deduplicate(ls):
@@ -456,6 +457,26 @@ def get_context_registers(ctx):
     return regs
 
 
+def get_unique_context_registers(ctx):
+
+    all_regs = get_context_registers(ctx)
+
+    unique_regs = {}
+    for reg in all_regs:
+        if reg.index not in unique_regs:
+            unique_regs[reg.index] = []
+        unique_regs[reg.index].append(reg)
+
+    regs = [unique_regs[key][0] for key in unique_regs]
+    return regs
+
+
+def context_visitor(ctx, visitor_fn):
+    if isinstance(ctx, Context):
+        visitor_fn(ctx)
+
+        for arg in ctx.context_args:
+            context_visitor(arg, visitor_fn)
 
 
 
@@ -768,14 +789,22 @@ def get_eq_class_relavent_contexts(possible_contexts, tight = True):
 
         accounted_for = []
         candidates = []
+
         for ctx in sorted_ctxs:
-            include = False
+            """
             for arg in ctx.context_args:
                 if isinstance(arg, BitVector) and arg.size not in accounted_for:
                     include = True
                     accounted_for.append(arg.size)
-            if include:
-                candidates.append(ctx)
+            """
+            current_args = get_num_symbolic_args(ctx)
+
+            if current_args in accounted_for:
+                continue
+
+            accounted_for.append(current_args)
+            candidates.append(ctx)
+
         return candidates
 
 

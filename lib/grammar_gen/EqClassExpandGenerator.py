@@ -1,4 +1,5 @@
 from common.Types import *
+import random
 from common.Instructions import *
 from  utils.DSLInstructionUtils import *
 
@@ -87,7 +88,7 @@ class EqClassExpandGenerator:
 
                     # To allow program to compile, insert a lit hole zero
                     if len(choose_any_clauses) == 0:
-                        choose_any_clauses += [self.emit_choose_lit(0, ref_arg.size)]
+                        choose_any_clauses += [self.emit_choose_lit(5+random.randint(0, 16), ref_arg.size)]
 
 
                     clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
