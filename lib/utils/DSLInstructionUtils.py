@@ -468,6 +468,7 @@ def get_unique_context_registers(ctx):
         unique_regs[reg.index].append(reg)
 
     regs = [unique_regs[key][0] for key in unique_regs]
+    regs = sorted(regs, key = lambda x : int(x.index))
     return regs
 
 
