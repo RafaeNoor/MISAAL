@@ -52,11 +52,12 @@ impl SynthLanguage for MISAALLang {
             MISAALLang::HVXMin([x, y]) => {
                 map!(get_cvec, x, y =>
                     {
-                        let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
-                        let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                        // println!("x for HVXMin is {:?}", bv_x);
-                        // println!("y for HVXMin is {:?}", bv_y);
-                        Some(x.min(y).clone())
+                        // let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
+                        // let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
+                        // // println!("x for HVXMin is {:?}", bv_x);
+                        // // println!("y for HVXMin is {:?}", bv_y);
+                        // Some(x.clone().min(y).clone())
+                        Some(x.clone())
                     }
                 )
             }
@@ -68,7 +69,8 @@ impl SynthLanguage for MISAALLang {
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
                         // println!("x for HalideVecMin is {:?}", bv_x);
                         // println!("y for HalideVecMin is {:?}", bv_y);
-                        Some(x.min(y).clone())
+                        // Some(x.clone().min(y).clone())
+                        Some(x.clone())
                     }
                 )
             }
@@ -80,7 +82,9 @@ impl SynthLanguage for MISAALLang {
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
                         // println!("x for HVXMin is {:?}", bv_x);
                         // println!("y for HVXMin is {:?}", bv_y);
-                        if x < y {Some(one.clone())} else {Some(zero.clone())}
+                        //if x < y {Some(one.clone())} else {Some(zero.clone())}
+                        Some(x.clone())
+
                     }
                 )
             }
@@ -88,9 +92,10 @@ impl SynthLanguage for MISAALLang {
             MISAALLang::HalideVecLt([x, y]) => {
                 map!(get_cvec, x, y =>
                     {
-                        let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
-                        let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                         if x < y {Some(one.clone())} else {Some(zero.clone())}
+                        // let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
+                        // let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
+                        //  if x < y {Some(one.clone())} else {Some(zero.clone())}
+                        Some(x.clone())
                     }
                 )
             }
@@ -98,11 +103,12 @@ impl SynthLanguage for MISAALLang {
             MISAALLang::HalideVecSatSub([x, y]) => {
                 map!(get_cvec, x, y =>
                     {
-                        let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
-                        let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
-                        // println!("x for HalideVecSatSub is {:?}", bv_x);
-                        // println!("y for HalideVecSatSub is {:?}", bv_y);
-                        x.checked_sub(*y)
+                        // let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
+                        // let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
+                        // // println!("x for HalideVecSatSub is {:?}", bv_x);
+                        // // println!("y for HalideVecSatSub is {:?}", bv_y);
+                        // x.checked_sub(*y)
+                        Some(x.clone())
                     }
                 )
             }
