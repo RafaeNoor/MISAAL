@@ -128,14 +128,14 @@ def get_matching_context(nested_expr, dsl_list):
 
 
 [['define', 'hydride-expr', ['_mm_movm_epi8_dsl', ['reg', ['bv', '0', ['bitvector', '8']]], ['lit', ['bv', '#b1', ['bitvector', '1']]], ['lit', ['bv', '#x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', ['bitvector', '512']]], ['reg', ['bv', '1', ['bitvector', '8']]], '512', '512', '0', '512', '16', '1', '16', '0']]]
-def parse_nested_expr_to_dsl(nested_expr, dsl_list):
+def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None):
 
 
     first_term = nested_expr[0]
 
     # Skip defines if they exist
     if first_term == 'define':
-        return parse_nested_expr_to_dsl(nested_expr[2], dsl_list)
+        return parse_nested_expr_to_dsl(nested_expr[2], dsl_list, expecting_return_size =  expecting_return_size)
 
     elif first_term == 'reg':
         # Just create a register with arbritary size and precision. Parent of this
@@ -149,7 +149,13 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
         if reg_index_term.startswith("#x"):
             reg_index_term = str(int(reg_index_term[2:], 16))
-        reg = Reg(reg_index_term, 8, 8)
+
+        reg_size = 8
+        if not expecting_return_size is None:
+            print("Reg index reg size:", expecting_return_size)
+            reg_size = expecting_return_size
+
+        reg = Reg(reg_index_term, 8, reg_size)
 
         return reg
 
@@ -158,7 +164,13 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
         #TODO: Need to figure out how to handle buffer index
         #['vec-absd', ['buffer-index', '0', "'uint16 1024)          (buffer-index  1 '", 'uint16', '1024']]
         reg_index_term = nested_expr[1]
-        reg = Reg(reg_index_term, 8, 8)
+
+        reg_size = 8
+        if not expecting_return_size is None:
+            print("Buffer index reg size:", expecting_return_size)
+            reg_size = expecting_return_size
+
+        reg = Reg(reg_index_term, 8, reg_size)
         return reg
     elif first_term == 'lit':
 
@@ -180,7 +192,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
         for idx, arg in enumerate(matching_context.context_args):
             if isinstance(arg, BitVector) or isinstance(arg, ConstBitVector):
-                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list) # Offset zero corresponds to the name of the current matching context
+                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list, expecting_return_size = arg.size) # Offset zero corresponds to the name of the current matching context
 
         return matching_context
 
@@ -192,7 +204,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list):
 
         for idx, arg in enumerate(matching_context.context_args):
             if isinstance(arg, BitVector) or isinstance(arg, ConstBitVector):
-                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list) # Offset zero corresponds to the name of the current matching context
+                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list, expecting_return_size = arg.size) # Offset zero corresponds to the name of the current matching context
 
         if matching_context != None:
             return matching_context

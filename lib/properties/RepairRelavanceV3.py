@@ -21,10 +21,10 @@ class RepairRelavanceV3(RepairRelavanceV2):
 
 
 
-    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True):
+    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True, memo_path = None):
 
 
-        super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs)
+        super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs, memo_path = memo_path)
         self.name = "RepairRelavanceV3"
         self.bv_streams_map = {}
 
@@ -244,9 +244,62 @@ class RepairRelavanceV3(RepairRelavanceV2):
 
 
 
+    def load_previous_property_map(self, memo_path):
+        if not os.path.exists(memo_path):
+            return
+
+        memo_dict = {}
+        with open(memo_path, "r") as MemoFile:
+            memo_dict = json.load(MemoFile)
 
 
 
+        property_map = {}
+
+        # Update property map
+        for key, prop in memo_dict.items():
+
+            entry = prop[0]['property']
+            candidate = entry['candidate']
+            src_expr_str = entry['synth_expression']
+            dst_expr_str = entry['output_expression']
+
+            if key not in property_map:
+                property_map[key] = []
+
+            prop_dict = copy.deepcopy({'property_name': self.name, 'property': {'candidate': candidate, 'output_expression': dst_expr_str, 'synth_expression': src_expr_str}})
+
+            property_map[key].append(prop_dict)
+
+        print('Read in {} entries into property_map'.format(len([k for k in memo_dict])))
+
+        return property_map
+
+
+
+    def load_previous_context_map(self, memo_path):
+        if not os.path.exists(memo_path):
+            return
+
+        self.load_previous_property_map(memo_path)
+
+        memo_dict = {}
+        with open(memo_path, "r") as MemoFile:
+            memo_dict = json.load(MemoFile)
+
+
+        # Update context map
+        for key, prop in memo_dict.items():
+
+            entry = prop[0]['property']
+            candidate = entry['candidate']
+
+            src_expr_str = entry['synth_expression']
+            dst_expr_str = entry['output_expression']
+
+            self.context_map[key] = src_expr_str , dst_expr_str
+
+        print('Read in {} entries into context_map'.format(len([k for k in memo_dict])))
 
 
 

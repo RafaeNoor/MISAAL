@@ -21,11 +21,13 @@ class RepairRelavanceV2(RepairRelavance):
 
 
 
-    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True):
+    def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True, memo_path = None):
+
 
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_depth = target_depth, target_start_depth = target_start_depth)
         self.name = "RepairRelavanceV2"
+        self.memo_path = memo_path
         self.synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = dsl_list, output_dsl_list = output_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = repair_dsl_list)
 
         self.canonicalizer = CanonicalizeExpression(commutative_map_path = commutative_map_path)
@@ -65,10 +67,11 @@ class RepairRelavanceV2(RepairRelavance):
 
 
     def get_grammar_relevant_dsl(self,out_precision, reduce_factor, input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst):
-        print("Output precision: ", out_precision)
-        print("Input precision: ", input_precs)
-        print("Input sizes: ", input_sizes)
-        print("Input Signedness: ", input_signedness)
+
+        #print("Output precision: ", out_precision)
+        #print("Input precision: ", input_precs)
+        #print("Input sizes: ", input_sizes)
+        #print("Input Signedness: ", input_signedness)
 
         relavent_dsls = []
         count = 0
@@ -187,13 +190,23 @@ class RepairRelavanceV2(RepairRelavance):
 
         relavent_indices = [i for i in range(len(dsl_expr.contexts))  if self.get_context_num_sym_args(dsl_expr.contexts[i]) == max_args]
 
+
         return_idx = relavent_indices[0]
-        min_prec = dsl_expr.contexts[return_idx].in_precision
-        for idx in relavent_indices:
-            cur_prec = dsl_expr.contexts[return_idx].in_precision
-            if cur_prec < min_prec:
-                min_prec = cur_prec
-                return_idx = idx
+        if False:
+            min_prec = dsl_expr.contexts[return_idx].in_precision
+            for idx in relavent_indices:
+                cur_prec = dsl_expr.contexts[idx].in_precision
+                if cur_prec < min_prec:
+                    min_prec = cur_prec
+                    return_idx = idx
+        else:
+            max_prec = dsl_expr.contexts[return_idx].in_precision
+            for idx in relavent_indices:
+                cur_prec = dsl_expr.contexts[idx].in_precision
+                if cur_prec > max_prec:
+                    max_prec = cur_prec
+                    return_idx = idx
+
         return return_idx
 
 

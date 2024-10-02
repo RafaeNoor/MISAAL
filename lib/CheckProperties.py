@@ -58,12 +58,15 @@ for f in cleanup_files:
 parser = argparse.ArgumentParser(prog='CheckProperties', description='Run properties on targets',epilog='Text at the bottom of help')
 
 parser.add_argument('-p', '--parallel',action='store_true', default = False)
+parser.add_argument('--keep-temp-files',action='store_true', default = False)
 parser.add_argument('--batch', type = int, default = 1024)
 parser.add_argument('--pool', type = int, default = 16)
 args = parser.parse_args()
 PARALLEL = args.parallel
 BATCH_SIZE = args.batch
 POOL_SIZE = args.pool
+KEEP_TEMP = args.keep_temp_files
+
 
 
 TARGETS = [ "x86", "hvx", "halide_hvx", "arm"]
@@ -102,6 +105,7 @@ TARGET_TO_DESC = {
 }
 
 
+commutative_path = "commutative_map.json"
 
 
 
@@ -111,17 +115,8 @@ TARGET_TO_DESC = {
 
 
 TARGETS = ["x86"]
-test_properties = [Translator, SimplifyingSwizzles, SwizzleTransferable, SynthSwizzleTransferable, FusedSwizzleTranslator]
-#test_properties = [SimplifyingSwizzles, FusedSwizzleTranslator]
 
-test_properties = [EqualOnValues, ScaledTranslator]
-test_properties = [LargeExpressionTranslator]
-test_properties = [SimplifyingSwizzles , SwizzleTransferable, SynthSwizzleTransferable ,EqualOnValuesDepth][2:]
-test_properties = [EqClassEqualDepth, EqClassEqualOnValuesDepth]
-
-
-test_properties = [RepairRelavance]
-#test_properties = [EqClassEqualDepth]
+test_properties = [RepairRelavanceV3]
 
 for property in test_properties:
     for target in TARGETS:
@@ -192,10 +187,14 @@ for property in test_properties:
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
 
         elif property is RepairRelavanceV2 or property is RepairRelavanceV3:
-            commutative_path = "commutative_map.json"
+            repair_memo_name = "RepairRelavanceV3_{}_intermediate_results.json".format(target)
+
+            if not os.path.exists(repair_memo_name):
+                repair_memo_name = None
+
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4, commutative_map_path = commutative_path )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
@@ -217,6 +216,7 @@ for property in test_properties:
         PropertyInstance.parallel = PARALLEL
         PropertyInstance.POOL_SIZE = POOL_SIZE
         PropertyInstance.BATCH_SIZE = BATCH_SIZE
+        PropertyInstance.keep_temp_files =  KEEP_TEMP
         property_map = PropertyInstance.get_property()
 
 

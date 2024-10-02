@@ -13,6 +13,16 @@ import numpy as np
 import concurrent.futures
 
 REMOVE_RKT_FILES = True
+
+
+def keep_temporary_files():
+    global REMOVE_RKT_FILES
+    REMOVE_RKT_FILES = False
+
+def delete_temporary_files():
+    global REMOVE_RKT_FILES
+    REMOVE_RKT_FILES = True
+
 HYDRIDE_HEADER =  """
         #lang rosette
         (require rosette/lib/synthax)
