@@ -8,6 +8,7 @@ from common.DSLParser import parse_dict
 from properties.RepairRelavance import RepairRelavance
 from properties.RepairRelavanceV2 import RepairRelavanceV2
 from properties.RepairRelavanceV3 import RepairRelavanceV3
+from properties.RepairRelavancePostProcess import RepairRelavancePostProcess
 from properties.Commutative import *
 from properties.Distributive import *
 from properties.Associative import *
@@ -116,7 +117,7 @@ commutative_path = "commutative_map.json"
 
 TARGETS = ["x86"]
 
-test_properties = [RepairRelavanceV3]
+test_properties = [RepairRelavancePostProcess]
 
 for property in test_properties:
     for target in TARGETS:
@@ -195,6 +196,16 @@ for property in test_properties:
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+
+        elif property is RepairRelavancePostProcess:
+            repair_memo_name = "RepairRelavanceV3_{}_intermediate_results.json".format(target)
+
+            if not os.path.exists(repair_memo_name):
+                repair_memo_name = None
+
+            repairs_sema = parse_dict(repair_semantics)
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(input_dsl_list = dsl_list ,output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, memo_path = repair_memo_name , target = target)
         elif property is EqClassEqualDepth:
             halide_dsl_list = parse_dict(halide_semantics)
             target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
