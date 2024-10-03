@@ -15,7 +15,7 @@ from sema.halide_sema import halide_semantics
 from repair_test_list import tests
 
 # Uncomment below line to keep intermediate racket files
-#keep_temporary_files()
+keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
 x86_dsl_list = parse_dict(x86_semantics)

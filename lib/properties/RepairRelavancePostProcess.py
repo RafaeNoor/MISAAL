@@ -117,11 +117,14 @@ class RepairRelavancePostProcess(Property):
                     boolean = self.racket_bool_map[contents]
                     if boolean:
                         print("SUCCESS!")
-                        self.passing_results[candidate] = self.repair_results_dict[candidate]
+                        print(parsed_expr.emit_context_expr_string())
+
+                        self.passing_results[candidate] = [expr_desc]
                         self.failing_results.pop(candidate, None)
                         self.error_results.pop(candidate, None)
                         return True
                     else:
+                        print("FAILURE")
                         self.failing_results[candidate] = self.repair_results_dict[candidate]
                 os.remove(result_file_name)
 
@@ -139,7 +142,7 @@ class RepairRelavancePostProcess(Property):
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
-        return self.repair_results_dict[key][0]
+        return self.passing_results[key][0]
 
     def emit_property_to_egg(self, property_map):
         return []
@@ -172,7 +175,6 @@ class RepairRelavancePostProcess(Property):
         print("[ PASSED ]:\t\t", passing_tests , "/", total_tests)
         print("[ FAILED ]:\t\t", failing_tests , "/", total_tests)
         print("[ ERROR ]:\t\t", error_tests , "/", total_tests)
-        print("[ REMAINING ]:\t\t", remaining_tests , "/", total_tests)
 
 
 
