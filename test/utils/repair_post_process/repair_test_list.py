@@ -125,5 +125,24 @@ mulhi_div_test_desc = {
 mulhi_div_test = test_generator_helper(mulhi_div_test_desc, True)
 
 
-tests = []
 tests.append(mulhi_div_test)
+
+
+add_shr_test_desc = {
+"_mm_add_si64+typed:unsigned-vec-shr": [
+        {
+            "property_name": "RepairRelavanceV3",
+            "property": {
+                "candidate": "_mm_add_si64",
+                "output_expression": "(repair-add_dsl (repair-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64) (typed:unsigned-vec-shr (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64) 8 64)",
+                "synth_expression": "(_mm_add_si64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 64 -1 0 0)"
+            }
+        }
+    ]
+
+}
+
+add_shr_test = test_generator_helper(add_shr_test_desc, False)
+
+
+tests.append(add_shr_test)

@@ -105,6 +105,7 @@ for test in tests:
             contents = LogFile.read().rstrip().lstrip()
             boolean = racket_bool_map[contents]
             if boolean == expected_result:
+                print("PASSED")
                 passed_tests.append(label)
             else:
                 failed_tests.append(label)

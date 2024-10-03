@@ -120,6 +120,10 @@ class RepairPostProcessUtils:
                 if counter == 0:
                     or_conditions.append("(and (not (concrete? {})) {})".format(interpret_prog_name," ".join(all_non_eq_clauses)))
 
+                    # Add always concrete literal value
+                    always_conc_clause = "[(is-always-concrete {}) #f]".format(interpret_prog_name)
+                    other_clauses.append(always_conc_clause)
+
 
 
             and_clause = "(and\n {})".format("\n".join(and_conditions))
@@ -178,8 +182,9 @@ class RepairPostProcessUtils:
         interpreter = "(define ({} prog )\n (destruct prog\n{}\n )\n)".format(
             repair_post_process_name, "\n".join(interpret_clauses))
 
+        always_conc_def = self.emit_is_concrete_def()
         main_wrapper = self.emit_main_wrapper(repair_post_process_name)
-        return prefix + interpreter + "\n" + main_wrapper + sufix
+        return prefix + always_conc_def+ "\n" + interpreter + "\n" + main_wrapper + sufix
 
     def emit_main_wrapper(self, repair_post_process_name = ""):
         return """
@@ -205,3 +210,30 @@ class RepairPostProcessUtils:
 
     def emit_check_property(self, expr_name):
         return "({} {})".format(self.repair_wrapper_name, expr_name)
+
+    def emit_is_concrete_def(self):
+        return """
+        (define (is-always-concrete v)
+          (cond
+            [(concrete? v)
+             #t
+             ]
+            [else
+
+              (define len (bvlength v))
+              (define hole (?? (bitvector len)))
+
+              (define eval-condition (equal? v hole))
+              (define sol
+                (synthesize
+                  #:forall (list v)
+                  #:guarantee (assert eval-condition)
+                  )
+                )
+              (sat? sol)
+
+              ]
+
+            )
+          )
+        """
