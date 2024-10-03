@@ -143,6 +143,40 @@ add_shr_test_desc = {
 }
 
 add_shr_test = test_generator_helper(add_shr_test_desc, False)
-
-
 tests.append(add_shr_test)
+
+
+
+pslld_vec_mul_desc = {
+    "_m_pslld+typed:unsigned-vec-mul": [
+        {
+            "property_name": "RepairRelavanceV3",
+            "property": {
+                "candidate": "_m_pslld",
+                "output_expression": "(repair-usat-sub_dsl (typed:unsigned-vec-mul (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32) (repair-umul_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32) 8 32)",
+                "synth_expression": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)"
+            }
+        },
+        {
+            "property_name": "RepairRelavanceV3",
+            "property": {
+                "candidate": "_m_pslld",
+                "output_expression": "(repair-usat-sub_dsl (repair-umul_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 32) (typed:unsigned-vec-mul (reg (bv #x01 8)) (reg (bv #x01 8)) 8 32) 32 32)",
+                "synth_expression": "(_m_pslld_dsl (reg (bv #x01 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x00 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)"
+            }
+        },
+        {
+            "property_name": "RepairRelavanceV3",
+            "property": {
+                "candidate": "_m_pslld",
+                "output_expression": "(repair-usat-sub_dsl (typed:unsigned-vec-mul (reg (bv #x01 8)) (reg (bv #x01 8)) 8 32) (typed:unsigned-vec-mul (reg (bv #x01 8)) (reg (bv #x01 8)) 8 32) 16 32)",
+                "synth_expression": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)"
+            }
+        }
+    ]
+
+}
+
+
+pslld_vec_mul_test = test_generator_helper(pslld_vec_mul_desc, True)
+tests.append(pslld_vec_mul_test)

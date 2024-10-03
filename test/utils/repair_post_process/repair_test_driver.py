@@ -15,7 +15,7 @@ from sema.halide_sema import halide_semantics
 from repair_test_list import tests
 
 # Uncomment below line to keep intermediate racket files
-keep_temporary_files()
+# keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
 x86_dsl_list = parse_dict(x86_semantics)
@@ -65,8 +65,13 @@ for test in tests:
     interpreter_framework = synth_desc.emit_interpreter_framework(relevant_subset)
 
     context_regs = get_unique_context_registers(parsed_expression)
+    num_regs = context_regs[-1].size + 1
 
-    register_sizes = [reg.size for reg in context_regs]
+    register_sizes = [8] * num_regs
+
+    for reg in context_regs:
+        idx = int(reg.index)
+        register_sizes[idx] = reg.size
 
 
 

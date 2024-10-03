@@ -78,8 +78,13 @@ class RepairRelavancePostProcess(Property):
             interpreter_framework = self.synth_desc.emit_interpreter_framework(relevant_subset)
 
             context_regs = get_unique_context_registers(parsed_expr)
+            num_regs = context_regs[-1].size + 1
 
-            register_sizes = [reg.size for reg in context_regs]
+            register_sizes = [8] * num_regs
+
+            for reg in context_regs:
+                idx = int(reg.index)
+                register_sizes[idx] = reg.size
 
             repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes)
 
