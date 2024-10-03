@@ -86,7 +86,7 @@ class RepairRelavancePostProcess(Property):
                 idx = int(reg.index)
                 register_sizes[idx] = reg.size
 
-            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes)
+            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes, const_fold_name = self.synth_desc.const_fold_name)
 
             repair_process_name = "repair-post-process"
 

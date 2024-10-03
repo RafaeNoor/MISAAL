@@ -180,3 +180,20 @@ pslld_vec_mul_desc = {
 
 pslld_vec_mul_test = test_generator_helper(pslld_vec_mul_desc, True)
 tests.append(pslld_vec_mul_test)
+
+mul_rnd_mul_shift_right_desc = {
+    "_mm256_mul_epi32+typed:signed-vec-rounding_mul_shift_right": [
+        {
+            "property_name": "RepairRelavanceV3",
+            "property": {
+                "candidate": "_mm256_mul_epi32",
+                "output_expression": "(typed:signed-vec-rounding_mul_shift_right (repair-cast-int_dsl (reg (bv #x01 8)) 32 64 32) (repair-cast-int_dsl (reg (bv #x00 8)) 32 64 32) (typed:signed-vec-rounding_mul_shift_right (lit (bv #x0000000000000006 64)) (lit (bv #x000000000000000b 64)) (lit (bv #x0000000000000013 64)) 8 64) 64 64)",
+                "synth_expression": "(_mm256_mul_epi32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 128 32 64 1 1 1 0)"
+            }
+        }
+    ]
+
+}
+
+mul_rnd_mul_shift_right_test  = test_generator_helper(mul_rnd_mul_shift_right_desc, True)
+tests.append(mul_rnd_mul_shift_right_test)

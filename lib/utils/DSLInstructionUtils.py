@@ -119,7 +119,7 @@ def execute_racket_file(statements):
             write_line(statement)
 
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
-    TIMEOUT = int(2* 60) # 20 mins
+    TIMEOUT = int(5* 60) # 20 mins
     result = None
     try:
         result = subprocess.run(["racket", "{}".format(filename)],

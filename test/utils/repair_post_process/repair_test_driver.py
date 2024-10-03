@@ -15,7 +15,7 @@ from sema.halide_sema import halide_semantics
 from repair_test_list import tests
 
 # Uncomment below line to keep intermediate racket files
-# keep_temporary_files()
+keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
 x86_dsl_list = parse_dict(x86_semantics)
@@ -25,6 +25,7 @@ halide_dsl_list = parse_dict(halide_semantics)
 combined_dsl_list = x86_dsl_list + repair_dsl_list + halide_dsl_list
 
 synth_desc = create_synth_desc("post", True, [], "", "")
+const_fold_name = synth_desc.const_fold_name
 sd = StructDef(emit_default = False)
 
 
@@ -75,7 +76,7 @@ for test in tests:
 
 
 
-    repair_util = RepairPostProcessUtils(test_name = inst_name, env_sizes = register_sizes)
+    repair_util = RepairPostProcessUtils(test_name = inst_name, env_sizes = register_sizes, const_fold_name = const_fold_name)
 
     repair_process_name = "repair-post-process"
 

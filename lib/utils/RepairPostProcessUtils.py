@@ -5,10 +5,13 @@ from common.PredefinedDSL import *
 
 class RepairPostProcessUtils:
 
-    def __init__(self, test_name = "autollvm_ir_class", env_sizes = []):
+    def __init__(self, test_name = "autollvm_ir_class", env_sizes = [], const_fold_name = "post:const-fold"):
+
+        self.const_fold = True
         self.test_name = test_name
         self.env_sizes = env_sizes
         self.repair_wrapper_name = "repair-wrapper"
+        self.const_fold_name = const_fold_name
 
 
     def emit_default_def(self, struct_definer,  repair_post_process_name="hydride:repair-post-process", interpret_name="hydride:interpret"):
@@ -209,7 +212,12 @@ class RepairPostProcessUtils:
 
 
     def emit_check_property(self, expr_name):
-        return "({} {})".format(self.repair_wrapper_name, expr_name)
+
+        expr = expr_name
+        if self.const_fold:
+            expr = "({} {})".format(self.const_fold_name, expr)
+
+        return "({} {})".format(self.repair_wrapper_name, expr)
 
     def emit_is_concrete_def(self):
         return """
