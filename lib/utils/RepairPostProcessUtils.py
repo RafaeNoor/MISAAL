@@ -68,47 +68,67 @@ class RepairPostProcessUtils:
         else_clause = "[else #f]"
 
         if dsl_inst.name == self.test_name:
-            # Only test conditions for this equivlance class
-            else_clause = "[else #t]"
             sym_idxs = self.get_all_possible_symbolic_indices(dsl_inst)
 
-            # Add result of interpreting operands and current expression to definitions outside of cond
+            sym_env_names = []
 
-            sym_env_name = "sym-env"
-            sym_env = "(define {} (vector {}))".format(sym_env_name, " ".join(["(?? (bitvector {}))".format(size) for size in self.env_sizes]))
-            fold_defs.append(sym_env)
 
-            interpreted_args = []
 
-            for idx in sym_idxs:
+            or_conditions = []
+            and_conditions = []
+            for counter, idx in enumerate(sym_idxs):
                 arg = sample_ctx.context_args[idx]
-                exec_arg = "({} {} {})".format(interpret_name, arg.name, sym_env_name)
-                exec_arg_name = "{}-interpreted".format(arg.name)
-                def_arg = "(define {} {})".format(exec_arg_name, exec_arg)
+                sym_env_name = "sym-env-" + arg.name
+                sym_env = "(define {} (vector {}))".format(sym_env_name, " ".join(["(?? (bitvector {}))".format(size) for size in self.env_sizes]))
+                sym_env_names.append(sym_env_names)
+                fold_defs.append(sym_env)
 
-                fold_defs.append(def_arg)
-                interpreted_args.append(exec_arg_name)
+                # Interpret the prog and other arguments
 
-            interpret_expr_name = "interpret-prog"
-            interpret_expr = "({} {} {})".format(interpret_name, "prog", sym_env_name)
-            interpret_expr_def = "(define {} {})".format(interpret_expr_name, interpret_expr)
+                interpret_prog_name = "prog-interpreted-{}".format(arg.name)
+                interpret_prog = "(define {} ({} prog {}))".format(interpret_prog_name ,interpret_name, sym_env_name)
 
-            fold_defs.append(interpret_expr_def)
+                fold_defs.append(interpret_prog)
+
+                all_non_eq_clauses = []
+                equal_arg_clauses = []
+                for inner_idx in sym_idxs:
+                    inner_arg = sample_ctx.context_args[inner_idx]
+                    exec_arg = "({} {} {})".format(interpret_name, inner_arg.name, sym_env_name)
+                    exec_arg_name = "{}-interpreted-{}".format(inner_arg.name, arg.name)
+                    def_arg = "(define {} {})".format(exec_arg_name, exec_arg)
+
+                    fold_defs.append(def_arg)
+
+                    clause = ""
+                    if inner_idx == idx:
+                        clause = "(equal? {} {})".format(interpret_prog_name, exec_arg_name)
+                    else:
+                        clause = "(not (equal? {} {}))".format(interpret_prog_name, exec_arg_name)
+
+                    equal_arg_clauses.append(clause)
 
 
-            # Condition 1: If the return type of the expression is equivalent to all input operands
-            pairs = ["(equal? {} {})".format(interpret_expr_name, interpret_arg) for interpret_arg in interpreted_args]
-            all_equal_cond = "[(and {}) #f]".format(" ".join(pairs))
-            other_clauses.append(all_equal_cond)
+                    if counter == 0:
+                        # Use first iteration to add case where it's not equal to any of the inputs (while not being concrete)
+                        all_non_eq_clauses.append("(not (equal? {} {}))".format(interpret_prog_name, exec_arg_name))
 
-            # Condition 2: Produces a concrete (i.e. constant) value for when interpreted with symbolic inputs
-            is_concrete = "[(concrete? {}) #f]".format(interpret_expr_name)
-            other_clauses.append(is_concrete)
 
-            # Condition 3: If it is equal to any of the operands always
-            for pair in pairs:
-                condition = "[{} #f]".format(pair)
-                other_clauses.append(condition)
+
+                and_conditions.append("(and {})".format(" ".join(equal_arg_clauses)))
+
+                if counter == 0:
+                    or_conditions.append("(and (not (concrete? {})) {})".format(interpret_prog_name," ".join(all_non_eq_clauses)))
+
+
+
+            and_clause = "(and\n {})".format("\n".join(and_conditions))
+
+            or_conditions.append(and_clause)
+
+            passing_clause = "(or \n{})".format("\n".join(or_conditions))
+
+            other_clauses.append("[{} \n #t]".format(passing_clause))
 
 
 
@@ -168,8 +188,15 @@ class RepairPostProcessUtils:
             (cond
                 [(concrete? condition) condition]
                 [else
-                    (define cex (verify (assert (not condition))))
-                    (sat? cex)
+                      (define sol
+                        (synthesize
+                          #:forall (list )
+                          #:guarantee (assert condition)
+                          )
+
+                        )
+                      (println sol)
+                      (sat? sol)
                 ]
             )
         )

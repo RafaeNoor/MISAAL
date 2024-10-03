@@ -15,7 +15,7 @@ from sema.halide_sema import halide_semantics
 from repair_test_list import tests
 
 # Uncomment below line to keep intermediate racket files
-# keep_temporary_files()
+#keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
 x86_dsl_list = parse_dict(x86_semantics)
@@ -28,7 +28,7 @@ synth_desc = create_synth_desc("post", True, [], "", "")
 sd = StructDef(emit_default = False)
 
 
-racket_bool_map = {"#f": False , "t": True}
+racket_bool_map = {"#f": False , "#t": True}
 
 
 
@@ -40,10 +40,10 @@ error_tests = []
 
 
 for test in tests:
-    inst_name = test[0]
-    inst_expr = test[1]
-    expected_result = test[2]
-    label = test[3]
+    inst_name = test.get_name()
+    inst_expr = test.get_expr()
+    expected_result = test.get_expected_result()
+    label = test.get_label()
 
     parsed_expression =  read_string_to_dsl(inst_expr, combined_dsl_list)
 

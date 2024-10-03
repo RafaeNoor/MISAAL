@@ -80,31 +80,43 @@ def get_matching_context(nested_expr, dsl_list):
             break
 
 
-        assert arg.lstrip("-").isnumeric(), "Expected numeric string"
+
+        assert arg.lstrip("-").isnumeric() or arg in ["#t", "#f"], "Expected numeric string {}".format(arg)
 
 
 
-        parameter_value = int(arg)
+        parameter_value = None
+
+        is_numeric = arg.lstrip("-").isnumeric()
+
+
+        if is_numeric:
+            parameter_value = int(arg)
+        else:
+            parameter_value = arg
 
         for ci in matching_context_indices:
             ctx = matching_dsl_inst.contexts[ci]
             ctx_arg =  ctx.context_args[idx]
 
 
-            if isinstance(ctx_arg, LaneSize):
+            if isinstance(ctx_arg, LaneSize) and is_numeric:
                 # value
                 if int(ctx_arg.value) == parameter_value:
                     new_matching_context_indices.append(ci)
 
-            elif isinstance(ctx_arg, Precision):
+            elif isinstance(ctx_arg, Precision) and is_numeric:
                 if int(ctx_arg.value) == parameter_value:
                     new_matching_context_indices.append(ci)
-            elif isinstance(ctx_arg, Integer):
+            elif isinstance(ctx_arg, Integer) and is_numeric:
                 #value
                 if int(ctx_arg.value) == parameter_value:
                     new_matching_context_indices.append(ci)
+            elif not is_numeric and isinstance(ctx_arg, Bool):
+                if ctx_arg.value == parameter_value:
+                    new_matching_context_indices.append(ci)
             else:
-                assert False, "Corresponding argument in context must be numeric"
+                assert False, "Corresponding argument in context must be numeric or boolean"
 
         matching_context_indices = new_matching_context_indices
 
