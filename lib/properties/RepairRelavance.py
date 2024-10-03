@@ -25,7 +25,7 @@ class RepairRelavance(IdentifySwizzles):
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
         input_test_list = [
-            "_mm512_andnot_epi32",
+            "_mm512_cvtepu8_epi32",
         ]
 
         #self.input_dsl_list = [d for d in self.input_dsl_list if d.name in input_test_list]
@@ -38,8 +38,7 @@ class RepairRelavance(IdentifySwizzles):
 
 
         test_list = [
-            "typed:vec-bwand",
-
+            "typed:cast-int",
         ]
         #self.output_dsl_list = [d for d in self.output_dsl_list if d.name in test_list]
 

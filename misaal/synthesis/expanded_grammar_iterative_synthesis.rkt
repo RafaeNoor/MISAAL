@@ -227,7 +227,7 @@
       (debug-log (format "Is this iterative optimization case ~a ?\n" iterative-opt-case))
 
 
-      (define is-union (and (not (concrete? materialize-src)) (not (concrete? materialize-dst))   ))
+      (define is-union (or (not (concrete? materialize-src)) (not (concrete? materialize-dst))   ))
 
 
       (cond
