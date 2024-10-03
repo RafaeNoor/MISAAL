@@ -10,9 +10,9 @@ egg::define_language! {
         Lit(Constant),          // Constants will be stored as i32, but interpreter will convert to BV of desired length
         "hexagon_V6_vminuh_128B" = HVXMin([Id;2]),
         "typed:unsigned-vec-min" = HalideVecMin([Id;2]),
-        "hexagon_V6_vltuh_128B" = HVXLt([Id;2]),
+        /* "hexagon_V6_vltuh_128B" = HVXLt([Id;2]),
         "typed:unsigned-vec-lt" = HalideVecLt([Id;2]),
-        "typed:unsigned-vec-sat-sub" = HalideVecSatSub([Id;2]),              // 10 - 12 is one relevance set
+        "typed:unsigned-vec-sat-sub" = HalideVecSatSub([Id;2]), */              // 10 - 12 is one relevance set
         /*"hexagon_V6_vandvrt_128B" = HVXAvg([Id;2]),
         "typed:unsigned-vec-shr" = HalideVecShr([Id;2]),                        // 13 - 15 is one relevance set
         "typed:unsigned-vec-div" = HalideVecDiv([Id;2]), */
@@ -22,22 +22,11 @@ egg::define_language! {
 
 impl SynthLanguage for MISAALLang {
     fn is_halide_allowed_op(&self) -> bool {
-        matches!(
-            self,
-            MISAALLang::HalideVecMin(_)
-                | MISAALLang::HalideVecSatSub(_)
-                | MISAALLang::HalideVecLt(_)
-        ) && !matches!(self, MISAALLang::HVXMin(_) | MISAALLang::HVXLt(_))
+        matches!(self, MISAALLang::HalideVecMin(_)) && !matches!(self, MISAALLang::HVXMin(_))
     }
 
     fn is_hvx_allowed_op(&self) -> bool {
-        matches!(self, MISAALLang::HVXMin(_) | MISAALLang::HVXLt(_))
-            && !(matches!(
-                self,
-                MISAALLang::HalideVecMin(_)
-                    | MISAALLang::HalideVecSatSub(_)
-                    | MISAALLang::HalideVecLt(_)
-            ))
+        matches!(self, MISAALLang::HVXMin(_)) && !(matches!(self, MISAALLang::HalideVecMin(_)))
     }
 
     type Constant = Constant;
@@ -75,7 +64,7 @@ impl SynthLanguage for MISAALLang {
                 )
             }
 
-            MISAALLang::HVXLt([x, y]) => {
+            /* MISAALLang::HVXLt([x, y]) => {
                 map!(get_cvec, x, y =>
                     {
                         let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
@@ -111,7 +100,7 @@ impl SynthLanguage for MISAALLang {
                         Some(x.clone())
                     }
                 )
-            }
+            } */
             MISAALLang::Var(_) => vec![],
         }
     }
@@ -175,22 +164,42 @@ impl SynthLanguage for MISAALLang {
 
 fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> {
     let mut buf: Vec<z3::ast::Int> = vec![];
+    let mut misaal_buf = "".to_string();
     let zero = z3::ast::Int::from_i64(ctx, 0);
     let one = z3::ast::Int::from_i64(ctx, 1);
     for node in expr.as_ref().iter() {
         match node {
-            MISAALLang::Lit(c) => buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap())),
+            MISAALLang::Lit(c) => {
+                misaal_buf.push_str(" (reg (bv #x00 8)) ");
+                buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap()))
+            }
             MISAALLang::HVXMin([x, y]) => {
+                // push expression to buffer, run through double_synthesis_grammar
+                // if synthesis is successful, the rule is valid
+                // the function checks for a given concretization, we have to specify output sizes
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
+                let bv_code = format!(
+                    "(hexagon_V6_vminuh_128B {} 1024 1024 0 1024 16 0 0)",
+                    misaal_buf
+                );
+                misaal_buf = bv_code;
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
             MISAALLang::HalideVecMin([x, y]) => {
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
+
+                let bv_code = format!("(typed:unsigned-vec-min {} 16 1024)", misaal_buf);
+                misaal_buf = bv_code;
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
-            MISAALLang::HVXLt([x, y]) => {
+            /* MISAALLang::HalideVecMin([x, y]) => {
+                let l = &buf[usize::from(*x)];
+                let r = &buf[usize::from(*y)];
+                buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
+            }
+             MISAALLang::HVXLt([x, y]) => {
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::lt(l, r), &one, &zero))
@@ -203,10 +212,14 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> 
             MISAALLang::HalideVecSatSub([x, y]) => buf.push(z3::ast::Int::sub(
                 ctx,
                 &[&buf[usize::from(*x)], &buf[usize::from(*y)]],
-            )),
-            MISAALLang::Var(v) => buf.push(z3::ast::Int::new_const(ctx, v.to_string())),
+            )), */
+            MISAALLang::Var(v) => {
+                misaal_buf.push_str(" (reg (bv #x01 8)) ");
+                buf.push(z3::ast::Int::new_const(ctx, v.to_string()))
+            }
         }
     }
+    println!("Expressions in validator {:?}", misaal_buf);
     buf.pop().unwrap()
 }
 
@@ -234,10 +247,10 @@ mod test {
                 &[],
                 &[
                     "hexagon_V6_vminuh_128B",
-                    "hexagon_V6_vltuh_128B",
-                    "typed:unsigned-vec-sat-sub",
+                    // "hexagon_V6_vltuh_128B",
+                    //"typed:unsigned-vec-sat-sub",
                     "typed:unsigned-vec-min",
-                    "typed:unsigned-vec-lt",
+                    // "typed:unsigned-vec-lt",
                 ],
             ],
         );
@@ -254,10 +267,10 @@ mod test {
                 "bop",
                 &Workload::new(&[
                     "hexagon_V6_vminuh_128B",
-                    "hexagon_V6_vltuh_128B",
-                    "typed:unsigned-vec-sat-sub",
+                    // "hexagon_V6_vltuh_128B",
+                    // "typed:unsigned-vec-sat-sub",
                     "typed:unsigned-vec-min",
-                    "typed:unsigned-vec-lt",
+                    // "typed:unsigned-vec-lt",
                 ]),
             )
             .plug("v", &Workload::new(&["a", "b", "c"]))
