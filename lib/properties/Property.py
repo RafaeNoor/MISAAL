@@ -134,6 +134,8 @@ class Property:
         """
         print(self.get_property_desc())
 
+        self.notify_count = self.BATCH_SIZE
+
         self.set_candidates(
             self.generate_candidates()
         )
@@ -446,6 +448,16 @@ class Property:
 
         for arg in ctx.context_args:
             names += self.get_nested_contexts_name(arg)
+        return list(set(names))
+
+    def get_nested_contexts_dsl_name(self, ctx):
+        if not isinstance(ctx, Context):
+            return []
+
+        names = [ctx.dsl_name.split("_dsl")[0]]
+
+        for arg in ctx.context_args:
+            names += self.get_nested_contexts_dsl_name(arg)
         return list(set(names))
 
     def run_on_completion(self):
