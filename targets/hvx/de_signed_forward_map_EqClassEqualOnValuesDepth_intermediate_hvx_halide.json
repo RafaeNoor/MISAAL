@@ -1,0 +1,29 @@
+{
+    "hexagon_V6_vrmpybv_128B": [
+        "typed:signed-vec-abs",
+        "typed:xBroadcast",
+        "typed:signed-vec-absd",
+        "typed:vec-add",
+        "typed:signed-vec-min",
+        "typed:signed-vec-halving_add",
+        "typed:vec-shl",
+        "typed:signed-vec-mul",
+        "typed:signed-vec-mod",
+        "typed:signed-vec-widen-mul",
+        "typed:cast-uint",
+        "typed:signed-vec-shr",
+        "typed:signed-vec-rounding_halving_add",
+        "typed:vec-bwand",
+        "typed:cast-int",
+        "typed:concat_vectors",
+        "typed:signed-vec-sat-sub",
+        "typed:vec-sub",
+        "typed:signed-vector_reduce_add",
+        "typed:slice_vectors",
+        "typed:signed-vec-max",
+        "typed:vec-bwnot",
+        "typed:signed-vec-div",
+        "typed:vec-saturate",
+        "typed:signed-vec-sat-add"
+    ]
+}

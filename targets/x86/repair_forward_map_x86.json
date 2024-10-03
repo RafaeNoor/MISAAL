@@ -1,0 +1,248 @@
+{
+    "_mm512_or_epi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm512_rem_epu32": [
+        "typed:signed-vec-mod"
+    ],
+    "_mm_add_si64": [
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:vec-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand"
+    ],
+    "_mm256_max_epu64": [
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm_broadcastmb_epi64": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:vec-saturate",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm256_mul_epi32": [
+        "typed:cast-int",
+        "typed:signed-vec-mul",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:unsigned-vec-mul",
+        "typed:vec-bwand"
+    ],
+    "_mm_mul_su32": [
+        "typed:signed-vec-mul",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-mul",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm_hadd_pi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:concat_vectors",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm_add_pi8": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:vec-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm_abs_epi16": [
+        "typed:signed-vec-div"
+    ],
+    "_mm_cmpgt_epi16": [
+        "typed:signed-vec-sat-sub",
+        "typed:vec-sub"
+    ],
+    "_mm512_cmplt_epi32_mask": [
+        "typed:vec-eq",
+        "typed:signed-vec-le"
+    ],
+    "_mm512_sllv_epi16": [
+        "typed:cast-int"
+    ],
+    "_mm256_cmpeq_epu64_mask": [
+        "typed:signed-vec-lt"
+    ],
+    "_mm_sub_si64": [
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:vec-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand",
+        "typed:vec-sub"
+    ],
+    "_mm_min_epu16": [
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:unsigned-vec-min"
+    ],
+    "_mm_test_epi64_mask": [
+        "typed:signed-vec-lt"
+    ],
+    "_mm512_cvtepu8_epi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:vec-saturate",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:signed-vec-mod",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm512_and_epi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm512_andnot_epi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:signed-vec-sat-sub",
+        "typed:unsigned-vec-sat-sub",
+        "typed:vec-bwand",
+        "typed:vec-sub",
+        "typed:cast-uint"
+    ],
+    "_mm512_subs_epi8": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:signed-vec-sat-sub",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_m_psrld": [
+        "typed:signed-vec-max",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-sat-sub",
+        "typed:unsigned-vec-sat-sub",
+        "typed:vec-sub"
+    ],
+    "_mm512_srli_epi16": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:cast-uint"
+    ],
+    "_mm512_cvtusepi64_epi32": [
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:vec-saturate",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm512_slli_epi16": [
+        "typed:cast-int",
+        "typed:unsigned-vec-widen-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:cast-uint"
+    ],
+    "_m_por": [
+        "typed:vec-bwnot",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:vec-bwand",
+        "typed:cast-uint"
+    ],
+    "_mm_extract_pi16": [
+        "typed:signed-vec-sat-sub",
+        "typed:signed-vec-min",
+        "typed:vec-sub"
+    ],
+    "_mm256_maddubs_epi16": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:cast-uint"
+    ],
+    "_mm_srlv_epi32": [
+        "typed:cast-int",
+        "typed:cast-uint"
+    ]
+}
