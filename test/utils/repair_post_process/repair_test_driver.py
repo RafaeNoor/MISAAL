@@ -12,8 +12,10 @@ from sema.x86SemanticsAllArgs import semantcs as x86_semantics
 from sema.repairs_sema import repair_semantics
 from sema.halide_sema import halide_semantics
 
+from repair_test_list import tests
+
 # Uncomment below line to keep intermediate racket files
-keep_temporary_files()
+# keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
 x86_dsl_list = parse_dict(x86_semantics)
@@ -26,17 +28,13 @@ synth_desc = create_synth_desc("post", True, [], "", "")
 sd = StructDef(emit_default = False)
 
 
+racket_bool_map = {"#f": False , "t": True}
 
-tests = []
 
 
-# Condition 3
-cond_3_name = "typed:vec-add"
-cond_3_expr = "(typed:vec-add (repair-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64) (repair-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64) 16 64)"
-cond_3_expected_result = False
-
-tests.append([cond_3_name, cond_3_expr, cond_3_expected_result])
-
+passed_tests = []
+failed_tests = []
+error_tests = []
 
 
 
@@ -45,6 +43,7 @@ for test in tests:
     inst_name = test[0]
     inst_expr = test[1]
     expected_result = test[2]
+    label = test[3]
 
     parsed_expression =  read_string_to_dsl(inst_expr, combined_dsl_list)
 
@@ -53,12 +52,13 @@ for test in tests:
     # Define visitor function to apply on each Context
     def ctx_visitor_fn(ctx):
         global relevant_subset_names
-        relevant_subset_names.append(ctx.dsl_name)
+        relevant_subset_names.append(ctx.dsl_name.split("_dsl")[0])
         relevant_subset_names = list(set(relevant_subset_names))
     context_visitor(parsed_expression, ctx_visitor_fn)
 
-    relevant_subset = [dsl_inst for dsl_inst in combined_dsl_list if dsl_inst.name in relevant_subset_names]
+    relevant_subset = [dsl_inst for dsl_inst in combined_dsl_list if dsl_inst.name in relevant_subset_names ]
 
+    assert len(relevant_subset_names) == len(relevant_subset)
 
 
 
@@ -78,7 +78,7 @@ for test in tests:
     statements.append(interpreter_framework)
 
 
-    statements.append(repair_util.emit_repair_post_process(combined_dsl_list, sd, interpret_name = "", repair_post_process_name = repair_process_name))
+    statements.append(repair_util.emit_repair_post_process(combined_dsl_list, sd, interpret_name = synth_desc.interpreter_name , repair_post_process_name = repair_process_name))
 
 
     src_expr_name = "src-expr"
@@ -86,11 +86,52 @@ for test in tests:
 
     statements.append(def_src)
 
+    result_stmt = "(define result {})".format(repair_util.emit_check_property(src_expr_name))
+    statements.append(result_stmt)
+
+    rand_prefix = get_random_tempfile_name()
+
+    result_file_name = rand_prefix+".log"
+
+    write_result_to_file = "(write-str-to-file (~v result) \"{}\")".format(result_file_name)
+
+    statements.append(write_result_to_file)
+
 
     execute_racket_file(statements)
 
+    if os.path.exists(result_file_name):
+        with open(result_file_name, "r") as LogFile:
+            contents = LogFile.read().rstrip().lstrip()
+            boolean = racket_bool_map[contents]
+            if boolean == expected_result:
+                passed_tests.append(label)
+            else:
+                failed_tests.append(label)
+        os.remove(result_file_name)
+
+
+    else:
+        error_tests.append(label)
 
 
 
 
 
+
+num_passed = len(passed_tests)
+num_failed = len(failed_tests)
+num_error = len(error_tests)
+
+total_tests = len(tests)
+
+print("=*="*15, "Test Summary","=*="*15)
+print("[ PASSED Tests ]:\t {} / {}".format(num_passed, total_tests))
+for passed in passed_tests:
+    print("–", passed)
+print("[ FAILED Tests ]:\t {} / {}".format(num_failed, total_tests))
+for failed in failed_tests:
+    print("–", failed)
+print("[ ERROR Tests ]:\t {} / {}".format(num_error, total_tests))
+for errs in error_tests:
+    print("–", errs)

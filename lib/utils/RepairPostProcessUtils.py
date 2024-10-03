@@ -8,6 +8,7 @@ class RepairPostProcessUtils:
     def __init__(self, test_name = "autollvm_ir_class", env_sizes = []):
         self.test_name = test_name
         self.env_sizes = env_sizes
+        self.repair_wrapper_name = "repair-wrapper"
 
 
     def emit_default_def(self, struct_definer,  repair_post_process_name="hydride:repair-post-process", interpret_name="hydride:interpret"):
@@ -31,8 +32,8 @@ class RepairPostProcessUtils:
     def emit_is_lit(self, val):
         return "(lit? {})".format(val)
 
-    def emit_fold_expr(self, expr, repair_post_process_name="hydride:repair-post-process"):
-        folded_name = expr + "-folded"
+    def emit_repair_expr(self, expr, repair_post_process_name="hydride:repair-post-process"):
+        folded_name = expr + "-repaired-post"
         definition = "(define {} ({} {}))".format(
             folded_name, repair_post_process_name, expr)
         return (folded_name, definition)
@@ -41,6 +42,8 @@ class RepairPostProcessUtils:
         return "(and "+" ".join([self.emit_is_lit(val) for val in vals]) + ")"
 
     def emit_repair_post_process_def(self, dsl_inst, struct_definer, repair_post_process_name="hydride:repair-post-process", interpret_name="hydride:interpret"):
+
+        self.repair_post_process_name = repair_post_process_name
         interpret = [struct_definer.emit_dsl_struct_use(dsl_inst)]
 
         fold_subexpr = []
@@ -51,7 +54,7 @@ class RepairPostProcessUtils:
         for idx, arg in enumerate(sample_ctx.context_args):
 
             if isBitVectorType(arg):
-                (folded_name, definition) = self.emit_fold_expr(
+                (folded_name, definition) = self.emit_repair_expr(
                     arg.name, repair_post_process_name=repair_post_process_name)
 
                 fold_subexpr.append(folded_name)
@@ -87,7 +90,7 @@ class RepairPostProcessUtils:
                 interpreted_args.append(exec_arg_name)
 
             interpret_expr_name = "interpret-prog"
-            interpret_expr = "({} {} {})".format(interpret_expr_name, "prog", sym_env_name)
+            interpret_expr = "({} {} {})".format(interpret_name, "prog", sym_env_name)
             interpret_expr_def = "(define {} {})".format(interpret_expr_name, interpret_expr)
 
             fold_defs.append(interpret_expr_def)
@@ -109,19 +112,6 @@ class RepairPostProcessUtils:
 
 
 
-
-
-
-
-
-        for idx, arg in enumerate(sample_ctx.context_args):
-
-            if isBitVectorType(arg):
-                (folded_name, definition) = self.emit_fold_expr(
-                    arg.name, repair_post_process_name=repair_post_process_name)
-
-                fold_subexpr.append(folded_name)
-                fold_defs.append(definition)
 
 
         interpret += fold_defs
@@ -167,4 +157,24 @@ class RepairPostProcessUtils:
 
         interpreter = "(define ({} prog )\n (destruct prog\n{}\n )\n)".format(
             repair_post_process_name, "\n".join(interpret_clauses))
-        return prefix + interpreter + sufix
+
+        main_wrapper = self.emit_main_wrapper(repair_post_process_name)
+        return prefix + interpreter + "\n" + main_wrapper + sufix
+
+    def emit_main_wrapper(self, repair_post_process_name = ""):
+        return """
+        (define ({} expr)
+            (define condition ({} src-expr))
+            (cond
+                [(concrete? condition) condition]
+                [else
+                    (define cex (verify (assert (not condition))))
+                    (sat? cex)
+                ]
+            )
+        )
+        """.format(self.repair_wrapper_name, repair_post_process_name)
+
+
+    def emit_check_property(self, expr_name):
+        return "({} {})".format(self.repair_wrapper_name, expr_name)
