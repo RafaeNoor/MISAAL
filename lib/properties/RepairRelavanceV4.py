@@ -29,7 +29,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             "_mm256_maddubs_epi16",
         ]
 
-        dsl_list = [d for d in dsl_list if d.name in input_test_list]
+        #dsl_list = [d for d in dsl_list if d.name in input_test_list]
 
 
         print(dsl_list)
@@ -38,7 +38,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             "typed:vec-add",
         ]
 
-        output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
+        #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
 
         print(output_dsl_list)
 
@@ -47,7 +47,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             "repair-vector-reduce-add",
         ]
 
-        repair_dsl_list = [d for d in repair_dsl_list if d.name in repair_test_list]
+        #repair_dsl_list = [d for d in repair_dsl_list if d.name in repair_test_list]
 
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs, memo_path = memo_path)
@@ -66,12 +66,15 @@ class RepairRelavanceV4(RepairRelavanceV3):
             for input_dsl in self.input_dsl_list:
                 for output_dsl in self.output_dsl_list:
                     candidate_prep = (input_dsl, output_dsl, depth)
-                    candidate_generator = self.prepare_candidate_generator(candidate_prep)
+                    try:
+                        candidate_generator = self.prepare_candidate_generator(candidate_prep)
 
-                    # Generator internally will query state to know
-                    # if the repair property is already valid hence we will exit early
-                    for candidate in candidate_generator:
-                        yield candidate
+                        # Generator internally will query state to know
+                        # if the repair property is already valid hence we will exit early
+                        for candidate in candidate_generator:
+                            yield candidate
+                    except:
+                        continue
 
 
 
@@ -215,6 +218,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             candidate['invoke_target_custom'] = invoke_target_custom
             candidate['additional_statements'] = statements
             candidate['custom_target_input_sizes'] = target_input_sizes
+            candidate['prepare-env-function'] = modified_env_func
 
             key = self.serialize_candidate(candidate)
 
@@ -260,7 +264,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
         src_expr_str, dst_expr_str = self.context_map[key]
-        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str}
+        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str, 'env-func': candidate['prepare-env-function'], 'target_input_sizes': candidate['custom_target_input_sizes']}
 
 
     def split_define_line(self, line):
