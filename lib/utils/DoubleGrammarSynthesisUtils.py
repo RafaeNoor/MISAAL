@@ -206,9 +206,19 @@ class DoubleGrammarSynthesisUtils:
         if not custom_target_input_sizes is None:
             dst_input_sizes = custom_target_input_sizes
 
+
+        for idx, prec in enumerate(input_precs):
+            min_prec = min(prec, dst_input_sizes[idx])
+            input_precs[idx] = min_prec
+
         print("Dst Output Size:", dst_output_size)
         print("Dst Input Sizes:", dst_input_sizes)
         print("Dst Input Precs:", input_precs)
+
+
+        if len(dst_input_sizes) == 0:
+            return False , "", ""
+
         GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
         dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 

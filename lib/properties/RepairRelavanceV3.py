@@ -42,12 +42,18 @@ class RepairRelavanceV3(RepairRelavanceV2):
             for input_dsl in self.input_dsl_list:
                 for output_dsl in self.output_dsl_list:
                     candidate_prep = (input_dsl, output_dsl, depth)
-                    candidate_generator = self.prepare_candidate_generator(candidate_prep)
+                    try:
+                        candidate_generator = self.prepare_candidate_generator(candidate_prep)
 
-                    # Generator internally will query state to know
-                    # if the repair property is already valid hence we will exit early
-                    for candidate in candidate_generator:
-                        yield candidate
+                        # Generator internally will query state to know
+                        # if the repair property is already valid hence we will exit early
+                        for candidate in candidate_generator:
+                            yield candidate
+                    except:
+                        with open("ErrorLog_{}.err".format(self.name),"a+") as ErrFile:
+                            error_line = "+".join([input_dsl.name, output_dsl.name])
+                            ErrFile.write(error_line+"\n")
+                            continue
 
 
 
