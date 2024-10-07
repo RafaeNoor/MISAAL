@@ -1,6 +1,13 @@
 use cli_runner::{get_stderr, get_stdout, run};
 use num::{ToPrimitive, Zero};
+use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
+use rayon::vec;
 use ruler::*;
+use std::fs::File;
+use std::fs::OpenOptions;
+use std::io::Write;
+use std::iter;
 use z3::ast::Ast;
 
 type Constant = i32; // Set this to desired precision; can extend i32 to BV of given size (1024 for initial experiments)
@@ -39,29 +46,33 @@ impl SynthLanguage for MISAALLang {
         match self {
             MISAALLang::Lit(c) => vec![Some(c.clone()); cvec_len],
             MISAALLang::HVXMin([x, y]) => {
-                map!(get_cvec, x, y =>
+                /*  map!(get_cvec, x, y =>
                     {
                         // let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
                         // let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
                         // // println!("x for HVXMin is {:?}", bv_x);
                         // // println!("y for HVXMin is {:?}", bv_y);
                         // Some(x.clone().min(y).clone())
-                        Some(x.clone())
+                        // vec!{Some(x.clone()), Some(y.clone())}
+                        vec![]
                     }
-                )
+                ) */
+                vec![]
             }
 
             MISAALLang::HalideVecMin([x, y]) => {
-                map!(get_cvec, x, y =>
+                /*  map!(get_cvec, x, y =>
                     {
                         let mut bv_x = format!("(integer->bitvector {} (bitvector 1024))", x);
                         let mut bv_y = format!("(integer->bitvector {} (bitvector 1024))", y);
                         // println!("x for HalideVecMin is {:?}", bv_x);
                         // println!("y for HalideVecMin is {:?}", bv_y);
                         // Some(x.clone().min(y).clone())
-                        Some(x.clone())
+                        // vec!{Some(x.clone()), Some(y.clone())}
+                        vec![]
                     }
-                )
+                ) */
+                vec![]
             }
 
             /* MISAALLang::HVXLt([x, y]) => {
@@ -151,8 +162,38 @@ impl SynthLanguage for MISAALLang {
         cfg.set_timeout_msec(1000);
         let ctx = z3::Context::new(&cfg);
         let solver = z3::Solver::new(&ctx);
-        let lexpr = egg_to_z3(&ctx, Self::instantiate(lhs).as_ref());
-        let rexpr = egg_to_z3(&ctx, Self::instantiate(rhs).as_ref());
+        println!("================================");
+        let mut rng = thread_rng();
+        let mut file_name: String = iter::repeat(())
+            .map(|()| rng.sample(Alphanumeric))
+            .map(char::from)
+            .take(8)
+            .collect();
+
+        file_name = "/home/llvm-lab/Downloads/MISAAL/ruler/tests/misaal_exprs/".to_owned()
+            + &file_name
+            + ".expr";
+
+        let mut data_file = File::create(&file_name).expect("creation failed");
+        data_file = OpenOptions::new()
+            .append(true)
+            .open(&file_name)
+            .expect("cannot open file");
+
+        print!("LHS expr:");
+        let (lexpr, lexpr_str) = egg_to_z3(&ctx, Self::instantiate(lhs).as_ref());
+        print!("RHS expr:");
+        let (rexpr, rexpr_str) = egg_to_z3(&ctx, Self::instantiate(rhs).as_ref());
+        data_file
+            .write(lexpr_str.as_bytes())
+            .expect("Unable to write LHS to file");
+        data_file
+            .write("\n".as_bytes())
+            .expect("Unable to write newline");
+        data_file
+            .write(rexpr_str.as_bytes())
+            .expect("Unable to write RHS to file");
+        println!("================================");
         solver.assert(&lexpr._eq(&rexpr).not());
         match solver.check() {
             z3::SatResult::Unsat => ValidationResult::Valid,
@@ -162,7 +203,7 @@ impl SynthLanguage for MISAALLang {
     }
 }
 
-fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> {
+fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>, String) {
     let mut buf: Vec<z3::ast::Int> = vec![];
     let mut misaal_buf = "".to_string();
     let zero = z3::ast::Int::from_i64(ctx, 0);
@@ -170,7 +211,13 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> 
     for node in expr.as_ref().iter() {
         match node {
             MISAALLang::Lit(c) => {
-                misaal_buf.push_str(" (reg (bv #x00 8)) ");
+                // println!("Lit in validator is {:?}", c);
+                // misaal_buf.push_str(" (reg (bv #x00 8)) ");
+                match c {
+                    1 => misaal_buf.push_str("(reg (bv #x01 8)) "),
+                    0 => misaal_buf.push_str("(reg (bv #x00 8)) "),
+                    _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
+                }
                 buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap()))
             }
             MISAALLang::HVXMin([x, y]) => {
@@ -179,6 +226,10 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> 
                 // the function checks for a given concretization, we have to specify output sizes
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
+                println!("MISAAL BUF IN HVX: {}", misaal_buf);
+                if misaal_buf.is_empty() {
+                    println!("BUF EMPTY HVX");
+                }
                 let bv_code = format!(
                     "(hexagon_V6_vminuh_128B {} 1024 1024 0 1024 16 0 0)",
                     misaal_buf
@@ -189,7 +240,11 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> 
             MISAALLang::HalideVecMin([x, y]) => {
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
+                println!("MISAAL BUF IN HALIDE: {}", misaal_buf);
 
+                if misaal_buf.is_empty() {
+                    println!("BUF EMPTY IN HALIDE");
+                }
                 let bv_code = format!("(typed:unsigned-vec-min {} 16 1024)", misaal_buf);
                 misaal_buf = bv_code;
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
@@ -214,13 +269,18 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> z3::ast::Int<'a> 
                 &[&buf[usize::from(*x)], &buf[usize::from(*y)]],
             )), */
             MISAALLang::Var(v) => {
-                misaal_buf.push_str(" (reg (bv #x01 8)) ");
+                match v.as_str() {
+                    "a" => misaal_buf.push_str("(reg (bv #x01 8)) "),
+                    "b" => misaal_buf.push_str("(reg (bv #x00 8)) "),
+                    _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
+                }
+
                 buf.push(z3::ast::Int::new_const(ctx, v.to_string()))
             }
         }
     }
     println!("Expressions in validator {:?}", misaal_buf);
-    buf.pop().unwrap()
+    (buf.pop().unwrap(), misaal_buf)
 }
 
 #[cfg(test)]
@@ -240,7 +300,7 @@ mod test {
     #[test]
     fn run() {
         let mut rules: Ruleset<MISAALLang> = Ruleset::default();
-        let lang = Lang::new(
+        /* let lang = Lang::new(
             &["0", "1", "-1", "2"],
             &["a", "b", "c"],
             &[
@@ -256,10 +316,10 @@ mod test {
         );
         rules.extend(recursive_rules(
             Metric::Atoms,
-            6,
+            8,
             lang.clone(),
             Ruleset::default(),
-        ));
+        )); */
 
         let wkld = Workload::new(&["(bop e e)", "v"])
             .plug("e", &Workload::new(&["(bop v v)", "v"]))
@@ -273,12 +333,8 @@ mod test {
                     // "typed:unsigned-vec-lt",
                 ]),
             )
-            .plug("v", &Workload::new(&["a", "b", "c"]))
-            .filter(Filter::Canon(vec![
-                "a".to_string(),
-                "b".to_string(),
-                "c".to_string(),
-            ]));
+            .plug("v", &Workload::new(&["a", "b"]))
+            .filter(Filter::Canon(vec!["a".to_string(), "b".to_string()]));
 
         rules.extend(run_workload(
             wkld,
