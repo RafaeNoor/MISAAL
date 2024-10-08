@@ -99,9 +99,9 @@ class DoubleGrammarSynthesisUtils:
             if ctx.out_vectsize == src_ctx.out_vectsize:
                 matching_ctx = True
 
-        if not matching_ctx:
-            print("Early return: No matching context")
-            return False, "", ""
+        #if not matching_ctx:
+        #    print("Early return: No matching context")
+        #    return False, "", ""
 
 
 

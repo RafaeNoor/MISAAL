@@ -8,6 +8,7 @@ from common.DSLParser import parse_dict
 from properties.RepairRelavance import RepairRelavance
 from properties.RepairRelavanceV2 import RepairRelavanceV2
 from properties.RepairRelavanceV3 import RepairRelavanceV3
+from properties.RepairRelavanceV4 import RepairRelavanceV4
 from properties.RepairRelavancePostProcess import RepairRelavancePostProcess
 from properties.Commutative import *
 from properties.Distributive import *
@@ -187,12 +188,20 @@ for property in test_properties:
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
 
-        elif property is RepairRelavanceV2 or property is RepairRelavanceV3:
-            repair_memo_name = "RepairRelavanceV3_{}_intermediate_results.json".format(target)
+        elif property is RepairRelavanceV2 or property is RepairRelavanceV3 :
+            repair_memo_name = "RepairRelavanceV3_{}_d2_processed_results.json".format(target)
+
 
             if not os.path.exists(repair_memo_name):
                 repair_memo_name = None
+                assert False
 
+            repairs_sema = parse_dict(repair_semantics)
+            halide_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 3, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+
+        elif property is RepairRelavanceV4:
+            repair_memo_name = None
             repairs_sema = parse_dict(repair_semantics)
             halide_dsl_list = parse_dict(halide_semantics)
             PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
