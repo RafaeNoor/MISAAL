@@ -25,6 +25,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
     def __init__(self, dsl_list = [], synth_desc = None, output_dsl_list = [], repair_dsl_list = [], target_synth_desc = None, target_start_depth = None,target_depth = 3, const_fold = False, commutative_map_path = None, force_contains_all_regs = True, memo_path = None):
 
 
+        # Sort dsl list so that we can inspect dot-product related relevance earlier
+        dsl_list = sort_dsl_list(dsl_list, ["bvmul", "sign-extend", "bvadd", "zero-extend"])
+
+
         input_test_list = [
             "_mm256_maddubs_epi16",
         ]
@@ -85,10 +89,24 @@ class RepairRelavanceV4(RepairRelavanceV3):
                             # if the repair property is already valid hence we will exit early
                             for candidate in candidate_generator:
                                 yield candidate
+                        except KeyboardInterrupt:
+                            print("Keybord interrupt")
+                            sys.exit()
                         except:
                             continue
                     else:
-                        candidate_generator = self.prepare_candidate_generator(candidate_prep)
+                        candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
+
+                        # Generator internally will query state to know
+                        # if the repair property is already valid hence we will exit early
+                        for candidate in candidate_generator:
+
+                            yield candidate
+
+                        if not self.has_differing_number_of_symbolic_args(input_dsl):
+                            continue
+
+                        candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
 
                         # Generator internally will query state to know
                         # if the repair property is already valid hence we will exit early

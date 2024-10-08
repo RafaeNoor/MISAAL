@@ -1064,3 +1064,27 @@ def process_dict(d):
         print(src_)
         print("-------->")
         print(dst_)
+
+
+
+# Sort DSL List according to those equivlance classes
+# which include bitvector ops present in ops
+def sort_dsl_list(dsl_list, ops):
+    def key_function(inst):
+        return_score  = len(ops)
+        for ctx in inst.contexts:
+            ctx_ops = ctx.get_bv_ops()
+            score = sum([1 for op in ops if op in ctx_ops])
+            score = len(ops) - score
+            return_score = min(return_score, score)
+        return return_score
+
+    sorted_dsl_list = sorted(dsl_list, key = key_function)
+
+    return sorted_dsl_list
+
+
+
+
+
+
