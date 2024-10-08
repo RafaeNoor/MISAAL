@@ -162,7 +162,7 @@ impl SynthLanguage for MISAALLang {
         cfg.set_timeout_msec(1000);
         let ctx = z3::Context::new(&cfg);
         let solver = z3::Solver::new(&ctx);
-        println!("================================");
+        //println!("================================");
         let mut rng = thread_rng();
         let mut file_name: String = iter::repeat(())
             .map(|()| rng.sample(Alphanumeric))
@@ -180,9 +180,9 @@ impl SynthLanguage for MISAALLang {
             .open(&file_name)
             .expect("cannot open file");
 
-        print!("LHS expr:");
+        //print!("LHS expr:");
         let (lexpr, lexpr_str) = egg_to_z3(&ctx, Self::instantiate(lhs).as_ref());
-        print!("RHS expr:");
+        //print!("RHS expr:");
         let (rexpr, rexpr_str) = egg_to_z3(&ctx, Self::instantiate(rhs).as_ref());
         data_file
             .write(lexpr_str.as_bytes())
@@ -193,7 +193,7 @@ impl SynthLanguage for MISAALLang {
         data_file
             .write(rexpr_str.as_bytes())
             .expect("Unable to write RHS to file");
-        println!("================================");
+        // println!("================================");
         solver.assert(&lexpr._eq(&rexpr).not());
         match solver.check() {
             z3::SatResult::Unsat => ValidationResult::Valid,
@@ -205,24 +205,16 @@ impl SynthLanguage for MISAALLang {
 
 fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>, String) {
     let mut buf: Vec<z3::ast::Int> = vec![];
-    let mut misaal_buf_2: Vec<String> = vec![];
-    let mut misaal_buf = "".to_string();
+    let mut misaal_buf: Vec<String> = vec![];
     let zero = z3::ast::Int::from_i64(ctx, 0);
     let one = z3::ast::Int::from_i64(ctx, 1);
     for node in expr.as_ref().iter() {
         match node {
             MISAALLang::Lit(c) => {
-                // println!("Lit in validator is {:?}", c);
-                // misaal_buf.push_str(" (reg (bv #x00 8)) ");
                 match c {
-                    1 => misaal_buf.push_str("(reg (bv #x01 8)) "),
-                    0 => misaal_buf.push_str("(reg (bv #x00 8)) "),
-                    _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
-                }
-                match c {
-                    1 => misaal_buf_2.push("(reg (bv #x01 8)) ".to_string()),
-                    0 => misaal_buf_2.push("(reg (bv #x00 8)) ".to_string()),
-                    _ => misaal_buf_2.push("(reg (bv #x02 8)) ".to_string()),
+                    1 => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
+                    0 => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
+                    _ => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
                 }
                 buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap()))
             }
@@ -232,73 +224,37 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>
                 // the function checks for a given concretization, we have to specify output sizes
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
+
                 let bv_code = format!(
-                    " (hexagon_V6_vminuh_128B {} 1024 1024 0 1024 16 0 0) ",
-                    misaal_buf
-                );
-                let bv_code_2 = format!(
                     " (hexagon_V6_vminuh_128B {} {} 1024 1024 0 1024 16 0 0) ",
-                    &misaal_buf_2[usize::from(*x)],
-                    &misaal_buf_2[usize::from(*y)]
+                    &misaal_buf[usize::from(*x)],
+                    &misaal_buf[usize::from(*y)]
                 );
-                // misaal_buf = bv_code;
-                misaal_buf_2.push(bv_code_2);
+                misaal_buf.push(bv_code);
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
             MISAALLang::HalideVecMin([x, y]) => {
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
-                /* println!(
-                    "Buf before loading into halide expr (should be 2 args) -  {:?}",
-                    misaal_buf
-                ) */
-                let bv_code = format!(" (typed:unsigned-vec-min {} 16 1024) ", misaal_buf);
-                let bv_code_2 = format!(
+                let bv_code = format!(
                     " (typed:unsigned-vec-min {} {} 16 1024) ",
-                    &misaal_buf_2[usize::from(*x)],
-                    &misaal_buf_2[usize::from(*y)]
+                    &misaal_buf[usize::from(*x)],
+                    &misaal_buf[usize::from(*y)]
                 );
-                // misaal_buf = bv_code;
-                misaal_buf_2.push(bv_code_2);
+                misaal_buf.push(bv_code);
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
-            /* MISAALLang::HalideVecMin([x, y]) => {
-                let l = &buf[usize::from(*x)];
-                let r = &buf[usize::from(*y)];
-                buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
-            }
-             MISAALLang::HVXLt([x, y]) => {
-                let l = &buf[usize::from(*x)];
-                let r = &buf[usize::from(*y)];
-                buf.push(z3::ast::Bool::ite(&z3::ast::Int::lt(l, r), &one, &zero))
-            }
-            MISAALLang::HalideVecLt([x, y]) => {
-                let l = &buf[usize::from(*x)];
-                let r = &buf[usize::from(*y)];
-                buf.push(z3::ast::Bool::ite(&z3::ast::Int::lt(l, r), &one, &zero))
-            }
-            MISAALLang::HalideVecSatSub([x, y]) => buf.push(z3::ast::Int::sub(
-                ctx,
-                &[&buf[usize::from(*x)], &buf[usize::from(*y)]],
-            )), */
             MISAALLang::Var(v) => {
                 match v.as_str() {
-                    "a" => misaal_buf.push_str("(reg (bv #x01 8)) "),
-                    "b" => misaal_buf.push_str("(reg (bv #x00 8)) "),
-                    _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
-                }
-
-                match v.as_str() {
-                    "a" => misaal_buf_2.push("(reg (bv #x01 8)) ".to_string()),
-                    "b" => misaal_buf_2.push("(reg (bv #x00 8)) ".to_string()),
-                    _ => misaal_buf_2.push("(reg (bv #x02 8)) ".to_string()),
+                    "a" => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
+                    "b" => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
+                    _ => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
                 }
                 buf.push(z3::ast::Int::new_const(ctx, v.to_string()))
             }
         }
     }
-    //println!("Expressions in new buf {:?}", misaal_buf_2);
-    (buf.pop().unwrap(), misaal_buf_2.pop().unwrap().to_string())
+    (buf.pop().unwrap(), misaal_buf.pop().unwrap().to_string())
 }
 
 #[cfg(test)]
@@ -367,7 +323,7 @@ mod test {
                 ],
             ],
         );
-
+        // n is depth
         let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
             .plug("VAR", &Workload::new(lang.vars))
             .plug("VAL", &Workload::empty())
