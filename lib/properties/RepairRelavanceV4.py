@@ -35,7 +35,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
         print(dsl_list)
 
         output_test_list = [
-            "typed:vec-add",
+            "typed:signed-vec-mul"
         ]
 
         #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
@@ -66,15 +66,32 @@ class RepairRelavanceV4(RepairRelavanceV3):
             for input_dsl in self.input_dsl_list:
                 for output_dsl in self.output_dsl_list:
                     candidate_prep = (input_dsl, output_dsl, depth)
-                    try:
+                    if True:
+                        try:
+                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
+
+                            # Generator internally will query state to know
+                            # if the repair property is already valid hence we will exit early
+                            for candidate in candidate_generator:
+
+                                yield candidate
+
+                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
+
+                            # Generator internally will query state to know
+                            # if the repair property is already valid hence we will exit early
+                            for candidate in candidate_generator:
+                                yield candidate
+                        except:
+                            continue
+                    else:
                         candidate_generator = self.prepare_candidate_generator(candidate_prep)
 
                         # Generator internally will query state to know
                         # if the repair property is already valid hence we will exit early
                         for candidate in candidate_generator:
                             yield candidate
-                    except:
-                        continue
+
 
 
 
@@ -83,9 +100,40 @@ class RepairRelavanceV4(RepairRelavanceV3):
     def get_bv_streams_key(self, src_ctx):
         return src_ctx.name
 
-    def prepare_candidate_generator(self, candidate_prep):
+    def get_repair_context_index(self, dsl_expr, use_max_args = False):
+        max_args = 0
+
+        if use_max_args:
+            max_args = max([self.get_context_num_sym_args(ctx) for ctx in dsl_expr.contexts])
+        else:
+            max_args = min([self.get_context_num_sym_args(ctx) for ctx in dsl_expr.contexts])
+
+        relavent_indices = [i for i in range(len(dsl_expr.contexts))  if self.get_context_num_sym_args(dsl_expr.contexts[i]) == max_args]
+
+
+        return_idx = relavent_indices[0]
+        if dsl_expr.contexts[return_idx].in_precision is None:
+            return return_idx
+
+        max_prec = dsl_expr.contexts[return_idx].in_precision
+        for idx in relavent_indices:
+            cur_prec = dsl_expr.contexts[idx].in_precision
+
+            if cur_prec is None:
+                continue
+
+            if max_prec is None:
+                max_prec = cur_prec
+
+            if cur_prec > max_prec:
+                max_prec = cur_prec
+                return_idx = idx
+
+        return return_idx
+
+    def prepare_candidate_generator(self, candidate_prep, use_max_args = True):
         input_dsl_inst = candidate_prep[0]
-        arg_id = self.get_repair_context_index(input_dsl_inst)
+        arg_id = self.get_repair_context_index(input_dsl_inst, use_max_args = use_max_args)
         modified_sema = self.get_instrumented_semantics(input_dsl_inst, arg_id)
         print(modified_sema)
         depth = candidate_prep[2]
@@ -302,6 +350,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
             hi =  brackets[1]
             lo =  brackets[2]
             arg =  brackets[3]
+            if isinstance(arg, list) and arg[0] == 'bv':
+                arg = "({})".format(" ".join(arg))
             stmt = "(printf \"(define reg_{} (extract ~a ~a ~a))\\n\"  {} {} \"{}\")".format(extract_labels.index(label), hi, lo, arg)
         else:
             stmt = "(printf \"(define ({}) {} )\\n\")".format(label, expr)
@@ -325,6 +375,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
         for idx, arg in enumerate(ctx.context_args):
             if isinstance(arg, BitVector):
                 continue
+            elif isinstance(arg, ConstBitVector):
+                lit_racket_value =  "(bv {} {})".format(arg.value, arg.size)
+                expr_map[formal_args[idx]] = lit_racket_value
             else:
                 expr_map[formal_args[idx]] = str(arg.value)
 
@@ -385,6 +438,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
                         else:
                             inlined_terms.append(term)
                     expr_to_rosette = "({})".format(" ".join(inlined_terms))
+                    print(expr_to_rosette)
                     updated_stmt = self.handle_profile_bv_expr(label, expr_to_rosette, extract_labels , is_extract = is_extract)
                     if is_extract:
                         expr_to_rosette = "reg_{}".format(extract_labels.index(label))

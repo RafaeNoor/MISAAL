@@ -361,6 +361,7 @@ class Property:
         print("Need to kill {} child processes".format(len(pid_to_kill)))
 
         for pid in pid_to_kill:
+            print("Trying to kill PID:\t", pid)
             if psutil.pid_exists(pid):
                 os.kill(pid, signal.SIGKILL)
 
