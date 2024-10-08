@@ -76,6 +76,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
                                 yield candidate
 
+                            if not self.has_differing_number_of_symbolic_args(input_dsl):
+                                continue
+
                             candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
 
                             # Generator internally will query state to know
@@ -96,6 +99,17 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
 
         return
+
+    def has_differing_number_of_symbolic_args(self,input_dsl):
+        num_sym_args = []
+
+        for ctx in input_dsl.contexts:
+            num_args = sum([1 for arg in ctx.context_args if isinstance(arg, BitVector)])
+            num_sym_args.append(num_args)
+
+        num_sym_args = list(set(num_sym_args))
+
+        return len(num_sym_args) > 1
 
     def get_bv_streams_key(self, src_ctx):
         return src_ctx.name
