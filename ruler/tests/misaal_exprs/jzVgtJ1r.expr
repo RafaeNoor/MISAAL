@@ -1,2 +1,0 @@
-(typed:unsigned-vec-min (typed:unsigned-vec-min (reg (bv #x00 8))  16 1024)(reg (bv #x01 8))  16 1024)
-(hexagon_V6_vminuh_128B (hexagon_V6_vminuh_128B (reg (bv #x01 8))  1024 1024 0 1024 16 0 0) 1024 1024 0 1024 16 0 0)

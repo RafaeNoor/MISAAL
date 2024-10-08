@@ -44,7 +44,7 @@ impl SynthLanguage for MISAALLang {
         let one = 1.to_i32().unwrap();
         let zero = 0.to_i32().unwrap();
         match self {
-            MISAALLang::Lit(c) => vec![Some(c.clone()); cvec_len],
+            MISAALLang::Lit(c) => vec![],
             MISAALLang::HVXMin([x, y]) => {
                 /*  map!(get_cvec, x, y =>
                     {
@@ -205,6 +205,7 @@ impl SynthLanguage for MISAALLang {
 
 fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>, String) {
     let mut buf: Vec<z3::ast::Int> = vec![];
+    let mut misaal_buf_2: Vec<String> = vec![];
     let mut misaal_buf = "".to_string();
     let zero = z3::ast::Int::from_i64(ctx, 0);
     let one = z3::ast::Int::from_i64(ctx, 1);
@@ -218,6 +219,11 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>
                     0 => misaal_buf.push_str("(reg (bv #x00 8)) "),
                     _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
                 }
+                match c {
+                    1 => misaal_buf_2.push("(reg (bv #x01 8)) ".to_string()),
+                    0 => misaal_buf_2.push("(reg (bv #x00 8)) ".to_string()),
+                    _ => misaal_buf_2.push("(reg (bv #x02 8)) ".to_string()),
+                }
                 buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap()))
             }
             MISAALLang::HVXMin([x, y]) => {
@@ -226,27 +232,34 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>
                 // the function checks for a given concretization, we have to specify output sizes
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
-                println!("MISAAL BUF IN HVX: {}", misaal_buf);
-                if misaal_buf.is_empty() {
-                    println!("BUF EMPTY HVX");
-                }
                 let bv_code = format!(
-                    "(hexagon_V6_vminuh_128B {} 1024 1024 0 1024 16 0 0)",
+                    " (hexagon_V6_vminuh_128B {} 1024 1024 0 1024 16 0 0) ",
                     misaal_buf
                 );
-                misaal_buf = bv_code;
+                let bv_code_2 = format!(
+                    " (hexagon_V6_vminuh_128B {} {} 1024 1024 0 1024 16 0 0) ",
+                    &misaal_buf_2[usize::from(*x)],
+                    &misaal_buf_2[usize::from(*y)]
+                );
+                // misaal_buf = bv_code;
+                misaal_buf_2.push(bv_code_2);
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
             MISAALLang::HalideVecMin([x, y]) => {
                 let l = &buf[usize::from(*x)];
                 let r = &buf[usize::from(*y)];
-                println!("MISAAL BUF IN HALIDE: {}", misaal_buf);
-
-                if misaal_buf.is_empty() {
-                    println!("BUF EMPTY IN HALIDE");
-                }
-                let bv_code = format!("(typed:unsigned-vec-min {} 16 1024)", misaal_buf);
-                misaal_buf = bv_code;
+                /* println!(
+                    "Buf before loading into halide expr (should be 2 args) -  {:?}",
+                    misaal_buf
+                ) */
+                let bv_code = format!(" (typed:unsigned-vec-min {} 16 1024) ", misaal_buf);
+                let bv_code_2 = format!(
+                    " (typed:unsigned-vec-min {} {} 16 1024) ",
+                    &misaal_buf_2[usize::from(*x)],
+                    &misaal_buf_2[usize::from(*y)]
+                );
+                // misaal_buf = bv_code;
+                misaal_buf_2.push(bv_code_2);
                 buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
             /* MISAALLang::HalideVecMin([x, y]) => {
@@ -275,12 +288,17 @@ fn egg_to_z3<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> (z3::ast::Int<'a>
                     _ => misaal_buf.push_str("(reg (bv #x02 8)) "),
                 }
 
+                match v.as_str() {
+                    "a" => misaal_buf_2.push("(reg (bv #x01 8)) ".to_string()),
+                    "b" => misaal_buf_2.push("(reg (bv #x00 8)) ".to_string()),
+                    _ => misaal_buf_2.push("(reg (bv #x02 8)) ".to_string()),
+                }
                 buf.push(z3::ast::Int::new_const(ctx, v.to_string()))
             }
         }
     }
-    println!("Expressions in validator {:?}", misaal_buf);
-    (buf.pop().unwrap(), misaal_buf)
+    //println!("Expressions in new buf {:?}", misaal_buf_2);
+    (buf.pop().unwrap(), misaal_buf_2.pop().unwrap().to_string())
 }
 
 #[cfg(test)]
@@ -316,25 +334,50 @@ mod test {
         );
         rules.extend(recursive_rules(
             Metric::Atoms,
-            8,
+            10,
             lang.clone(),
             Ruleset::default(),
         )); */
 
-        let wkld = Workload::new(&["(bop e e)", "v"])
-            .plug("e", &Workload::new(&["(bop v v)", "v"]))
-            .plug(
-                "bop",
-                &Workload::new(&[
+        /* let wkld = Workload::new(&["(bop e e)", "v"])
+        .plug("e", &Workload::new(&["(bop v v)", "v"]))
+        .plug(
+            "bop",
+            &Workload::new(&[
+                "hexagon_V6_vminuh_128B",
+                // "hexagon_V6_vltuh_128B",
+                // "typed:unsigned-vec-sat-sub",
+                "typed:unsigned-vec-min",
+                // "typed:unsigned-vec-lt",
+            ]),
+        )
+        .plug("v", &Workload::new(&["a", "b"]))
+        .filter(Filter::Canon(vec!["a".to_string(), "b".to_string()])); */
+        let lang = Lang::new(
+            &["0", "1", "-1", "2"],
+            &["a", "b", "c"],
+            &[
+                &[],
+                &[
                     "hexagon_V6_vminuh_128B",
                     // "hexagon_V6_vltuh_128B",
-                    // "typed:unsigned-vec-sat-sub",
+                    //"typed:unsigned-vec-sat-sub",
                     "typed:unsigned-vec-min",
                     // "typed:unsigned-vec-lt",
-                ]),
-            )
-            .plug("v", &Workload::new(&["a", "b"]))
-            .filter(Filter::Canon(vec!["a".to_string(), "b".to_string()]));
+                ],
+            ],
+        );
+
+        let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+            .plug("VAR", &Workload::new(lang.vars))
+            .plug("VAL", &Workload::empty())
+            .plug("OP1", &Workload::new(lang.ops[0].clone()))
+            .plug("OP2", &Workload::new(lang.ops[1].clone()))
+            .filter(Filter::Canon(vec![
+                "a".to_string(),
+                "b".to_string(),
+                "c".to_string(),
+            ]));
 
         rules.extend(run_workload(
             wkld,
