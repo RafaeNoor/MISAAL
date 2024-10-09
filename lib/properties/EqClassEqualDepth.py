@@ -198,7 +198,7 @@ class EqClassEqualDepth(EqualOnValues):
         print_dsl_list_summary(self.output_dsl_list)
 
 
-        self.input_dsl_list = self.filter_source_dsl_list(self.input_dsl_list)
+        #self.input_dsl_list = self.filter_source_dsl_list(self.input_dsl_list)
 
 
         # Candidate will be defined as:
