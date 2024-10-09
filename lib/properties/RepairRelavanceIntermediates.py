@@ -153,20 +153,31 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
             forward_defns = ordered_defns[idx:]
             forward_sizes = env_sizes[idx:]
 
-            backward_keys = ordered_keys[:idx]
-            backward_defns = ordered_defns[:idx]
-            backward_sizes = env_sizes[:idx]
+            assert len(forward_keys) == len(forward_defns)
+            assert len(forward_keys) == len(forward_sizes)
+
 
             for forward_idx, forward_val_name in enumerate(forward_keys):
+                backward_keys = ordered_keys[:idx+forward_idx]
+                backward_defns = ordered_defns[:idx+forward_idx]
+                backward_sizes = env_sizes[:idx+forward_idx]
+
+                backward_keys = ordered_keys
+                backward_defns = ordered_defns
+                backward_sizes = env_sizes
 
 
                 forward_val_defn = forward_defns[forward_idx]
                 forward_val_size = forward_sizes[forward_idx]
 
+                print("FORWARD VAL DEFN", forward_val_defn)
+                print("idx", idx)
+                print("forward_idx", forward_idx)
+                print("forward_sizes", forward_sizes)
+                print("forward_defns", forward_defns)
+
                 custom_env_func = self.create_prepare_env_fn(formal_param_defs, backward_defns, backward_keys)
 
-                statements = []
-                statements.append(custom_env_func)
 
 
                 # Output size must be the output precision since we're testing on one lane
@@ -175,30 +186,10 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
                 print("Required output size: ", forward_val_size)
                 for expr in enumerate_target_program:
-                    def invoke_ref_custom(interpreter_name, invoke_ref_name = "invoke-spec"):
-                        invoke_stmts = []
-                        invoke_stmts = [formal_param_defs]
-                        invoke_stmts += [forward_val_defn]
-                        invoke_stmts += [forward_val_name]
 
-                        invoke_ref_def = "(define ({} spec-expr env)\n{})".format(invoke_ref_name, "\n".join(invoke_stmts))
+                    statements = []
+                    statements.append(custom_env_func)
 
-                        return invoke_ref_name, invoke_ref_def
-
-                    def invoke_ref_lane_custom(interpreter_name, invoke_ref_name = "invoke-spec-lane"):
-
-                        invoke_stmts = []
-                        invoke_stmts = [formal_param_defs]
-                        invoke_stmts += [forward_val_defn]
-                        invoke_stmts += [forward_val_name]
-
-                        invoke_ref_lane_def = "(define ({} spec-expr lane-idx env)\n{})".format(invoke_ref_name, "\n".join(invoke_stmts))
-                        return invoke_ref_name, invoke_ref_lane_def
-
-                    def invoke_target_custom(interpreter_name):
-                        invoke_target_name = "invoke-target-repair"
-                        invoke_target_def = "(define ({} expr env) ({} expr (prepare-env env)))".format(invoke_target_name, interpreter_name)
-                        return invoke_target_name, invoke_target_def
 
                     target_input_sizes =  backward_sizes
                     if get_expr_depth(expr) != depth:
@@ -211,7 +202,6 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
                     if self.useCanon and  not self.canonicalizer.isCanonical(expr, canon_target):
                         continue
 
-                    print(expr.emit_context_expr_string())
 
 
                     candidate = copy.deepcopy({})
@@ -219,13 +209,16 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
                     candidate['target_dsl'] = output_dsl_inst
                     candidate['src_expr'] = src_ctx
                     candidate['target_expr'] = expr
-                    candidate['invoke_ref_custom'] = invoke_ref_custom
-                    candidate['invoke_ref_lane_custom'] = invoke_ref_lane_custom
-                    candidate['invoke_target_custom'] = invoke_target_custom
                     candidate['additional_statements'] = statements
                     candidate['custom_target_input_sizes'] = target_input_sizes
                     candidate['prepare-env-function'] = custom_env_func
                     candidate['target_output_size'] = forward_val_size
+                    candidate['formal_param_defs'] = formal_param_defs
+                    candidate['forward_val_defn'] = forward_val_defn
+                    candidate['forward_val_name'] = forward_val_name
+
+
+
 
                     key = self.serialize_candidate(candidate)
 
@@ -236,26 +229,52 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
 
                     yield candidate
+                    break
+
 
         return
 
 
 
     def property_holds_on_candidate(self, candidate):
-        print(candidate)
         src_ctx = (candidate['src_expr'])
         target_expr = (candidate['target_expr'])
-        invoke_ref_custom = candidate['invoke_ref_custom']
-        invoke_ref_lane_custom = candidate['invoke_ref_lane_custom']
-        invoke_target_custom = candidate['invoke_target_custom']
         statements = candidate['additional_statements']
         custom_target_input_sizes = candidate['custom_target_input_sizes']
         target_output_size = candidate['target_output_size']
+        formal_param_defs = candidate['formal_param_defs']
+        forward_val_defn = candidate['forward_val_defn']
+        forward_val_name = candidate['forward_val_name']
+
+        def invoke_ref_custom(interpreter_name, invoke_ref_name = "invoke-spec"):
+            invoke_stmts = []
+            invoke_stmts = [formal_param_defs]
+            invoke_stmts += [forward_val_defn]
+            invoke_stmts += [forward_val_name]
+
+            invoke_ref_def = "(define ({} spec-expr env)\n{})".format(invoke_ref_name, "\n".join(invoke_stmts))
+
+            return invoke_ref_name, invoke_ref_def
+
+        def invoke_ref_lane_custom(interpreter_name, invoke_ref_name = "invoke-spec-lane"):
+
+            invoke_stmts = []
+            invoke_stmts = [formal_param_defs]
+            invoke_stmts += [forward_val_defn]
+            invoke_stmts += [forward_val_name]
+
+            invoke_ref_lane_def = "(define ({} spec-expr lane-idx env)\n{})".format(invoke_ref_name, "\n".join(invoke_stmts))
+            return invoke_ref_name, invoke_ref_lane_def
+
+        def invoke_target_custom(interpreter_name):
+            invoke_target_name = "invoke-target-repair"
+            invoke_target_def = "(define ({} expr env) ({} expr (prepare-env env)))".format(invoke_target_name, interpreter_name)
+            return invoke_target_name, invoke_target_def
 
         key = self.serialize_candidate(candidate)
 
-        if key in self.context_map:
-            return False
+        #if key in self.context_map:
+        #    return False
 
 
 
