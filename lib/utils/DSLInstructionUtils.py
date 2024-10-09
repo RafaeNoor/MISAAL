@@ -792,19 +792,34 @@ def get_eq_class_relavent_contexts(possible_contexts, tight = True):
         accounted_for = []
         candidates = []
 
+        # For swizzles, Hydride adds those swizzles to the same
+        # EQ class which have different behavior w.r.t to input output sizes.
+        # For example the full interleave swizzle and the subset interleave swizzles
+        # are placed in the same class. Explicitly include at least one context with such
+        # property
+
         for ctx in sorted_ctxs:
-            """
-            for arg in ctx.context_args:
-                if isinstance(arg, BitVector) and arg.size not in accounted_for:
-                    include = True
-                    accounted_for.append(arg.size)
-            """
+
             current_args = get_num_symbolic_args(ctx)
 
-            if current_args in accounted_for:
+            in_out_condition = -1
+
+            if not (ctx.in_vectsize is None) and not (ctx.out_vectsize is None):
+                in_size = ctx.in_vectsize
+                out_size = ctx.out_vectsize
+
+                if in_size == out_size:
+                    in_out_condition =  0
+                else:
+                    in_out_condition =  1
+
+
+            key = (current_args, in_out_condition)
+
+            if key in accounted_for:
                 continue
 
-            accounted_for.append(current_args)
+            accounted_for.append(key)
             candidates.append(ctx)
 
         return candidates

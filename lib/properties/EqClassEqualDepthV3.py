@@ -61,7 +61,28 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
 
 
 
+    def count_contexts(self, expr, substr = None):
+        if isinstance(expr, Context):
 
+            child_results = 0
+
+            for arg in expr.context_args:
+                child_results += self.count_contexts(arg, substr = substr)
+
+            if substr is None:
+                return 1  + child_results
+            else:
+                if substr in expr.name:
+                    return 1 + child_results
+            return child_results
+        return 0
+
+    def custom_test(self, expr):
+        num_nodes = self.count_contexts(expr)
+        num_swizzles = self.count_contexts(expr, substr = "swizzle")
+
+
+        return (num_nodes == 3) and (num_swizzles == 2) and ("swizzle" not in expr.name)
 
     def run_on_batch_completion(self):
         pass
@@ -82,6 +103,11 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
             for ros in relavent_output_subset:
                 print(ros.name)
 
+            sample_ctx = dsl_inst.get_sample_context()
+
+            if sample_ctx.out_vectsize == None:
+                continue
+
             src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
 
             if src_ctx.out_vectsize == None:
@@ -96,6 +122,9 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                 if isinstance(src_expr, Reg):
                     continue
 
+                if not self.custom_test(src_expr):
+                    continue
+
                 print(src_expr.dsl_name)
                 if not self.expr_contains(src_expr, dsl_inst.name):
                     continue
@@ -105,10 +134,20 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                 if not self.canonicalizer.isCanonical(src_expr, canonical_src_expr):
                     continue
 
-                target_expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_ctx.out_vectsize)
+                target_expressions = create_exhaustive_expressions_generator(relavent_output_subset, self.output_depth, use_eq_class = True, output_size = src_expr.out_vectsize)
                 for target_expr in target_expressions:
 
+
                     if isinstance(target_expr, Reg):
+                        continue
+
+                    if "add" not in target_expr.name:
+                        continue
+
+                    if self.count_contexts(target_expr, substr = "swizzle") > 0:
+                        continue
+
+                    if not self.count_contexts(target_expr, substr = "widen-mul") == 2:
                         continue
 
                     if get_expr_depth(target_expr) == self.output_depth:
@@ -130,6 +169,24 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
 
 
 
+    def get_context_with_min_sym_bvs(self, dsl_inst):
+        arg_min = np.argmin([get_num_symbolic_args(ctx) for ctx in dsl_inst.contexts])
 
+        min_ctx = dsl_inst.contexts[arg_min]
+        valid_contexts = [ctx for ctx in dsl_inst.contexts if get_num_symbolic_args(ctx)  == get_num_symbolic_args(min_ctx)]
+
+        max_out = 0
+        max_ctx = None
+
+        for ctx in valid_contexts:
+            print(ctx.name)
+            if ctx.out_vectsize > max_out:
+                max_out = ctx.out_vectsize
+                max_ctx = ctx
+
+
+        assert not max_ctx is None, dsl_inst.name
+
+        return max_ctx
 
 

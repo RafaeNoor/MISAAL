@@ -278,7 +278,8 @@ class EqClassEqualDepth(EqualOnValues):
         relavent_swizzles = []
 
         for swizzle_ty in self.swizzle_forward_map:
-            if dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+            ctx_in_map = any([ctx.name in self.swizzle_forward_map[swizzle_ty] for ctx in dsl_inst.contexts])
+            if ctx_in_map or dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
                 swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
 
                 if swizzle_inst.name in relevent_swizzles_names:
@@ -304,7 +305,8 @@ class EqClassEqualDepth(EqualOnValues):
         relavent_swizzles = []
 
         for swizzle_ty in self.swizzle_forward_map:
-            if dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+            ctx_in_map = any([ctx.name in self.swizzle_forward_map[swizzle_ty] for ctx in dsl_inst.contexts])
+            if ctx_in_map or dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
                 swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
 
                 if swizzle_inst.name in relevent_swizzles_names:
@@ -638,6 +640,12 @@ class EqClassEqualDepth(EqualOnValues):
 
 
 
-
+    def find_ctx(self, ctx_name):
+        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list:
+            for ctx in dsl_inst.contexts:
+                if ctx.name == ctx_name:
+                    return ctx
+        assert False,"Unreachable"
+        return None
 
 
