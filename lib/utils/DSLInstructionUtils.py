@@ -144,6 +144,7 @@ def execute_racket_file(statements):
     print("Completed executing file:\t", filename)
     if REMOVE_RKT_FILES:
         subprocess.run(["rm {}".format(filename)], shell = True)
+        pass
     return result
 
 

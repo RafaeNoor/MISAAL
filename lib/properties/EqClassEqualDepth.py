@@ -272,6 +272,27 @@ class EqClassEqualDepth(EqualOnValues):
                     return dsl_inst
         assert False, "Could not find {}".format(name)
 
+    def get_relavent_swizzle_dsl_subset(self, dsl_inst):
+
+        relevent_swizzles_names = []
+        relavent_swizzles = []
+
+        for swizzle_ty in self.swizzle_forward_map:
+            if dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+                swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
+
+                if swizzle_inst.name in relevent_swizzles_names:
+                    continue
+
+                relevent_swizzles_names.append(swizzle_inst.name)
+
+                relavent_swizzles.append(swizzle_inst)
+
+
+
+        return relavent_swizzles
+
+
 
     def get_relavent_output_dsl_subset(self, dsl_inst):
         if not dsl_inst.name in self.forward_map:
@@ -309,6 +330,11 @@ class EqClassEqualDepth(EqualOnValues):
     def get_context_with_max_sym_bvs(self, dsl_inst):
         arg_max = np.argmax([get_num_symbolic_args(ctx) for ctx in dsl_inst.contexts])
         src_ctx = dsl_inst.contexts[arg_max]
+        return src_ctx
+
+    def get_context_with_min_sym_bvs(self, dsl_inst):
+        arg_min = np.argmin([get_num_symbolic_args(ctx) for ctx in dsl_inst.contexts])
+        src_ctx = dsl_inst.contexts[arg_min]
         return src_ctx
 
 

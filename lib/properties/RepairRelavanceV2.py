@@ -379,7 +379,7 @@ class RepairRelavanceV2(RepairRelavance):
 
     def expr_contains(self, expr, name):
         if isinstance(expr, Context):
-            if name == expr.dsl_name:
+            if name == expr.dsl_name or name == expr.dsl_name.split("_dsl")[0]:
                 return True
             conds = []
             for arg in expr.context_args:
