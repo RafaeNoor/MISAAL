@@ -34,19 +34,26 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
             "_mm256_dpbusd_epi32",
         ]
 
-        dsl_list = [d for d in dsl_list if d.name in input_test_list]
+        #dsl_list = [d for d in dsl_list if d.name in input_test_list]
 
         output_test_list = [
             #"typed:signed-vec-mul",
-            "typed:cast-int",
+            #"typed:cast-uint",
+            "typed:signed-vector_reduce_add",
         ]
 
-        output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
+        #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
+
+        repair_test_list = [
+            "repair-add",
+        ]
+
+        #repair_dsl_list = [d for d in repair_dsl_list if d.name in repair_test_list]
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs, memo_path = memo_path)
 
         self.name = "RepairRelavanceIntermediates"
-        self.skip_exception = False
+        self.skip_exception = True
     def get_property_desc(self):
         return "Test if a given output dsl instruction may be used to generate target expression (Version Intermediates)"
 
@@ -162,9 +169,9 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
                 backward_defns = ordered_defns[:idx+forward_idx]
                 backward_sizes = env_sizes[:idx+forward_idx]
 
-                backward_keys = ordered_keys
-                backward_defns = ordered_defns
-                backward_sizes = env_sizes
+                #backward_keys = ordered_keys
+                #backward_defns = ordered_defns
+                #backward_sizes = env_sizes
 
 
                 forward_val_defn = forward_defns[forward_idx]
@@ -229,7 +236,6 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
 
                     yield candidate
-                    break
 
 
         return

@@ -565,6 +565,11 @@
   ( apply concat (reverse vals))
   )
 
+; alias
+(define (do-typed:signedtor_reduce_add width v1 iprec isize)
+  (do-typed:signed-vector-reduce-add width v1 iprec isize)
+  )
+
 ;; UNSIGNED OPERATIONS
 
 

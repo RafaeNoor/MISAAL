@@ -17,6 +17,7 @@ import signal
 import pwd
 from subprocess import check_output
 from utils.NotificationUtil import send_email
+import copy
 
 import random
 
@@ -246,6 +247,7 @@ class Property:
                 j = 0
 
                 for candidate in self.candidates:
+                    candidate = copy.deepcopy(candidate)
                     count += 1
                     j+= 1
                     pool.submit(worker, candidate)

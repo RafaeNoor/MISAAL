@@ -30,7 +30,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
 
         input_test_list = [
-            "_mm256_maddubs_epi16",
+            #"_mm256_maddubs_epi16",
+            #"_mm256_dpbusd_epi32",
         ]
 
         #dsl_list = [d for d in dsl_list if d.name in input_test_list]
@@ -39,7 +40,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
         print(dsl_list)
 
         output_test_list = [
-            "typed:signed-vec-mul"
+            #"typed:signed-vec-widen-mul",
+            #"typed:vec-add",
+            "typed:signed-vector_reduce_add",
         ]
 
         #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
@@ -48,7 +51,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
 
         repair_test_list = [
-            "repair-vector-reduce-add",
+            #"repair-vector-reduce-add",
+            "repair-add",
         ]
 
         #repair_dsl_list = [d for d in repair_dsl_list if d.name in repair_test_list]
@@ -57,6 +61,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs, memo_path = memo_path)
         self.name = "RepairRelavanceV4"
         self.ctx_formal_param_names = {}
+        self.current_depth = 0
+        self.skip_exception = True
 
 
     def get_property_desc(self):
@@ -67,18 +73,25 @@ class RepairRelavanceV4(RepairRelavanceV3):
         if not self.target_start_depth is None:
             start_depth = self.target_start_depth
         for depth in range(start_depth, self.target_depth + 1):
+            self.current_depth = depth
             for input_dsl in self.input_dsl_list:
                 for output_dsl in self.output_dsl_list:
                     candidate_prep = (input_dsl, output_dsl, depth)
-                    if True:
+                    skip = False
+                    if self.skip_exception:
                         try:
                             candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
 
                             # Generator internally will query state to know
                             # if the repair property is already valid hence we will exit early
                             for candidate in candidate_generator:
-
+                                key = self.serialize_candidate(candidate)
+                                if key in self.context_map:
+                                    skip = True
+                                    break
                                 yield candidate
+                            if skip:
+                                continue
 
                             if not self.has_differing_number_of_symbolic_args(input_dsl):
                                 continue
@@ -88,6 +101,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
                             # Generator internally will query state to know
                             # if the repair property is already valid hence we will exit early
                             for candidate in candidate_generator:
+                                key = self.serialize_candidate(candidate)
+                                if key in self.context_map:
+                                    skip = True
+                                    break
                                 yield candidate
                         except KeyboardInterrupt:
                             print("Keybord interrupt")
@@ -96,14 +113,21 @@ class RepairRelavanceV4(RepairRelavanceV3):
                             continue
                     else:
                         candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
+                        print(candidate_generator)
 
                         # Generator internally will query state to know
                         # if the repair property is already valid hence we will exit early
                         for candidate in candidate_generator:
-
+                            key = self.serialize_candidate(candidate)
+                            if key in self.context_map:
+                                skip = True
+                                break
                             yield candidate
 
                         if not self.has_differing_number_of_symbolic_args(input_dsl):
+                            continue
+
+                        if skip:
                             continue
 
                         candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
@@ -111,6 +135,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
                         # Generator internally will query state to know
                         # if the repair property is already valid hence we will exit early
                         for candidate in candidate_generator:
+                            key = self.serialize_candidate(candidate)
+                            if key in self.context_map:
+                                skip = True
+                                break
                             yield candidate
 
 
@@ -197,7 +225,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
         reduce_factor = self.get_reducing_factor(stream_0)
         print("Reduction factor:", reduce_factor)
 
-        modified_env_func, env_sizes = self.emit_prepare_repair_env(stream_0, modified_sema, input_dsl_inst, src_ctx)
+        repair_env_obj = self.emit_prepare_repair_env(stream_0, modified_sema, input_dsl_inst, src_ctx)
+        modified_env_func = repair_env_obj['env_fn']
+        env_sizes = repair_env_obj['ordered_sizes']
+
         print(modified_env_func)
 
         sliced_sizes = env_sizes
@@ -585,7 +616,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
         non_regs = [key for key in var_label_map if not key.startswith("reg")]
 
-        non_regs = [key for key in var_label_map  ]
+        # Place registers first and then non-reg
+        non_regs = regs + non_regs
+
 
         for label in non_regs:
             for lane_idx, lane_context in enumerate(var_label_map[label]):
@@ -639,8 +672,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
         formal_param_defs = "\n".join(formal_param_defs)
 
         prepare_env_fn = "(define (prepare-env env) {} \n {} \n (vector {})\n)".format(formal_param_defs, "\n".join(ordered_defns), " ".join(ordered_keys))
-        return prepare_env_fn, ordered_sizes
 
+        result_obj = {'env_fn':  prepare_env_fn, 'ordered_keys': ordered_keys, 'ordered_defns': ordered_defns, 'ordered_sizes': ordered_sizes, 'formal_param_defs': formal_param_defs}
+        return result_obj
 
 
 
@@ -690,3 +724,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
 
         return funcs
+
+    def get_notify_body(self, count, success_count, start_time):
+        orig_body = super().get_notify_body(count, success_count, start_time)
+        current_depth_str  = "Current Depth:\t{}".format(str(self.current_depth))
+        return "\n".join([orig_body, current_depth_str])
+
