@@ -122,10 +122,6 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                 if isinstance(src_expr, Reg):
                     continue
 
-                if not self.custom_test(src_expr):
-                    continue
-
-                print(src_expr.dsl_name)
                 if not self.expr_contains(src_expr, dsl_inst.name):
                     continue
 
@@ -141,14 +137,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                     if isinstance(target_expr, Reg):
                         continue
 
-                    if "add" not in target_expr.name:
-                        continue
 
-                    if self.count_contexts(target_expr, substr = "swizzle") > 0:
-                        continue
-
-                    if not self.count_contexts(target_expr, substr = "widen-mul") == 2:
-                        continue
 
                     if get_expr_depth(target_expr) == self.output_depth:
                         canonical_target_expr = self.canonicalizer.canonicalize(target_expr)
