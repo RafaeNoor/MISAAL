@@ -278,11 +278,19 @@ class EqClassEqualDepth(EqualOnValues):
             return []
         relavent_names = self.forward_map[dsl_inst.name]
         relavent_outputs = [d for d in self.output_dsl_list if d.name in relavent_names]
+
+        relevent_swizzles_names = []
         relavent_swizzles = []
 
         for swizzle_ty in self.swizzle_forward_map:
             if dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
                 swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
+
+                if swizzle_inst.name in relevent_swizzles_names:
+                    continue
+
+                relevent_swizzles_names.append(swizzle_inst.name)
+
                 relavent_swizzles.append(swizzle_inst)
 
 
