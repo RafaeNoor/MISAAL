@@ -1,0 +1,91 @@
+ruler::impl_hvx!(128);
+
+#[path = "./recipes/bv4_fancy.rs"]
+pub mod bv4_fancy;
+
+#[cfg(test)]
+pub mod test {
+    use std::time::{Duration, Instant};
+
+    use ruler::{
+        enumo::{self, Filter, Metric, Ruleset, Workload},
+        recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, Lang},
+        Limits,
+    };
+
+    use crate::HvxLang;
+
+    fn gen() -> (Ruleset<HvxLang>, Duration) {
+        let start = Instant::now();
+        let mut rules: Ruleset<HvxLang> = Ruleset::default();
+        // let lang = Lang::new(&["0", "1"], &["a", "b", "c"], &[&["vdeal", "vshuff"]]);
+        // rules.extend(recursive_rules(
+        //     enumo::Metric::Atoms,
+        //     2,
+        //     lang.clone(),
+        //     Ruleset::default(),
+        // ));
+        // let lang = Workload::new(["(vdeal EXPR 54)", "(vshuff EXPR)", "VAL"]);
+         let a6_canon = iter_metric(base_lang(1), "EXPR", enumo::Metric::Atoms, 3)
+             .plug("VAR", &Workload::new(&["a", "b", "c"]))
+             .plug("VAL", &Workload::new(&["0", "1"]))
+             .plug("OP1", &Workload::new(&["vdeal", "vshuff"]))
+             .filter(Filter::Canon(vec![
+                 "a".to_string(),
+                 "b".to_string(),
+                 "c".to_string(),
+             ]));
+
+            // .plug("VAR", &Workload::new(lang.vars))
+            // .plug("VAL", &Workload::empty())
+            // .plug("OP1", &Workload::new(lang.ops[0].clone()))
+            // .filter(Filter::Canon(vec![
+            //     "a".to_string(),
+            //     "b".to_string(),
+            //     "c".to_string(),
+            // ]));
+
+         let consts = Workload::new(["0", "1", "2"]);
+         let wkld = Workload::Append(vec![a6_canon, consts]);
+
+         wkld.pretty_print();
+         rules.extend(run_workload(
+             wkld,
+             rules.clone(),
+             Limits::synthesis(),
+             Limits::minimize(),
+             true,
+         ));
+
+
+        // let lang = Workload::new(["(vdeal EXPR)", "(vshuff EXPR)", "VAL"]);
+        // let depth3 = iter_metric(lang, "EXPR", Metric::Depth, 3)
+        //     .plug("VAL", &Workload::new(["0", "1"]));
+        // depth3.pretty_print();
+        //  rules.extend(run_workload(
+        //     depth3,
+        //     rules.clone(),
+        //     Limits::synthesis(),
+        //     Limits::minimize(),
+        //     true,
+        // ));       
+        
+
+
+        let duration = start.elapsed();
+        (rules, duration)
+    }
+
+    #[test]
+    fn compare() {
+        let domain = "HVX";
+        // Port the bv4 rules into domain
+        // let actual_bv4_rules: Ruleset<_> = bv4_fancy_rules();
+        // let ported_bv4_rules: Ruleset<Bv> = Ruleset::new(actual_bv4_rules.to_str_vec());
+
+        // Generate the rules directly
+        let (gen, gen_time): (Ruleset<HvxLang>, Duration) = gen();
+
+        // logger::write_bv_derivability(domain, gen, gen_time, ported_bv4_rules)
+    }
+}
