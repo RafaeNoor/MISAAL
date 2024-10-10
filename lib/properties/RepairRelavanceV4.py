@@ -80,7 +80,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
                     skip = False
                     if self.skip_exception:
                         try:
-                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
+                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
 
                             # Generator internally will query state to know
                             # if the repair property is already valid hence we will exit early
@@ -96,7 +96,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
                             if not self.has_differing_number_of_symbolic_args(input_dsl):
                                 continue
 
-                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = True)
+                            candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
 
                             # Generator internally will query state to know
                             # if the repair property is already valid hence we will exit early

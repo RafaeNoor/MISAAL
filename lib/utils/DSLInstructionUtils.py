@@ -11,6 +11,7 @@ import tempfile
 import glob
 import numpy as np
 import concurrent.futures
+import signal
 
 REMOVE_RKT_FILES = True
 
@@ -105,6 +106,22 @@ class HelperCompletedProcess:
     def __init__(self, returncode = 1):
         self.returncode = returncode
 
+def run_command_child_processes(cmd, timeout = 5):
+    try:
+        proc = subprocess.Popen(cmd, start_new_session=True, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
+        proc.wait(timeout = timeout)
+    except  subprocess.TimeoutExpired:
+        print("Process timedout after after ", timeout, "seconds")
+        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+    except  KeyboardInterrupt:
+        print("Keyboard interrupt, killing child processe")
+        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+
+
+    result = HelperCompletedProcess(returncode = proc.returncode)
+    print("Return code: ", proc.returncode)
+    return result
+
 def execute_racket_file(statements):
 
     filename = next(tempfile._get_candidate_names()) + ".rkt"
@@ -121,22 +138,28 @@ def execute_racket_file(statements):
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
     TIMEOUT = int(5* 60) # 20 mins
     result = None
-    try:
-        result = subprocess.run(["racket", "{}".format(filename)],
-                                stdout = subprocess.DEVNULL,
-                                stderr = subprocess.DEVNULL,
-                                timeout = TIMEOUT
-                                )
 
-    except KeyboardInterrupt:
-        sys.exit()
-    except subprocess.TimeoutExpired:
-        print("File Timedout:\t", filename)
-        result = HelperCompletedProcess(returncode = 1)
-    except :
-        print("Unknown error for", filename, ":\t")
-        sys.exit()
-        result = HelperCompletedProcess(returncode = 1)
+    USE_P_OPEN = True
+
+    if USE_P_OPEN:
+        result = run_command_child_processes(["racket", "{}".format(filename)], timeout = TIMEOUT)
+    else:
+        try:
+            result = subprocess.run(["racket", "{}".format(filename)],
+                                    stdout = subprocess.DEVNULL,
+                                    stderr = subprocess.DEVNULL,
+                                    timeout = TIMEOUT
+                                    )
+
+        except KeyboardInterrupt:
+            sys.exit()
+        except subprocess.TimeoutExpired:
+            print("File Timedout:\t", filename)
+            result = HelperCompletedProcess(returncode = 1)
+        except :
+            print("Unknown error for", filename, ":\t")
+            sys.exit()
+            result = HelperCompletedProcess(returncode = 1)
 
 
 
