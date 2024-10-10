@@ -1124,6 +1124,24 @@ def sort_dsl_list(dsl_list, ops):
 
 
 
+def get_contexts_with_output_size(dsl_inst, size):
+    ctxs = []
+
+    for ctx in dsl_inst.contexts:
+        if ctx.out_vectsize != None and ctx.out_vectsize == size:
+            ctxs.append(ctx)
+
+    return ctxs
+
+def get_contexts_with_num_arg(dsl_inst, num_sym_args):
+    ctxs = []
+
+    for ctx in dsl_inst.contexts:
+        sym_args = sum([1 for arg in ctx.context_args if isinstance(arg, BitVector)])
+        if sym_args == num_sym_args:
+            ctxs.append(ctx)
+
+    return ctxs
 
 
 
