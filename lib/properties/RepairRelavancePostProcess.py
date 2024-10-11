@@ -11,7 +11,7 @@ import sys
 
 class RepairRelavancePostProcess(Property):
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], repair_dsl_list = [], memo_path = None, target = "x86"):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], repair_dsl_list = [], memo_path = None, target = "x86", base_name = ""):
 
         super().__init__(name = "RepairRelavancePostProcess"
 ,dsl_list = input_dsl_list, is_candidate_generator = True)
@@ -19,6 +19,7 @@ class RepairRelavancePostProcess(Property):
         self.input_dsl_list = input_dsl_list
         self.repair_dsl_list = repair_dsl_list
         self.output_dsl_list = output_dsl_list
+        self.base_name = base_name
 
         self.combined_dsl_list = self.input_dsl_list + self.output_dsl_list + self.repair_dsl_list
 
@@ -158,9 +159,9 @@ class RepairRelavancePostProcess(Property):
         return []
 
     def dump_evaluated_tests(self):
-        pass_name = "_".join([self.name,"PASS", self.target]) + ".json"
-        fail_name = "_".join([self.name,"FAIL", self.target]) + ".json"
-        error_name = "_".join([self.name,"ERROR", self.target]) + ".json"
+        pass_name = "_".join([self.name,"PASS", self.target, self.base_name]) + ".json"
+        fail_name = "_".join([self.name,"FAIL", self.target, self.base_name]) + ".json"
+        error_name = "_".join([self.name,"ERROR", self.target, self.base_name]) + ".json"
 
         with open(pass_name, "w+") as WriteFile:
             WriteFile.write(json.dumps(self.passing_results, indent = 4))
