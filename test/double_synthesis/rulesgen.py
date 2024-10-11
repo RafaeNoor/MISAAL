@@ -80,7 +80,11 @@ def get_input_sizes(expr : Context, dsl_list : list,
           if isinstance(arg, Context):
             input_sizes_dict = get_input_sizes(arg, dsl_list, input_sizes_dict)
           elif isinstance(arg, Reg):
-            input_sizes_dict[ctx_idx].append(ctx.in_vectsize)
+            if dict_idx == 0:
+              input_sizes_dict[ctx_idx].append(ctx.in_vectsize)
+            else:
+              for key in input_sizes_dict.keys():
+                input_sizes_dict[key].append(ctx.in_vectsize)
       break
   # Get rid of duplicate entries
   result = {}
