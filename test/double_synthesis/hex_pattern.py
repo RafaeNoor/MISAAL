@@ -1,7 +1,7 @@
 from common.DSLParser import parse_dict
-from utils.ReadDSL import read_string_to_dsl
+from utils.ReadDSL import read_string_to_dsl, get_matching_context
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
-from utils.DSLInstructionUtils import keep_temporary_files, check_if_contexts_equal
+from utils.DSLInstructionUtils import *
 import os
 import sys
 from os import listdir
@@ -26,17 +26,24 @@ content = expr_file.readlines()
 hvx_expr_str = content[1]
 halide_expr_str = content[0]
 
-print(hvx_expr_str)
-print(halide_expr_str)
-
 #hvx_expr_str = "(hexagon_V6_vminuh_128B (reg (bv #x00 8)) (hexagon_V6_vminuh_128B (reg (bv #x00 8)) (reg (bv #x01 8)) 1024 1024 0 1024 16 0 0) 1024 1024 0 1024 16 0 0)"
 #halide_expr_str = "(typed:unsigned-vec-min (reg (bv #x00 8)) (typed:unsigned-vec-min (reg (bv #x00 8)) (reg (bv #x01 8)) 16 1024) 16 1024)"
 
 hvx_expr_ctx = read_string_to_dsl(hvx_expr_str, hvx_dsl_list)
 halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
 
+hvx_dsl_inst = dsl_inst_from_ctx(hvx_expr_ctx, hvx_dsl_list) 
+
+#print("HVX Matching Ctx: ", get_matching_context(hvx_expr_ctx.emit_context_expr_string(), hvx_dsl_list))
+
 #print("="*5, "Pretty Printing Expressions", "="*5)
 #print(hvx_expr_ctx.emit_context_expr_string())
+#print("hvx Context concrete name: ", hvx_expr_ctx.name)
+#
+#desired_ctxs = get_contexts_with_output_size(dsl_inst_from_ctx(hvx_expr_ctx, hvx_dsl_list) ,1024)
+#
+#print("HVX Contexts with Output Size ", desired_ctxs)
+#print("IS IT LOGICAL? ", desired_ctxs[0].is_elementwise_logical_like_operation())
 #print(halide_expr_ctx.emit_context_expr_string())
 
 
@@ -50,11 +57,11 @@ synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list,
 #print("hvx Context output size: ",hvx_expr_ctx.out_vectsize)
 #print("Halide Context output size: ", halide_expr_ctx.out_vectsize)
 
-#print("hvx Context concrete name: ",hvx_expr_ctx.name)
 #print("Halide Context concrete name: ",halide_expr_ctx.name)
 
 
-output_sizes = [32, 64, 128, 1024]
+#output_sizes = [32, 64, 128, 1024]
+output_sizes = [128, 1024]
 
 for output_size in output_sizes:
     #print("="*10, "Testing Output size", output_size ,"="*10)
@@ -73,6 +80,7 @@ for output_size in output_sizes:
 
 
     if success:
+        print("ENUMO_SUCC")
         print("SUCCESS at output size {}!".format(output_size))
         print("Corresponding hvx concretization:")
         print(src_expr_str)

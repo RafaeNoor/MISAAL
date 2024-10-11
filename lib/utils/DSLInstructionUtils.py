@@ -1064,3 +1064,10 @@ def process_dict(d):
         print(src_)
         print("-------->")
         print(dst_)
+
+def dsl_inst_from_ctx(ctx, dsl_list):
+    for dsl_inst in dsl_list:
+        for _ctx in dsl_inst.contexts:
+            if _ctx.name == ctx.name:
+                return dsl_inst
+                
