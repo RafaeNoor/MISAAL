@@ -50,9 +50,14 @@ class RepairRelavancePostProcess(Property):
 
     def generate_candidates(self):
 
-        for key in self.repair_results_dict:
-            yield key
+        try:
+            for key in self.repair_results_dict:
+                yield key
 
+        except KeyboardInterrupt:
+            print("Keyboard exception, exiting ....")
+
+        return
 
 
 
