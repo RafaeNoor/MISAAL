@@ -1,0 +1,62 @@
+{
+    "_mm256_dpbusd_epi32": [
+        "typed:cast-int",
+        "typed:cast-uint",
+        "typed:signed-vec-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-mul",
+        "typed:vec-add"
+    ],
+    "_mm256_maddubs_epi16": [
+        "typed:cast-int",
+        "typed:signed-vec-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-mul",
+        "typed:vec-add"
+    ],
+    "_mm256_mulhrs_epi16": [
+        "typed:cast-int",
+        "typed:signed-vec-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "_mm512_fmadd_epi32": [
+        "typed:cast-uint",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul",
+        "typed:unsigned-vec-sat-add",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-add"
+    ],
+    "_mm256_mul_epi32": [
+        "typed:cast-int"
+    ],
+    "_mm_mul_su32": [
+        "typed:cast-uint"
+    ],
+    "_mm_avg_epu8": [
+        "typed:vec-add"
+    ],
+    "_mm512_mulhi_epu32": [
+        "typed:cast-uint",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul",
+        "typed:unsigned-vec-widen-mul"
+    ],
+    "_mm256_rol_epi32": [
+        "typed:signed-vec-shr",
+        "typed:vec-shl"
+    ],
+    "_mm256_ror_epi32": [
+        "typed:signed-vec-shr",
+        "typed:vec-shl"
+    ],
+    "_mm_rolv_epi32": [
+        "typed:signed-vec-shr",
+        "typed:vec-shl"
+    ],
+    "_mm_rorv_epi32": [
+        "typed:signed-vec-shr",
+        "typed:vec-shl"
+    ]
+}

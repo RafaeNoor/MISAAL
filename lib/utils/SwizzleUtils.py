@@ -251,11 +251,13 @@ def summarize_distinct_swizzles(swizzle_analysis_result, target_name = "misaal")
     for key, props  in swizzle_analysis_result.items():
         for prop in props:
             ctxs = prop['property']['contexts']
+            class_name = prop['property']['candidate']
 
             for ctx in (ctxs):
                 swizzle_name = "{}_swizzle_{}".format(target_name, sid)
                 sid+= 1
-                swizzle_ctx = parse_swizzle_object(ctx, key, swizzle_name)
+                #swizzle_ctx = parse_swizzle_object(ctx, key, swizzle_name)
+                swizzle_ctx = parse_swizzle_object(ctx, class_name, swizzle_name)
 
                 if not swizzle_ctx.is_valid():
                     print(swizzle_name, "is in valid!")

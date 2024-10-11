@@ -17,6 +17,7 @@ import signal
 import pwd
 from subprocess import check_output
 from utils.NotificationUtil import send_email
+import copy
 
 import random
 
@@ -246,6 +247,7 @@ class Property:
                 j = 0
 
                 for candidate in self.candidates:
+                    candidate = copy.deepcopy(candidate)
                     count += 1
                     j+= 1
                     pool.submit(worker, candidate)
@@ -361,6 +363,7 @@ class Property:
         print("Need to kill {} child processes".format(len(pid_to_kill)))
 
         for pid in pid_to_kill:
+            print("Trying to kill PID:\t", pid)
             if psutil.pid_exists(pid):
                 os.kill(pid, signal.SIGKILL)
 
@@ -511,5 +514,15 @@ class Property:
         raise NotImplementedError()
 
 
+
+    def expr_contains(self, expr, name):
+        if isinstance(expr, Context):
+            if name == expr.dsl_name or name == expr.dsl_name.split("_dsl")[0]:
+                return True
+            conds = []
+            for arg in expr.context_args:
+                conds.append(self.expr_contains(arg, name))
+            return any(conds)
+        return False
 
 

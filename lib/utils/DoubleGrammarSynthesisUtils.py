@@ -1,18 +1,23 @@
 from utils.DSLInstructionUtils import *
 from utils.CodeSynthesizerDesc import *
 from common.Types import *
+from common.StructDef import StructDef
 from  common.Instructions import Context
 import copy
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
+from utils.ContainsRegDef import ContainsRegDef
 import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = []):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = False):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
         self.auxilary_dsl_list = auxilary_dsl_list
+        self.struct_def = StructDef()
+        self.force_contains_all_regs = force_contains_all_regs
+        self.contains_reg_def = ContainsRegDef()
 
 
     def get_registers(self, ctx):
@@ -63,9 +68,12 @@ class DoubleGrammarSynthesisUtils:
 
 
 
-    def double_grammar_synthesis(self, src_expr, target_expr, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None):
+    def double_grammar_synthesis(self, src_expr, target_expr, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True):
         src_ctx = copy.deepcopy(src_expr)
         dst_ctx = copy.deepcopy(target_expr)
+
+        print(emit_compact_context_expr_str(src_ctx))
+        print(emit_compact_context_expr_str(dst_ctx))
 
         relavent_output_subset = self.get_relevant_dsl_list([dst_ctx])
         print(relavent_output_subset)
@@ -88,8 +96,6 @@ class DoubleGrammarSynthesisUtils:
             print("Early return: Dst expression is a context")
             return False, "", ""
 
-        print(emit_compact_context_expr_str(src_ctx))
-        print(emit_compact_context_expr_str(dst_ctx))
 
 
         dst_eq_class = self.get_eq_class(dst_ctx.dsl_name)
@@ -99,9 +105,9 @@ class DoubleGrammarSynthesisUtils:
             if ctx.out_vectsize == src_ctx.out_vectsize:
                 matching_ctx = True
 
-        if not matching_ctx:
-            print("Early return: No matching context")
-            return False, "", ""
+        #if not matching_ctx:
+        #    print("Early return: No matching context")
+        #    return False, "", ""
 
 
 
@@ -185,6 +191,11 @@ class DoubleGrammarSynthesisUtils:
         if double_grammar_desc.emit_interpreter:
             statements.append(double_grammar_desc.emit_interpreter_framework(relavent_dsl_subset))
 
+        if self.force_contains_all_regs:
+            statements.append(self.contains_reg_def.emit_contains(relavent_dsl_subset ,self.struct_def))
+
+        num_src_regs = len(src_ctx_regs)
+
         env = []
         for idx in range(len(src_ctx_regs)):
             value = "(?? (bitvector {}))".format(src_ctx_regs[idx].size)
@@ -206,20 +217,34 @@ class DoubleGrammarSynthesisUtils:
         if not custom_target_input_sizes is None:
             dst_input_sizes = custom_target_input_sizes
 
+
+        for idx, prec in enumerate(input_precs):
+            min_prec = min(prec, dst_input_sizes[idx])
+            input_precs[idx] = min_prec
+
         print("Dst Output Size:", dst_output_size)
         print("Dst Input Sizes:", dst_input_sizes)
         print("Dst Input Precs:", input_precs)
+
+
+        if len(dst_input_sizes) == 0:
+            return False , "", ""
+
         GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
         dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 
         GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs)
 
         src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
-        statements.append(src_expression_grammar)
 
-        src_expression = "(define src-expr\n ({})\n)".format(src_expression_label)
+        if is_src_grammar:
+            statements.append(src_expression_grammar)
+            src_expression = "(define src-expr\n ({})\n)".format(src_expression_label)
+            statements.append(src_expression)
+        else:
+            src_expression = "(define src-expr\n'()\n)"
+            statements.append(src_expression)
 
-        statements.append(src_expression)
 
 
         statements.append(dst_expression_grammar)
@@ -229,13 +254,13 @@ class DoubleGrammarSynthesisUtils:
             decl , defn = invoke_ref_custom(double_grammar_desc.interpreter_name)
             statements.append(defn)
         else:
-            statements.append(self.get_invoke_spec(spec_name = "src-expr", interpret_name = double_grammar_desc.interpreter_name))
+            statements.append(self.get_invoke_spec(spec_name = "src-expr", interpret_name = double_grammar_desc.interpreter_name, num_regs = num_src_regs))
 
         if not invoke_ref_lane_custom is None:
             decl , defn = invoke_ref_lane_custom(double_grammar_desc.interpreter_name)
             statements.append(defn)
         else:
-            statements.append(self.get_invoke_spec_lane(spec_name = "src-expr", output_prec = src_ctx.out_precision, interpret_name = double_grammar_desc.interpreter_name))
+            statements.append(self.get_invoke_spec_lane(spec_name = "src-expr", output_prec = src_ctx.out_precision, interpret_name = double_grammar_desc.interpreter_name, num_regs = num_src_regs))
 
         statements.append("(define optimize? #t)")
 
@@ -275,7 +300,10 @@ class DoubleGrammarSynthesisUtils:
         conditional = "(cond [satisfiable? {}] [else {}])".format(if_sat, if_unsat)
         statements.append(conditional)
 
+        #print("\n".join(statements))
         result = execute_racket_file(statements)
+
+
 
         is_simplified = result.returncode == 0
 
@@ -310,15 +338,30 @@ class DoubleGrammarSynthesisUtils:
         print("Unable to find", eq_class_name)
         assert False,"Unreachable"
 
-    def get_invoke_spec(self, spec_name = "spec-expr", env_name = "env", interpret_name = "interpret", invoke_spec_name = "invoke-spec"):
-        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+    def get_invoke_spec(self, spec_name = "spec-expr", env_name = "env", interpret_name = "interpret", invoke_spec_name = "invoke-spec", num_regs = 1):
+
+        constraint = self.emit_contains_assertion(expr_name = spec_name, num_regs = num_regs)
+
+        interpret_stmt =   "\n".join([constraint, "({} {} {})".format(interpret_name, spec_name, env_name)])
         return "(define ({} {}  {})\n {})".format(invoke_spec_name ,spec_name, env_name, interpret_stmt)
 
 
-    def get_invoke_spec_lane(self, spec_name = "spec-expr", env_name = "env", output_prec = 8, interpret_name = "interpret", invoke_spec_name = "invoke-spec-lane"):
-        interpret_stmt =   "({} {} {})".format(interpret_name, spec_name, env_name)
+    def get_invoke_spec_lane(self, spec_name = "spec-expr", env_name = "env", output_prec = 8, interpret_name = "interpret", invoke_spec_name = "invoke-spec-lane", num_regs = 1):
+
+        constraint = self.emit_contains_assertion(expr_name = spec_name, num_regs = num_regs)
+        interpret_stmt =   "\n".join(["({} {} {})".format(interpret_name, spec_name, env_name)])
         low_offset = "(define low (* {} lane-idx))".format(str(output_prec))
         high_offset = "(define high (+ low (- {} 1)))".format(str(output_prec))
         extract = "(define slice (extract high low {}))".format(interpret_stmt)
-        stmts = [low_offset, high_offset, extract, "slice"]
+        stmts = [constraint,low_offset, high_offset, extract, "slice"]
         return "(define ({} {} lane-idx {})\n {})".format(invoke_spec_name ,spec_name, env_name, "\n".join(stmts))
+
+    def emit_contains_assertion(self, expr_name = "spec-expr", num_regs = 1):
+        if self.force_contains_all_regs:
+            is_symbolic = "(not (concrete? {}))".format(expr_name)
+            contains_regs = ["({} {} {})".format(self.contains_reg_def.contains_name, expr_name, idx) for idx in range(0, num_regs)]
+            contains_all = "(assert (and {}))".format(" ".join(contains_regs))
+            condition = "(cond [{} {}])".format(is_symbolic, contains_all)
+            return condition
+        else:
+            return ""

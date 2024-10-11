@@ -25,7 +25,7 @@ class RepairRelavance(IdentifySwizzles):
         self.output_dsl_list = output_dsl_list
         self.input_dsl_list = dsl_list
         input_test_list = [
-            "_mm512_cvtepu8_epi32",
+            "hexagon_V6_vaddhsat_128B"
         ]
 
         #self.input_dsl_list = [d for d in self.input_dsl_list if d.name in input_test_list]

@@ -11,6 +11,7 @@ import tempfile
 import glob
 import numpy as np
 import concurrent.futures
+import signal
 
 REMOVE_RKT_FILES = True
 
@@ -105,6 +106,22 @@ class HelperCompletedProcess:
     def __init__(self, returncode = 1):
         self.returncode = returncode
 
+def run_command_child_processes(cmd, timeout = 5):
+    try:
+        proc = subprocess.Popen(cmd, start_new_session=True, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL)
+        proc.wait(timeout = timeout)
+    except  subprocess.TimeoutExpired:
+        print("Process timedout after after ", timeout, "seconds")
+        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+    except  KeyboardInterrupt:
+        print("Keyboard interrupt, killing child processe")
+        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+
+
+    result = HelperCompletedProcess(returncode = proc.returncode)
+    print("Return code: ", proc.returncode)
+    return result
+
 def execute_racket_file(statements):
 
     filename = next(tempfile._get_candidate_names()) + ".rkt"
@@ -121,22 +138,28 @@ def execute_racket_file(statements):
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
     TIMEOUT = int(5* 60) # 20 mins
     result = None
-    try:
-        result = subprocess.run(["racket", "{}".format(filename)],
-                                stdout = subprocess.DEVNULL,
-                                stderr = subprocess.DEVNULL,
-                                timeout = TIMEOUT
-                                )
 
-    except KeyboardInterrupt:
-        sys.exit()
-    except subprocess.TimeoutExpired:
-        print("File Timedout:\t", filename)
-        result = HelperCompletedProcess(returncode = 1)
-    except :
-        print("Unknown error for", filename, ":\t")
-        sys.exit()
-        result = HelperCompletedProcess(returncode = 1)
+    USE_P_OPEN = True
+
+    if USE_P_OPEN:
+        result = run_command_child_processes(["racket", "{}".format(filename)], timeout = TIMEOUT)
+    else:
+        try:
+            result = subprocess.run(["racket", "{}".format(filename)],
+                                    stdout = subprocess.DEVNULL,
+                                    stderr = subprocess.DEVNULL,
+                                    timeout = TIMEOUT
+                                    )
+
+        except KeyboardInterrupt:
+            sys.exit()
+        except subprocess.TimeoutExpired:
+            print("File Timedout:\t", filename)
+            result = HelperCompletedProcess(returncode = 1)
+        except :
+            print("Unknown error for", filename, ":\t")
+            sys.exit()
+            result = HelperCompletedProcess(returncode = 1)
 
 
 
@@ -144,6 +167,7 @@ def execute_racket_file(statements):
     print("Completed executing file:\t", filename)
     if REMOVE_RKT_FILES:
         subprocess.run(["rm {}".format(filename)], shell = True)
+        pass
     return result
 
 
@@ -791,19 +815,34 @@ def get_eq_class_relavent_contexts(possible_contexts, tight = True):
         accounted_for = []
         candidates = []
 
+        # For swizzles, Hydride adds those swizzles to the same
+        # EQ class which have different behavior w.r.t to input output sizes.
+        # For example the full interleave swizzle and the subset interleave swizzles
+        # are placed in the same class. Explicitly include at least one context with such
+        # property
+
         for ctx in sorted_ctxs:
-            """
-            for arg in ctx.context_args:
-                if isinstance(arg, BitVector) and arg.size not in accounted_for:
-                    include = True
-                    accounted_for.append(arg.size)
-            """
+
             current_args = get_num_symbolic_args(ctx)
 
-            if current_args in accounted_for:
+            in_out_condition = -1
+
+            if not (ctx.in_vectsize is None) and not (ctx.out_vectsize is None):
+                in_size = ctx.in_vectsize
+                out_size = ctx.out_vectsize
+
+                if in_size == out_size:
+                    in_out_condition =  0
+                else:
+                    in_out_condition =  1
+
+
+            key = (current_args, in_out_condition)
+
+            if key in accounted_for:
                 continue
 
-            accounted_for.append(current_args)
+            accounted_for.append(key)
             candidates.append(ctx)
 
         return candidates
@@ -1064,6 +1103,48 @@ def process_dict(d):
         print(src_)
         print("-------->")
         print(dst_)
+
+
+
+# Sort DSL List according to those equivlance classes
+# which include bitvector ops present in ops
+def sort_dsl_list(dsl_list, ops):
+    def key_function(inst):
+        return_score  = len(ops)
+        for ctx in inst.contexts:
+            ctx_ops = ctx.get_bv_ops()
+            score = sum([1 for op in ops if op in ctx_ops])
+            score = len(ops) - score
+            return_score = min(return_score, score)
+        return return_score
+
+    sorted_dsl_list = sorted(dsl_list, key = key_function)
+
+    return sorted_dsl_list
+
+
+
+def get_contexts_with_output_size(dsl_inst, size):
+    ctxs = []
+
+    for ctx in dsl_inst.contexts:
+        if ctx.out_vectsize != None and ctx.out_vectsize == size:
+            ctxs.append(ctx)
+
+    return ctxs
+
+def get_contexts_with_num_arg(dsl_inst, num_sym_args):
+    ctxs = []
+
+    for ctx in dsl_inst.contexts:
+        sym_args = sum([1 for arg in ctx.context_args if isinstance(arg, BitVector)])
+        if sym_args == num_sym_args:
+            ctxs.append(ctx)
+
+    return ctxs
+
+
+
 
 def dsl_inst_from_ctx(ctx, dsl_list):
     for dsl_inst in dsl_list:
