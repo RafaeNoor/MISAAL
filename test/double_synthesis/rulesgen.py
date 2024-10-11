@@ -75,21 +75,12 @@ def get_input_sizes(expr : Context, dsl_list : list,
     if expr_name == dsl_inst_name:
       for ctx_idx, ctx in enumerate(dsl_inst.contexts):
         if dict_idx == 0:
-          key = ctx_idx
-        elif dict_idx == -1:
-          key = -1
-          for idx in input_sizes_dict.keys():
-            if key < idx:
-              key = idx
-          key += 1
-        else:
-          key += 1
-        input_sizes_dict[key] = list()
+          input_sizes_dict[ctx_idx] = list()
         for arg in expr.context_args:  
           if isinstance(arg, Context):
             input_sizes_dict = get_input_sizes(arg, dsl_list, input_sizes_dict)
           elif isinstance(arg, Reg):
-            input_sizes_dict[key].append(ctx.in_vectsize)
+            input_sizes_dict[ctx_idx].append(ctx.in_vectsize)
       break
   # Get rid of duplicate entries
   result = {}
