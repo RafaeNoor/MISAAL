@@ -237,6 +237,14 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
 
 
+
+                    src_expr_regs = get_unique_context_registers(src_ctx)
+                    bitwidth_sizes = [arg.size for arg in src_expr_regs]
+                    candidate['src_env_sizes'] = bitwidth_sizes
+
+
+
+
                     key = self.serialize_candidate(candidate)
 
                     if key in self.context_map:
@@ -313,7 +321,8 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
         src_expr_str, dst_expr_str = self.context_map[key]
-        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str, 'env-func': candidate['prepare-env-function'], 'target_input_sizes': candidate['custom_target_input_sizes']}
+        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str, 'env-func': candidate['prepare-env-function'], 'target_input_sizes': candidate['custom_target_input_sizes'], 'src_env_sizes': candidate['src_env_sizes'] }
+
 
 
 
