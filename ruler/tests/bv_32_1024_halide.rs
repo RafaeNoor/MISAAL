@@ -198,7 +198,7 @@ impl SynthLanguage for MISAALLang {
             .expect("Unable to write RHS to file");
 
         let cmd = format!(
-            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py {}",
+            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
             file_name
         );
 

@@ -1144,7 +1144,10 @@ def get_contexts_with_num_arg(dsl_inst, num_sym_args):
     return ctxs
 
 
-
+def dsl_inst_from_name(name, dsl_list):
+    for dsl_inst in dsl_list:
+        if name == dsl_inst.name:
+            return dsl_inst
 
 def dsl_inst_from_ctx(ctx, dsl_list):
     for dsl_inst in dsl_list:
