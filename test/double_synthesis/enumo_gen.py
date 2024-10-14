@@ -334,8 +334,12 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
                                 op_dict[str(get_num_symbolic_args(ctx))].append(ctx)
                             else:
                                 continue
-        for i in op_dict.values():
-            ret_str += f"\t&{i},\n"
+        max_args = max([int(i) for i in op_dict.keys()])
+        for i in range(max_args):
+            if op_dict[str(i + 1)] == []:
+                ret_str += "\t&[],\n"
+            else:
+                ret_str += f"\t&{op_dict[str(i + 1)]},\n"
 
         ret_str += "\t);\n\n"
 
@@ -345,7 +349,9 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
         ret_str += f'\t.plug("VAR", &Workload::new(lang_{idx}.vars))\n'
         ret_str += '\t.plug("VAL", &Workload::empty())\n'
         for arg in range(0, num_sym_args):
-            ret_str += f'\t.plug("OP{arg+1}", &Workload::new(lang_{idx}.ops[{arg}].clone()))\n'
+            ret_str += (
+                f'\t.plug("OP{arg+1}", &Workload::new(lang_{idx}.ops[{arg}].clone()))\n'
+            )
         ret_str += "\t);\n\n"
 
     return ret_str
