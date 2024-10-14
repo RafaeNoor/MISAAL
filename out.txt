@@ -410,102 +410,15 @@ fn eval<'a, F>(&'a self, cvec_len: usize, mut get_cvec: F) -> CVec<Self>
 	}
 }
 
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhb_128B]
-op_dict ['hexagon_V6_vdmpyhb_acc_128B']
-op_dict []
-op_dict ['typed:unsigned-vec-sat-sub', 'typed:unsigned-vec-min', 'hexagon_V6_vminuh_128B']
-op_dict ['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vpackwuh_sat_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:vec-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'typed:unsigned-vec-mul']
-op_dict ['hexagon_V6_vmpyih_acc_128B']
-op_dict ['typed:cast-uint']
-op_dict ['typed:unsigned-vec-widen-mul', 'hexagon_V6_vmpabus_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vabsdiffh_128B']
-op_dict []
-op_dict ['typed:signed-vec-lt', 'hexagon_V6_vgtb_128B']
-op_dict ['typed:cast-uint']
-op_dict ['typed:signed-vec-min', 'typed:vec-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaddubh_128B']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-mul', 'typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpyh_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:signed-vec-sat-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaddhsat_128B']
-op_dict ['hexagon_V6_vabsh_128B']
-op_dict ['typed:signed-vec-div']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vunpackoh_128B']
-op_dict ['typed:cast-uint', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'typed:vec-sub', 'hexagon_V6_vsubuhw_128B']
-op_dict ['typed:cast-int', 'typed:cast-uint', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:vec-sub', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vsubh_128B']
-op_dict ['typed:cast-int', 'typed:cast-uint', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-mul', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpyih_128B']
-op_dict []
-op_dict ['typed:signed-vec-min', 'typed:vec-add', 'typed:vec-shl', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-shr', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaslhv_128B']
-op_dict []
-op_dict ['typed:signed-vec-div', 'hexagon_V6_vnavgw_128B']
-op_dict ['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vsathub_128B']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhvsat_128B]
-op_dict ['hexagon_V6_vdmpyhvsat_acc_128B']
-op_dict []
-op_dict ['typed:signed-vec-widen-mul', 'typed:unsigned-vec-mul', 'hexagon_V6_vrmpybv_128B']
-op_dict [hexagon_V6_vrmpybv_acc_128B, hexagon_V6_vrmpybusv_acc_128B, hexagon_V6_vrmpyubv_acc_128B]
-op_dict []
-op_dict ['typed:unsigned-vec-widen-mul', 'typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vrmpyub_128B, hexagon_V6_vrmpybus_128B]
-op_dict ['hexagon_V6_vrmpybus_acc_128B']
-op_dict ['typed:cast-uint']
-op_dict ['typed:unsigned-vec-widen-mul', 'hexagon_V6_vdmpybus_128B']
-op_dict [hexagon_V6_vdmpybus_acc_128B]
-op_dict ['typed:cast-uint']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpyuhe_128B']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-widen-mul', 'hexagon_V6_vdmpyhisat_128B']
-op_dict [hexagon_V6_vdmpyhisat_acc_128B, hexagon_V6_vdmpyhsuisat_acc_128B]
-op_dict ['typed:cast-uint']
-op_dict ['typed:unsigned-vec-widen-mul', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpabusv_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vor_128B']
-op_dict []
-op_dict ['typed:unsigned-vec-le', 'typed:unsigned-vec-lt', 'hexagon_V6_vandvrt_128B']
-op_dict []
-op_dict ['typed:signed-vec-div', 'hexagon_V6_vavgwrnd_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmaxw_128B']
-op_dict ['typed:cast-uint']
-op_dict ['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpyub_128B']
-op_dict []
-op_dict ['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vavguw_128B']
-op_dict ['typed:cast-int', 'typed:vec-saturate', 'typed:cast-uint', 'typed:vec-bwnot', 'hexagon_V6_vunpackh_128B']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-add']
-op_dict []
-op_dict ['typed:vec-add', 'typed:signed-vec-widen-mul']
-op_dict ['hexagon_V6_vmpybv_acc_128B']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', 'hexagon_V6_vmpauhb_128B']
-op_dict []
-op_dict ['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vlsrwv_128B']
-op_dict ['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vsb_128B']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-add']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpybv_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot']
-op_dict ['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:vec-shl', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-shr', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-shr', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vasrhv_128B']
-op_dict ['typed:cast-int']
-op_dict ['typed:signed-vec-widen-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhsat_128B, hexagon_V6_vdmpyhsusat_128B]
-op_dict ['hexagon_V6_vdmpyhsat_acc_128B']
-op_dict ['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vnot_128B']
-op_dict ['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add']
 let lang_0 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhb_128B],
-	&['hexagon_V6_vdmpyhb_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhb_128B],
+		&["hexagon_V6_vdmpyhb_acc_128B"],
+	];
+);
 
 let wkld_0 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_0.vars))
@@ -513,43 +426,49 @@ let wkld_0 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_0.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_0.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_0.ops[2].clone()))
-	);
+;
 
 let lang_1 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:unsigned-vec-sat-sub', 'typed:unsigned-vec-min', 'hexagon_V6_vminuh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:unsigned-vec-sat-sub", "typed:unsigned-vec-min", "hexagon_V6_vminuh_128B"],
+	];
+);
 
 let wkld_1 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_1.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_1.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_1.ops[1].clone()))
-	);
+;
 
 let lang_2 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vpackwuh_sat_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vpackwuh_sat_128B"],
+	];
+);
 
 let wkld_2 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_2.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_2.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_2.ops[1].clone()))
-	);
+;
 
 let lang_3 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:vec-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'typed:unsigned-vec-mul'],
-	&['hexagon_V6_vmpyih_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:vec-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "typed:unsigned-vec-mul"],
+		&["hexagon_V6_vmpyih_acc_128B"],
+	];
+);
 
 let wkld_3 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_3.vars))
@@ -557,211 +476,241 @@ let wkld_3 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_3.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_3.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_3.ops[2].clone()))
-	);
+;
 
 let lang_4 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:unsigned-vec-widen-mul', 'hexagon_V6_vmpabus_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:unsigned-vec-widen-mul", "hexagon_V6_vmpabus_128B"],
+	];
+);
 
 let wkld_4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_4.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_4.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_4.ops[1].clone()))
-	);
+;
 
 let lang_5 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vabsdiffh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vabsdiffh_128B"],
+	];
+);
 
 let wkld_5 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_5.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_5.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_5.ops[1].clone()))
-	);
+;
 
 let lang_6 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:signed-vec-lt', 'hexagon_V6_vgtb_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:signed-vec-lt", "hexagon_V6_vgtb_128B"],
+	];
+);
 
 let wkld_6 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_6.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_6.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_6.ops[1].clone()))
-	);
+;
 
 let lang_7 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:signed-vec-min', 'typed:vec-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaddubh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:signed-vec-min", "typed:vec-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vaddubh_128B"],
+	];
+);
 
 let wkld_7 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_7.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_7.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_7.ops[1].clone()))
-	);
+;
 
 let lang_8 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-mul', 'typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpyh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-mul", "typed:signed-vec-widen-mul", "typed:signed-vec-mul", "hexagon_V6_vmpyh_128B"],
+	];
+);
 
 let wkld_8 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_8.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_8.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_8.ops[1].clone()))
-	);
+;
 
 let lang_9 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:signed-vec-sat-add', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaddhsat_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:signed-vec-sat-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vaddhsat_128B"],
+	];
+);
 
 let wkld_9 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_9.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_9.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_9.ops[1].clone()))
-	);
+;
 
 let lang_10 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['hexagon_V6_vabsh_128B'],
-	&['typed:signed-vec-div'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["hexagon_V6_vabsh_128B"],
+		&["typed:signed-vec-div"],
+	];
+);
 
 let wkld_10 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_10.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_10.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_10.ops[1].clone()))
-	);
+;
 
 let lang_11 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vunpackoh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vunpackoh_128B"],
+	];
+);
 
 let wkld_11 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_11.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_11.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_11.ops[1].clone()))
-	);
+;
 
 let lang_12 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'typed:vec-sub', 'hexagon_V6_vsubuhw_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "typed:vec-sub", "hexagon_V6_vsubuhw_128B"],
+	];
+);
 
 let wkld_12 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_12.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_12.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_12.ops[1].clone()))
-	);
+;
 
 let lang_13 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int', 'typed:cast-uint', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:vec-sub', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vsubh_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int", "typed:cast-uint", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:vec-sub", "typed:unsigned-vec-sat-add", "hexagon_V6_vsubh_128B"],
+	];
+);
 
 let wkld_13 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_13.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_13.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_13.ops[1].clone()))
-	);
+;
 
 let lang_14 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int', 'typed:cast-uint', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-mul', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpyih_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int", "typed:cast-uint", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-mul", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpyih_128B"],
+	];
+);
 
 let wkld_14 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_14.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_14.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_14.ops[1].clone()))
-	);
+;
 
 let lang_15 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:signed-vec-min', 'typed:vec-add', 'typed:vec-shl', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-shr', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaslhv_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:signed-vec-min", "typed:vec-add", "typed:vec-shl", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-shr", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vaslhv_128B"],
+	];
+);
 
 let wkld_15 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_15.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_15.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_15.ops[1].clone()))
-	);
+;
 
 let lang_16 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:signed-vec-div', 'hexagon_V6_vnavgw_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:signed-vec-div", "hexagon_V6_vnavgw_128B"],
+	];
+);
 
 let wkld_16 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_16.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_16.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_16.ops[1].clone()))
-	);
+;
 
 let lang_17 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vsathub_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vsathub_128B"],
+	];
+);
 
 let wkld_17 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_17.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_17.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_17.ops[1].clone()))
-	);
+;
 
 let lang_18 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhvsat_128B],
-	&['hexagon_V6_vdmpyhvsat_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhvsat_128B],
+		&["hexagon_V6_vdmpyhvsat_acc_128B"],
+	];
+);
 
 let wkld_18 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_18.vars))
@@ -769,15 +718,17 @@ let wkld_18 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_18.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_18.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_18.ops[2].clone()))
-	);
+;
 
 let lang_19 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:signed-vec-widen-mul', 'typed:unsigned-vec-mul', 'hexagon_V6_vrmpybv_128B'],
-	&[hexagon_V6_vrmpybv_acc_128B, hexagon_V6_vrmpybusv_acc_128B, hexagon_V6_vrmpyubv_acc_128B],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:signed-vec-widen-mul", "typed:unsigned-vec-mul", "hexagon_V6_vrmpybv_128B"],
+		&[hexagon_V6_vrmpybv_acc_128B, hexagon_V6_vrmpybusv_acc_128B, hexagon_V6_vrmpyubv_acc_128B],
+	];
+);
 
 let wkld_19 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_19.vars))
@@ -785,15 +736,17 @@ let wkld_19 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_19.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_19.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_19.ops[2].clone()))
-	);
+;
 
 let lang_20 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:unsigned-vec-widen-mul', 'typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', hexagon_V6_vrmpyub_128B, hexagon_V6_vrmpybus_128B],
-	&['hexagon_V6_vrmpybus_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:unsigned-vec-widen-mul", "typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vrmpyub_128B, hexagon_V6_vrmpybus_128B],
+		&["hexagon_V6_vrmpybus_acc_128B"],
+	];
+);
 
 let wkld_20 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_20.vars))
@@ -801,15 +754,17 @@ let wkld_20 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_20.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_20.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_20.ops[2].clone()))
-	);
+;
 
 let lang_21 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:unsigned-vec-widen-mul', 'hexagon_V6_vdmpybus_128B'],
-	&[hexagon_V6_vdmpybus_acc_128B],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:unsigned-vec-widen-mul", "hexagon_V6_vdmpybus_128B"],
+		&[hexagon_V6_vdmpybus_acc_128B],
+	];
+);
 
 let wkld_21 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_21.vars))
@@ -817,29 +772,33 @@ let wkld_21 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_21.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_21.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_21.ops[2].clone()))
-	);
+;
 
 let lang_22 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpyuhe_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpyuhe_128B"],
+	];
+);
 
 let wkld_22 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_22.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_22.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_22.ops[1].clone()))
-	);
+;
 
 let lang_23 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-widen-mul', 'hexagon_V6_vdmpyhisat_128B'],
-	&[hexagon_V6_vdmpyhisat_acc_128B, hexagon_V6_vdmpyhsuisat_acc_128B],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-widen-mul", "hexagon_V6_vdmpyhisat_128B"],
+		&[hexagon_V6_vdmpyhisat_acc_128B, hexagon_V6_vdmpyhsuisat_acc_128B],
+	];
+);
 
 let wkld_23 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_23.vars))
@@ -847,127 +806,145 @@ let wkld_23 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_23.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_23.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_23.ops[2].clone()))
-	);
+;
 
 let lang_24 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:unsigned-vec-widen-mul', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpabusv_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:unsigned-vec-widen-mul", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "hexagon_V6_vmpabusv_128B"],
+	];
+);
 
 let wkld_24 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_24.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_24.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_24.ops[1].clone()))
-	);
+;
 
 let lang_25 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vor_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vor_128B"],
+	];
+);
 
 let wkld_25 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_25.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_25.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_25.ops[1].clone()))
-	);
+;
 
 let lang_26 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:unsigned-vec-le', 'typed:unsigned-vec-lt', 'hexagon_V6_vandvrt_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:unsigned-vec-le", "typed:unsigned-vec-lt", "hexagon_V6_vandvrt_128B"],
+	];
+);
 
 let wkld_26 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_26.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_26.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_26.ops[1].clone()))
-	);
+;
 
 let lang_27 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:signed-vec-div', 'hexagon_V6_vavgwrnd_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:signed-vec-div", "hexagon_V6_vavgwrnd_128B"],
+	];
+);
 
 let wkld_27 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_27.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_27.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_27.ops[1].clone()))
-	);
+;
 
 let lang_28 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmaxw_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vmaxw_128B"],
+	];
+);
 
 let wkld_28 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_28.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_28.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_28.ops[1].clone()))
-	);
+;
 
 let lang_29 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint'],
-	&['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-sat-add', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'hexagon_V6_vmpyub_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint"],
+		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "hexagon_V6_vmpyub_128B"],
+	];
+);
 
 let wkld_29 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_29.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_29.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_29.ops[1].clone()))
-	);
+;
 
 let lang_30 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vavguw_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:unsigned-vec-shr", "typed:unsigned-vec-div", "hexagon_V6_vavguw_128B"],
+	];
+);
 
 let wkld_30 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_30.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_30.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_30.ops[1].clone()))
-	);
+;
 
 let lang_31 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int', 'typed:vec-saturate', 'typed:cast-uint', 'typed:vec-bwnot', 'hexagon_V6_vunpackh_128B'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-add'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int", "typed:vec-saturate", "typed:cast-uint", "typed:vec-bwnot", "hexagon_V6_vunpackh_128B"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-add"],
+	];
+);
 
 let wkld_31 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_31.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_31.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_31.ops[1].clone()))
-	);
+;
 
 let lang_32 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:vec-add', 'typed:signed-vec-widen-mul'],
-	&['hexagon_V6_vmpybv_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:vec-add", "typed:signed-vec-widen-mul"],
+		&["hexagon_V6_vmpybv_acc_128B"],
+	];
+);
 
 let wkld_32 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_32.vars))
@@ -975,85 +952,97 @@ let wkld_32 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_32.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_32.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_32.ops[2].clone()))
-	);
+;
 
 let lang_33 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', 'hexagon_V6_vmpauhb_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", "hexagon_V6_vmpauhb_128B"],
+	];
+);
 
 let wkld_33 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_33.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_33.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_33.ops[1].clone()))
-	);
+;
 
 let lang_34 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&[],
-	&['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vlsrwv_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&[],
+		&["typed:unsigned-vec-shr", "typed:unsigned-vec-div", "hexagon_V6_vlsrwv_128B"],
+	];
+);
 
 let wkld_34 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_34.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_34.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_34.ops[1].clone()))
-	);
+;
 
 let lang_35 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vsb_128B'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-add'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot", "hexagon_V6_vsb_128B"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-add"],
+	];
+);
 
 let wkld_35 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_35.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_35.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_35.ops[1].clone()))
-	);
+;
 
 let lang_36 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpybv_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpybv_128B"],
+	];
+);
 
 let wkld_36 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_36.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_36.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_36.ops[1].clone()))
-	);
+;
 
 let lang_37 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
-	&['typed:signed-vec-mod', 'typed:signed-vec-min', 'typed:vec-shl', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-mod', 'typed:unsigned-vec-shr', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-shr', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vasrhv_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
+		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:vec-shl", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-shr", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-shr", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vasrhv_128B"],
+	];
+);
 
 let wkld_37 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_37.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_37.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_37.ops[1].clone()))
-	);
+;
 
 let lang_38 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-int'],
-	&['typed:signed-vec-widen-mul', 'typed:unsigned-vec-mul', hexagon_V6_vdmpyhsat_128B, hexagon_V6_vdmpyhsusat_128B],
-	&['hexagon_V6_vdmpyhsat_acc_128B'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-int"],
+		&["typed:signed-vec-widen-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhsat_128B, hexagon_V6_vdmpyhsusat_128B],
+		&["hexagon_V6_vdmpyhsat_acc_128B"],
+	];
+);
 
 let wkld_38 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_38.vars))
@@ -1061,20 +1050,22 @@ let wkld_38 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
 	.plug("OP1", &Workload::new(lang_38.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_38.ops[1].clone()))
 	.plug("OP3", &Workload::new(lang_38.ops[2].clone()))
-	);
+;
 
 let lang_39 = Lang::new(
-	&['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-	&['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vnot_128B'],
-	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add'],
-	);
+	&["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+	&["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+	&[
+		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot", "hexagon_V6_vnot_128B"],
+		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add"],
+	];
+);
 
 let wkld_39 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
 	.plug("VAR", &Workload::new(lang_39.vars))
 	.plug("VAL", &Workload::empty())
 	.plug("OP1", &Workload::new(lang_39.ops[0].clone()))
 	.plug("OP2", &Workload::new(lang_39.ops[1].clone()))
-	);
+;
 
 

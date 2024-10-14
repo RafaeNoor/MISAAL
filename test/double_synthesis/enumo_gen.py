@@ -318,7 +318,7 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
         ]  # 3 is max num of sym args; parameterize this
         ret_str += f"\t&{val_list},\n"
         ret_str += f"\t&{var_list},\n"
-
+        ret_str += "\t&[\n"
         op_dict = defaultdict(list)
         for op in opset:
             for dsl_list in dsl_lists:
@@ -337,11 +337,12 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
         max_args = max([int(i) for i in op_dict.keys()])
         for i in range(max_args):
             if op_dict[str(i + 1)] == []:
-                ret_str += "\t&[],\n"
+                ret_str += "\t\t&[],\n"
             else:
-                ret_str += f"\t&{op_dict[str(i + 1)]},\n"
+                ret_str += f"\t\t&{op_dict[str(i + 1)]},\n"
 
-        ret_str += "\t);\n\n"
+        ret_str += "\t],\n"
+        ret_str += ");\n\n"
 
         num_sym_args = len(op_dict.keys())
 
@@ -352,8 +353,10 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
             ret_str += (
                 f'\t.plug("OP{arg+1}", &Workload::new(lang_{idx}.ops[{arg}].clone()))\n'
             )
-        ret_str += "\t);\n\n"
+        ret_str += ";\n\n"
 
+    ret_str = ret_str.replace("\'", '\"')
+    
     return ret_str
 
 
