@@ -166,6 +166,7 @@ import json
 import sys
 from os import listdir
 from os.path import isfile, join
+from collections import defaultdict
 
 
 # Uncomment below line to keep intermediate racket files
@@ -301,9 +302,13 @@ def gen_egg_evaluator(dsl_lists):
     return ret_str
 
 
-def generate_enumo_langs(relevance_sets, depth):
+def generate_enumo_langs(relevance_sets, depth, dsl_lists):
     ret_str = ""
-    for i, pair in enumerate(relevance_sets):
+    for i, relevance_set in enumerate(relevance_sets):
+        opset = relevance_sets[relevance_set]
+        opset.append(relevance_set)
+        # print("Opset: ", opset)
+        # get num symbolic args from context name
         ret_str += f"let lang_{i} = Lang::new(\n"
         val_list = [
             str(i) for i in range(0, depth * 3)
@@ -313,6 +318,36 @@ def generate_enumo_langs(relevance_sets, depth):
         ]  # 3 is max num of sym args; parameterize this
         ret_str += f"\t&{val_list},\n"
         ret_str += f"\t&{var_list},\n"
+
+        op_dict = defaultdict(list)
+        for op in opset:
+            for dsl_list in dsl_lists:
+                for inst in dsl_list:
+                    if op == inst.name:
+                        # get all contexts with same logic as lang
+                        curr_num_sym = 0
+                        for ctx in inst.contexts:
+                            if curr_num_sym == 0:
+                                curr_num_sym = get_num_symbolic_args(ctx)
+                                op_dict[str(curr_num_sym)].append(inst.name)
+                            elif curr_num_sym != get_num_symbolic_args(ctx):
+                                op_dict[str(get_num_symbolic_args(ctx))].append(ctx)
+                            else:
+                                continue
+        for i in op_dict.values():
+            ret_str += f"\t&{i},\n"
+
+        ret_str += "\t);\n\n"
+
+        num_sym_args = len(op_dict.keys())
+
+        ret_str += f'let wkld = iter_metric(base_lang({num_sym_args}), "EXPR", Metric::Depth, {depth})\n'
+        ret_str += '\t.plug("VAR", &Workload::new(lang.vars))\n'
+        ret_str += '\t.plug("VAL", &Workload::empty())\n'
+        for i in range(0, num_sym_args):
+            ret_str += f'\t.plug("OP{i+1}", &Workload::new(lang.ops[{i}].clone()))\n'
+        ret_str += "\t);\n\n"
+
     return ret_str
 
 
@@ -322,6 +357,6 @@ relevance_sets = json.load(f)
 
 print(gen_egg_lang([hvx_dsl_list, halide_dsl_list]))
 print(gen_egg_evaluator([hvx_dsl_list, halide_dsl_list]))
-print(generate_enumo_langs(relevance_sets, 3))
+print(generate_enumo_langs(relevance_sets, 3, [hvx_dsl_list, halide_dsl_list]))
 
 # generate new Lang for each relevance set so that is the onl
