@@ -194,7 +194,7 @@ print(halide_expr_ctx.emit_context_expr_string())
 
 
 def to_camel_case(snake_str):
-    return "".join(x.capitalize() for x in snake_str.lower().split("_"))
+    return "".join(x.capitalize() for x in snake_str.lower().split("_")).replace(":", "_").replace("-", "_")
 
 
 def get_all_inst_names(dsl_list):

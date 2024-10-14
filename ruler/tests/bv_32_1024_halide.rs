@@ -1,3 +1,5 @@
+#![recursion_limit = "256"]
+
 use cli_runner::{get_stderr, get_stdout, run};
 use num::{ToPrimitive, Zero};
 use rand::distributions::Alphanumeric;

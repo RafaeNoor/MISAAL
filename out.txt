@@ -178,52 +178,52 @@ egg::define_language! {
 		"hexagon_V6_vmpyhvsrs_128B" = HexagonV6Vmpyhvsrs128b([Id;(2)]),
 		"hexagon_V6_interleave_4_128B" = HexagonV6Interleave4128b(Id),
 		"hexagon_V6_interleave_2_128B" = HexagonV6Interleave2128b(Id),
-		"typed:cast-int" = Typed:cast-int(Id),
-		"typed:cast-uint" = Typed:cast-uint(Id),
-		"typed:concat_vectors" = Typed:concatVectors([Id;(2)]),
-		"typed:signed-vec-abs" = Typed:signed-vec-abs(Id),
-		"typed:signed-vec-absd" = Typed:signed-vec-absd([Id;(2)]),
-		"typed:signed-vec-div" = Typed:signed-vec-div([Id;(2)]),
-		"typed:signed-vec-halving_add" = Typed:signed-vec-halvingAdd([Id;(2)]),
-		"typed:signed-vec-le" = Typed:signed-vec-le([Id;(2)]),
-		"typed:signed-vec-lt" = Typed:signed-vec-lt([Id;(2)]),
-		"typed:signed-vec-max" = Typed:signed-vec-max([Id;(2)]),
-		"typed:signed-vec-min" = Typed:signed-vec-min([Id;(2)]),
-		"typed:signed-vec-mod" = Typed:signed-vec-mod([Id;(2)]),
-		"typed:signed-vec-mul" = Typed:signed-vec-mul([Id;(2)]),
-		"typed:signed-vec-rounding_halving_add" = Typed:signed-vec-roundingHalvingAdd([Id;(2)]),
-		"typed:signed-vec-rounding_mul_shift_right" = Typed:signed-vec-roundingMulShiftRight([Id;(3)]),
-		"typed:signed-vec-rounding_shift_right" = Typed:signed-vec-roundingShiftRight([Id;(2)]),
-		"typed:signed-vec-sat-add" = Typed:signed-vec-sat-add([Id;(2)]),
-		"typed:signed-vec-sat-sub" = Typed:signed-vec-sat-sub([Id;(2)]),
-		"typed:signed-vec-shr" = Typed:signed-vec-shr([Id;(2)]),
-		"typed:signed-vec-widen-mul" = Typed:signed-vec-widen-mul([Id;(2)]),
-		"typed:signed-vector_reduce_add" = Typed:signed-vectorReduceAdd(Id),
-		"typed:slice_vectors" = Typed:sliceVectors(Id),
-		"typed:unsigned-vec-absd" = Typed:unsigned-vec-absd([Id;(2)]),
-		"typed:unsigned-vec-div" = Typed:unsigned-vec-div([Id;(2)]),
-		"typed:unsigned-vec-halving_add" = Typed:unsigned-vec-halvingAdd([Id;(2)]),
-		"typed:unsigned-vec-le" = Typed:unsigned-vec-le([Id;(2)]),
-		"typed:unsigned-vec-lt" = Typed:unsigned-vec-lt([Id;(2)]),
-		"typed:unsigned-vec-max" = Typed:unsigned-vec-max([Id;(2)]),
-		"typed:unsigned-vec-min" = Typed:unsigned-vec-min([Id;(2)]),
-		"typed:unsigned-vec-mod" = Typed:unsigned-vec-mod([Id;(2)]),
-		"typed:unsigned-vec-mul" = Typed:unsigned-vec-mul([Id;(2)]),
-		"typed:unsigned-vec-rounding_halving_add" = Typed:unsigned-vec-roundingHalvingAdd([Id;(2)]),
-		"typed:unsigned-vec-rounding_mul_shift_right" = Typed:unsigned-vec-roundingMulShiftRight([Id;(3)]),
-		"typed:unsigned-vec-rounding_shift_right" = Typed:unsigned-vec-roundingShiftRight([Id;(2)]),
-		"typed:unsigned-vec-sat-add" = Typed:unsigned-vec-sat-add([Id;(2)]),
-		"typed:unsigned-vec-sat-sub" = Typed:unsigned-vec-sat-sub([Id;(2)]),
-		"typed:unsigned-vec-shr" = Typed:unsigned-vec-shr([Id;(2)]),
-		"typed:unsigned-vec-widen-mul" = Typed:unsigned-vec-widen-mul([Id;(2)]),
-		"typed:vec-add" = Typed:vec-add([Id;(2)]),
-		"typed:vec-bwand" = Typed:vec-bwand([Id;(2)]),
-		"typed:vec-bwnot" = Typed:vec-bwnot(Id),
-		"typed:vec-eq" = Typed:vec-eq([Id;(2)]),
-		"typed:vec-saturate" = Typed:vec-saturate(Id),
-		"typed:vec-shl" = Typed:vec-shl([Id;(2)]),
-		"typed:vec-sub" = Typed:vec-sub([Id;(2)]),
-		"typed:xBroadcast" = Typed:xbroadcast(Id),
+		"typed:cast-int" = Typed_cast_int(Id),
+		"typed:cast-uint" = Typed_cast_uint(Id),
+		"typed:concat_vectors" = Typed_concatVectors([Id;(2)]),
+		"typed:signed-vec-abs" = Typed_signed_vec_abs(Id),
+		"typed:signed-vec-absd" = Typed_signed_vec_absd([Id;(2)]),
+		"typed:signed-vec-div" = Typed_signed_vec_div([Id;(2)]),
+		"typed:signed-vec-halving_add" = Typed_signed_vec_halvingAdd([Id;(2)]),
+		"typed:signed-vec-le" = Typed_signed_vec_le([Id;(2)]),
+		"typed:signed-vec-lt" = Typed_signed_vec_lt([Id;(2)]),
+		"typed:signed-vec-max" = Typed_signed_vec_max([Id;(2)]),
+		"typed:signed-vec-min" = Typed_signed_vec_min([Id;(2)]),
+		"typed:signed-vec-mod" = Typed_signed_vec_mod([Id;(2)]),
+		"typed:signed-vec-mul" = Typed_signed_vec_mul([Id;(2)]),
+		"typed:signed-vec-rounding_halving_add" = Typed_signed_vec_roundingHalvingAdd([Id;(2)]),
+		"typed:signed-vec-rounding_mul_shift_right" = Typed_signed_vec_roundingMulShiftRight([Id;(3)]),
+		"typed:signed-vec-rounding_shift_right" = Typed_signed_vec_roundingShiftRight([Id;(2)]),
+		"typed:signed-vec-sat-add" = Typed_signed_vec_sat_add([Id;(2)]),
+		"typed:signed-vec-sat-sub" = Typed_signed_vec_sat_sub([Id;(2)]),
+		"typed:signed-vec-shr" = Typed_signed_vec_shr([Id;(2)]),
+		"typed:signed-vec-widen-mul" = Typed_signed_vec_widen_mul([Id;(2)]),
+		"typed:signed-vector_reduce_add" = Typed_signed_vectorReduceAdd(Id),
+		"typed:slice_vectors" = Typed_sliceVectors(Id),
+		"typed:unsigned-vec-absd" = Typed_unsigned_vec_absd([Id;(2)]),
+		"typed:unsigned-vec-div" = Typed_unsigned_vec_div([Id;(2)]),
+		"typed:unsigned-vec-halving_add" = Typed_unsigned_vec_halvingAdd([Id;(2)]),
+		"typed:unsigned-vec-le" = Typed_unsigned_vec_le([Id;(2)]),
+		"typed:unsigned-vec-lt" = Typed_unsigned_vec_lt([Id;(2)]),
+		"typed:unsigned-vec-max" = Typed_unsigned_vec_max([Id;(2)]),
+		"typed:unsigned-vec-min" = Typed_unsigned_vec_min([Id;(2)]),
+		"typed:unsigned-vec-mod" = Typed_unsigned_vec_mod([Id;(2)]),
+		"typed:unsigned-vec-mul" = Typed_unsigned_vec_mul([Id;(2)]),
+		"typed:unsigned-vec-rounding_halving_add" = Typed_unsigned_vec_roundingHalvingAdd([Id;(2)]),
+		"typed:unsigned-vec-rounding_mul_shift_right" = Typed_unsigned_vec_roundingMulShiftRight([Id;(3)]),
+		"typed:unsigned-vec-rounding_shift_right" = Typed_unsigned_vec_roundingShiftRight([Id;(2)]),
+		"typed:unsigned-vec-sat-add" = Typed_unsigned_vec_sat_add([Id;(2)]),
+		"typed:unsigned-vec-sat-sub" = Typed_unsigned_vec_sat_sub([Id;(2)]),
+		"typed:unsigned-vec-shr" = Typed_unsigned_vec_shr([Id;(2)]),
+		"typed:unsigned-vec-widen-mul" = Typed_unsigned_vec_widen_mul([Id;(2)]),
+		"typed:vec-add" = Typed_vec_add([Id;(2)]),
+		"typed:vec-bwand" = Typed_vec_bwand([Id;(2)]),
+		"typed:vec-bwnot" = Typed_vec_bwnot(Id),
+		"typed:vec-eq" = Typed_vec_eq([Id;(2)]),
+		"typed:vec-saturate" = Typed_vec_saturate(Id),
+		"typed:vec-shl" = Typed_vec_shl([Id;(2)]),
+		"typed:vec-sub" = Typed_vec_sub([Id;(2)]),
+		"typed:xBroadcast" = Typed_xbroadcast(Id),
 		Var(Symbol),
 	}
 }
@@ -360,52 +360,52 @@ fn eval<'a, F>(&'a self, cvec_len: usize, mut get_cvec: F) -> CVec<Self>
 		MISAALLang::HexagonV6Vmpyhvsrs128b([a, b]) => vec[]!
 		MISAALLang::HexagonV6Interleave4128b(a) => vec[]!
 		MISAALLang::HexagonV6Interleave2128b(a) => vec[]!
-		MISAALLang::Typed:cast-int(a) => vec[]!
-		MISAALLang::Typed:cast-uint(a) => vec[]!
-		MISAALLang::Typed:concatVectors([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-abs(a) => vec[]!
-		MISAALLang::Typed:signed-vec-absd([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-div([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-halvingAdd([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-le([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-lt([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-max([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-min([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-mod([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-mul([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-roundingHalvingAdd([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-roundingMulShiftRight([a, b, c]) => vec[]!
-		MISAALLang::Typed:signed-vec-roundingShiftRight([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-sat-add([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-sat-sub([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-shr([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vec-widen-mul([a, b]) => vec[]!
-		MISAALLang::Typed:signed-vectorReduceAdd(a) => vec[]!
-		MISAALLang::Typed:sliceVectors(a) => vec[]!
-		MISAALLang::Typed:unsigned-vec-absd([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-div([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-halvingAdd([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-le([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-lt([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-max([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-min([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-mod([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-mul([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-roundingHalvingAdd([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-roundingMulShiftRight([a, b, c]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-roundingShiftRight([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-sat-add([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-sat-sub([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-shr([a, b]) => vec[]!
-		MISAALLang::Typed:unsigned-vec-widen-mul([a, b]) => vec[]!
-		MISAALLang::Typed:vec-add([a, b]) => vec[]!
-		MISAALLang::Typed:vec-bwand([a, b]) => vec[]!
-		MISAALLang::Typed:vec-bwnot(a) => vec[]!
-		MISAALLang::Typed:vec-eq([a, b]) => vec[]!
-		MISAALLang::Typed:vec-saturate(a) => vec[]!
-		MISAALLang::Typed:vec-shl([a, b]) => vec[]!
-		MISAALLang::Typed:vec-sub([a, b]) => vec[]!
-		MISAALLang::Typed:xbroadcast(a) => vec[]!
+		MISAALLang::Typed_cast_int(a) => vec[]!
+		MISAALLang::Typed_cast_uint(a) => vec[]!
+		MISAALLang::Typed_concatVectors([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_abs(a) => vec[]!
+		MISAALLang::Typed_signed_vec_absd([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_div([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_halvingAdd([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_le([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_lt([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_max([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_min([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_mod([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_mul([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_roundingHalvingAdd([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_roundingMulShiftRight([a, b, c]) => vec[]!
+		MISAALLang::Typed_signed_vec_roundingShiftRight([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_sat_add([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_sat_sub([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_shr([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vec_widen_mul([a, b]) => vec[]!
+		MISAALLang::Typed_signed_vectorReduceAdd(a) => vec[]!
+		MISAALLang::Typed_sliceVectors(a) => vec[]!
+		MISAALLang::Typed_unsigned_vec_absd([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_div([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_halvingAdd([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_le([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_lt([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_max([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_min([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_mod([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_mul([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_roundingHalvingAdd([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_roundingMulShiftRight([a, b, c]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_roundingShiftRight([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_sat_add([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_sat_sub([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_shr([a, b]) => vec[]!
+		MISAALLang::Typed_unsigned_vec_widen_mul([a, b]) => vec[]!
+		MISAALLang::Typed_vec_add([a, b]) => vec[]!
+		MISAALLang::Typed_vec_bwand([a, b]) => vec[]!
+		MISAALLang::Typed_vec_bwnot(a) => vec[]!
+		MISAALLang::Typed_vec_eq([a, b]) => vec[]!
+		MISAALLang::Typed_vec_saturate(a) => vec[]!
+		MISAALLang::Typed_vec_shl([a, b]) => vec[]!
+		MISAALLang::Typed_vec_sub([a, b]) => vec[]!
+		MISAALLang::Typed_xbroadcast(a) => vec[]!
  		MISAALLang::Var(_) => vec![],
 	}
 }
@@ -417,7 +417,7 @@ let lang_0 = Lang::new(
 		&["typed:cast-int"],
 		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhb_128B],
 		&["hexagon_V6_vdmpyhb_acc_128B"],
-	];
+	],
 );
 
 let wkld_0 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -434,7 +434,7 @@ let lang_1 = Lang::new(
 	&[
 		&[],
 		&["typed:unsigned-vec-sat-sub", "typed:unsigned-vec-min", "hexagon_V6_vminuh_128B"],
-	];
+	],
 );
 
 let wkld_1 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -450,7 +450,7 @@ let lang_2 = Lang::new(
 	&[
 		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vpackwuh_sat_128B"],
-	];
+	],
 );
 
 let wkld_2 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -467,7 +467,7 @@ let lang_3 = Lang::new(
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:vec-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "typed:unsigned-vec-mul"],
 		&["hexagon_V6_vmpyih_acc_128B"],
-	];
+	],
 );
 
 let wkld_3 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -484,7 +484,7 @@ let lang_4 = Lang::new(
 	&[
 		&["typed:cast-uint"],
 		&["typed:unsigned-vec-widen-mul", "hexagon_V6_vmpabus_128B"],
-	];
+	],
 );
 
 let wkld_4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -500,7 +500,7 @@ let lang_5 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vabsdiffh_128B"],
-	];
+	],
 );
 
 let wkld_5 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -516,7 +516,7 @@ let lang_6 = Lang::new(
 	&[
 		&[],
 		&["typed:signed-vec-lt", "hexagon_V6_vgtb_128B"],
-	];
+	],
 );
 
 let wkld_6 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -532,7 +532,7 @@ let lang_7 = Lang::new(
 	&[
 		&["typed:cast-uint"],
 		&["typed:signed-vec-min", "typed:vec-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vaddubh_128B"],
-	];
+	],
 );
 
 let wkld_7 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -548,7 +548,7 @@ let lang_8 = Lang::new(
 	&[
 		&["typed:cast-int"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-mul", "typed:signed-vec-widen-mul", "typed:signed-vec-mul", "hexagon_V6_vmpyh_128B"],
-	];
+	],
 );
 
 let wkld_8 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -564,7 +564,7 @@ let lang_9 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:signed-vec-sat-add", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vaddhsat_128B"],
-	];
+	],
 );
 
 let wkld_9 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -580,7 +580,7 @@ let lang_10 = Lang::new(
 	&[
 		&["hexagon_V6_vabsh_128B"],
 		&["typed:signed-vec-div"],
-	];
+	],
 );
 
 let wkld_10 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -596,7 +596,7 @@ let lang_11 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vunpackoh_128B"],
-	];
+	],
 );
 
 let wkld_11 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -612,7 +612,7 @@ let lang_12 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "typed:vec-sub", "hexagon_V6_vsubuhw_128B"],
-	];
+	],
 );
 
 let wkld_12 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -628,7 +628,7 @@ let lang_13 = Lang::new(
 	&[
 		&["typed:cast-int", "typed:cast-uint", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:vec-sub", "typed:unsigned-vec-sat-add", "hexagon_V6_vsubh_128B"],
-	];
+	],
 );
 
 let wkld_13 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -644,7 +644,7 @@ let lang_14 = Lang::new(
 	&[
 		&["typed:cast-int", "typed:cast-uint", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-mul", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpyih_128B"],
-	];
+	],
 );
 
 let wkld_14 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -660,7 +660,7 @@ let lang_15 = Lang::new(
 	&[
 		&[],
 		&["typed:signed-vec-min", "typed:vec-add", "typed:vec-shl", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-shr", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vaslhv_128B"],
-	];
+	],
 );
 
 let wkld_15 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -676,7 +676,7 @@ let lang_16 = Lang::new(
 	&[
 		&[],
 		&["typed:signed-vec-div", "hexagon_V6_vnavgw_128B"],
-	];
+	],
 );
 
 let wkld_16 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -692,7 +692,7 @@ let lang_17 = Lang::new(
 	&[
 		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vsathub_128B"],
-	];
+	],
 );
 
 let wkld_17 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -709,7 +709,7 @@ let lang_18 = Lang::new(
 		&["typed:cast-int"],
 		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhvsat_128B],
 		&["hexagon_V6_vdmpyhvsat_acc_128B"],
-	];
+	],
 );
 
 let wkld_18 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -727,7 +727,7 @@ let lang_19 = Lang::new(
 		&[],
 		&["typed:signed-vec-widen-mul", "typed:unsigned-vec-mul", "hexagon_V6_vrmpybv_128B"],
 		&[hexagon_V6_vrmpybv_acc_128B, hexagon_V6_vrmpybusv_acc_128B, hexagon_V6_vrmpyubv_acc_128B],
-	];
+	],
 );
 
 let wkld_19 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -745,7 +745,7 @@ let lang_20 = Lang::new(
 		&[],
 		&["typed:unsigned-vec-widen-mul", "typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", hexagon_V6_vrmpyub_128B, hexagon_V6_vrmpybus_128B],
 		&["hexagon_V6_vrmpybus_acc_128B"],
-	];
+	],
 );
 
 let wkld_20 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -763,7 +763,7 @@ let lang_21 = Lang::new(
 		&["typed:cast-uint"],
 		&["typed:unsigned-vec-widen-mul", "hexagon_V6_vdmpybus_128B"],
 		&[hexagon_V6_vdmpybus_acc_128B],
-	];
+	],
 );
 
 let wkld_21 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -780,7 +780,7 @@ let lang_22 = Lang::new(
 	&[
 		&["typed:cast-uint"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpyuhe_128B"],
-	];
+	],
 );
 
 let wkld_22 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -797,7 +797,7 @@ let lang_23 = Lang::new(
 		&["typed:cast-int"],
 		&["typed:signed-vec-widen-mul", "hexagon_V6_vdmpyhisat_128B"],
 		&[hexagon_V6_vdmpyhisat_acc_128B, hexagon_V6_vdmpyhsuisat_acc_128B],
-	];
+	],
 );
 
 let wkld_23 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -814,7 +814,7 @@ let lang_24 = Lang::new(
 	&[
 		&["typed:cast-uint"],
 		&["typed:unsigned-vec-widen-mul", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "hexagon_V6_vmpabusv_128B"],
-	];
+	],
 );
 
 let wkld_24 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -830,7 +830,7 @@ let lang_25 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vor_128B"],
-	];
+	],
 );
 
 let wkld_25 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -846,7 +846,7 @@ let lang_26 = Lang::new(
 	&[
 		&[],
 		&["typed:unsigned-vec-le", "typed:unsigned-vec-lt", "hexagon_V6_vandvrt_128B"],
-	];
+	],
 );
 
 let wkld_26 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -862,7 +862,7 @@ let lang_27 = Lang::new(
 	&[
 		&[],
 		&["typed:signed-vec-div", "hexagon_V6_vavgwrnd_128B"],
-	];
+	],
 );
 
 let wkld_27 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -878,7 +878,7 @@ let lang_28 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "hexagon_V6_vmaxw_128B"],
-	];
+	],
 );
 
 let wkld_28 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -894,7 +894,7 @@ let lang_29 = Lang::new(
 	&[
 		&["typed:cast-uint"],
 		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-sat-add", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "hexagon_V6_vmpyub_128B"],
-	];
+	],
 );
 
 let wkld_29 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -910,7 +910,7 @@ let lang_30 = Lang::new(
 	&[
 		&[],
 		&["typed:unsigned-vec-shr", "typed:unsigned-vec-div", "hexagon_V6_vavguw_128B"],
-	];
+	],
 );
 
 let wkld_30 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -926,7 +926,7 @@ let lang_31 = Lang::new(
 	&[
 		&["typed:cast-int", "typed:vec-saturate", "typed:cast-uint", "typed:vec-bwnot", "hexagon_V6_vunpackh_128B"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-add"],
-	];
+	],
 );
 
 let wkld_31 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -943,7 +943,7 @@ let lang_32 = Lang::new(
 		&[],
 		&["typed:vec-add", "typed:signed-vec-widen-mul"],
 		&["hexagon_V6_vmpybv_acc_128B"],
-	];
+	],
 );
 
 let wkld_32 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -960,7 +960,7 @@ let lang_33 = Lang::new(
 	&[
 		&["typed:cast-int"],
 		&["typed:signed-vec-widen-mul", "typed:signed-vec-mul", "typed:unsigned-vec-mul", "hexagon_V6_vmpauhb_128B"],
-	];
+	],
 );
 
 let wkld_33 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -976,7 +976,7 @@ let lang_34 = Lang::new(
 	&[
 		&[],
 		&["typed:unsigned-vec-shr", "typed:unsigned-vec-div", "hexagon_V6_vlsrwv_128B"],
-	];
+	],
 );
 
 let wkld_34 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -992,7 +992,7 @@ let lang_35 = Lang::new(
 	&[
 		&["typed:vec-saturate", "typed:cast-uint", "typed:cast-int", "typed:vec-bwnot", "hexagon_V6_vsb_128B"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-widen-mul", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-add"],
-	];
+	],
 );
 
 let wkld_35 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -1008,7 +1008,7 @@ let lang_36 = Lang::new(
 	&[
 		&["typed:cast-int"],
 		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:signed-vec-widen-mul", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-mul", "typed:signed-vec-mul", "typed:unsigned-vec-sat-add", "hexagon_V6_vmpybv_128B"],
-	];
+	],
 );
 
 let wkld_36 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -1024,7 +1024,7 @@ let lang_37 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
 		&["typed:signed-vec-mod", "typed:signed-vec-min", "typed:vec-shl", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:unsigned-vec-mod", "typed:unsigned-vec-shr", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:signed-vec-shr", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add", "hexagon_V6_vasrhv_128B"],
-	];
+	],
 );
 
 let wkld_37 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
@@ -1041,7 +1041,7 @@ let lang_38 = Lang::new(
 		&["typed:cast-int"],
 		&["typed:signed-vec-widen-mul", "typed:unsigned-vec-mul", hexagon_V6_vdmpyhsat_128B, hexagon_V6_vdmpyhsusat_128B],
 		&["hexagon_V6_vdmpyhsat_acc_128B"],
-	];
+	],
 );
 
 let wkld_38 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
@@ -1058,7 +1058,7 @@ let lang_39 = Lang::new(
 	&[
 		&["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot", "hexagon_V6_vnot_128B"],
 		&["typed:signed-vec-min", "typed:unsigned-vec-sat-sub", "typed:signed-vec-max", "typed:vec-bwand", "typed:unsigned-vec-min", "typed:unsigned-vec-max", "typed:unsigned-vec-sat-add"],
-	];
+	],
 );
 
 let wkld_39 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
