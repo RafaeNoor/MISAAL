@@ -304,12 +304,12 @@ def gen_egg_evaluator(dsl_lists):
 
 def generate_enumo_langs(relevance_sets, depth, dsl_lists):
     ret_str = ""
-    for i, relevance_set in enumerate(relevance_sets):
+    for idx, relevance_set in enumerate(relevance_sets):
         opset = relevance_sets[relevance_set]
         opset.append(relevance_set)
         # print("Opset: ", opset)
         # get num symbolic args from context name
-        ret_str += f"let lang_{i} = Lang::new(\n"
+        ret_str += f"let lang_{idx} = Lang::new(\n"
         val_list = [
             str(i) for i in range(0, depth * 3)
         ]  # 3 is max num of sym args; parameterize this
@@ -341,11 +341,11 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
 
         num_sym_args = len(op_dict.keys())
 
-        ret_str += f'let wkld_{i} = iter_metric(base_lang({num_sym_args}), "EXPR", Metric::Depth, {depth})\n'
-        ret_str += '\t.plug("VAR", &Workload::new(lang_{i}.vars))\n'
+        ret_str += f'let wkld_{idx} = iter_metric(base_lang({num_sym_args}), "EXPR", Metric::Depth, {depth})\n'
+        ret_str += f'\t.plug("VAR", &Workload::new(lang_{idx}.vars))\n'
         ret_str += '\t.plug("VAL", &Workload::empty())\n'
-        for i in range(0, num_sym_args):
-            ret_str += f'\t.plug("OP{i+1}", &Workload::new(lang_{i}.ops[{i}].clone()))\n'
+        for arg in range(0, num_sym_args):
+            ret_str += f'\t.plug("OP{arg+1}", &Workload::new(lang_{idx}.ops[{arg}].clone()))\n'
         ret_str += "\t);\n\n"
 
     return ret_str

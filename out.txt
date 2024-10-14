@@ -418,12 +418,12 @@ let lang_0 = Lang::new(
 	&['hexagon_V6_vdmpyhb_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_0 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_0.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_0.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_0.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_0.ops[2].clone()))
 	);
 
 let lang_1 = Lang::new(
@@ -432,10 +432,10 @@ let lang_1 = Lang::new(
 	&['typed:unsigned-vec-sat-sub', 'typed:unsigned-vec-min', 'hexagon_V6_vminuh_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_1 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_1.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_1.ops[0].clone()))
 	);
 
 let lang_2 = Lang::new(
@@ -445,11 +445,11 @@ let lang_2 = Lang::new(
 	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_2 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_2.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_2.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_2.ops[1].clone()))
 	);
 
 let lang_3 = Lang::new(
@@ -460,12 +460,12 @@ let lang_3 = Lang::new(
 	&['hexagon_V6_vmpyih_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_3 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_3.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_3.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_3.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_3.ops[2].clone()))
 	);
 
 let lang_4 = Lang::new(
@@ -475,11 +475,11 @@ let lang_4 = Lang::new(
 	&['typed:cast-uint'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_4.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_4.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_4.ops[1].clone()))
 	);
 
 let lang_5 = Lang::new(
@@ -489,11 +489,11 @@ let lang_5 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_5 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_5.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_5.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_5.ops[1].clone()))
 	);
 
 let lang_6 = Lang::new(
@@ -502,10 +502,10 @@ let lang_6 = Lang::new(
 	&['typed:signed-vec-lt', 'hexagon_V6_vgtb_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_6 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_6.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_6.ops[0].clone()))
 	);
 
 let lang_7 = Lang::new(
@@ -515,11 +515,11 @@ let lang_7 = Lang::new(
 	&['typed:cast-uint'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_7 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_7.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_7.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_7.ops[1].clone()))
 	);
 
 let lang_8 = Lang::new(
@@ -529,11 +529,11 @@ let lang_8 = Lang::new(
 	&['typed:cast-int'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_8 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_8.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_8.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_8.ops[1].clone()))
 	);
 
 let lang_9 = Lang::new(
@@ -543,11 +543,11 @@ let lang_9 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_9 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_9.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_9.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_9.ops[1].clone()))
 	);
 
 let lang_10 = Lang::new(
@@ -557,11 +557,11 @@ let lang_10 = Lang::new(
 	&['hexagon_V6_vabsh_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_10 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_10.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_10.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_10.ops[1].clone()))
 	);
 
 let lang_11 = Lang::new(
@@ -571,11 +571,11 @@ let lang_11 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_11 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_11.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_11.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_11.ops[1].clone()))
 	);
 
 let lang_12 = Lang::new(
@@ -585,11 +585,11 @@ let lang_12 = Lang::new(
 	&['typed:cast-uint', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_12 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_12.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_12.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_12.ops[1].clone()))
 	);
 
 let lang_13 = Lang::new(
@@ -599,11 +599,11 @@ let lang_13 = Lang::new(
 	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:vec-sub', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vsubh_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_13 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_13.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_13.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_13.ops[1].clone()))
 	);
 
 let lang_14 = Lang::new(
@@ -613,11 +613,11 @@ let lang_14 = Lang::new(
 	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-mul', 'typed:unsigned-vec-max', 'typed:unsigned-vec-mul', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vmpyih_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_14 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_14.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_14.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_14.ops[1].clone()))
 	);
 
 let lang_15 = Lang::new(
@@ -626,10 +626,10 @@ let lang_15 = Lang::new(
 	&['typed:signed-vec-min', 'typed:vec-add', 'typed:vec-shl', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:signed-vec-shr', 'typed:unsigned-vec-max', 'typed:unsigned-vec-sat-add', 'hexagon_V6_vaslhv_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_15 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_15.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_15.ops[0].clone()))
 	);
 
 let lang_16 = Lang::new(
@@ -638,10 +638,10 @@ let lang_16 = Lang::new(
 	&['typed:signed-vec-div', 'hexagon_V6_vnavgw_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_16 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_16.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_16.ops[0].clone()))
 	);
 
 let lang_17 = Lang::new(
@@ -651,11 +651,11 @@ let lang_17 = Lang::new(
 	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_17 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_17.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_17.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_17.ops[1].clone()))
 	);
 
 let lang_18 = Lang::new(
@@ -666,12 +666,12 @@ let lang_18 = Lang::new(
 	&['hexagon_V6_vdmpyhvsat_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_18 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_18.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_18.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_18.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_18.ops[2].clone()))
 	);
 
 let lang_19 = Lang::new(
@@ -681,11 +681,11 @@ let lang_19 = Lang::new(
 	&[hexagon_V6_vrmpybv_acc_128B, hexagon_V6_vrmpybusv_acc_128B, hexagon_V6_vrmpyubv_acc_128B],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_19 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_19.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_19.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_19.ops[1].clone()))
 	);
 
 let lang_20 = Lang::new(
@@ -695,11 +695,11 @@ let lang_20 = Lang::new(
 	&['hexagon_V6_vrmpybus_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_20 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_20.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_20.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_20.ops[1].clone()))
 	);
 
 let lang_21 = Lang::new(
@@ -710,12 +710,12 @@ let lang_21 = Lang::new(
 	&[hexagon_V6_vdmpybus_acc_128B],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_21 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_21.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_21.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_21.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_21.ops[2].clone()))
 	);
 
 let lang_22 = Lang::new(
@@ -725,11 +725,11 @@ let lang_22 = Lang::new(
 	&['typed:cast-uint'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_22 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_22.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_22.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_22.ops[1].clone()))
 	);
 
 let lang_23 = Lang::new(
@@ -740,12 +740,12 @@ let lang_23 = Lang::new(
 	&[hexagon_V6_vdmpyhisat_acc_128B, hexagon_V6_vdmpyhsuisat_acc_128B],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_23 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_23.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_23.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_23.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_23.ops[2].clone()))
 	);
 
 let lang_24 = Lang::new(
@@ -755,11 +755,11 @@ let lang_24 = Lang::new(
 	&['typed:cast-uint'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_24 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_24.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_24.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_24.ops[1].clone()))
 	);
 
 let lang_25 = Lang::new(
@@ -769,11 +769,11 @@ let lang_25 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_25 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_25.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_25.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_25.ops[1].clone()))
 	);
 
 let lang_26 = Lang::new(
@@ -782,10 +782,10 @@ let lang_26 = Lang::new(
 	&['typed:unsigned-vec-le', 'typed:unsigned-vec-lt', 'hexagon_V6_vandvrt_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_26 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_26.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_26.ops[0].clone()))
 	);
 
 let lang_27 = Lang::new(
@@ -794,10 +794,10 @@ let lang_27 = Lang::new(
 	&['typed:signed-vec-div', 'hexagon_V6_vavgwrnd_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_27 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_27.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_27.ops[0].clone()))
 	);
 
 let lang_28 = Lang::new(
@@ -807,11 +807,11 @@ let lang_28 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_28 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_28.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_28.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_28.ops[1].clone()))
 	);
 
 let lang_29 = Lang::new(
@@ -821,11 +821,11 @@ let lang_29 = Lang::new(
 	&['typed:cast-uint'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_29 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_29.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_29.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_29.ops[1].clone()))
 	);
 
 let lang_30 = Lang::new(
@@ -834,10 +834,10 @@ let lang_30 = Lang::new(
 	&['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vavguw_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_30 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_30.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_30.ops[0].clone()))
 	);
 
 let lang_31 = Lang::new(
@@ -847,11 +847,11 @@ let lang_31 = Lang::new(
 	&['typed:signed-vec-min', 'typed:unsigned-vec-sat-sub', 'typed:signed-vec-max', 'typed:unsigned-vec-widen-mul', 'typed:vec-bwand', 'typed:unsigned-vec-min', 'typed:unsigned-vec-max', 'typed:signed-vec-widen-mul', 'typed:unsigned-vec-sat-add'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_31 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_31.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_31.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_31.ops[1].clone()))
 	);
 
 let lang_32 = Lang::new(
@@ -861,11 +861,11 @@ let lang_32 = Lang::new(
 	&['hexagon_V6_vmpybv_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_32 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_32.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_32.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_32.ops[1].clone()))
 	);
 
 let lang_33 = Lang::new(
@@ -875,11 +875,11 @@ let lang_33 = Lang::new(
 	&['typed:signed-vec-widen-mul', 'typed:signed-vec-mul', 'typed:unsigned-vec-mul', 'hexagon_V6_vmpauhb_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_33 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_33.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_33.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_33.ops[1].clone()))
 	);
 
 let lang_34 = Lang::new(
@@ -888,10 +888,10 @@ let lang_34 = Lang::new(
 	&['typed:unsigned-vec-shr', 'typed:unsigned-vec-div', 'hexagon_V6_vlsrwv_128B'],
 	);
 
-let wkld = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_34 = iter_metric(base_lang(1), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_34.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
+	.plug("OP1", &Workload::new(lang_34.ops[0].clone()))
 	);
 
 let lang_35 = Lang::new(
@@ -901,11 +901,11 @@ let lang_35 = Lang::new(
 	&['typed:vec-saturate', 'typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vsb_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_35 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_35.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_35.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_35.ops[1].clone()))
 	);
 
 let lang_36 = Lang::new(
@@ -915,11 +915,11 @@ let lang_36 = Lang::new(
 	&['typed:cast-int'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_36 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_36.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_36.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_36.ops[1].clone()))
 	);
 
 let lang_37 = Lang::new(
@@ -929,11 +929,11 @@ let lang_37 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_37 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_37.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_37.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_37.ops[1].clone()))
 	);
 
 let lang_38 = Lang::new(
@@ -944,12 +944,12 @@ let lang_38 = Lang::new(
 	&['hexagon_V6_vdmpyhsat_acc_128B'],
 	);
 
-let wkld = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_38 = iter_metric(base_lang(3), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_38.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
-	.plug("OP3", &Workload::new(lang.ops[2].clone()))
+	.plug("OP1", &Workload::new(lang_38.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_38.ops[1].clone()))
+	.plug("OP3", &Workload::new(lang_38.ops[2].clone()))
 	);
 
 let lang_39 = Lang::new(
@@ -959,11 +959,11 @@ let lang_39 = Lang::new(
 	&['typed:cast-uint', 'typed:cast-int', 'typed:vec-bwnot', 'hexagon_V6_vnot_128B'],
 	);
 
-let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
-	.plug("VAR", &Workload::new(lang.vars))
+let wkld_39 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+	.plug("VAR", &Workload::new(lang_39.vars))
 	.plug("VAL", &Workload::empty())
-	.plug("OP1", &Workload::new(lang.ops[0].clone()))
-	.plug("OP2", &Workload::new(lang.ops[1].clone()))
+	.plug("OP1", &Workload::new(lang_39.ops[0].clone()))
+	.plug("OP2", &Workload::new(lang_39.ops[1].clone()))
 	);
 
 
