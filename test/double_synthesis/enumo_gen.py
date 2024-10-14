@@ -341,11 +341,11 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
 
         num_sym_args = len(op_dict.keys())
 
-        ret_str += f'let wkld = iter_metric(base_lang({num_sym_args}), "EXPR", Metric::Depth, {depth})\n'
-        ret_str += '\t.plug("VAR", &Workload::new(lang.vars))\n'
+        ret_str += f'let wkld_{i} = iter_metric(base_lang({num_sym_args}), "EXPR", Metric::Depth, {depth})\n'
+        ret_str += '\t.plug("VAR", &Workload::new(lang_{i}.vars))\n'
         ret_str += '\t.plug("VAL", &Workload::empty())\n'
         for i in range(0, num_sym_args):
-            ret_str += f'\t.plug("OP{i+1}", &Workload::new(lang.ops[{i}].clone()))\n'
+            ret_str += f'\t.plug("OP{i+1}", &Workload::new(lang_{i}.ops[{i}].clone()))\n'
         ret_str += "\t);\n\n"
 
     return ret_str
