@@ -218,13 +218,25 @@ def get_non_symbolic_bvs(expr: Context):
     assert isinstance(expr, Context) == True
     non_symbolic_args = list()
     for arg in expr.context_args:
-        if not isinstance(arg, Reg) and not isinstance(arg, Context):
+        # need a way to print BV values
+        if not isinstance(arg, Reg) and not isinstance(arg, Context) and not isinstance(arg, BitVector):
             non_symbolic_args.append(arg)
     return non_symbolic_args
+
 
 f = open("repair_forward_map.json")
 
 relevance_sets = json.load(f)
+
+print(
+    "non sym args for ctx: ",
+    [
+        i.value
+        for i in get_non_symbolic_bvs(
+            ctx_from_name("hexagon_V6_vrmpybv_acc_128B", hvx_dsl_list)
+        )
+    ],
+)
 
 print(gen_egg_lang([hvx_dsl_list, halide_dsl_list]))
 print(gen_egg_evaluator([hvx_dsl_list, halide_dsl_list]))

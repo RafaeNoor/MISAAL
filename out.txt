@@ -16,14 +16,6 @@ DSL Name to search: typed:unsigned-vec-min
 Checking: [['reg', ['bv', '#x00', '8']], ['reg', ['bv', '#x01', '8']], '16', '1024']
 Reg index reg size: 1024
 Reg index reg size: 1024
-Context args for HVX expr:  [<common.Types.Integer object at 0x7f408fe860d0>, <common.Types.Integer object at 0x7f408fe86340>, <common.Types.Integer object at 0x7f408fe862b0>, <common.Types.Integer object at 0x7f408fe86220>, <common.Types.Precision object at 0x7f408fe86400>, <common.Types.Integer object at 0x7f408fe86430>, <common.Types.Integer object at 0x7f408fe86520>]
-1024
-1024
-0
-1024
-16
-0
-0
 ===== Pretty Printing Expressions =====
  (hexagon_V6_vminuh_128B_dsl ; hexagon_V6_vminuh_128B
 	(reg (bv 0 (bitvector 8))) ; < 128 x i8> False
@@ -57,6 +49,7 @@ Context args for HVX expr:  [<common.Types.Integer object at 0x7f408fe860d0>, <c
 	16
 	1024
  )
+non syma rgs for ctx:  [1024, 32, 0, 32, 8, -1, 1, 1, 16, 1, 0]
 egg::define_language! {
 	pub enum MISAALLang {
 		Lit(Constant),
