@@ -1,0 +1,88 @@
+{
+    "_mm512_andnot_epi32+typed:signed-vec-rounding_shift_right": [
+        {
+            "property_name": "RepairRelavanceV4",
+            "property": {
+                "candidate": "_mm512_andnot_epi32",
+                "output_expression": "(typed:signed-vec-rounding_shift_right (repair-bwand_dsl (reg (bv #x01 8)) (reg (bv #x02 8)) 16 32) (repair-bwand_dsl (reg (bv #x00 8)) (reg (bv #x02 8)) 16 32) 32 32)",
+                "synth_expression": "(_mm512_andnot_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 0)",
+                "env-func": "(define (prepare-env env) \n\n(define a (vector-ref env 0))\n(define b (vector-ref env 1)) \n (define reg_0 (concat \n\n(extract 511 480 a)))\n(define reg_1 (concat \n\n(extract 511 480 b)))\n(define %4 (concat \n\n(bvnot (extract 511 480 a)))) \n (vector reg_0 reg_1 %4)\n)",
+                "target_input_sizes": [
+                    32,
+                    32,
+                    32
+                ],
+                "src_env_sizes": [
+                    512,
+                    512
+                ]
+            }
+        }
+    ],
+    "_mm256_dpbusd_epi32+typed:signed-vec-mul": [
+        {
+            "property_name": "RepairRelavanceIntermediates",
+            "property": {
+                "candidate": "_mm256_dpbusd_epi32",
+                "output_expression": "(typed:signed-vec-mul (reg (bv #x03 8)) (reg (bv #x04 8)) 16 64)",
+                "synth_expression": "'()",
+                "env-func": "(define (prepare-env env) \n\n(define src (vector-ref env 0))\n(define a (vector-ref env 1))\n(define b (vector-ref env 2)) \n (define reg_0 (concat \n\n(extract 255 224 src)))\n(define reg_1 (concat \n\n(extract 255 248 a)\n(extract 247 240 a)\n(extract 239 232 a)\n(extract 231 224 a)))\n(define reg_2 (concat \n\n(extract 255 248 b)\n(extract 247 240 b)\n(extract 239 232 b)\n(extract 231 224 b)))\n(define %4.ab0 (concat \n\n(bvsizeext (extract 255 248 a) 16 0)\n(bvsizeext (extract 247 240 a) 16 0)\n(bvsizeext (extract 239 232 a) 16 0)\n(bvsizeext (extract 231 224 a) 16 0)))\n(define %9.ab0 (concat \n\n(bvsizeext (extract 255 248 b) 16 1)\n(bvsizeext (extract 247 240 b) 16 1)\n(bvsizeext (extract 239 232 b) 16 1)\n(bvsizeext (extract 231 224 b) 16 1))) \n (vector reg_0 reg_1 reg_2 %4.ab0 %9.ab0)\n)",
+                "target_input_sizes": [
+                    32,
+                    32,
+                    32,
+                    64,
+                    64
+                ],
+                "src_env_sizes": [
+                    256,
+                    256,
+                    256
+                ]
+            }
+        },
+        {
+            "property_name": "RepairRelavanceIntermediates",
+            "property": {
+                "candidate": "_mm256_dpbusd_epi32",
+                "output_expression": "(typed:signed-vec-mul (reg (bv #x04 8)) (reg (bv #x03 8)) 16 64)",
+                "synth_expression": "'()",
+                "env-func": "(define (prepare-env env) \n\n(define src (vector-ref env 0))\n(define a (vector-ref env 1))\n(define b (vector-ref env 2)) \n (define reg_0 (concat \n\n(extract 255 224 src)))\n(define reg_1 (concat \n\n(extract 255 248 a)\n(extract 247 240 a)\n(extract 239 232 a)\n(extract 231 224 a)))\n(define reg_2 (concat \n\n(extract 255 248 b)\n(extract 247 240 b)\n(extract 239 232 b)\n(extract 231 224 b)))\n(define %4.ab0 (concat \n\n(bvsizeext (extract 255 248 a) 16 0)\n(bvsizeext (extract 247 240 a) 16 0)\n(bvsizeext (extract 239 232 a) 16 0)\n(bvsizeext (extract 231 224 a) 16 0)))\n(define %9.ab0 (concat \n\n(bvsizeext (extract 255 248 b) 16 1)\n(bvsizeext (extract 247 240 b) 16 1)\n(bvsizeext (extract 239 232 b) 16 1)\n(bvsizeext (extract 231 224 b) 16 1))) \n (vector reg_0 reg_1 reg_2 %4.ab0 %9.ab0)\n)",
+                "target_input_sizes": [
+                    32,
+                    32,
+                    32,
+                    64,
+                    64
+                ],
+                "src_env_sizes": [
+                    256,
+                    256,
+                    256
+                ]
+            }
+        },
+        {
+            "property_name": "RepairRelavanceIntermediates",
+            "property": {
+                "candidate": "_mm256_dpbusd_epi32",
+                "output_expression": "(typed:signed-vec-mul (reg (bv #x04 8)) (reg (bv #x03 8)) 16 64)",
+                "synth_expression": "'()",
+                "env-func": "(define (prepare-env env) \n\n(define src (vector-ref env 0))\n(define a (vector-ref env 1))\n(define b (vector-ref env 2)) \n (define reg_0 (concat \n\n(extract 255 224 src)))\n(define reg_1 (concat \n\n(extract 255 248 a)\n(extract 247 240 a)\n(extract 239 232 a)\n(extract 231 224 a)))\n(define reg_2 (concat \n\n(extract 255 248 b)\n(extract 247 240 b)\n(extract 239 232 b)\n(extract 231 224 b)))\n(define %4.ab0 (concat \n\n(bvsizeext (extract 255 248 a) 16 0)\n(bvsizeext (extract 247 240 a) 16 0)\n(bvsizeext (extract 239 232 a) 16 0)\n(bvsizeext (extract 231 224 a) 16 0)))\n(define %9.ab0 (concat \n\n(bvsizeext (extract 255 248 b) 16 1)\n(bvsizeext (extract 247 240 b) 16 1)\n(bvsizeext (extract 239 232 b) 16 1)\n(bvsizeext (extract 231 224 b) 16 1))) \n (vector reg_0 reg_1 reg_2 %4.ab0 %9.ab0)\n)",
+                "target_input_sizes": [
+                    32,
+                    32,
+                    32,
+                    64,
+                    64
+                ],
+                "src_env_sizes": [
+                    256,
+                    256,
+                    256
+                ]
+            }
+        }
+    ]
+
+}

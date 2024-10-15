@@ -5,13 +5,15 @@ from common.PredefinedDSL import *
 
 class RepairPostProcessUtils:
 
-    def __init__(self, test_name = "autollvm_ir_class", env_sizes = [], const_fold_name = "post:const-fold"):
+    def __init__(self, test_name = "autollvm_ir_class", env_sizes = [], const_fold_name = "post:const-fold", use_prepared_env_name = None, prepare_env_sizes = []):
 
         self.const_fold = True
         self.test_name = test_name
         self.env_sizes = env_sizes
         self.repair_wrapper_name = "repair-wrapper"
         self.const_fold_name = const_fold_name
+        self.use_prepared_env_name = use_prepared_env_name
+        self.prepare_env_sizes = prepare_env_sizes
 
 
     def emit_default_def(self, struct_definer,  repair_post_process_name="hydride:repair-post-process", interpret_name="hydride:interpret"):
@@ -82,7 +84,11 @@ class RepairPostProcessUtils:
             for counter, idx in enumerate(sym_idxs):
                 arg = sample_ctx.context_args[idx]
                 sym_env_name = "sym-env-" + arg.name
-                sym_env = "(define {} (vector {}))".format(sym_env_name, " ".join(["(?? (bitvector {}))".format(size) for size in self.env_sizes]))
+                if self.use_prepared_env_name is None:
+                    sym_env = "(define {} (vector {}))".format(sym_env_name, " ".join(["(?? (bitvector {}))".format(size) for size in self.env_sizes]))
+                else:
+                    sym_env = "(define {} ({} (vector {})))".format(sym_env_name, self.use_prepared_env_name ," ".join(["(?? (bitvector {}))".format(size) for size in self.prepare_env_sizes]))
+
                 sym_env_names.append(sym_env_names)
                 fold_defs.append(sym_env)
 

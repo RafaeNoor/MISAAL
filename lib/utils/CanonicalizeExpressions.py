@@ -143,13 +143,32 @@ class CanonicalizeExpression:
             num_lhs_terms = self.count_terms(lhs_term)
             num_rhs_terms = self.count_terms(rhs_term)
 
+
             self.canonicalize_helper(lhs_term)
             self.canonicalize_helper(rhs_term)
+
+            lhs_name = ""
+            if isinstance(lhs_term, Context):
+                lhs_name = lhs_term.name
+
+            rhs_name = ""
+            if isinstance(rhs_term, Context):
+                rhs_name = rhs_term.name
 
             if num_rhs_terms > num_lhs_terms:
                 # Swap terms
                 expr.context_args[rhs_idx] = lhs_term
                 expr.context_args[lhs_idx] = rhs_term
+            elif num_rhs_terms == num_lhs_terms and len(rhs_name) > len(lhs_name):
+                # Use context name to break tie
+                # Swap terms
+                expr.context_args[rhs_idx] = lhs_term
+                expr.context_args[lhs_idx] = rhs_term
+
+
+
+
+
 
         elif len(args) == 3 and self.is_expr_commutable(expr):
             # Count number of nodes on both sides and then set accordingly. Recursively
@@ -163,10 +182,24 @@ class CanonicalizeExpression:
             self.canonicalize_helper(lhs_term)
             self.canonicalize_helper(rhs_term)
 
+            lhs_name = ""
+            if isinstance(lhs_term, Context):
+                lhs_name = lhs_term.name
+
+            rhs_name = ""
+            if isinstance(rhs_term, Context):
+                rhs_name = rhs_term.name
+
             if num_rhs_terms > num_lhs_terms:
                 # Swap terms
                 expr.context_args[rhs_idx] = lhs_term
                 expr.context_args[lhs_idx] = rhs_term
+            elif num_rhs_terms == num_lhs_terms and len(rhs_name) > len(lhs_name):
+                # Use context name to break tie
+                # Swap terms
+                expr.context_args[rhs_idx] = lhs_term
+                expr.context_args[lhs_idx] = rhs_term
+
 
 
 

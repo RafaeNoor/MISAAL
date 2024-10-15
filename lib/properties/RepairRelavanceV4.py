@@ -32,6 +32,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
         input_test_list = [
             #"_mm256_maddubs_epi16",
             #"_mm256_dpbusd_epi32",
+            #"_mm512_sllv_epi16",
+            "_mm_add_pi8",
         ]
 
         #dsl_list = [d for d in dsl_list if d.name in input_test_list]
@@ -41,10 +43,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
         output_test_list = [
             #"typed:signed-vec-widen-mul",
-            #"typed:vec-add",
-            "typed:signed-vector_reduce_add",
+            "typed:vec-add",
+            #"typed:signed-vector_reduce_add",
+            #"typed:vec-shl",
         ]
-
         #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
 
         print(output_dsl_list)
@@ -213,6 +215,11 @@ class RepairRelavanceV4(RepairRelavanceV3):
             bv_streams = self.get_bv_streams(input_dsl_inst, modified_sema, 0, src_ctx)
             streams = bv_streams.split("STORE")
             stream_0 = streams[0].strip().split("\n")
+            reduce_factor = self.get_reducing_factor(stream_0)
+            if reduce_factor == 1:
+                # Discard all lane calls
+                stream_0 = [line for line in stream_0 if "LANE" not in line ]
+                print("\n"*10, stream_0)
             self.bv_streams_map[stream_map_key] = stream_0
 
         print(input_dsl_inst.name)
@@ -303,6 +310,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
         target_input_sizes =  sliced_sizes
 
+        bitwidth_sizes_int = [arg.size for arg in src_ctx_regs]
+
         for expr in enumerate_target_program:
 
 
@@ -330,6 +339,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             candidate['additional_statements'] = statements
             candidate['custom_target_input_sizes'] = target_input_sizes
             candidate['prepare-env-function'] = modified_env_func
+            candidate['src_env_sizes'] = bitwidth_sizes_int
 
             key = self.serialize_candidate(candidate)
 
@@ -375,7 +385,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)
         src_expr_str, dst_expr_str = self.context_map[key]
-        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str, 'env-func': candidate['prepare-env-function'], 'target_input_sizes': candidate['custom_target_input_sizes']}
+        return {"candidate": candidate['src_dsl'].name, "output_expression" : dst_expr_str, "synth_expression": src_expr_str, 'env-func': candidate['prepare-env-function'], 'target_input_sizes': candidate['custom_target_input_sizes'], "src_env_sizes": candidate['src_env_sizes']}
 
 
     def split_define_line(self, line):
@@ -472,6 +482,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
         print("Initial expr map", expr_map)
 
         extract_labels = []
+        lane_inserted = False
 
         apply_cond = False
         for line_idx, line in enumerate(dsl_inst.semantics):
@@ -513,17 +524,20 @@ class RepairRelavanceV4(RepairRelavanceV3):
                 new_sema.append(line.replace("\"", ""))
                 if isBVOp:
                     # Obtain bitvector sizes dynamically to avoid complex analysis
-                    stmt = "(printf \"(SIZE {} ~a)\\n\" (bvlength {}))".format(label, label)
+                    stmt = "(printf \"(SIZE {} ~a)\\n\" {})".format(label, self.get_rosette_length_function(label))
                     if is_extract:
-                        stmt = "(printf \"(SIZE {} ~a)\\n\" (bvlength {}))".format( "reg_{}".format(extract_labels.index(label)), label)
+                        stmt = "(printf \"(SIZE {} ~a)\\n\" {})".format( "reg_{}".format(extract_labels.index(label)), self.get_rosette_length_function(label))
                     new_sema.append(stmt)
 
-
-
-
-            elif self.is_store_line(line):
+            elif line[1:].strip().startswith("(cond") and not lane_inserted:
+                lane_inserted = True
+                new_sema.append('(printf \"LANE\\n\")')
+                new_sema.append(line.replace("\"", ""))
+            elif self.is_store_line(line) :
                 if apply_cond:
-                    new_sema.append('(printf \"LANE\\n\")')
+                    if not lane_inserted:
+                        new_sema.append('(printf \"LANE\\n\")')
+                        lane_inserted = True
                     new_sema.append(line.replace("\"", ""))
                     apply_cond = False
                 else:
@@ -542,7 +556,10 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
     def get_reducing_factor(self, stream):
         # Count number of lane seperating calls per output lane
-        return sum([1 for c in stream if c == 'LANE'])
+
+
+
+        return max(sum([1 for c in stream if c == 'LANE']), 1)
 
 
     def bind_slice_regs(self, expr, reg_map, lane_idx):
@@ -576,6 +593,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
         print(size_defn)
 
         size_map = self.get_size_map(size_defn)
+        boolean_vars = [reg for reg in size_map if size_map[reg] == "BOOL"]
 
 
         slice_stream = [line for line in slice_stream if not "SIZE" in line]
@@ -614,7 +632,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
         for reg in regs:
             reg_map[reg] = var_label_map[reg]
 
-        non_regs = [key for key in var_label_map if not key.startswith("reg")]
+        non_regs = [key for key in var_label_map if not key.startswith("reg") and key not in boolean_vars]
 
         # Place registers first and then non-reg
         non_regs = regs + non_regs
@@ -729,4 +747,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
         orig_body = super().get_notify_body(count, success_count, start_time)
         current_depth_str  = "Current Depth:\t{}".format(str(self.current_depth))
         return "\n".join([orig_body, current_depth_str])
+
+    def get_rosette_length_function(self, val_name):
+        return "(cond [(bv? {}) (bvlength {})] [(boolean? {}) \"BOOL\"][else 1])".format(val_name, val_name, val_name)
+
 

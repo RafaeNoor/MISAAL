@@ -118,6 +118,7 @@ class RepairRelavance(IdentifySwizzles):
                 extract_count[arg] = 0
             extract_count[arg] +=1
 
+        print(extract_count)
 
         return max([c for a,c in extract_count.items()])
 

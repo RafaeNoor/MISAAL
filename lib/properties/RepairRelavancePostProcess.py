@@ -11,7 +11,7 @@ import sys
 
 class RepairRelavancePostProcess(Property):
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], repair_dsl_list = [], memo_path = None, target = "x86"):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], repair_dsl_list = [], memo_path = None, target = "x86", base_name = ""):
 
         super().__init__(name = "RepairRelavancePostProcess"
 ,dsl_list = input_dsl_list, is_candidate_generator = True)
@@ -19,6 +19,7 @@ class RepairRelavancePostProcess(Property):
         self.input_dsl_list = input_dsl_list
         self.repair_dsl_list = repair_dsl_list
         self.output_dsl_list = output_dsl_list
+        self.base_name = base_name
 
         self.combined_dsl_list = self.input_dsl_list + self.output_dsl_list + self.repair_dsl_list
 
@@ -50,9 +51,14 @@ class RepairRelavancePostProcess(Property):
 
     def generate_candidates(self):
 
-        for key in self.repair_results_dict:
-            yield key
+        try:
+            for key in self.repair_results_dict:
+                yield key
 
+        except KeyboardInterrupt:
+            print("Keyboard exception, exiting ....")
+
+        return
 
 
 
@@ -78,7 +84,7 @@ class RepairRelavancePostProcess(Property):
             interpreter_framework = self.synth_desc.emit_interpreter_framework(relevant_subset)
 
             context_regs = get_unique_context_registers(parsed_expr)
-            num_regs = context_regs[-1].size + 1
+            num_regs = int(context_regs[-1].index) + 1
 
             register_sizes = [8] * num_regs
 
@@ -86,7 +92,8 @@ class RepairRelavancePostProcess(Property):
                 idx = int(reg.index)
                 register_sizes[idx] = reg.size
 
-            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes, const_fold_name = self.synth_desc.const_fold_name)
+            src_env_sizes  =  expr_desc['property']['src_env_sizes']
+            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes, const_fold_name = self.synth_desc.const_fold_name, use_prepared_env_name = "prepare-env", prepare_env_sizes = src_env_sizes)
 
             repair_process_name = "repair-post-process"
 
@@ -102,7 +109,22 @@ class RepairRelavancePostProcess(Property):
 
             statements.append(def_src)
 
-            result_stmt = "(define result {})".format(repair_util.emit_check_property(src_expr_name))
+            statements.append(self.emit_define_reg_replace())
+
+            env_function = expr_desc['property']['env-func']
+
+            statements.append(env_function)
+
+
+            # Created folded env and inline into src expression
+            inline_env = "(define inline-env (create-bind-reg prepare-env (list {})))".format(" ".join([str(size) for size in src_env_sizes]))
+            statements.append(inline_env)
+
+            inline_expr_name = "inline-src-expr"
+            def_inline = "(define {} ({} {} inline-env))".format(inline_expr_name,  self.synth_desc.bind_name,  src_expr_name)
+            statements.append(def_inline)
+
+            result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
             statements.append(result_stmt)
 
             rand_prefix = get_random_tempfile_name()
@@ -153,9 +175,9 @@ class RepairRelavancePostProcess(Property):
         return []
 
     def dump_evaluated_tests(self):
-        pass_name = "_".join([self.name,"PASS", self.target]) + ".json"
-        fail_name = "_".join([self.name,"FAIL", self.target]) + ".json"
-        error_name = "_".join([self.name,"ERROR", self.target]) + ".json"
+        pass_name = "_".join([self.name,"PASS", self.target, self.base_name]) + ".json"
+        fail_name = "_".join([self.name,"FAIL", self.target, self.base_name]) + ".json"
+        error_name = "_".join([self.name,"ERROR", self.target, self.base_name]) + ".json"
 
         with open(pass_name, "w+") as WriteFile:
             WriteFile.write(json.dumps(self.passing_results, indent = 4))
@@ -193,8 +215,24 @@ class RepairRelavancePostProcess(Property):
         self.dump_evaluated_tests()
 
 
+    def emit_define_reg_replace(self):
+        return """(define (create-bind-reg prep-env-fn env-sizes)
+              (define (create-sym-test-env i)
+                (define size-i (list-ref env-sizes i))
+                (?? (bitvector size-i))
+                )
+              (define sym-input-env (build-vector (length env-sizes) create-sym-test-env ))
 
+              (define test-prepare-env (prep-env-fn sym-input-env))
 
+              (define (reg-replace i)
+                (define value (vector-ref test-prepare-env i))
+                (cond
+                  [(concrete? value) (lit value)]
+                  [else (reg (bv i (bitvector 8)))]
+                  )
+                )
 
-
-
+              (build-vector (vector-length test-prepare-env) reg-replace )
+              )
+              """

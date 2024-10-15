@@ -1154,6 +1154,24 @@ def dsl_inst_from_name(name, dsl_list):
         if name == dsl_inst.name:
             return dsl_inst
 
+def get_dsl_inst_for_ctx(ctx, dsl_list):
+
+    for dsl_inst in dsl_list:
+        ctx_dsl_name = ctx.dsl_name.split("_dsl")[0]
+        if ctx_dsl_name == dsl_inst.name:
+            return dsl_inst
+
+    return None
+
+def get_dsl_inst_for_ctx(ctx, dsl_list):
+
+    for dsl_inst in dsl_list:
+        ctx_dsl_name = ctx.dsl_name.split("_dsl")[0]
+        if ctx_dsl_name == dsl_inst.name:
+            return dsl_inst
+
+    return None
+
 def dsl_inst_from_ctx(ctx, dsl_list):
     for dsl_inst in dsl_list:
         for _ctx in dsl_inst.contexts:
