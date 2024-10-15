@@ -200,7 +200,9 @@ impl SynthLanguage for MISAALLang {
             .expect("Unable to write RHS to file");
 
         let cmd = format!(
-            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
+            // need to parallelize for it to be usable
+            // "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
+            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py {}",
             file_name
         );
 
@@ -234,12 +236,13 @@ fn egg_misaal_validator<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> String
     for node in expr.as_ref().iter() {
         match node {
             MISAALLang::Lit(c) => {
-                match c {
+                misaal_buf.push(format!("(reg (bv #x0{} 8)) ", c).to_string());
+                /* match c {
                     1 => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
                     0 => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
                     2 => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
                     _ => misaal_buf.push("(reg (bv #x03 8)) ".to_string()),
-                }
+                } */
                 //buf.push(z3::ast::Int::from_i64(ctx, c.to_i64().unwrap()))
             }
             MISAALLang::HVXMin([x, y]) => {

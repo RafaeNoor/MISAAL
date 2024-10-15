@@ -14,7 +14,7 @@ rm -f hvx_out.txt && cargo test --package ruler --test hvx -- test::compare --ex
 
 rm -f misaal_out.txt && cargo test --package ruler --test misaal -- test::run --exact --show-output &> misaal_out.txt
 
-
+rm -rf /home/baronia3/new-MISAAL/MISAAL/ruler/tests/misaal_exprs/* && time cargo test --package ruler --test misaal_gen_test -- test::run --exact --show-output
 
 /home/baronia3/bin/racket -I rosette -e '
                         (require hydride/utils/bvops)

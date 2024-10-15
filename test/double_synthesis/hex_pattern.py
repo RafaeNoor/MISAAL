@@ -26,26 +26,22 @@ content = expr_file.readlines()
 hvx_expr_str = content[1]
 halide_expr_str = content[0]
 
+#for i in hvx_dsl_list:
+#    print(i)
+
+#halide_expr_str = "(typed:unsigned-vec-shr (reg (bv #x01 8))  (reg (bv #x00 8))  16 1024)"
+#hvx_expr_str = "(hexagon_V6_vlsrw_128B (reg (bv #x01 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 32))) (reg (bv #x00 8))  1024 1024 0 1024 32 1 0)"
+
 #hvx_expr_str = "(hexagon_V6_vminuh_128B (reg (bv #x00 8)) (hexagon_V6_vminuh_128B (reg (bv #x00 8)) (reg (bv #x01 8)) 1024 1024 0 1024 16 0 0) 1024 1024 0 1024 16 0 0)"
 #halide_expr_str = "(typed:unsigned-vec-min (reg (bv #x00 8)) (typed:unsigned-vec-min (reg (bv #x00 8)) (reg (bv #x01 8)) 16 1024) 16 1024)"
 
 hvx_expr_ctx = read_string_to_dsl(hvx_expr_str, hvx_dsl_list)
 halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
 
-hvx_dsl_inst = dsl_inst_from_ctx(hvx_expr_ctx, hvx_dsl_list) 
-
-#print("HVX Matching Ctx: ", get_matching_context(hvx_expr_ctx.emit_context_expr_string(), hvx_dsl_list))
-
-#print("="*5, "Pretty Printing Expressions", "="*5)
-#print(hvx_expr_ctx.emit_context_expr_string())
-#print("hvx Context concrete name: ", hvx_expr_ctx.name)
-#
-#desired_ctxs = get_contexts_with_output_size(dsl_inst_from_ctx(hvx_expr_ctx, hvx_dsl_list) ,1024)
-#
-#print("HVX Contexts with Output Size ", desired_ctxs)
-#print("IS IT LOGICAL? ", desired_ctxs[0].is_elementwise_logical_like_operation())
-#print(halide_expr_ctx.emit_context_expr_string())
-
+print("="*5, "Pretty Printing Expressions", "="*5)
+print(hvx_expr_ctx.emit_context_expr_string())
+print("hvx Context concrete name: ", hvx_expr_ctx.name)
+print(halide_expr_ctx.emit_context_expr_string())
 
 synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list,
                                           output_dsl_list = halide_dsl_list)

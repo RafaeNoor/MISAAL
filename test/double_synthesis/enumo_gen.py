@@ -214,15 +214,46 @@ def generate_enumo_langs(relevance_sets, depth, dsl_lists):
 
     return ret_str
 
+
 def get_non_symbolic_bvs(expr: Context):
     assert isinstance(expr, Context) == True
     non_symbolic_args = list()
     for arg in expr.context_args:
         # need a way to print BV values
-        if not isinstance(arg, Reg) and not isinstance(arg, Context) and not isinstance(arg, BitVector):
-            non_symbolic_args.append(arg)
+        if isinstance(arg, ConstBitVector):
+            non_symbolic_args.append(f"{arg.get_dsl_value()}")
+        elif (
+            not isinstance(arg, Reg)
+            and not isinstance(arg, Context)
+            and not isinstance(arg, BitVector)
+        ):
+            non_symbolic_args.append(arg.value)
     return non_symbolic_args
 
+
+def generate_validator_from_dsl_list(dsl_list):
+    ret = []
+    for inst in dsl_list:
+        curr_num_sym = 0
+        for ctx in inst.contexts:
+            if curr_num_sym == 0:
+                curr_num_sym = get_num_symbolic_args(ctx)
+                if curr_num_sym == 1:
+                    ret.append(f'"{inst.name}" = {to_camel_case(inst.name)}(Id),')
+                else:
+                    ret.append(
+                        f'"{inst.name}" = {to_camel_case(inst.name)}([Id;({curr_num_sym})]),'
+                    )
+            elif curr_num_sym != get_num_symbolic_args(ctx):
+                if get_num_symbolic_args(ctx) == 1:
+                    ret.append(f'"{ctx.name}" = {to_camel_case(ctx.name)}(Id),')
+                else:
+                    ret.append(
+                        f'"{ctx.name}" = {to_camel_case(ctx.name)}([Id;({get_num_symbolic_args(ctx)})]),'
+                    )
+            else:
+                continue
+    return ret
 
 f = open("repair_forward_map.json")
 
@@ -231,9 +262,9 @@ relevance_sets = json.load(f)
 print(
     "non sym args for ctx: ",
     [
-        i.value
+        i
         for i in get_non_symbolic_bvs(
-            ctx_from_name("hexagon_V6_vrmpybv_acc_128B", hvx_dsl_list)
+            ctx_from_name("hexagon_V6_vrmpybv_128B", hvx_dsl_list)
         )
     ],
 )
