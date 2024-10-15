@@ -310,6 +310,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
         target_input_sizes =  sliced_sizes
 
+        bitwidth_sizes_int = [arg.size for arg in src_ctx_regs]
+
         for expr in enumerate_target_program:
 
 
@@ -337,7 +339,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             candidate['additional_statements'] = statements
             candidate['custom_target_input_sizes'] = target_input_sizes
             candidate['prepare-env-function'] = modified_env_func
-            candidate['src_env_sizes'] = bitwidth_sizes
+            candidate['src_env_sizes'] = bitwidth_sizes_int
 
             key = self.serialize_candidate(candidate)
 

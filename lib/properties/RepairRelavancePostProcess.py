@@ -84,7 +84,7 @@ class RepairRelavancePostProcess(Property):
             interpreter_framework = self.synth_desc.emit_interpreter_framework(relevant_subset)
 
             context_regs = get_unique_context_registers(parsed_expr)
-            num_regs = context_regs[-1].size + 1
+            num_regs = int(context_regs[-1].index) + 1
 
             register_sizes = [8] * num_regs
 
@@ -92,7 +92,8 @@ class RepairRelavancePostProcess(Property):
                 idx = int(reg.index)
                 register_sizes[idx] = reg.size
 
-            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes, const_fold_name = self.synth_desc.const_fold_name)
+            src_env_sizes  =  expr_desc['property']['src_env_sizes']
+            repair_util = RepairPostProcessUtils(test_name = test_name, env_sizes = register_sizes, const_fold_name = self.synth_desc.const_fold_name, use_prepared_env_name = "prepare-env", prepare_env_sizes = src_env_sizes)
 
             repair_process_name = "repair-post-process"
 
@@ -108,7 +109,22 @@ class RepairRelavancePostProcess(Property):
 
             statements.append(def_src)
 
-            result_stmt = "(define result {})".format(repair_util.emit_check_property(src_expr_name))
+            statements.append(self.emit_define_reg_replace())
+
+            env_function = expr_desc['property']['env-func']
+
+            statements.append(env_function)
+
+
+            # Created folded env and inline into src expression
+            inline_env = "(define inline-env (create-bind-reg prepare-env (list {})))".format(" ".join([str(size) for size in src_env_sizes]))
+            statements.append(inline_env)
+
+            inline_expr_name = "inline-src-expr"
+            def_inline = "(define {} ({} {} inline-env))".format(inline_expr_name,  self.synth_desc.bind_name,  src_expr_name)
+            statements.append(def_inline)
+
+            result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
             statements.append(result_stmt)
 
             rand_prefix = get_random_tempfile_name()
@@ -199,8 +215,24 @@ class RepairRelavancePostProcess(Property):
         self.dump_evaluated_tests()
 
 
+    def emit_define_reg_replace(self):
+        return """(define (create-bind-reg prep-env-fn env-sizes)
+              (define (create-sym-test-env i)
+                (define size-i (list-ref env-sizes i))
+                (?? (bitvector size-i))
+                )
+              (define sym-input-env (build-vector (length env-sizes) create-sym-test-env ))
 
+              (define test-prepare-env (prep-env-fn sym-input-env))
 
+              (define (reg-replace i)
+                (define value (vector-ref test-prepare-env i))
+                (cond
+                  [(concrete? value) (lit value)]
+                  [else (reg (bv i (bitvector 8)))]
+                  )
+                )
 
-
-
+              (build-vector (vector-length test-prepare-env) reg-replace )
+              )
+              """
