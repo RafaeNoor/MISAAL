@@ -414,7 +414,8 @@ impl<L: SynthLanguage> Ruleset<L> {
                 // candidate has merged (derivable from other rewrites)
                 continue;
             } else {
-                let halide_pattern_is_extractable = |pat: &Pattern<L>| {
+                // self.add(rule);
+                 let halide_pattern_is_extractable = |pat: &Pattern<L>| {
                     pat.ast.as_ref().iter().all(|n| match n {
                         ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
                         ENodeOrVar::Var(_) => true,

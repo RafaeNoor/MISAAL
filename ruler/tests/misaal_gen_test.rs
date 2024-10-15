@@ -196,17 +196,17 @@ impl SynthLanguage for MISAALLang {
 
         file_name = env::var("EXPR_DIR").unwrap().to_owned() + &file_name + ".expr";
 
-        let mut data_file = File::create(&file_name).expect("creation failed");
+        /* let mut data_file = File::create(&file_name).expect("creation failed");
         data_file = OpenOptions::new()
             .append(true)
             .open(&file_name)
-            .expect("cannot open file");
+            .expect("cannot open file"); */
 
         //print!("LHS expr:");
         let lexpr_str = egg_misaal_validator(&ctx, Self::instantiate(lhs).as_ref());
         //print!("RHS expr:");
         let rexpr_str = egg_misaal_validator(&ctx, Self::instantiate(rhs).as_ref());
-        data_file
+        /* data_file
             .write(lexpr_str.as_bytes())
             .expect("Unable to write LHS to file");
         data_file
@@ -214,22 +214,22 @@ impl SynthLanguage for MISAALLang {
             .expect("Unable to write newline");
         data_file
             .write(rexpr_str.as_bytes())
-            .expect("Unable to write RHS to file");
+            .expect("Unable to write RHS to file"); */
 
         let cmd = format!(
             // need to parallelize for it to be usable
             // "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
-            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py {}",
-            file_name
+            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py \"{}\" \"{}\"",
+            lexpr_str, rexpr_str
         );
 
-        // print!("cmd to run: {}\n", cmd);
+        print!("cmd to run: {}\n", cmd);
         let output = run(&cmd);
         // assert!(output.status.success());
         let mut so = get_stdout(&output).to_string();
         so = so.trim().to_owned();
         if so.contains("ENUMO_SUCC") {
-            println!("We have a success for in file {}", &file_name);
+            // println!("We have a success for in file {}", &file_name);
             ValidationResult::Valid
         } else {
             ValidationResult::Invalid
@@ -369,7 +369,7 @@ fn egg_misaal_validator<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> String
             }
             MISAALLang::HexagonV6Vlsrwv128b([x, y]) => {
                 let bv_code = format!(
-                    " (hexagon_V6_vlsrwv_128B {} (lit (bv #x00000000000000000000000000000000 (bitvector 32))) {} 1024 1024 0 1024 32 1 0) ",
+                    " (hexagon_V6_vlsrwv_128B {} (lit (bv #x00000000000000000000000000000000 (bitvector 16))) {} 1024 1024 0 1024 16 1 0) ",
                     &misaal_buf[usize::from(*x)],
                     &misaal_buf[usize::from(*y)]
                 );
@@ -453,7 +453,7 @@ mod test {
         rules_34.pretty_print();
         println!("------------------------------------");
 
-        let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
+        /* let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
 
         let lang_37 = Lang::new(
             &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
@@ -492,6 +492,6 @@ mod test {
             true,
         ));
         println!("---- RULES for RELEVANCE SET 37 ----");
-        rules_37.pretty_print();
+        rules_37.pretty_print(); */
     }
 }
