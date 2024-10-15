@@ -19,12 +19,15 @@ from sema.halide_sema import halide_semantics
 hvx_dsl_list = parse_dict(hvx_semantics)
 halide_dsl_list = parse_dict(halide_semantics)
 
-file_name = sys.argv[1]
-expr_file = open(file_name)
-content = expr_file.readlines()  
+#file_name = sys.argv[1]
+#expr_file = open(file_name)
+#content = expr_file.readlines()  
 
-hvx_expr_str = content[1]
-halide_expr_str = content[0]
+#hvx_expr_str = content[1]
+#halide_expr_str = content[0]
+
+hvx_expr_str = sys.argv[2]
+halide_expr_str = sys.argv[1]
 
 #for i in hvx_dsl_list:
 #    print(i)
