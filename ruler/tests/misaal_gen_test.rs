@@ -45,6 +45,25 @@ impl SynthLanguage for MISAALLang {
         !matches!(
             self,
             MISAALLang::HexagonV6Vasrhv128b(_) | MISAALLang::HexagonV6Vlsrwv128b(_)
+        ) && matches!(
+            self,
+            MISAALLang::Typed_cast_int(_)
+                | MISAALLang::Typed_cast_uint(_)
+                | MISAALLang::Typed_vec_bwnot(_)
+                | MISAALLang::Typed_signed_vec_mod(_)
+                | MISAALLang::Typed_signed_vec_min(_)
+                | MISAALLang::Typed_vec_shl(_)
+                | MISAALLang::Typed_unsigned_vec_sat_sub(_)
+                | MISAALLang::Typed_unsigned_vec_max(_)
+                | MISAALLang::Typed_signed_vec_max(_)
+                | MISAALLang::Typed_unsigned_vec_mod(_)
+                | MISAALLang::Typed_unsigned_vec_sat_add(_)
+                | MISAALLang::Typed_signed_vec_shr(_)
+                | MISAALLang::Typed_unsigned_vec_min(_)
+                | MISAALLang::Typed_vec_bwand(_)
+                | MISAALLang::HexagonV6Vlsrwv128b(_)
+                | MISAALLang::Typed_unsigned_vec_div(_)
+                | MISAALLang::Typed_unsigned_vec_shr(_)
         )
     }
 
@@ -52,8 +71,45 @@ impl SynthLanguage for MISAALLang {
         matches!(
             self,
             MISAALLang::HexagonV6Vasrhv128b(_) | MISAALLang::HexagonV6Vlsrwv128b(_)
+        ) && !matches!(
+            self,
+            MISAALLang::Typed_cast_int(_)
+                | MISAALLang::Typed_cast_uint(_)
+                | MISAALLang::Typed_vec_bwnot(_)
+                | MISAALLang::Typed_signed_vec_mod(_)
+                | MISAALLang::Typed_signed_vec_min(_)
+                | MISAALLang::Typed_vec_shl(_)
+                | MISAALLang::Typed_unsigned_vec_sat_sub(_)
+                | MISAALLang::Typed_unsigned_vec_max(_)
+                | MISAALLang::Typed_signed_vec_max(_)
+                | MISAALLang::Typed_unsigned_vec_mod(_)
+                | MISAALLang::Typed_unsigned_vec_sat_add(_)
+                | MISAALLang::Typed_signed_vec_shr(_)
+                | MISAALLang::Typed_unsigned_vec_min(_)
+                | MISAALLang::Typed_vec_bwand(_)
+                | MISAALLang::HexagonV6Vlsrwv128b(_)
+                | MISAALLang::Typed_unsigned_vec_div(_)
+                | MISAALLang::Typed_unsigned_vec_shr(_)
         )
     }
+
+    /* MISAALLang::Typed_cast_int(_)
+    | MISAALLang::Typed_cast_uint(_)
+    | MISAALLang::Typed_vec_bwnot(_)
+    | MISAALLang::Typed_signed_vec_mod(_)
+    | MISAALLang::Typed_signed_vec_min(_)
+    | MISAALLang::Typed_vec_shl(_)
+    | MISAALLang::Typed_unsigned_vec_sat_sub(_)
+    | MISAALLang::Typed_unsigned_vec_max(_)
+    | MISAALLang::Typed_signed_vec_max(_)
+    | MISAALLang::Typed_unsigned_vec_mod(_)
+    | MISAALLang::Typed_unsigned_vec_sat_add(_)
+    | MISAALLang::Typed_signed_vec_shr(_)
+    | MISAALLang::Typed_unsigned_vec_min(_)
+    | MISAALLang::Typed_vec_bwand(_)
+    | MISAALLang::HexagonV6Vlsrwv128b(_)
+    | MISAALLang::Typed_unsigned_vec_div(_)
+    | MISAALLang::Typed_unsigned_vec_shr(_) */
 
     type Constant = Constant;
     fn eval<'a, F>(&'a self, cvec_len: usize, mut get_cvec: F) -> CVec<Self>
@@ -397,7 +453,7 @@ mod test {
         rules_34.pretty_print();
         println!("------------------------------------");
 
-        /* let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
+        let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
 
         let lang_37 = Lang::new(
             &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
@@ -436,6 +492,6 @@ mod test {
             true,
         ));
         println!("---- RULES for RELEVANCE SET 37 ----");
-        rules_37.pretty_print(); */
+        rules_37.pretty_print();
     }
 }
