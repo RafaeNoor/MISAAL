@@ -141,6 +141,9 @@ class RepairRelavancePostProcess(Property):
 
                 statement_copy.append(write_result_to_file)
 
+                expr_desc['solver'] = solvers
+
+                desc_copy = copy.deepcopy(expr_desc)
 
                 execute_racket_file(statement_copy)
 
@@ -152,19 +155,23 @@ class RepairRelavancePostProcess(Property):
                             print("SUCCESS!")
                             print(parsed_expr.emit_context_expr_string())
 
-                            expr_desc['solver'] = solvers
-                            self.passing_results[candidate] = [expr_desc]
+                            self.passing_results[candidate] = [desc_copy]
                             self.failing_results.pop(candidate, None)
                             self.error_results.pop(candidate, None)
                             return True
                         else:
                             print("FAILURE")
-                            self.failing_results[candidate] = self.repair_results_dict[candidate]
+                            if candidate not in self.failing_results:
+                                self.failing_results[candidate] = []
+                            self.failing_results[candidate].append(desc_copy) #= self.repair_results_dict[candidate]
                     os.remove(result_file_name)
 
 
                 else:
-                    self.error_results[candidate] = self.repair_results_dict[candidate]
+                    if candidate not in self.error_results:
+                        self.error_results[candidate] = []
+                    # Either timeout or failing
+                    self.error_results[candidate].append(desc_copy) #= self.repair_results_dict[candidate]
         return False
 
 

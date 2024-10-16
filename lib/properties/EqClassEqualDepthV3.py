@@ -139,7 +139,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                         if isinstance(src_expr, Reg):
                             continue
 
-                        if get_expr_depth(src_expr) == input_depth:
+                        if get_expr_depth(src_expr) != input_depth:
                             continue
 
                         if not self.expr_contains(src_expr, dsl_inst.name):
