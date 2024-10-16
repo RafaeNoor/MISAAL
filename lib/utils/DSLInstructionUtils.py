@@ -32,6 +32,8 @@ HYDRIDE_HEADER =  """
         (require rosette/lib/destruct)
         (require hydride)
         (require misaal)
+        (require rosette/solver/smt/boolector)
+        (require rosette/solver/smt/z3)
 
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)

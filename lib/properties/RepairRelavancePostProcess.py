@@ -124,40 +124,47 @@ class RepairRelavancePostProcess(Property):
             def_inline = "(define {} ({} {} inline-env))".format(inline_expr_name,  self.synth_desc.bind_name,  src_expr_name)
             statements.append(def_inline)
 
-            result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
-            statements.append(result_stmt)
+            for solvers in ["z3", "boolector"]:
+                statement_copy = copy.deepcopy(statements)
 
-            rand_prefix = get_random_tempfile_name()
+                set_solver_stmt = "(current-solver ({}))".format(solvers)
+                statement_copy.append(set_solver_stmt)
 
-            result_file_name = rand_prefix+".log"
+                result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
+                statement_copy.append(result_stmt)
 
-            write_result_to_file = "(write-str-to-file (~v result) \"{}\")".format(result_file_name)
+                rand_prefix = get_random_tempfile_name()
 
-            statements.append(write_result_to_file)
+                result_file_name = rand_prefix+".log"
 
+                write_result_to_file = "(write-str-to-file (~v result) \"{}\")".format(result_file_name)
 
-            execute_racket_file(statements)
-
-            if os.path.exists(result_file_name):
-                with open(result_file_name, "r") as LogFile:
-                    contents = LogFile.read().rstrip().lstrip()
-                    boolean = self.racket_bool_map[contents]
-                    if boolean:
-                        print("SUCCESS!")
-                        print(parsed_expr.emit_context_expr_string())
-
-                        self.passing_results[candidate] = [expr_desc]
-                        self.failing_results.pop(candidate, None)
-                        self.error_results.pop(candidate, None)
-                        return True
-                    else:
-                        print("FAILURE")
-                        self.failing_results[candidate] = self.repair_results_dict[candidate]
-                os.remove(result_file_name)
+                statement_copy.append(write_result_to_file)
 
 
-            else:
-                self.error_results[candidate] = self.repair_results_dict[candidate]
+                execute_racket_file(statement_copy)
+
+                if os.path.exists(result_file_name):
+                    with open(result_file_name, "r") as LogFile:
+                        contents = LogFile.read().rstrip().lstrip()
+                        boolean = self.racket_bool_map[contents]
+                        if boolean:
+                            print("SUCCESS!")
+                            print(parsed_expr.emit_context_expr_string())
+
+                            expr_desc['solver'] = solvers
+                            self.passing_results[candidate] = [expr_desc]
+                            self.failing_results.pop(candidate, None)
+                            self.error_results.pop(candidate, None)
+                            return True
+                        else:
+                            print("FAILURE")
+                            self.failing_results[candidate] = self.repair_results_dict[candidate]
+                    os.remove(result_file_name)
+
+
+                else:
+                    self.error_results[candidate] = self.repair_results_dict[candidate]
         return False
 
 
@@ -219,7 +226,8 @@ class RepairRelavancePostProcess(Property):
         return """(define (create-bind-reg prep-env-fn env-sizes)
               (define (create-sym-test-env i)
                 (define size-i (list-ref env-sizes i))
-                (?? (bitvector size-i))
+                (define-symbolic* value (bitvector size-i))
+                value
                 )
               (define sym-input-env (build-vector (length env-sizes) create-sym-test-env ))
 
