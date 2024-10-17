@@ -1,0 +1,1 @@
+(typed:unsigned-vec-min (typed:unsigned-vec-min (reg (bv #x01 8)) (reg (bv #x01 8)) 32 1024) (reg (bv #x01 8)) 32 1024)

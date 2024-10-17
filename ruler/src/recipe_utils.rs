@@ -36,15 +36,19 @@ fn run_workload_internal<L: SynthLanguage>(
 ) -> Ruleset<L> {
     let t = Instant::now();
 
+    println!("RECIPIE UTILS: Entered WKLD Internal");
     let egraph = workload.to_egraph::<L>();
+    println!("RECIPIE UTILS: Converted to Egraph");
     let compressed = Scheduler::Compress(prior_limits).run(&egraph, &prior);
 
+    println!("RECIPIE UTILS: Compressed");
     let mut candidates = if fast_match {
         Ruleset::fast_cvec_match(&compressed)
     } else {
         Ruleset::cvec_match(&compressed)
     };
 
+    println!("RECIPIE UTILS: CVec Matched");
     let num_prior = prior.len();
     let (chosen, _) = candidates.minimize(prior, Scheduler::Compress(minimize_limits));
     let time = t.elapsed().as_secs_f64();
