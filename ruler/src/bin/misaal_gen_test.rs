@@ -73,9 +73,7 @@ impl SynthLanguage for MISAALLang {
             | MISAALLang::Typed_unsigned_vec_min(_)
             | MISAALLang::Typed_vec_bwand(_)
             | */
-            MISAALLang::HexagonV6Vlsrwv128b(_)
-                | MISAALLang::Typed_unsigned_vec_div(_)
-                | MISAALLang::Typed_unsigned_vec_shr(_)
+            MISAALLang::Typed_unsigned_vec_div(_) | MISAALLang::Typed_unsigned_vec_shr(_)
         )
     }
 
@@ -100,9 +98,7 @@ impl SynthLanguage for MISAALLang {
             | MISAALLang::Typed_unsigned_vec_min(_)
             | MISAALLang::Typed_vec_bwand(_)
             | */
-            MISAALLang::HexagonV6Vlsrwv128b(_)
-                | MISAALLang::Typed_unsigned_vec_div(_)
-                | MISAALLang::Typed_unsigned_vec_shr(_)
+            MISAALLang::Typed_unsigned_vec_div(_) | MISAALLang::Typed_unsigned_vec_shr(_)
         )
     }
 
@@ -221,7 +217,9 @@ impl SynthLanguage for MISAALLang {
                 data_file
                     .write("SUCC for this expr".as_bytes())
                     .expect("Unable to write");
-                data_file.write("\n\n\n".as_bytes());
+                data_file.write("\n\n".as_bytes());
+                data_file.write(so.as_bytes());
+                data_file.write("\n\n\n\n\n".as_bytes());
                 ValidationResult::Valid
             } else {
                 data_file
@@ -410,12 +408,12 @@ fn main() {
 
     let lang_34 = Lang::new(
         &["0", "1", "2", "3"],
-        &["a", "b", "c", "d"],
+        &["a", "b", "c"],
         &[
             &[],
             &[
                 "typed:unsigned-vec-shr",
-                // "typed:unsigned-vec-div",
+                "typed:unsigned-vec-div",
                 "hexagon_V6_vlsrwv_128B",
             ],
         ],

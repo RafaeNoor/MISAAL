@@ -333,22 +333,40 @@ impl<L: SynthLanguage> Ruleset<L> {
     /// Faster version of CVec matching. May underestimate candidates when there are None values
     pub fn fast_cvec_match(egraph: &EGraph<L, SynthAnalysis>) -> Ruleset<L> {
         let mut by_cvec: IndexMap<&CVec<L>, Vec<Id>> = IndexMap::default();
-
+        println!("In fast cvec match");
         for class in egraph.classes() {
             if class.data.is_defined() {
                 by_cvec.entry(&class.data.cvec).or_default().push(class.id);
             }
         }
-
         let mut candidates = Ruleset::default();
         let extract = Extractor::new(egraph, AstSize);
 
         for ids in by_cvec.values() {
             let exprs: Vec<_> = ids.iter().map(|&id| extract.find_best(id).1).collect();
-
             for (idx, e1) in exprs.iter().enumerate() {
                 for e2 in exprs[(idx + 1)..].iter() {
-                    candidates.add_from_recexprs(e1, e2);
+                    let map = &mut HashMap::default();
+                    let l_pat = L::generalize(e1, map);
+                    let r_pat = L::generalize(e2, map);
+
+                    let halide_pattern_is_extractable = |pat: &Pattern<L>| {
+                        pat.ast.as_ref().iter().all(|n| match n {
+                            ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
+                            ENodeOrVar::Var(_) => true,
+                        })
+                    };
+                    let hvx_pattern_is_extractable = |pat: &Pattern<L>| {
+                        pat.ast.as_ref().iter().all(|n| match n {
+                            ENodeOrVar::ENode(n) => n.is_hvx_allowed_op(),
+                            ENodeOrVar::Var(_) => true,
+                        })
+                    };
+                    if halide_pattern_is_extractable(&l_pat) && hvx_pattern_is_extractable(&r_pat) {
+                        println!("lhs {:?}", e1);
+                        println!("rhs {:?}\n\n\n", e2);
+                        candidates.add_from_recexprs(e1, e2);
+                    }
                 }
             }
         }
@@ -415,7 +433,7 @@ impl<L: SynthLanguage> Ruleset<L> {
                 continue;
             } else {
                 // self.add(rule);
-                 let halide_pattern_is_extractable = |pat: &Pattern<L>| {
+                let halide_pattern_is_extractable = |pat: &Pattern<L>| {
                     pat.ast.as_ref().iter().all(|n| match n {
                         ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
                         ENodeOrVar::Var(_) => true,
