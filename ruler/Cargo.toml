@@ -43,3 +43,11 @@ version = "0.9.5"
 # Tests do a lot of work
 [profile.test]
 opt-level = 3
+
+[profile.release]
+opt-level = 3
+
+[profile.release-with-debug]
+opt-level = 3
+inherits = "release"
+debug = true

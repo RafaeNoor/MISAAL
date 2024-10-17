@@ -161,61 +161,70 @@ impl SynthLanguage for MISAALLang {
     }
 
     fn validate(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> ValidationResult {
-        let mut cfg = z3::Config::new();
-        cfg.set_timeout_msec(1000);
-        let ctx = z3::Context::new(&cfg);
-        let solver = z3::Solver::new(&ctx);
         //println!("================================");
-        let mut rng = thread_rng();
+        /* let mut rng = thread_rng();
         let mut file_name: String = iter::repeat(())
             .map(|()| rng.sample(Alphanumeric))
             .map(char::from)
             .take(8)
-            .collect();
+            .collect(); */
 
         /* file_name = "/home/llvm-lab/Downloads/MISAAL/ruler/tests/misaal_exprs/".to_owned()
         + &file_name
         + ".expr"; */
+        let file_log = "misaal_log";
+        let file_name = env::var("EXPR_DIR").unwrap().to_owned() + &file_log + ".expr";
 
-        file_name = env::var("EXPR_DIR").unwrap().to_owned() + &file_name + ".expr";
-
-        let mut data_file = File::create(&file_name).expect("creation failed");
-        data_file = OpenOptions::new()
+        let mut data_file = OpenOptions::new()
             .append(true)
+            .create(true)
             .open(&file_name)
             .expect("cannot open file");
 
-        //print!("LHS expr:");
-        let lexpr_str = egg_misaal_validator(&ctx, Self::instantiate(lhs).as_ref());
-        //print!("RHS expr:");
-        let rexpr_str = egg_misaal_validator(&ctx, Self::instantiate(rhs).as_ref());
-        data_file
-            .write(lexpr_str.as_bytes())
-            .expect("Unable to write LHS to file");
-        data_file
-            .write("\n".as_bytes())
-            .expect("Unable to write newline");
-        data_file
-            .write(rexpr_str.as_bytes())
-            .expect("Unable to write RHS to file");
+        let lexpr_str = egg_misaal_validator(Self::instantiate(lhs).as_ref());
+        let rexpr_str = egg_misaal_validator(Self::instantiate(rhs).as_ref());
 
-        let cmd = format!(
+        if lexpr_str.contains("hexagon") || rexpr_str.contains("typed") {
+            ValidationResult::Invalid
+        } else {
+            data_file
+                .write(lexpr_str.as_bytes())
+                .expect("Unable to write LHS to file");
+            data_file
+                .write("\n".as_bytes())
+                .expect("Unable to write newline");
+            data_file
+                .write(rexpr_str.as_bytes())
+                .expect("Unable to write RHS to file");
+            data_file
+                .write("\n".as_bytes())
+                .expect("Unable to write newline");
+
+            let cmd = format!(
             // need to parallelize for it to be usable
             // "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
-            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py {}",
-            file_name
+            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py \"{}\" \"{}\"",
+            lexpr_str, rexpr_str
         );
 
-        // print!("cmd to run: {}\n", cmd);
-        let output = run(&cmd);
-        // assert!(output.status.success());
-        let mut so = get_stdout(&output).to_string();
-        so = so.trim().to_owned();
-        if so.contains("ENUMO_SUCC") {
-            println!("We have a success for in file {}", &file_name);
-            ValidationResult::Valid
-        } else {
-            ValidationResult::Invalid
+            // print!("cmd to run: {}\n", cmd);
+            let output = run(&cmd);
+            // assert!(output.status.success());
+            let mut so = get_stdout(&output).to_string();
+            so = so.trim().to_owned();
+            if so.contains("ENUMO_SUCC") {
+                data_file
+                    .write("SUCC for this expr".as_bytes())
+                    .expect("Unable to write");
+                data_file.write("\n\n\n".as_bytes());
+                ValidationResult::Valid
+            } else {
+                data_file
+                    .write("FAIL for this expr".as_bytes())
+                    .expect("Unable to write");
+                data_file.write("\n\n\n".as_bytes());
+                ValidationResult::Invalid
+            }
         }
 
         // println!("================================");
@@ -228,7 +237,7 @@ impl SynthLanguage for MISAALLang {
     }
 }
 
-fn egg_misaal_validator<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> String {
+fn egg_misaal_validator<'a>(expr: &[MISAALLang]) -> String {
     // let mut buf: Vec<z3::ast::Int> = vec![];
     let mut misaal_buf: Vec<String> = vec![];
     // let zero = z3::ast::Int::from_i64(ctx, 0);
@@ -272,13 +281,10 @@ fn egg_misaal_validator<'a>(ctx: &'a z3::Context, expr: &[MISAALLang]) -> String
                 // buf.push(z3::ast::Bool::ite(&z3::ast::Int::le(l, r), l, r))
             }
             MISAALLang::Var(v) => {
-                match v.as_str() {
-                    "a" => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
-                    "b" => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
-                    "c" => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
-                    _ => misaal_buf.push("(reg (bv #x03 8)) ".to_string()),
-                }
-                // buf.push(z3::ast::Int::new_const(ctx, v.to_string()))
+                misaal_buf.push(format!(
+                    "(reg (bv #x0{:?} 8)) ",
+                    (v.to_string().chars().next().unwrap().to_ascii_lowercase() as u8) - 97
+                ));
             }
         }
     }
@@ -310,7 +316,7 @@ mod test {
         let var_slice: Vec<&str> = var_vec.iter().map(|s| s.as_str()).collect();
 
         let lang = Lang::new(
-            &["0", "1", "-1", "2"],
+            &["0", "1", "2", "3"],
             &["a", "b", "c", "d"],
             // &var_slice,
             &[
@@ -325,7 +331,7 @@ mod test {
             ],
         );
         // n is depth
-        let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, 3)
+        let wkld = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
             .plug("VAR", &Workload::new(lang.vars))
             .plug("VAL", &Workload::empty())
             .plug("OP1", &Workload::new(lang.ops[0].clone()))

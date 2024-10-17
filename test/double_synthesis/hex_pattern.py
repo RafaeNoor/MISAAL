@@ -36,7 +36,7 @@ print(halide_expr_ctx.emit_context_expr_string())
 synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list,
                                           output_dsl_list = halide_dsl_list,
                                           # Force all source expression to be used in the left hand side (i.e. src expression)
-                                          force_contains_all_regs = True
+                                          force_contains_all_regs = False
                                           )
 
 
@@ -70,12 +70,12 @@ for output_size in output_sizes:
 
 
     if success:
-        print("ENUMO_SUCC")
         print("SUCCESS at output size {}!".format(output_size))
         print("Corresponding hvx concretization:")
         print(src_expr_str)
 
         print("Corresponding Halide concretization:")
         print(dst_expr_str)
+        print("ENUMO_SUCC")
     else:
         print("FAILURE")

@@ -1,4 +1,4 @@
-#![recursion_limit = "256"]
+#![recursion_limit = "512"]
 
 use cli_runner::{get_stderr, get_stdout, run};
 use num::{ToPrimitive, Zero};
@@ -6,12 +6,23 @@ use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use rayon::vec;
 use ruler::*;
+use std::char;
 use std::env;
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::iter;
 use z3::ast::Ast;
+// use crate::MISAALLang;
+use std::time::{Duration, Instant};
+
+use env_logger::filter;
+use ruler::{
+    enumo::{Filter, Metric, Ruleset, Workload},
+    logger,
+    recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, Lang},
+    Limits,
+};
 
 type Constant = i32;
 
@@ -195,54 +206,6 @@ impl SynthLanguage for MISAALLang {
         let cmd = format!(
             // need to parallelize for it to be usable
             // "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
-            "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py {} {}",
-            lexpr_str, rexpr_str
-        );
-
-        // print!("cmd to run: {}\n", cmd);
-        let output = run(&cmd);
-        // assert!(output.status.success());
-        let mut so = get_stdout(&output).to_string();
-        so = so.trim().to_owned();
-        if so.contains("ENUMO_SUCC") {
-            ValidationResult::Valid
-        } else {
-            data_file
-            ValidationResult::Invalid
-        }
-        // }
-    }
-    /* fn validate(lhs: &Pattern<Self>, rhs: &Pattern<Self>) -> ValidationResult {
-        let mut rng = thread_rng();
-        let mut file_name: String = iter::repeat(())
-            .map(|()| rng.sample(Alphanumeric))
-            .map(char::from)
-            .take(8)
-            .collect();
-
-        file_name = env::var("EXPR_DIR").unwrap().to_owned() + &file_name + ".expr";
-
-        let mut data_file = File::create(&file_name).expect("creation failed");
-        data_file = OpenOptions::new()
-            .append(true)
-            .open(&file_name)
-            .expect("cannot open file");
-
-        let lexpr_str = egg_misaal_validator(Self::instantiate(lhs).as_ref());
-        let rexpr_str = egg_misaal_validator(Self::instantiate(rhs).as_ref());
-        data_file
-            .write(lexpr_str.as_bytes())
-            .expect("Unable to write LHS to file");
-        data_file
-            .write("\n".as_bytes())
-            .expect("Unable to write newline");
-        data_file
-            .write(rexpr_str.as_bytes())
-            .expect("Unable to write RHS to file");
-
-        let cmd = format!(
-            // need to parallelize for it to be usable
-            // "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/enumo_validator.py {}",
             "python3 /home/baronia3/new-MISAAL/MISAAL/test/double_synthesis/hex_pattern.py \"{}\" \"{}\"",
             lexpr_str, rexpr_str
         );
@@ -253,19 +216,24 @@ impl SynthLanguage for MISAALLang {
         let mut so = get_stdout(&output).to_string();
         so = so.trim().to_owned();
         if so.contains("ENUMO_SUCC") {
-            // println!("We have a success for in file {}", &file_name);
+            data_file
+                .write("SUCC for this expr".as_bytes())
+                .expect("Unable to write");
+            data_file.write("\n\n\n".as_bytes());
             ValidationResult::Valid
         } else {
+            data_file
+                .write("FAIL for this expr".as_bytes())
+                .expect("Unable to write");
+            data_file.write("\n\n\n".as_bytes());
             ValidationResult::Invalid
         }
-    } */
+        // }
+    }
 }
 
 fn egg_misaal_validator<'a>(expr: &[MISAALLang]) -> String {
-    // let mut buf: Vec<z3::ast::Int> = vec![];
     let mut misaal_buf: Vec<String> = vec![];
-    // let zero = z3::ast::Int::from_i64(ctx, 0);
-    // let one = z3::ast::Int::from_i64(ctx, 1);
     for node in expr.as_ref().iter() {
         match node {
             MISAALLang::Lit(c) => {
@@ -416,108 +384,98 @@ fn egg_misaal_validator<'a>(expr: &[MISAALLang]) -> String {
                 misaal_buf.push(bv_code);
             }
 
-            MISAALLang::Var(v) => match v.as_str() {
+            /* MISAALLang::Var(v) => match v.as_str() {
                 "a" => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
                 "b" => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
                 "c" => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
                 _ => misaal_buf.push("(reg (bv #x03 8)) ".to_string()),
-            },
+            }, */
+            MISAALLang::Var(v) => {
+                misaal_buf.push(format!(
+                    "(reg (bv #x0{:?} 8)) ",
+                    (v.to_string().chars().next().unwrap().to_ascii_lowercase() as u8) - 97
+                ));
+            }
         }
     }
     misaal_buf.pop().unwrap().to_string()
 }
 
-#[cfg(test)]
+fn main() {
+    let depth = 2;
 
-mod test {
-    use crate::MISAALLang;
-    use std::time::{Duration, Instant};
+    let mut rules_34: Ruleset<MISAALLang> = Ruleset::default();
 
-    use env_logger::filter;
-    use ruler::{
-        enumo::{Filter, Metric, Ruleset, Workload},
-        logger,
-        recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, Lang},
-        Limits,
-    };
-
-    #[test]
-    fn run() {
-        let depth = 2;
-
-        let mut rules_34: Ruleset<MISAALLang> = Ruleset::default();
-
-        let lang_34 = Lang::new(
-            &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
-            &["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+    let lang_34 = Lang::new(
+        &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+        &["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+        &[
+            &[],
             &[
-                &[],
-                &[
-                    "typed:unsigned-vec-shr",
-                    "typed:unsigned-vec-div",
-                    "hexagon_V6_vlsrwv_128B",
-                ],
+                "typed:unsigned-vec-shr",
+                "typed:unsigned-vec-div",
+                "hexagon_V6_vlsrwv_128B",
             ],
-        );
+        ],
+    );
 
-        let wkld_34 = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
-            .plug("VAR", &Workload::new(lang_34.vars))
-            .plug("VAL", &Workload::empty())
-            .plug("OP1", &Workload::new(lang_34.ops[0].clone()))
-            .plug("OP2", &Workload::new(lang_34.ops[1].clone()));
+    let wkld_34 = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
+        .plug("VAR", &Workload::new(lang_34.vars))
+        .plug("VAL", &Workload::empty())
+        .plug("OP1", &Workload::new(lang_34.ops[0].clone()))
+        .plug("OP2", &Workload::new(lang_34.ops[1].clone()));
 
-        rules_34.extend(run_workload(
-            wkld_34,
-            rules_34.clone(),
-            Limits::synthesis(),
-            Limits::minimize(),
-            true,
-        ));
-        println!("---- RULES for RELEVANCE SET 34 ----");
-        rules_34.pretty_print();
-        println!("------------------------------------");
+    rules_34.extend(run_workload(
+        wkld_34,
+        rules_34.clone(),
+        Limits::synthesis(),
+        Limits::minimize(),
+        true,
+    ));
+    println!("---- RULES for RELEVANCE SET 34 ----");
+    rules_34.pretty_print();
+    println!("------------------------------------");
 
-        /* let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
+    /* let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
 
-        let lang_37 = Lang::new(
-            &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
-            &["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+    let lang_37 = Lang::new(
+        &["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+        &["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+        &[
+            &["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
             &[
-                &["typed:cast-uint", "typed:cast-int", "typed:vec-bwnot"],
-                &[
-                    "typed:signed-vec-mod",
-                    "typed:signed-vec-min",
-                    "typed:vec-shl",
-                    "typed:unsigned-vec-sat-sub",
-                    "typed:signed-vec-max",
-                    "typed:unsigned-vec-mod",
-                    "typed:unsigned-vec-shr",
-                    "typed:vec-bwand",
-                    "typed:unsigned-vec-min",
-                    "typed:signed-vec-shr",
-                    "typed:unsigned-vec-max",
-                    "typed:unsigned-vec-sat-add",
-                    "hexagon_V6_vasrhv_128B",
-                ],
+                "typed:signed-vec-mod",
+                "typed:signed-vec-min",
+                "typed:vec-shl",
+                "typed:unsigned-vec-sat-sub",
+                "typed:signed-vec-max",
+                "typed:unsigned-vec-mod",
+                "typed:unsigned-vec-shr",
+                "typed:vec-bwand",
+                "typed:unsigned-vec-min",
+                "typed:signed-vec-shr",
+                "typed:unsigned-vec-max",
+                "typed:unsigned-vec-sat-add",
+                "hexagon_V6_vasrhv_128B",
             ],
-        );
+        ],
+    );
 
-        let wkld_37 = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
-            .plug("VAR", &Workload::new(lang_37.vars))
-            .plug("VAL", &Workload::empty())
-            .plug("OP1", &Workload::new(lang_37.ops[0].clone()))
-            .plug("OP2", &Workload::new(lang_37.ops[1].clone()));
+    let wkld_37 = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
+        .plug("VAR", &Workload::new(lang_37.vars))
+        .plug("VAL", &Workload::empty())
+        .plug("OP1", &Workload::new(lang_37.ops[0].clone()))
+        .plug("OP2", &Workload::new(lang_37.ops[1].clone()));
 
-        rules_37.extend(run_workload(
-            wkld_37,
-            rules_37.clone(),
-            Limits::synthesis(),
-            Limits::minimize(),
-            true,
-        ));
-        println!("---- RULES for RELEVANCE SET 37 ----");
-        rules_37.pretty_print(); */
-    }
+    rules_37.extend(run_workload(
+        wkld_37,
+        rules_37.clone(),
+        Limits::synthesis(),
+        Limits::minimize(),
+        true,
+    ));
+    println!("---- RULES for RELEVANCE SET 37 ----");
+    rules_37.pretty_print(); */
 }
 
 // rust binaries take ~20s to compile
