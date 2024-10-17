@@ -96,6 +96,12 @@ class CanonicalizeExpression:
         if isinstance(expr, Reg) and  isinstance(canonical_expr, Reg):
             return True
 
+        if isinstance(expr, ConstBitVector) and  not isinstance(canonical_expr, ConstBitVector):
+            return False
+
+        if not isinstance(expr, ConstBitVector) and   isinstance(canonical_expr, ConstBitVector):
+            return False
+
 
         if isinstance(expr, Context) and isinstance(canonical_expr, Context):
             same_name = expr.dsl_name == canonical_expr.dsl_name
@@ -121,7 +127,14 @@ class CanonicalizeExpression:
 
                 if isinstance(canon_arg, Context):
                     condition = condition and self.isCanonical(arg, canon_arg)
+
             return condition
+
+        if isinstance(expr, Context) and not isinstance(canonical_expr, Context):
+            return False
+
+        if not isinstance(expr, Context) and isinstance(canonical_expr, Context):
+            return False
 
         return True
 

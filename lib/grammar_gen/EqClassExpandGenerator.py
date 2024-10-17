@@ -88,7 +88,8 @@ class EqClassExpandGenerator:
 
                     # To allow program to compile, insert a lit hole zero
                     if len(choose_any_clauses) == 0:
-                        choose_any_clauses += [self.emit_choose_lit(5+random.randint(0, 16), ref_arg.size)]
+                        #choose_any_clauses += [self.emit_choose_lit(5+random.randint(0, 16), ref_arg.size)]
+                        return
 
 
                     clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
@@ -169,7 +170,10 @@ class EqClassExpandGenerator:
     def emit_layer_context(self, layer_name):
         assert layer_name in self.grammar_clause_map, "Must be pre-initialized"
         layer_ctx = self.grammar_clause_map[layer_name]
-        definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, "\n".join(layer_ctx['clauses']))
+        if len(layer_ctx['clauses']) == 0:
+            definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, self.emit_choose_lit("0", layer_ctx['output_size']))
+        else:
+            definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, "\n".join(layer_ctx['clauses']))
         return definition
 
     def visit_expr(self, ctx, parent_name, layer_idx, output_size):

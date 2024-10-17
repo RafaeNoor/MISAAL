@@ -22,6 +22,7 @@ class RepairRelavancePostProcess(Property):
         self.base_name = base_name
 
         self.combined_dsl_list = self.input_dsl_list + self.output_dsl_list + self.repair_dsl_list
+        self.output_language = self.output_dsl_list + self.repair_dsl_list
 
         self.repair_results_dict = {}
 
@@ -101,7 +102,7 @@ class RepairRelavancePostProcess(Property):
             statements.append(interpreter_framework)
 
 
-            statements.append(repair_util.emit_repair_post_process(self.combined_dsl_list, self.sd, interpret_name = self.synth_desc.interpreter_name , repair_post_process_name = repair_process_name))
+            statements.append(repair_util.emit_repair_post_process(self.output_language, self.sd, interpret_name = self.synth_desc.interpreter_name , repair_post_process_name = repair_process_name))
 
 
             src_expr_name = "src-expr"

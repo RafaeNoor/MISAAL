@@ -120,8 +120,13 @@ def run_command_child_processes(cmd, timeout = 5):
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
 
 
-    result = HelperCompletedProcess(returncode = proc.returncode)
     print("Return code: ", proc.returncode)
+    result = None
+    if proc.returncode == None:
+        result = HelperCompletedProcess(returncode = 1)
+    else:
+        result = HelperCompletedProcess(returncode = proc.returncode)
+
     return result
 
 def execute_racket_file(statements):
