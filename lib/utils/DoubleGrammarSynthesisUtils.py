@@ -5,6 +5,8 @@ from common.StructDef import StructDef
 from  common.Instructions import Context
 import copy
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
+from synthesizer.StepWiseSynthesizer import StepWiseSynthesizer
+from grammar_generator.TypedSimpleGrammarGenerator import TypedSimpleGrammarGenerator
 from utils.ContainsRegDef import ContainsRegDef
 import sys
 
@@ -230,8 +232,6 @@ class DoubleGrammarSynthesisUtils:
         if len(dst_input_sizes) == 0:
             return False , "", ""
 
-        GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
-        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 
         GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs)
 
@@ -245,7 +245,10 @@ class DoubleGrammarSynthesisUtils:
             src_expression = "(define src-expr\n'()\n)"
             statements.append(src_expression)
 
+        dst_expression_label = None
 
+        GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
+        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 
         statements.append(dst_expression_grammar)
 
@@ -365,3 +368,212 @@ class DoubleGrammarSynthesisUtils:
             return condition
         else:
             return ""
+
+
+
+    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2):
+        src_ctx = copy.deepcopy(src_expr)
+
+        print(emit_compact_context_expr_str(src_ctx))
+
+        relavent_output_subset = target_list
+        print(relavent_output_subset)
+
+        relavent_input_subset = self.get_relevant_dsl_list([src_ctx])
+        input_subset_names = [i.name for i in relavent_input_subset]
+        assert len(relavent_input_subset) != 0, "Atleast one AutoLLVM IR class expected for src language"
+        relavent_dsl_subset = relavent_input_subset + [t for t in target_list if t.name not in input_subset_names]
+        print(relavent_dsl_subset)
+
+
+        src_output_size = src_ctx.out_vectsize
+        if not custom_src_output_size is None:
+            src_output_size = custom_src_output_size
+
+        dst_output_size = src_ctx.out_vectsize
+        if not custom_dst_output_size is None:
+            dst_output_size = custom_dst_output_size
+
+        precision = src_ctx.in_precision
+
+        src_ctx_sym_args = self.get_registers(src_ctx)
+
+        src_ctx_regs = src_ctx_sym_args
+
+        reg_arg_map = {}
+        for idx, arg in enumerate(src_ctx_sym_args):
+            key = str(arg.size)
+            if key not in reg_arg_map:
+                reg_arg_map[key] = []
+            reg_arg_map[key].append(arg)
+
+        src_regs_count = len(src_ctx_regs)
+
+
+
+        # Bind expression to target expression
+        reg_arg_idx_map = {}
+        for key in reg_arg_map:
+            reg_arg_idx_map[key] = 0
+        print(reg_arg_map)
+
+        statements = []
+
+
+        statements += additional_statements
+
+        # Need to create a new desc for swizzles and target inst comined
+        double_grammar_desc = create_synth_desc("double_target_", True, [], "", "")
+        double_grammar_desc.emit_sema = True
+        double_grammar_desc.emit_interpreter = True
+
+        target_language_dsl =  relavent_output_subset
+        src_language_dsl = relavent_input_subset
+
+        if double_grammar_desc.emit_interpreter:
+            statements.append(double_grammar_desc.emit_interpreter_framework(relavent_dsl_subset))
+
+        if self.force_contains_all_regs:
+            statements.append(self.contains_reg_def.emit_contains(relavent_dsl_subset ,self.struct_def))
+
+        num_src_regs = len(src_ctx_regs)
+
+        env = []
+        for idx in range(len(src_ctx_regs)):
+            value = "(?? (bitvector {}))".format(src_ctx_regs[idx].size)
+            env.append(value)
+
+
+
+        # Define dst expression as a grammar of possible
+        # concrete Eq class members in the same structure
+        input_precs = [arg.precision for arg in src_ctx_regs]
+
+
+        src_input_sizes = [arg.size for arg in src_ctx_regs]
+        dst_input_sizes = [arg.size for arg in src_ctx_regs]
+
+
+        if not custom_src_input_sizes is None:
+            src_input_sizes = custom_src_input_sizes
+        if not custom_target_input_sizes is None:
+            dst_input_sizes = custom_target_input_sizes
+
+
+        for idx, prec in enumerate(input_precs):
+            min_prec = min(prec, dst_input_sizes[idx])
+            input_precs[idx] = min_prec
+
+        print("Dst Output Size:", dst_output_size)
+        print("Dst Input Sizes:", dst_input_sizes)
+        print("Dst Input Precs:", input_precs)
+
+
+        if len(dst_input_sizes) == 0:
+            return False , "", ""
+
+
+        GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs)
+
+        src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
+
+        if is_src_grammar:
+            statements.append(src_expression_grammar)
+            src_expression = "(define src-expr\n ({})\n)".format(src_expression_label)
+            statements.append(src_expression)
+        else:
+            src_expression = "(define src-expr\n'()\n)"
+            statements.append(src_expression)
+
+        dst_expression_label = None
+
+        TARGET = "x86"
+        spec = get_hydride_spec_from_ctx(src_ctx)
+        spec.set_target(TARGET)
+        # Use Hydride heurstic based synthesis for Destination but
+        # expanded grammar for Src expression
+        GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
+        dst_expression_grammar_tree = GrammarGeneratorDst.emit_synthesis_grammar(main_grammar_name = "dst-grammar-wrapper")
+        statements.append(dst_expression_grammar_tree)
+
+        dst_expression_label = "dst-grammar-depth-{}".format(depth)
+
+        dst_grammar_def = "(define ({}) (dst-grammar-wrapper {}))".format(dst_expression_label, depth)
+        statements.append(dst_grammar_def)
+
+
+
+
+
+
+
+        if not invoke_ref_custom is None:
+            decl , defn = invoke_ref_custom(double_grammar_desc.interpreter_name)
+            statements.append(defn)
+        else:
+            statements.append(self.get_invoke_spec(spec_name = "src-expr", interpret_name = double_grammar_desc.interpreter_name, num_regs = num_src_regs))
+
+        if not invoke_ref_lane_custom is None:
+            decl , defn = invoke_ref_lane_custom(double_grammar_desc.interpreter_name)
+            statements.append(defn)
+        else:
+            statements.append(self.get_invoke_spec_lane(spec_name = "src-expr", output_prec = src_ctx.out_precision, interpret_name = double_grammar_desc.interpreter_name, num_regs = num_src_regs))
+
+        statements.append("(define optimize? #t)")
+
+        statements.append("(define symbolic? #f)")
+
+        if not invoke_target_custom  is None:
+            interpret_def_name, interpret_def = invoke_target_custom(double_grammar_desc.interpreter_name)
+            statements.append(interpret_def)
+            statements.append("(define interpreter {})".format(interpret_def_name))
+        else:
+            statements.append("(define interpreter {})".format(double_grammar_desc.interpreter_name))
+
+        statements.append("(define cost-model {})".format(double_grammar_desc.cost_name))
+        leaves_sizes_vals = [str(arg.size) for arg in src_ctx_regs]
+        if not custom_src_input_sizes is None:
+            leaves_sizes_vals = [str(size) for size in custom_src_input_sizes]
+        leaves_sizes = "(define leaves-sizes (list {}))".format(" ".join(leaves_sizes_vals))
+        statements.append(leaves_sizes)
+
+
+
+        execute_synthesis = "(define-values (satisfiable? mat-src mat-dst)  (expanded-grammar-synthesize invoke-spec invoke-spec-lane src-expr ({}) leaves-sizes optimize? interpreter cost-model  symbolic? 30 'z3))".format(dst_expression_label)
+        statements.append(execute_synthesis)
+
+
+        fname_prefix = get_random_tempfile_name()
+        read_from_fname_src = fname_prefix+".src.log"+".rkt"
+        read_from_fname_dst = fname_prefix+".dst.log"+".rkt"
+        write_src_to_file ="(write-str-to-file (~v mat-src) \"{}\")".format(read_from_fname_src)
+
+        write_dst_to_file ="(write-str-to-file (~v mat-dst) \"{}\")".format(read_from_fname_dst)
+
+
+        if_sat = "\n".join([write_src_to_file ,write_dst_to_file,"(exit 0)"])
+        if_unsat = "(exit 1)"
+
+        conditional = "(cond [satisfiable? {}] [else {}])".format(if_sat, if_unsat)
+        statements.append(conditional)
+
+        #print("\n".join(statements))
+        result = execute_racket_file(statements)
+
+
+
+        is_simplified = result.returncode == 0
+
+        synth_src_str = ""
+        synth_dst_str = ""
+        if is_simplified:
+            with open(read_from_fname_src, "r") as ReadFile:
+                synth_src_str = ReadFile.read()
+            os.remove(read_from_fname_src)
+
+            with open(read_from_fname_dst, "r") as ReadFile:
+                synth_dst_str = ReadFile.read()
+            os.remove(read_from_fname_dst)
+
+
+        return is_simplified, synth_src_str, synth_dst_str

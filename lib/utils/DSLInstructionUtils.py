@@ -12,6 +12,7 @@ import glob
 import numpy as np
 import concurrent.futures
 import signal
+from Specification import Specification
 
 REMOVE_RKT_FILES = True
 
@@ -1160,4 +1161,39 @@ def get_dsl_inst_for_ctx(ctx, dsl_list):
             return dsl_inst
 
     return None
+
+
+def get_hydride_ctx_bv_ops(ctx):
+    if isinstance(ctx, Context):
+        ctx_ops = ctx.get_bv_ops()
+
+        for arg in ctx.context_args:
+            ctx_ops += get_hydride_ctx_bv_ops(arg)
+
+        return list(set(ctx_ops))
+    else:
+        return []
+
+def get_hydride_spec_from_ctx(ctx, name = "hydride_spec"):
+
+    print(ctx.name)
+    ops = get_hydride_ctx_bv_ops(ctx)
+    output_size = ctx.out_vectsize
+    output_prec = ctx.out_precision
+    imms = []
+    regs = get_unique_context_registers(ctx)
+    input_precs = [int(reg.precision) for reg in regs]
+    input_sizes = [int(reg.size) for reg in regs]
+
+    print(input_precs)
+    print(input_sizes)
+    input_shapes = [[1, input_sizes[i] // input_precs[i]] for i in range(len(input_sizes))]
+    output_shape = [1, output_size // output_prec]
+
+    spec = Specification(name = name, semantics = ops, output_shape = output_shape, input_shapes = input_shapes, input_precision = input_precs, output_precision = output_prec)
+
+    return spec
+
+
+
 

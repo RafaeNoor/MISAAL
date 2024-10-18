@@ -44,6 +44,13 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
         self.target_canon_map = {}
         self.use_canon_map = use_canon_map
 
+        self.canon_skipped_src = 0
+        self.canon_skipped_dst = 0
+
+
+    def get_cannon_map_key(self, expr):
+        return expr.emit_context_expr_string()
+
     def sort_input_dsl_list(self):
 
         def num_related_ops(dsl_inst):
@@ -232,10 +239,12 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                         if self.use_canon_map:
                             canon_map_key = canonical_src_expr.emit_context_expr_string()
                             if canon_map_key in self.src_canon_map:
+                                self.canon_skipped_src += 1
                                 continue
                             self.src_canon_map[canon_map_key] = 1
                         else:
                             if not self.canonicalizer.isCanonical(src_expr, canonical_src_expr):
+                                self.canon_skipped_src += 1
                                 continue
 
                         target_expressions = create_exhaustive_expressions_generator(relavent_output_subset, output_depth, use_eq_class = True, output_size = src_expr.out_vectsize)
@@ -252,6 +261,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
                                 if self.use_canon_map:
                                     canon_map_key = canonical_target_expr.emit_context_expr_string()
                                     if canon_map_key in self.target_canon_map:
+                                        self.canon_skipped_dst += 1
                                         continue
 
                                     self.target_canon_map[canon_map_key] = 1
@@ -259,6 +269,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
 
                                 else:
                                     if not self.canonicalizer.isCanonical(target_expr, canonical_target_expr):
+                                        self.canon_skipped_dst += 1
                                         continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
@@ -294,6 +305,8 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
     def get_notify_body(self, count, success_count, start_time):
         parent_body = super().get_notify_body(count, success_count, start_time)
         depth_info = "Current Input Depth = {}, Current Output Depth = {}".format(self.current_input_depth, self.current_output_depth)
+        skipped_srcs = "Canonicalizer skipped {} Src expressions".format(self.canon_skipped_src)
+        skipped_dsts = "Canonicalizer skipped {} Target expressions".format(self.canon_skipped_dst)
 
-        return "\n".join([parent_body, depth_info])
+        return "\n".join([parent_body, depth_info, skipped_srcs, skipped_dsts])
 
