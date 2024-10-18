@@ -12,7 +12,7 @@ import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = False):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
@@ -20,6 +20,7 @@ class DoubleGrammarSynthesisUtils:
         self.struct_def = StructDef()
         self.force_contains_all_regs = force_contains_all_regs
         self.contains_reg_def = ContainsRegDef()
+        self.use_any_reg = use_any_reg
 
 
     def get_registers(self, ctx):
@@ -233,7 +234,7 @@ class DoubleGrammarSynthesisUtils:
             return False , "", ""
 
 
-        GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs)
+        GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
 
         src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
 
@@ -247,7 +248,7 @@ class DoubleGrammarSynthesisUtils:
 
         dst_expression_label = None
 
-        GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs)
+        GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
         dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
 
         statements.append(dst_expression_grammar)
@@ -473,7 +474,7 @@ class DoubleGrammarSynthesisUtils:
             return False , "", ""
 
 
-        GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs)
+        GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
 
         src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
 

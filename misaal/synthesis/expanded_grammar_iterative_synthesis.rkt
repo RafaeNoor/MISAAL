@@ -202,19 +202,30 @@
 
       (debug-log satisfiable?)
 
+      (define complete-sol? 
+        (if satisfiable?
+          (complete-solution sol? (append (symbolics grammar-fn-dst) (symbolics grammar-fn-src)))
+          sol?
+          )
+        )
+
+
       (define materialize-dst
         (if satisfiable?
-          (evaluate grammar-fn-dst sol?)
+          (evaluate grammar-fn-dst complete-sol?)
           '()))
 
       (define materialize-src
         (if satisfiable?
-          (evaluate grammar-fn-src sol?)
+          (evaluate grammar-fn-src complete-sol?)
           '()))
 
       (debug-log "Materialized expressions")
       (debug-log "src")
       (debug-log materialize-src)
+
+
+      (debug-log (evaluate materialize-src sol?))
 
       (debug-log "dst")
       (debug-log materialize-dst)

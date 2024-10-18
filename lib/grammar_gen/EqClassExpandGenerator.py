@@ -94,7 +94,9 @@ class EqClassExpandGenerator:
 
                     clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
                 else:
-                    clause_tokens.append(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign))
+                    if self.input_sizes[int(ref_arg.index)] != f_arg.size:
+                        return
+                    clause_tokens.append("(choose* {})".format(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign)))
 
             elif isinstance(ref_arg, Context) and isinstance(f_arg, ConstBitVector):
                 return
