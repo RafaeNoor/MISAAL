@@ -7,6 +7,8 @@ from  common.Instructions import Context
 from utils.DSLInstructionUtils import *
 import subprocess
 import os
+import time
+
 
 
 
@@ -16,6 +18,8 @@ def get_valid_concretization(ref_expr, output_size, dsl_list):
 
     # Valid expressions is a list of possible concretizations, currently we return the first valid one
     valid_expressions = get_valid_concretization_helper(ref_expr, output_size, dsl_list)
+
+
 
 
     #assert len(valid_expressions) >= 1, "No valid expression found"
@@ -114,6 +118,103 @@ def get_valid_concretization_helper(ref_expr, output_size, dsl_list):
 
 
     return expressions
+
+
+
+
+
+
+def get_possible_output_sizes_of_eq_class(ctx_, dsl_list):
+
+    if isinstance(ctx_, Reg):
+        return set()
+
+    for dsl_inst in dsl_list:
+        sizes = []
+        ret_size = False
+        for ctx in dsl_inst.contexts:
+            if ctx.name == ctx_.name:
+                ret_size = True
+
+            if ctx.out_vectsize != None:
+                continue
+
+            sizes.append(ctx.out_vectsize)
+
+        if ret_size:
+            return set(sizes)
+    return set()
+
+
+
+
+def get_possible_input_sizes_of_eq_class(ctx_, dsl_list):
+
+    if isinstance(ctx_, Reg):
+        return set()
+
+    for dsl_inst in dsl_list:
+        sizes = []
+        ret_size = False
+        for ctx in dsl_inst.contexts:
+            if ctx.name == ctx_.name:
+                ret_size = True
+
+            for arg in ctx.context_args:
+                if isinstance(arg, BitVector):
+                    sizes.append(arg.size)
+
+        if ret_size:
+            return set(sizes)
+    return set()
+
+
+# Testing if a valid concretization of function exists
+
+def does_valid_concretization_exist(ref_expr, output_size, dsl_list):
+
+    if isinstance(ref_expr, Reg):
+        return True
+
+
+    if isinstance(ref_expr, Context):
+
+        eq_class = None
+        for dsl_inst in dsl_list:
+            if dsl_inst.name ==  ref_expr.dsl_name.split("_dsl")[0]:
+                eq_class = dsl_inst
+                break
+
+        valid_contexts = [ctx for ctx in eq_class.contexts if ctx.out_vectsize == output_size]
+
+        if len(valid_contexts) == 0:
+            return False
+
+        sym_indices = [idx for idx, arg in enumerate(ref_expr.context_args) if isinstance(arg, BitVector) or isinstance(arg, Reg)]
+
+        for valid_ctx in valid_contexts:
+            valid = True
+            for  sym_idx in  sym_indices:
+                ref_expr_arg = ref_expr.context_args[sym_idx]
+                valid_expr_size = valid_ctx.context_args[sym_idx].size
+                valid = valid and does_valid_concretization_exist(ref_expr_arg, valid_expr_size, dsl_list)
+
+                if not valid:
+                    break
+
+            if valid:
+                return True
+        return False
+
+    return False
+
+
+
+
+
+
+
+
 
 
 

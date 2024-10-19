@@ -48,6 +48,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
         self.canon_skipped_dst = 0
 
 
+
     def get_cannon_map_key(self, expr):
         return expr.emit_context_expr_string()
 

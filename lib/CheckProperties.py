@@ -29,6 +29,8 @@ from properties.EqClassEqualOnValuesDepth import EqClassEqualOnValuesDepth
 from properties.EqClassEqualDepth import EqClassEqualDepth
 from properties.EqClassEqualDepthV2 import EqClassEqualDepthV2
 from properties.EqClassEqualDepthV3 import EqClassEqualDepthV3
+from properties.EqClassEqualDepthV4 import EqClassEqualDepthV4
+from properties.EqClassEqualDepthV3Synth import EqClassEqualDepthV3Synth
 from properties.ExtractLaneSlice import ExtractLaneSlice
 
 from sema.hexsemantics_new import semantics as hvx_semantics
@@ -251,7 +253,25 @@ for property in test_properties:
             forward_path_name = "repair_forward_map_{}.json".format(target)
             swizzle_forward_path = TARGET_TO_SWIZZLE_DMAP[target]
             commutative_path = "commutative_map.json"
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 4,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = True)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 4,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+
+        elif property is EqClassEqualDepthV3Synth:
+            halide_dsl_list = parse_dict(halide_semantics)
+            target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
+            forward_path_name = "repair_forward_map_{}.json".format(target)
+            swizzle_forward_path = TARGET_TO_SWIZZLE_DMAP[target]
+            commutative_path = "commutative_map.json"
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 4,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+
+        elif property is EqClassEqualDepthV4:
+            halide_dsl_list = parse_dict(halide_semantics)
+            target_swizzles = parse_dict(TARGET_TO_SWIZZLE[target], keep_duplicate=True)
+            forward_path_name = "repair_forward_map_{}.json".format(target)
+            swizzle_forward_path = TARGET_TO_SWIZZLE_DMAP[target]
+            commutative_path = "commutative_map.json"
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+
+
 
         elif property is LargeExpressionTranslator:
             swizzle_dict = TARGET_TO_SWIZZLE[target]

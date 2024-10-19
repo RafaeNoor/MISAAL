@@ -1,6 +1,7 @@
 import string
 import copy
 import json
+import os
 
 
 
@@ -291,6 +292,51 @@ def summarize_distinct_swizzles(swizzle_analysis_result, target_name = "misaal")
         XMLFile.write("<intrinsics_list>\n")
         XMLFile.write("\n".join(intrins) +"\n")
         XMLFile.write("</intrinsics_list>\n")
+
+
+
+
+
+
+def get_swizzle_derivation_eq_class(swizzle_map_path, swizzle_dsl_list, target_dsl_list):
+
+    assert os.path.exists(swizzle_map_path), "Swizzle map path does not exist"
+
+    def get_eq_class(ctx_name, dsl_list):
+        for dsl_inst in dsl_list:
+            for ctx in dsl_inst.contexts:
+                if ctx.name == ctx_name:
+                    return dsl_inst
+
+        print(ctx_name)
+        assert False, "Unreachable"
+
+    with open(swizzle_map_path, "r") as SwFile:
+        swizzle_entry_data = json.load(SwFile)
+
+    eq_class_summary = {}
+
+    changed = True
+
+    while changed:
+        changed = False
+
+        for swizzle_ctx_name in swizzle_entry_data:
+            swizzle_eq_class = get_eq_class(swizzle_ctx_name, swizzle_dsl_list)
+
+
+
+            for target_ctx_name in swizzle_entry_data[swizzle_ctx_name]:
+                target_eq_class = get_eq_class(target_ctx_name,  target_dsl_list)
+
+                if target_eq_class.name not in eq_class_summary:
+                    changed = True
+                    eq_class_summary[target_eq_class.name] = []
+
+                if swizzle_eq_class.name not in eq_class_summary[target_eq_class.name]:
+                    changed = True
+                    eq_class_summary[target_eq_class.name].append(swizzle_eq_class.name)
+    return eq_class_summary
 
 
 
