@@ -19,6 +19,7 @@ from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.EnumerateUtils import *
 from utils.ConcretizeUtils import *
+import gc
 
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
@@ -32,7 +33,35 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         self.name = "EqClassEqualDepthV4"
 
 
+        self.swizzle_max_num_args = 4
+        self.current_gc_iteration = 0
+        self.VIRT_MEM_LIMIT_MB =  9216
+        self.gc_log = []
 
+
+
+
+    def should_garbage_collect(self, iteration):
+
+        VIRT_MEM = get_process_virtual_memory_megabytes()
+        if VIRT_MEM > self.VIRT_MEM_LIMIT_MB:
+
+            iterations_since_gc = abs(iteration - self.current_gc_iteration)
+
+            # In case garbage collected happened less than 256 iterations ago
+            if iterations_since_gc > 256:
+                return True
+
+
+        return False
+
+
+    def collect_garbage(self, iteration):
+        VIRT_MEM = get_process_virtual_memory_megabytes()
+        entry = (iteration, VIRT_MEM)
+        self.gc_log.append(entry)
+        self.current_gc_iteration = iteration
+        gc.collect()
 
     def property_holds_on_candidate(self, candidate):
 
@@ -121,6 +150,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     self.src_canon_map.clear()
                     for src_expr in src_expressions:
 
+
                         if isinstance(src_expr, Reg):
                             continue
 
@@ -147,6 +177,10 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_expr.out_vectsize)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
+
+                            if self.should_garbage_collect(target_count):
+                                self.collect_garbage()
+
 
                             if isinstance(target_expr, Reg):
                                 continue
@@ -178,4 +212,68 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
 
+    def run_on_batch_completion(self):
+        gc.collect()
 
+    def get_notify_body(self, count, success_count, start_time):
+        parent_body = super().get_notify_body(count, success_count, start_time)
+        gc_log_str = "\n".join([str(entry) for entry in self.gc_log ])
+
+        gc_desc = "Garbage Collected Log"
+
+        return "\n".join([parent_body, gc_desc, gc_log_str])
+
+
+    def get_relavent_swizzle_dsl_subset(self, dsl_inst):
+
+        relevent_swizzles_names = []
+        relavent_swizzles = []
+
+        for swizzle_ty in self.swizzle_forward_map:
+            ctx_in_map = any([ctx.name in self.swizzle_forward_map[swizzle_ty] for ctx in dsl_inst.contexts])
+            if ctx_in_map or dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+                swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
+
+                if swizzle_inst.name in relevent_swizzles_names:
+                    continue
+
+                if get_max_symbolic_args(swizzle_inst) >= 4:
+                    continue
+
+                relevent_swizzles_names.append(swizzle_inst.name)
+
+                relavent_swizzles.append(swizzle_inst)
+
+
+
+        return relavent_swizzles
+
+
+
+    def get_relavent_output_dsl_subset(self, dsl_inst):
+        if not dsl_inst.name in self.forward_map:
+            return []
+        relavent_names = self.forward_map[dsl_inst.name]
+        relavent_outputs = [d for d in self.output_dsl_list if d.name in relavent_names]
+
+        relevent_swizzles_names = []
+        relavent_swizzles = []
+
+        for swizzle_ty in self.swizzle_forward_map:
+            ctx_in_map = any([ctx.name in self.swizzle_forward_map[swizzle_ty] for ctx in dsl_inst.contexts])
+            if ctx_in_map or dsl_inst.name in self.swizzle_forward_map[swizzle_ty]:
+                swizzle_inst = self.get_swizzle_by_name(swizzle_ty)
+
+                if swizzle_inst.name in relevent_swizzles_names:
+                    continue
+
+                if get_max_symbolic_args(swizzle_inst) >= 4:
+                    continue
+
+                relevent_swizzles_names.append(swizzle_inst.name)
+
+                relavent_swizzles.append(swizzle_inst)
+
+
+
+        return relavent_outputs + relavent_swizzles

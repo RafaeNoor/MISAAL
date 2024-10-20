@@ -12,6 +12,7 @@ import glob
 import numpy as np
 import concurrent.futures
 import signal
+import psutil
 from Specification import Specification
 
 REMOVE_RKT_FILES = True
@@ -884,8 +885,8 @@ def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  r
                 inst_relavent_ctx += dsl_inst.contexts
             else:
                 for ctx in dsl_inst.contexts:
-                    loose_condition = ctx.get_output_size() == return_size
-                    tight_condition = ctx.get_output_size() == return_size and ctx.in_precision == return_prec
+                    loose_condition = not ctx.out_vectsize is None and ctx.get_output_size() == return_size
+                    tight_condition = not ctx.out_vectsize is None and ctx.get_output_size() == return_size and ctx.in_precision == return_prec
                     if USE_LOOSE and loose_condition:
                         inst_relavent_ctx.append(ctx)
                     elif not USE_LOOSE and tight_condition:
@@ -1197,3 +1198,9 @@ def get_hydride_spec_from_ctx(ctx, name = "hydride_spec"):
 
 
 
+def get_process_virtual_memory_megabytes():
+    return psutil.Process(os.getpid()).memory_info().vms / 1024 ** 2
+
+
+def get_process_physical_memory_megabytes():
+    return psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2

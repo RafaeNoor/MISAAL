@@ -17,6 +17,7 @@ import itertools
 import numpy as np
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
+import gc
 
 class EqClassEqualDepthV3(EqClassEqualDepthV2):
 

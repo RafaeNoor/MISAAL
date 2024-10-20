@@ -187,10 +187,17 @@ def does_valid_concretization_exist(ref_expr, output_size, dsl_list):
 
         valid_contexts = [ctx for ctx in eq_class.contexts if ctx.out_vectsize == output_size]
 
+        ref_expr_ctx = None
+
+        for ctx in eq_class.contexts:
+            if ctx.name == ref_expr.name:
+                ref_expr_ctx = ctx
+                break
+
         if len(valid_contexts) == 0:
             return False
 
-        sym_indices = [idx for idx, arg in enumerate(ref_expr.context_args) if isinstance(arg, BitVector) or isinstance(arg, Reg)]
+        sym_indices = [idx for idx, arg in enumerate(ref_expr_ctx.context_args) if isinstance(arg, BitVector) or isinstance(arg, Reg)]
 
         for valid_ctx in valid_contexts:
             valid = True
@@ -211,6 +218,49 @@ def does_valid_concretization_exist(ref_expr, output_size, dsl_list):
 
 
 
+def is_expression_template_valid(template):
+
+    if not isinstance(template, list) and not isinstance(template, tuple):
+        return False
+
+    if len(template) != 2:
+        return False
+
+    if isinstance(template[0], Reg):
+        return True
+
+
+    for sub_temp in template[1]:
+        if not is_expression_template_valid(sub_temp[0]):
+            return False
+    return True
+
+
+def materialize_expression_template(valid_template):
+
+    assert isinstance(valid_template, list)
+    assert len(valid_template) == 2
+
+    expr = valid_template[0]
+
+    if isinstance(expr, Reg):
+        #print("Materialize reg size:", expr.size, expr.precision)
+        return expr
+
+
+    # Else context
+
+    context_copy = copy.deepcopy(expr)
+
+    argument_settings = valid_template[1]
+
+    for arg_ctx in argument_settings:
+        expr_ctx, idx = arg_ctx
+        materialize_arg = materialize_expression_template(expr_ctx)
+
+        context_copy.context_args[idx] = materialize_arg
+
+    return context_copy
 
 
 
@@ -218,16 +268,170 @@ def does_valid_concretization_exist(ref_expr, output_size, dsl_list):
 
 
 
+def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
+    valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list)
+
+
+    for valid_template in valid_expression_templates:
+        if not is_expression_template_valid(valid_template):
+            continue
+        materialize_context = materialize_expression_template(valid_template)
+        return materialize_context
+
+
+    assert False, "Unreachable"
+    return None
 
 
 
 
+def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
+
+    if isinstance(ref_expr, Reg):
+        #print("Creating reg of required size: ", output_size)
+        yield [Reg(ref_expr.index, ref_expr.precision, output_size, signed = ref_expr.signed), None]
+        return []
+
+
+    assert isinstance(ref_expr, Context)
+
+    def get_ctx_sym_args(ctx):
+        return sum([1 for arg in ctx.context_args if isinstance(arg, BitVector)])
+
+
+    def get_sym_arg_indices(ctx):
+        return [idx for idx, arg in enumerate(ctx.context_args) if isinstance(arg, BitVector)]
+
+    def get_subexpr_at_idx(idx):
+        return ref_expr.context_args[idx]
+
+    dsl_inst = get_dsl_inst_for_ctx(ref_expr, dsl_list)
+
+    num_sym_args = 0
+    sym_idxs = []
+
+    for ctx in dsl_inst.contexts:
+        if ctx.name == ref_expr.name:
+            num_sym_args = get_ctx_sym_args(ctx)
+            sym_idxs = get_sym_arg_indices(ctx)
 
 
 
+    valid_ctxs = []
+
+    for ctx in dsl_inst.contexts:
+        ctx_sym_args = get_ctx_sym_args(ctx)
+
+        if ctx_sym_args  != num_sym_args:
+            continue
+
+        if ctx.out_vectsize is None:
+            continue
+
+        if ctx.out_vectsize == output_size:
+            valid_ctxs.append(ctx)
+
+    for valid_ctx in valid_ctxs:
+        ctx = valid_ctx
+        if num_sym_args == 4:
+
+            sym_idx_0 = sym_idxs[0]
+            sub_ref_expr_0 = get_subexpr_at_idx(sym_idx_0)
+            required_size_0 = ctx.context_args[sym_idx_0].size
+            generator_0 =  get_valid_concretization_generator_helper(sub_ref_expr_0, required_size_0, dsl_list)
+            for config_0 in generator_0:
+
+                if len(config_0) != 2:
+                    continue
+
+                sym_idx_1 = sym_idxs[1]
+                sub_ref_expr_1 = get_subexpr_at_idx(sym_idx_1)
+                required_size_1 = ctx.context_args[sym_idx_1].size
+                generator_1 =  get_valid_concretization_generator_helper(sub_ref_expr_1, required_size_1, dsl_list)
+                for config_1 in generator_1:
+                    if len(config_1) != 2:
+                        continue
+
+                    sym_idx_2 = sym_idxs[2]
+                    sub_ref_expr_2 = get_subexpr_at_idx(sym_idx_2)
+                    required_size_2 = ctx.context_args[sym_idx_2].size
+                    generator_2 =  get_valid_concretization_generator_helper(sub_ref_expr_2, required_size_2, dsl_list)
+                    for config_2 in generator_2:
+                        if len(config_2) != 2:
+                            continue
+
+                        sym_idx_3 = sym_idxs[3]
+                        sub_ref_expr_3 = get_subexpr_at_idx(sym_idx_3)
+                        required_size_3 = ctx.context_args[sym_idx_3].size
+                        generator_3 =  get_valid_concretization_generator_helper(sub_ref_expr_3, required_size_3, dsl_list)
+
+                        for config_3 in generator_3:
+                            if len(config_3) != 2:
+                                continue
+                            yield [valid_ctx, [(config_0, sym_idx_0), (config_1, sym_idx_1), (config_2, sym_idx_2), (config_3, sym_idx_3)]]
+        elif num_sym_args == 3:
+
+            sym_idx_0 = sym_idxs[0]
+            sub_ref_expr_0 = get_subexpr_at_idx(sym_idx_0)
+            required_size_0 = ctx.context_args[sym_idx_0].size
+            generator_0 =  get_valid_concretization_generator_helper(sub_ref_expr_0, required_size_0, dsl_list)
+            for config_0 in generator_0:
+
+                if len(config_0) != 2:
+                    continue
+
+                sym_idx_1 = sym_idxs[1]
+                sub_ref_expr_1 = get_subexpr_at_idx(sym_idx_1)
+                required_size_1 = ctx.context_args[sym_idx_1].size
+                generator_1 =  get_valid_concretization_generator_helper(sub_ref_expr_1, required_size_1, dsl_list)
+                for config_1 in generator_1:
+                    if len(config_1) != 2:
+                        continue
+
+                    sym_idx_2 = sym_idxs[2]
+                    sub_ref_expr_2 = get_subexpr_at_idx(sym_idx_2)
+                    required_size_2 = ctx.context_args[sym_idx_2].size
+                    generator_2 =  get_valid_concretization_generator_helper(sub_ref_expr_2, required_size_2, dsl_list)
+                    for config_2 in generator_2:
+                        if len(config_2) != 2:
+                            continue
+
+                    yield [valid_ctx, [(config_0, sym_idx_0), (config_1, sym_idx_1), (config_2, sym_idx_2)]]
+
+        elif num_sym_args == 2:
+
+            sym_idx_0 = sym_idxs[0]
+            sub_ref_expr_0 = get_subexpr_at_idx(sym_idx_0)
+            required_size_0 = ctx.context_args[sym_idx_0].size
+            generator_0 =  get_valid_concretization_generator_helper(sub_ref_expr_0, required_size_0, dsl_list)
+            for config_0 in generator_0:
+
+                if len(config_0) != 2:
+                    continue
+
+                sym_idx_1 = sym_idxs[1]
+                sub_ref_expr_1 = get_subexpr_at_idx(sym_idx_1)
+                required_size_1 = ctx.context_args[sym_idx_1].size
+                generator_1 =  get_valid_concretization_generator_helper(sub_ref_expr_1, required_size_1, dsl_list)
+                for config_1 in generator_1:
+                    if len(config_1) != 2:
+                        continue
+                    yield [valid_ctx, [(config_0, sym_idx_0), (config_1, sym_idx_1)]]
 
 
+        elif num_sym_args == 1:
+            sym_idx = sym_idxs[0]
+            sub_ref_expr = get_subexpr_at_idx(sym_idx)
+            required_size = ctx.context_args[sym_idx].size
+            generator_0 =  get_valid_concretization_generator_helper(sub_ref_expr, required_size, dsl_list)
+            for config_0 in generator_0:
+                if len(config_0) != 2:
+                    continue
+                yield [valid_ctx, [(config_0, sym_idx)]]
+        else:
+            assert False, "Unreachable number of sym args {}".format(num_sym_args)
 
 
-
+    yield []
+    return
 

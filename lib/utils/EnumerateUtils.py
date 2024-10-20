@@ -163,7 +163,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1)
 
 def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size = None):
     assert not output_size is None, "Require passing it output size for version 2 generator"
-    depth_expressions_generator = create_exhaustive_expressions_generator_helper_v2(copy.deepcopy(dsl_list), expr_depth = expr_depth)
+    depth_expressions_generator = create_exhaustive_expressions_generator_helper_v2(dsl_list, expr_depth = expr_depth)
 
     for expr in depth_expressions_generator:
         copied_expr = expr
