@@ -70,9 +70,9 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         dst_ctx = candidate[1]
         output_size = candidate[3]
 
-        valid_src_conc = get_valid_concretization(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+        valid_src_conc = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
 
-        valid_dst_conc = get_valid_concretization(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+        valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
 
         if valid_src_conc is None or valid_dst_conc is None:
             print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
