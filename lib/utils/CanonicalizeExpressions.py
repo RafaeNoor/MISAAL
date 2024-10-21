@@ -149,6 +149,9 @@ class CanonicalizeExpression:
             for idx, arg in args:
                 self.canonicalize_helper(arg)
         elif len(args) == 2 and self.is_expr_commutable(expr):
+
+            commutable_indices = self.get_commutable_indices(expr)
+
             # Count number of nodes on both sides and then set accordingly. Recursively
             # canoncialize operands
             lhs_idx, lhs_term = args[0]

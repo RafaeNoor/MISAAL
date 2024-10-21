@@ -1,4 +1,5 @@
 import common.Types
+import json
 import itertools
 import copy
 import sys
@@ -279,6 +280,8 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
         return materialize_context
 
 
+    print(ref_expr.emit_context_expr_string())
+    print(output_size)
     assert False, "Unreachable"
     return None
 
@@ -396,7 +399,8 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
                         if len(config_2) != 2:
                             continue
 
-                    yield [valid_ctx, [(config_0, sym_idx_0), (config_1, sym_idx_1), (config_2, sym_idx_2)]]
+                        yield [valid_ctx, [(config_0, sym_idx_0), (config_1, sym_idx_1), (config_2, sym_idx_2)]]
+
 
         elif num_sym_args == 2:
 
