@@ -22,6 +22,7 @@ class RepairRelavancePostProcess(Property):
         self.base_name = base_name
 
         self.combined_dsl_list = self.input_dsl_list + self.output_dsl_list + self.repair_dsl_list
+        self.output_language = self.output_dsl_list + self.repair_dsl_list
 
         self.repair_results_dict = {}
 
@@ -101,7 +102,7 @@ class RepairRelavancePostProcess(Property):
             statements.append(interpreter_framework)
 
 
-            statements.append(repair_util.emit_repair_post_process(self.combined_dsl_list, self.sd, interpret_name = self.synth_desc.interpreter_name , repair_post_process_name = repair_process_name))
+            statements.append(repair_util.emit_repair_post_process(self.output_language, self.sd, interpret_name = self.synth_desc.interpreter_name , repair_post_process_name = repair_process_name))
 
 
             src_expr_name = "src-expr"
@@ -124,40 +125,54 @@ class RepairRelavancePostProcess(Property):
             def_inline = "(define {} ({} {} inline-env))".format(inline_expr_name,  self.synth_desc.bind_name,  src_expr_name)
             statements.append(def_inline)
 
-            result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
-            statements.append(result_stmt)
+            for solvers in ["z3", "boolector"]:
+                statement_copy = copy.deepcopy(statements)
 
-            rand_prefix = get_random_tempfile_name()
+                set_solver_stmt = "(current-solver ({}))".format(solvers)
+                statement_copy.append(set_solver_stmt)
 
-            result_file_name = rand_prefix+".log"
+                result_stmt = "(define result {})".format(repair_util.emit_check_property(inline_expr_name))
+                statement_copy.append(result_stmt)
 
-            write_result_to_file = "(write-str-to-file (~v result) \"{}\")".format(result_file_name)
+                rand_prefix = get_random_tempfile_name()
 
-            statements.append(write_result_to_file)
+                result_file_name = rand_prefix+".log"
+
+                write_result_to_file = "(write-str-to-file (~v result) \"{}\")".format(result_file_name)
+
+                statement_copy.append(write_result_to_file)
+
+                expr_desc['solver'] = solvers
+
+                desc_copy = copy.deepcopy(expr_desc)
+
+                execute_racket_file(statement_copy)
+
+                if os.path.exists(result_file_name):
+                    with open(result_file_name, "r") as LogFile:
+                        contents = LogFile.read().rstrip().lstrip()
+                        boolean = self.racket_bool_map[contents]
+                        if boolean:
+                            print("SUCCESS!")
+                            print(parsed_expr.emit_context_expr_string())
+
+                            self.passing_results[candidate] = [desc_copy]
+                            self.failing_results.pop(candidate, None)
+                            self.error_results.pop(candidate, None)
+                            return True
+                        else:
+                            print("FAILURE")
+                            if candidate not in self.failing_results:
+                                self.failing_results[candidate] = []
+                            self.failing_results[candidate].append(desc_copy) #= self.repair_results_dict[candidate]
+                    os.remove(result_file_name)
 
 
-            execute_racket_file(statements)
-
-            if os.path.exists(result_file_name):
-                with open(result_file_name, "r") as LogFile:
-                    contents = LogFile.read().rstrip().lstrip()
-                    boolean = self.racket_bool_map[contents]
-                    if boolean:
-                        print("SUCCESS!")
-                        print(parsed_expr.emit_context_expr_string())
-
-                        self.passing_results[candidate] = [expr_desc]
-                        self.failing_results.pop(candidate, None)
-                        self.error_results.pop(candidate, None)
-                        return True
-                    else:
-                        print("FAILURE")
-                        self.failing_results[candidate] = self.repair_results_dict[candidate]
-                os.remove(result_file_name)
-
-
-            else:
-                self.error_results[candidate] = self.repair_results_dict[candidate]
+                else:
+                    if candidate not in self.error_results:
+                        self.error_results[candidate] = []
+                    # Either timeout or failing
+                    self.error_results[candidate].append(desc_copy) #= self.repair_results_dict[candidate]
         return False
 
 
@@ -219,7 +234,8 @@ class RepairRelavancePostProcess(Property):
         return """(define (create-bind-reg prep-env-fn env-sizes)
               (define (create-sym-test-env i)
                 (define size-i (list-ref env-sizes i))
-                (?? (bitvector size-i))
+                (define-symbolic* value (bitvector size-i))
+                value
                 )
               (define sym-input-env (build-vector (length env-sizes) create-sym-test-env ))
 

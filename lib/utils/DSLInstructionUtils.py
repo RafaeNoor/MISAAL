@@ -12,6 +12,8 @@ import glob
 import numpy as np
 import concurrent.futures
 import signal
+import psutil
+from Specification import Specification
 
 REMOVE_RKT_FILES = True
 
@@ -32,6 +34,8 @@ HYDRIDE_HEADER =  """
         (require rosette/lib/destruct)
         (require hydride)
         (require misaal)
+        (require rosette/solver/smt/boolector)
+        (require rosette/solver/smt/z3)
 
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
@@ -118,8 +122,13 @@ def run_command_child_processes(cmd, timeout = 5):
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
 
 
-    result = HelperCompletedProcess(returncode = proc.returncode)
     print("Return code: ", proc.returncode)
+    result = None
+    if proc.returncode == None:
+        result = HelperCompletedProcess(returncode = 1)
+    else:
+        result = HelperCompletedProcess(returncode = proc.returncode)
+
     return result
 
 def execute_racket_file(statements):
@@ -876,8 +885,8 @@ def create_exhaustive_expressions_generator_helper(dsl_list,  expr_depth = 1,  r
                 inst_relavent_ctx += dsl_inst.contexts
             else:
                 for ctx in dsl_inst.contexts:
-                    loose_condition = ctx.get_output_size() == return_size
-                    tight_condition = ctx.get_output_size() == return_size and ctx.in_precision == return_prec
+                    loose_condition = not ctx.out_vectsize is None and ctx.get_output_size() == return_size
+                    tight_condition = not ctx.out_vectsize is None and ctx.get_output_size() == return_size and ctx.in_precision == return_prec
                     if USE_LOOSE and loose_condition:
                         inst_relavent_ctx.append(ctx)
                     elif not USE_LOOSE and tight_condition:
@@ -1178,3 +1187,44 @@ def dsl_inst_from_ctx(ctx, dsl_list):
             if _ctx.name == ctx.name:
                 return dsl_inst
                 
+
+def get_hydride_ctx_bv_ops(ctx):
+    if isinstance(ctx, Context):
+        ctx_ops = ctx.get_bv_ops()
+
+        for arg in ctx.context_args:
+            ctx_ops += get_hydride_ctx_bv_ops(arg)
+
+        return list(set(ctx_ops))
+    else:
+        return []
+
+def get_hydride_spec_from_ctx(ctx, name = "hydride_spec"):
+
+    print(ctx.name)
+    ops = get_hydride_ctx_bv_ops(ctx)
+    output_size = ctx.out_vectsize
+    output_prec = ctx.out_precision
+    imms = []
+    regs = get_unique_context_registers(ctx)
+    input_precs = [int(reg.precision) for reg in regs]
+    input_sizes = [int(reg.size) for reg in regs]
+
+    print(input_precs)
+    print(input_sizes)
+    input_shapes = [[1, input_sizes[i] // input_precs[i]] for i in range(len(input_sizes))]
+    output_shape = [1, output_size // output_prec]
+
+    spec = Specification(name = name, semantics = ops, output_shape = output_shape, input_shapes = input_shapes, input_precision = input_precs, output_precision = output_prec)
+
+    return spec
+
+
+
+
+def get_process_virtual_memory_megabytes():
+    return psutil.Process(os.getpid()).memory_info().vms / 1024 ** 2
+
+
+def get_process_physical_memory_megabytes():
+    return psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
