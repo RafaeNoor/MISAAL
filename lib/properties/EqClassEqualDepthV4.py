@@ -213,7 +213,9 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
     def run_on_batch_completion(self):
-        gc.collect()
+        VIRT_MEM = get_process_virtual_memory_megabytes()
+        if VIRT_MEM > self.VIRT_MEM_LIMIT_MB:
+            self.collect_garbage("BATCH_COMPLETION")
 
     def get_notify_body(self, count, success_count, start_time):
         parent_body = super().get_notify_body(count, success_count, start_time)
