@@ -3,11 +3,13 @@ import subprocess as sb
 from compiler.EggLogCompiler import EggLogCompiler
 from utils.ReadDSL import read_string_to_dsl
 import sys
+import time
+import os
 
 
 class HydrideCompiler(EggLogCompiler):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_file_name = None, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], input_file_path = None, output_file_path = None, function_name = None, intrinsics_file = None):
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_file_name = None, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], input_file_path = None, output_file_path = None, function_name = None, intrinsics_file = None, hydride_root_path = None):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations, egg_file_name = egg_file_name, egg_pkg_path = egg_pkg_path)
         self.llvm_so_path = llvm_so_path
         self.llvm_flags = llvm_flags
@@ -15,6 +17,8 @@ class HydrideCompiler(EggLogCompiler):
         self.output_file_path = output_file_path
         self.function_name = function_name
         self.intrinsics_file = intrinsics_file
+        self.hydride_root_path = hydride_root_path
+
 
     def get_reg_vector_type(self, reg):
         return "; (reg {}) <{} x i{}>".format(reg.index, reg.size // reg.precision,  reg.precision)
@@ -44,11 +48,29 @@ class HydrideCompiler(EggLogCompiler):
 
 
 
+    def run_llvm_legalizer(self):
+
+        assert not self.llvm_so_path is None, "Unable to find LLVM target shared object file"
+        assert not self.intrinsics_file is None, "Unable to find LLVM intrinsic file"
+        assert len(self.llvm_flags) != 0, "Expected at least one LLVM flag"
+        assert not self.hydride_root_path is None , "Hydride Root must be defined"
+
+        start_time = time.time()
+
+        low_level_gen_script = os.path.join(self.hydride_root_path, "codegen-generator", "tools","low-level-codegen","RoseLowLevelCodeGen.py")
+        llvm_out_file =  "llvm.out"
+        cmd = ["python3", low_level_gen_script, self.output_file_path, self.llvm_so_path, self.intrinsics_file, " ".join(self.llvm_flags), llvm_out_file]
+
+        cmd_str = " ".join(cmd)
+        sb.run(cmd_str, shell = True)
+        elapsed = time.time() - start_time
+
+        self.compile_times.append(("LLVM Legalize", elapsed))
+
+
 
 
     def compile_hydride(self):
-        #assert not self.llvm_so_path is None, "Unable to find LLVM target shared object file"
-        #assert not len(self.llvm_flags) != 0, "Expected at least one LLVM flag"
         assert not self.input_file_path is None, "Expected Input file"
         assert not self.output_file_path is None, "Expected Output file"
 

@@ -3,6 +3,7 @@ from utils.EggLogUtils import *
 import os
 import subprocess as sb
 from utils.ReadDSL import read_string_to_dsl
+import time
 
 # Compiler using the EggLog DSL for applying rewrites
 
@@ -17,6 +18,7 @@ class EggLogCompiler(CompilerBase):
         if egg_file_name is None:
             egg_file_name = "temp.egg"
         self.egg_file_name = egg_file_name
+        self.compile_times = []
 
     def initialize_class_map(self):
         pass
@@ -47,6 +49,7 @@ class EggLogCompiler(CompilerBase):
     def execute_cmd(self, cmd, cur_dir = None):
         output_stream_name= "egg.out.txt"
 
+
         with open(output_stream_name, "w+") as OutStream:
             if cur_dir is None:
                 print("$[ Egg Compiler ]: "," ".join(cmd))
@@ -75,7 +78,12 @@ class EggLogCompiler(CompilerBase):
         target_egg_file = os.path.join(example_path, fname)
         exec_cmd = ["cargo", "run" , target_egg_file]
 
+        start_time = time.time()
+
         egg_log_stream = self.execute_cmd(exec_cmd, cur_dir = self.egg_pkg_path)
+
+        elapsed = time.time() - start_time
+        self.compile_times.append(("EggLog", elapsed))
 
         final_expression_str = egg_log_stream.strip().split("\n")[-1]
         return final_expression_str
@@ -127,6 +135,15 @@ class EggLogCompiler(CompilerBase):
 
 
 
+    def print_stats(self):
+        print("=======", "Compile Times", "=======")
+        total = 0
+        for category, secs in self.compile_times:
+            print(category,":\t",  secs, "seconds")
+            total += secs
+
+        print("=="*20)
+        print("Total", ":", total)
 
 
 
