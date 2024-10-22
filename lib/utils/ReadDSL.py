@@ -65,11 +65,10 @@ def get_matching_context(nested_expr, dsl_list):
                         print("Size does not match", ctx_arg.size, int(arg[3]))
                         continue
 
-                    input_prec = int(arg[2].split("int")[-1])
-
-                    if ctx.in_precision != input_prec:
-                        print("Precision does not match", ctx.in_precision, input_prec)
-                        continue
+                    #input_prec = int(arg[2].split("int")[-1])
+                    #if ctx.in_precision != input_prec:
+                    #    print("Precision does not match", ctx.in_precision, input_prec)
+                    #    continue
 
                     new_matching_context_indices.append(ci)
                 matching_context_indices = new_matching_context_indices
