@@ -24,7 +24,7 @@ import gc
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1):
 
 
 
@@ -36,6 +36,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         self.swizzle_max_num_args = 4
         self.current_gc_iteration = 0
         self.VIRT_MEM_LIMIT_MB =  9216
+        self.start_input_depth = start_input_depth
+        self.start_output_depth = start_output_depth
         self.gc_log = []
 
 
@@ -171,9 +173,9 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     self.src_canon_map.clear()
                     for src_expr in src_expressions:
 
-
                         if isinstance(src_expr, Reg):
                             continue
+
 
                         if get_expr_depth(src_expr) != input_depth:
                             continue
@@ -204,13 +206,13 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                 self.collect_garbage()
 
 
-                            if isinstance(target_expr, Reg):
+                            if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
 
 
 
 
-                            if get_expr_depth(target_expr) == output_depth:
+                            if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
                                 canonical_target_expr = self.canonicalizer.canonicalize(target_expr)
 
                                 if self.use_canon_map:

@@ -178,7 +178,25 @@ class EqClassExpandGenerator:
             definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, "\n".join(layer_ctx['clauses']))
         return definition
 
+    def visit_reg_layer(self, ctx, parent_name,  layer_idx, output_size):
+        current_layer_name = "reg_{}_{}".format(output_size, layer_idx)
+        self.initialize_layer_context(current_layer_name, parent_name, output_size, None, ctx, layer_idx)
+
+        if self.use_any_reg:
+            choose_any_clauses = [self.emit_choose_reg(i, precision = 8) for i in range(len(self.input_sizes)) if self.input_sizes[i] == output_size]
+        else:
+            choose_any_clauses = [self.emit_choose_reg(i, precision = 8) for i in [ctx.index] if self.input_sizes[i] == output_size]
+
+
+        clause = "{}".format("\n".join(choose_any_clauses))
+        print("Reg clause:", clause)
+        self.add_clause_to_layer_context(current_layer_name, clause)
+        self.set_layer_context_visited(current_layer_name)
+        return current_layer_name
+
     def visit_expr(self, ctx, parent_name, layer_idx, output_size):
+        if isinstance(ctx, Reg):
+            return self.visit_reg_layer(ctx, parent_name, layer_idx, output_size)
         eq_class = self.get_eq_class(ctx.dsl_name)
         #print("Visting ", eq_class.name, " with output size: ", output_size)
 

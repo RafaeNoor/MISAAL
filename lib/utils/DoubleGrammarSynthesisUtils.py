@@ -81,32 +81,32 @@ class DoubleGrammarSynthesisUtils:
         relavent_output_subset = self.get_relevant_dsl_list([dst_ctx])
         print(relavent_output_subset)
 
-        assert len(relavent_output_subset) != 0, "Atleast one AutoLLVM IR class expected for target language"
+        assert len(relavent_output_subset) != 0 or isinstance(target_expr, Reg), "Atleast one AutoLLVM IR class expected for target language"
         relavent_input_subset = self.get_relevant_dsl_list([src_ctx])
         print(relavent_input_subset)
         assert len(relavent_input_subset) != 0, "Atleast one AutoLLVM IR class expected for src language"
         relavent_dsl_subset = self.get_relevant_dsl_list([src_ctx, dst_ctx])
         print(relavent_dsl_subset)
 
-        print("relavent_output_subset", len(relavent_output_subset), len(relavent_output_subset[0].contexts))
-        print("relavent_input_subset", len(relavent_input_subset),  len(relavent_input_subset[0].contexts))
-        print("relavent_combined_subset", len(relavent_dsl_subset))
+        #print("relavent_output_subset", len(relavent_output_subset), len(relavent_output_subset[0].contexts))
+        #print("relavent_input_subset", len(relavent_input_subset),  len(relavent_input_subset[0].contexts))
+        #print("relavent_combined_subset", len(relavent_dsl_subset))
 
 
 
 
-        if isinstance(dst_ctx, Reg):
-            print("Early return: Dst expression is a context")
-            return False, "", ""
+        #if isinstance(dst_ctx, Reg):
+        #    print("Early return: Dst expression is a context")
+        #    return False, "", ""
 
 
 
-        dst_eq_class = self.get_eq_class(dst_ctx.dsl_name)
+        #dst_eq_class = self.get_eq_class(dst_ctx.dsl_name)
 
-        matching_ctx = False
-        for ctx in dst_eq_class.contexts:
-            if ctx.out_vectsize == src_ctx.out_vectsize:
-                matching_ctx = True
+        #matching_ctx = False
+        #for ctx in dst_eq_class.contexts:
+        #    if ctx.out_vectsize == src_ctx.out_vectsize:
+        #        matching_ctx = True
 
         #if not matching_ctx:
         #    print("Early return: No matching context")
@@ -145,9 +145,9 @@ class DoubleGrammarSynthesisUtils:
             reg_arg_idx_map[key] = 0
         print(reg_arg_map)
 
+        """
         dst_regs = self.get_registers(dst_ctx)
 
-        """
         common_param =  False
 
 
