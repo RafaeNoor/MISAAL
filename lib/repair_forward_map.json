@@ -1,0 +1,359 @@
+{
+    "hexagon_V6_vdmpyhb_acc_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vminuh_128B": [
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-min"
+    ],
+    "hexagon_V6_vpackwuh_sat_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-saturate",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vmpyih_acc_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:cast-uint",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-int",
+        "typed:unsigned-vec-mul",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vmpabus_128B": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:cast-uint"
+    ],
+    "hexagon_V6_vabsdiffh_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vgtb_128B": [
+        "typed:signed-vec-lt"
+    ],
+    "hexagon_V6_vaddubh_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint"
+    ],
+    "hexagon_V6_vmpyh_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-mul",
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:signed-vec-mul"
+    ],
+    "hexagon_V6_vaddhsat_128B": [
+        "typed:signed-vec-min",
+        "typed:signed-vec-sat-add",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vabsh_128B": [
+        "typed:signed-vec-div"
+    ],
+    "hexagon_V6_vunpackoh_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vsubuhw_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:vec-sub",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vsubh_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:vec-sub",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vmpyih_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:unsigned-vec-mul",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vaslhv_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-add",
+        "typed:vec-shl",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-shr",
+        "typed:unsigned-vec-max",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vnavgw_128B": [
+        "typed:signed-vec-div"
+    ],
+    "hexagon_V6_vsathub_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-saturate",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vdmpyhvsat_acc_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vrmpybv_128B": [
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vrmpybus_acc_128B": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:signed-vec-widen-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vdmpybus_128B": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:cast-uint"
+    ],
+    "hexagon_V6_vmpyuhe_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-mod",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:unsigned-vec-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vdmpyhisat_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul"
+    ],
+    "hexagon_V6_vmpabusv_128B": [
+        "typed:unsigned-vec-widen-mul",
+        "typed:cast-uint",
+        "typed:unsigned-vec-mul",
+        "typed:signed-vec-mul"
+    ],
+    "hexagon_V6_vor_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vandvrt_128B": [
+        "typed:unsigned-vec-le",
+        "typed:unsigned-vec-lt"
+    ],
+    "hexagon_V6_vavgwrnd_128B": [
+        "typed:signed-vec-div"
+    ],
+    "hexagon_V6_vmaxw_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot"
+    ],
+    "hexagon_V6_vmpyub_128B": [
+        "typed:signed-vec-mod",
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-mod",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-sat-add",
+        "typed:cast-uint",
+        "typed:unsigned-vec-mul",
+        "typed:signed-vec-mul"
+    ],
+    "hexagon_V6_vavguw_128B": [
+        "typed:unsigned-vec-shr",
+        "typed:unsigned-vec-div"
+    ],
+    "hexagon_V6_vunpackh_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-min",
+        "typed:vec-saturate",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:signed-vec-widen-mul",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vmpybv_acc_128B": [
+        "typed:vec-add",
+        "typed:signed-vec-widen-mul"
+    ],
+    "hexagon_V6_vmpauhb_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vlsrwv_128B": [
+        "typed:unsigned-vec-shr",
+        "typed:unsigned-vec-div"
+    ],
+    "hexagon_V6_vsb_128B": [
+        "typed:signed-vec-min",
+        "typed:vec-saturate",
+        "typed:unsigned-vec-sat-sub",
+        "typed:cast-uint",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-widen-mul",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vmpybv_128B": [
+        "typed:signed-vec-mod",
+        "typed:signed-vec-min",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-int",
+        "typed:unsigned-vec-mul",
+        "typed:signed-vec-mul",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vasrhv_128B": [
+        "typed:signed-vec-mod",
+        "typed:signed-vec-min",
+        "typed:vec-shl",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:unsigned-vec-mod",
+        "typed:unsigned-vec-shr",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-shr",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ],
+    "hexagon_V6_vdmpyhsat_acc_128B": [
+        "typed:cast-int",
+        "typed:signed-vec-widen-mul",
+        "typed:unsigned-vec-mul"
+    ],
+    "hexagon_V6_vnot_128B": [
+        "typed:signed-vec-min",
+        "typed:unsigned-vec-sat-sub",
+        "typed:signed-vec-max",
+        "typed:vec-bwand",
+        "typed:unsigned-vec-min",
+        "typed:unsigned-vec-max",
+        "typed:cast-uint",
+        "typed:cast-int",
+        "typed:vec-bwnot",
+        "typed:unsigned-vec-sat-add"
+    ]
+}
