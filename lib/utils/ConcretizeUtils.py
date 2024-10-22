@@ -272,13 +272,17 @@ def materialize_expression_template(valid_template):
 def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
     valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list)
 
+    valid = False
 
     for valid_template in valid_expression_templates:
         if not is_expression_template_valid(valid_template):
             continue
+        valid = True
         materialize_context = materialize_expression_template(valid_template)
-        return materialize_context
+        yield materialize_context
 
+    if valid:
+        return
 
     print(ref_expr.emit_context_expr_string())
     print(output_size)

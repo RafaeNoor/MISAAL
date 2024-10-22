@@ -70,23 +70,44 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         dst_ctx = candidate[1]
         output_size = candidate[3]
 
-        valid_src_conc = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+
+        valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+
+
 
         valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+        valid_dst_conc = next(valid_dst_conc)
 
-        if valid_src_conc is None or valid_dst_conc is None:
-            print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
-            return False
+        input_sizes_visited = []
+        for valid_src_conc in valid_src_conc_gen:
+
+            contains_swizzle = self.count_contexts(valid_src_conc, "swizzle") != 0
+
+            regs = get_unique_context_registers(valid_src_conc)
+            reg_sizes = sorted([reg.size for reg in regs])
+
+            if reg_sizes in input_sizes_visited:
+                continue
+
+            input_sizes_visited.append(reg_sizes)
 
 
-        success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc)
-
-        if success:
-            key = self.serialize_candidate(candidate)
-            self.simplify_map[key] = (src_expr_str, dst_expr_str)
+            if valid_src_conc is None or valid_dst_conc is None:
+                print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
+                continue
 
 
-        return success
+            success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc)
+
+            if success:
+                key = self.serialize_candidate(candidate)
+                self.simplify_map[key] = (src_expr_str, dst_expr_str)
+                return success
+
+            if not contains_swizzle:
+                break
+
+        return False
 
 
     def serialize_candidate(self, candidate):
@@ -158,6 +179,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                             continue
 
 
+
                         if not self.expr_contains(src_expr, dsl_inst.name):
                             continue
 
@@ -184,6 +206,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                             if isinstance(target_expr, Reg):
                                 continue
+
+
 
 
                             if get_expr_depth(target_expr) == output_depth:
