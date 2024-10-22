@@ -1,6 +1,8 @@
 from compiler.Compiler import *
 from utils.EggLogUtils import *
+import os
 import subprocess as sb
+from utils.ReadDSL import read_string_to_dsl
 
 # Compiler using the EggLog DSL for applying rewrites
 
@@ -42,14 +44,25 @@ class EggLogCompiler(CompilerBase):
     def convert_reg_to_compiler_datastructure(self, expr_regs):
         return [emit_egg_define_reg(reg) for reg in expr_regs]
 
-
     def execute_cmd(self, cmd, cur_dir = None):
-        if cur_dir is None:
-            print("$[ Egg Compiler ]: "," ".join(cmd))
-            sb.run(" ".join(cmd), shell = True)
-        else:
-            print("$[ Egg Compiler: {} ]: ".format(cur_dir)," ".join(cmd))
-            sb.run(" ".join(cmd), shell = True, cwd = cur_dir)
+        output_stream_name= "egg.out.txt"
+
+        with open(output_stream_name, "w+") as OutStream:
+            if cur_dir is None:
+                print("$[ Egg Compiler ]: "," ".join(cmd))
+                sb.run(" ".join(cmd), shell = True, stdout = OutStream, stderr = OutStream)
+            else:
+                print("$[ Egg Compiler: {} ]: ".format(cur_dir)," ".join(cmd))
+                sb.run(" ".join(cmd), shell = True, cwd = cur_dir, stdout = OutStream, stderr = OutStream)
+
+
+        content = ""
+        if os.path.exists(output_stream_name):
+            with open(output_stream_name, "r") as StreamFile:
+                content =  StreamFile.read()
+            os.remove(output_stream_name)
+
+        return content
 
 
     def execute_egglog_file(self, fname):
@@ -62,7 +75,10 @@ class EggLogCompiler(CompilerBase):
         target_egg_file = os.path.join(example_path, fname)
         exec_cmd = ["cargo", "run" , target_egg_file]
 
-        self.execute_cmd(exec_cmd, cur_dir = self.egg_pkg_path)
+        egg_log_stream = self.execute_cmd(exec_cmd, cur_dir = self.egg_pkg_path)
+
+        final_expression_str = egg_log_stream.strip().split("\n")[-1]
+        return final_expression_str
 
 
 
@@ -72,6 +88,9 @@ class EggLogCompiler(CompilerBase):
 
         statements.append(compiler_functionality)
         statements += [defn for label, defn in reg_data_structures]
+
+        num_regs = len(reg_data_structures)
+
 
 
         src_expr_name = "srcexpr"
@@ -88,9 +107,25 @@ class EggLogCompiler(CompilerBase):
         with open(self.egg_file_name, "w+") as EggFile:
             EggFile.write("\n".join(statements))
 
-        self.execute_egglog_file(self.egg_file_name)
+        final_expression_str= self.execute_egglog_file(self.egg_file_name)
 
-        return expr
+        output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
+
+        return output_expression
+
+    def parse_egglog_output_expr(self, expr_str, num_regs):
+
+        expression_str = expr_str
+
+        for i in range(num_regs):
+            expression_str = expression_str.replace("(SYMBV {})".format(i), "(reg (bv {} 8))".format(i))
+
+        output_expr = read_string_to_dsl(expression_str, self.target_dsl_list)
+
+        return output_expr
+
+
+
 
 
 
