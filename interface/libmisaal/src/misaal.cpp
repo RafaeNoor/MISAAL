@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <fstream>
 #include "misaal.h"
 
 
@@ -12,26 +13,34 @@ namespace misaal {
         Expressions.push_back(Task);
     }
 
-    void MisaalCompiler::compile_expression(std::string output_bitcode_path){
+    void MisaalCompiler::compile_expression(std::string output_bitcode_path, std::string benchmark){
+        std::string python_content = emit_python_rewrite_file(benchmark);
+        std::string python_file_name = benchmark + "_misaal.py";
+        write_to_file(python_file_name, python_content);
+    }
 
+    void MisaalCompiler::write_to_file(std::string fname, std::string content){
+        std::cout << "Writing to " << fname << " ...\n";
+        std::ofstream myfile;
+        myfile.open (fname);
+        myfile << content << "\n";
+        myfile.close();
     }
 
 
     std::string MisaalCompiler::get_compiler_python_import(){
-        std::string imports = " \
-                               from compiler.HydrideCompiler import HydrideCompiler \
-                               from egg_config import EGG_PKG_PATH \
-                               from sema.hexsemantics_new import semantics as hvx_semantics \
-                               from sema.x86SemanticsAllArgs import semantcs as x86_semantics \
-                               from sema.halide_sema import halide_semantics \
-                               from sema.hex_swizzles import hvx_swizzles \
-                               from sema.x86_swizzles import x86_swizzles \
-                               from sema.arm_swizzles import arm_swizzles \
-                               from sema.ARMSema import arm_semantics \
-                               from sema.repairs_sema import repair_semantics \
-                               from common.DSLParser import parse_dict \
-                               ";
-
+        std::string imports = "\
+from compiler.HydrideCompiler import HydrideCompiler\n\
+from utils.egg_config import EGG_PKG_PATH\n\
+from sema.hexsemantics_new import semantics as hvx_semantics\n\
+from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
+from sema.halide_sema import halide_semantics\n\
+from sema.hex_swizzles import hvx_swizzles\n\
+from sema.x86_swizzles import x86_swizzles\n\
+from sema.arm_swizzles import arm_swizzles\n\
+from sema.ARMSema import arm_semantics\n\
+from sema.repairs_sema import repair_semantics\n\
+from common.DSLParser import parse_dict\n";
         return imports;
 
     }
@@ -53,8 +62,12 @@ namespace misaal {
     }
 
     std::string MisaalCompiler::get_input_dsl_list_definition(std::string input_dsl_name){
+        std::vector<std::string> statements;
         std::string parse_inst_dict = parse_dict("halide_dsl_list", "halide_semantics");
-        return input_dsl_name + " = halide_dsl_list";
+        statements.push_back(parse_inst_dict);
+        statements.push_back(input_dsl_name + " = halide_dsl_list");
+
+        return join(statements, "\n");
     }
 
 
@@ -159,6 +172,7 @@ namespace misaal {
         };
         return wrapper;
     }
+
 
     std::string MisaalCompiler::emit_python_rewrite_file(std::string base_name){
 

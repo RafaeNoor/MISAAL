@@ -36,7 +36,7 @@ namespace misaal {
                 HYDRIDE_ROOT = HYDRIDE_PATH;
             }
             void add_expression_to_compile(std::string expr, std::string name);
-            void compile_expression(std::string output_bitcode_path);
+            void compile_expression(std::string output_bitcode_path, std::string benchmark);
 
 
 
@@ -52,6 +52,7 @@ namespace misaal {
             std::string get_llvm_so_flags();
             std::string get_llvm_intrinsic_wrapper();
             std::string emit_python_rewrite_file(std::string base_name);
+            void write_to_file(std::string fname, std::string content);
 
 
             TARGET target;

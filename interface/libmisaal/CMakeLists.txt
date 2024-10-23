@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 project(LIBMISAAL VERSION 1.0)
 set(LIBMISAAL_VERSION 1.0)
 
-
+include(CTest)
 
 # Function to prepend the subdirectory to source files in subdirectories
 function(PREPEND var )
@@ -44,3 +44,7 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
     )
 
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
