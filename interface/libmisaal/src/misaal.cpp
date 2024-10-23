@@ -1,7 +1,9 @@
 #include <iostream>
+#include <cstdlib>
 #include <vector>
 #include <stdlib.h>
 #include <fstream>
+#include <chrono>
 #include "misaal.h"
 
 
@@ -14,9 +16,23 @@ namespace misaal {
     }
 
     void MisaalCompiler::compile_expression(std::string output_bitcode_path, std::string benchmark){
-        std::string python_content = emit_python_rewrite_file(benchmark);
+        std::string python_content = emit_python_rewrite_file(output_bitcode_path, benchmark);
         std::string python_file_name = benchmark + "_misaal.py";
         write_to_file(python_file_name, python_content);
+
+        execute_python_file(python_file_name);
+    }
+
+    void MisaalCompiler::execute_python_file(std::string fname){
+        std::string cmd = "python3 " + fname;
+        auto start = std::chrono::system_clock::now();
+        int ret_code = system(cmd.c_str());
+        auto end = std::chrono::system_clock::now();
+
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::cout << "Compilation took "<< elapsed_seconds.count() << " seconds ...\n";
+
+
     }
 
     void MisaalCompiler::write_to_file(std::string fname, std::string content){
@@ -49,11 +65,18 @@ from common.DSLParser import parse_dict\n";
         return output_name + " = parse_dict(" +  dict_name + ")"; 
     }
 
-    std::string MisaalCompiler::join(std::vector<std::string> statements, std::string join_on){
+    std::string MisaalCompiler::join(std::vector<std::string>& statements, std::string join_on){
         std::string joined = "";
 
-        for(auto str : statements){
-            joined = joined +  str + join_on;
+        
+        for(int i =0; i < statements.size(); i++){
+            auto str = statements[i];
+            if (i == statements.size() - 1){
+                joined = joined +  str;
+            } else {
+                joined = joined +  str + join_on;
+
+            }
         }
 
         return joined;
@@ -174,7 +197,7 @@ from common.DSLParser import parse_dict\n";
     }
 
 
-    std::string MisaalCompiler::emit_python_rewrite_file(std::string base_name){
+    std::string MisaalCompiler::emit_python_rewrite_file(std::string output_path ,std::string base_name){
 
         std::vector<std::string> statements;
 
@@ -182,7 +205,8 @@ from common.DSLParser import parse_dict\n";
         std::string common_imports  = get_compiler_python_import();
         statements.push_back(common_imports);
 
-        std::string pattern_imports = get_patterns_import("misaal_patterns");
+        std::string pattern_alias = "misaal_patterns";
+        std::string pattern_imports = get_patterns_import(pattern_alias);
         statements.push_back(pattern_imports);
 
         // Parse Input and Output DSL Lists
@@ -196,6 +220,8 @@ from common.DSLParser import parse_dict\n";
         statements.push_back(input_dsl_defn);
         statements.push_back(output_dsl_defn);
 
+
+        // LLVM Flags
         std::string wrapper = "so_path = " + get_llvm_so_path();
         std::string flags = "llvm_flags = [" + get_llvm_so_flags() + "]";
         std::string intrinsics = "intrin = " + get_llvm_intrinsic_wrapper();
@@ -204,11 +230,84 @@ from common.DSLParser import parse_dict\n";
         statements.push_back(flags);
         statements.push_back(intrinsics);
 
+        // Hydride Root 
+        statements.push_back("HYDRIDE_ROOT = \""+HYDRIDE_ROOT + "\"");
+
+        std::string test_name = "tests";
+        std::string tests_desc = prepare_rewrite_specs(test_name);
+        statements.push_back(tests_desc);
+
+        std::string compiler_name = "misaal_compiler";
+
+        std::string compiler_def = define_misaal_compiler(compiler_name, test_name,  input_dsl_name, output_dsl_name, pattern_alias, output_path);
+        statements.push_back(compiler_def);
+
+
+
+
+
         return join(statements, "\n");
 
 
 
     };
+
+    std::string MisaalCompiler::define_misaal_compiler(std::string compiler_name, std::string test_name, std::string input_dsl_name, std::string output_dsl_name, std::string pattern_alias, std::string output_path){
+        std::vector<std::string> statements;
+        statements.push_back("# Defining MISAAL Rewrite compiler");
+
+        std::vector<std::string> params;
+
+        params.push_back(pattern_alias);
+        params.push_back("src_dsl_list = " + input_dsl_name);
+        params.push_back("target_dsl_list = " + output_dsl_name);
+        params.push_back("run_iterations = " + std::to_string(rewrite_iterations));
+        params.push_back("egg_pkg_path = EGG_PKG_PATH");
+        params.push_back("tests = " + test_name);
+        params.push_back("llvm_so_path = so_path");
+        params.push_back("llvm_flags =  llvm_flags");
+        params.push_back("intrinsics_file =  intrin");
+        params.push_back("hydride_root_path =  HYDRIDE_ROOT");
+        params.push_back("llvm_out_file_name = \"" + output_path + "\"");
+
+        std::string compiler_defn = compiler_name + " = HydrideCompiler(" + join(params, ", ") + ")"; 
+
+        statements.push_back(compiler_defn);
+
+        // Invoke compiler and print stats
+        statements.push_back("# Invoke compiler and print stats");
+        statements.push_back(compiler_name + ".compile_hydride()");
+        statements.push_back(compiler_name + ".run_llvm_legalizer()");
+        statements.push_back(compiler_name + ".print_stats()");
+
+        return join(statements ,"\n");
+
+
+    }
+
+    std::string MisaalCompiler::prepare_rewrite_specs(std::string test_name){
+        std::vector<std::string> statements;
+        
+        statements.push_back("# Defining Tests ");
+        statements.push_back(test_name + " = []");
+
+        for(int i = 0; i < Expressions.size() ; i++){
+            std::string base_name = "test_"+std::to_string(i);
+            auto CQ = Expressions[i];
+
+            std::string func_name = base_name+"_name";
+            std::string func_defn_name = base_name+"_str";
+
+            std::string name_def = func_name + " = \"" + CQ.name +"\"";
+            std::string func_def = func_defn_name + " =\"\"\"\n" + CQ.expr + "\n\"\"\"";
+
+            statements.push_back(name_def);
+            statements.push_back(func_def);
+
+            statements.push_back(test_name+ ".append((" + func_name + "," + func_defn_name + "))");
+        }
+        return join(statements, "\n");
+    }
 
 
 }

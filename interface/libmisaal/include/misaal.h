@@ -42,17 +42,21 @@ namespace misaal {
 
         private:
 
+            void execute_python_file(std::string fname);
             std::string get_compiler_python_import();
             std::string parse_dict(std::string output_name, std::string dict_name);
-            std::string join(std::vector<std::string> statements, std::string join_on);
+            std::string join(std::vector<std::string>& statements, std::string join_on);
             std::string get_input_dsl_list_definition(std::string input_dsl_name);
             std::string get_output_dsl_list_definition(std::string output_dsl_name);
             std::string get_patterns_import(std::string pattern_alias);
             std::string get_llvm_so_path();
             std::string get_llvm_so_flags();
             std::string get_llvm_intrinsic_wrapper();
-            std::string emit_python_rewrite_file(std::string base_name);
+            std::string emit_python_rewrite_file(std::string output_path, std::string base_name);
             void write_to_file(std::string fname, std::string content);
+
+            std::string prepare_rewrite_specs(std::string test_name);
+            std::string define_misaal_compiler(std::string compiler_name, std::string test_name, std::string input_dsl_name, std::string output_dsl_name, std::string pattern_alias, std::string output_path);
 
 
             TARGET target;
@@ -60,6 +64,8 @@ namespace misaal {
             std::string HYDRIDE_ROOT;
 
             std::vector<CompilerQuery> Expressions;
+
+            int rewrite_iterations = 5;
 
 
     };
