@@ -24,7 +24,7 @@ def get_matching_context(nested_expr, dsl_list):
     else:
         dsl_name = nested_expr[0]
 
-    print("DSL Name to search:", dsl_name)
+    #print("DSL Name to search:", dsl_name)
 
     matching_dsl_inst = None
 
@@ -207,7 +207,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
 
     else:
-        print("Possibly dsl instruction in halide")
+        #print("Possibly dsl instruction in halide")
 
         matching_context = get_matching_context(nested_expr, dsl_list)
 

@@ -2,14 +2,27 @@ from compiler.HydrideCompiler import HydrideCompiler
 from compiler.Pattern import Pattern, parse_pattern_from_string
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.halide_sema import halide_semantics
+from sema.hex_swizzles import hvx_swizzles
 from common.DSLParser import parse_dict
 from utils.ReadDSL import read_string_to_dsl
 import os
 
+from patterns.PatternUtils import create_patterns
+from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
+
 halide_dsl_list = parse_dict(halide_semantics)
 hvx_dsl_list = parse_dict(hvx_semantics)
+hvx_swizzles_dsl_list = parse_dict(hvx_swizzles)
 
-current_file_base = os.path.basename(__file__).split(".")[0]
+
+combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
+
+
+props = [
+    hvx_EqClassEqualDepthV4
+]
+
+parsed_patterns = create_patterns(props, combined_dsl_list)
 
 
 pattern_str_from = """
@@ -41,4 +54,6 @@ pattern_str_to = """
 
 pattern = parse_pattern_from_string(pattern_str_from, pattern_str_to, halide_dsl_list, hvx_dsl_list, src_language = "halide", target_language = "hvx")
 
-HVX_patterns = [pattern]
+HVX_patterns = [pattern] + parsed_patterns
+
+print("Total Patterns:", len(HVX_patterns))
