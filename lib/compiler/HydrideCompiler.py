@@ -1,4 +1,5 @@
 from compiler.Compiler import *
+import concurrent.futures
 import subprocess as sb
 from compiler.EggLogCompiler import EggLogCompiler
 from utils.ReadDSL import read_string_to_dsl
@@ -9,21 +10,25 @@ import os
 
 class HydrideCompiler(EggLogCompiler):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_file_name = None, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], input_file_path = None, output_file_path = None, function_name = None, intrinsics_file = None, hydride_root_path = None):
-        super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations, egg_file_name = egg_file_name, egg_pkg_path = egg_pkg_path)
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], tests = [], function_name = None, intrinsics_file = None, hydride_root_path = None):
+        super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations,  egg_pkg_path = egg_pkg_path)
         self.llvm_so_path = llvm_so_path
         self.llvm_flags = llvm_flags
-        self.input_file_path = input_file_path
-        self.output_file_path = output_file_path
+        self.output_file_path = "test.out"
         self.function_name = function_name
         self.intrinsics_file = intrinsics_file
         self.hydride_root_path = hydride_root_path
+        self.input_tests = tests
+        self.pool_size = 4
+        self.measure_egglog_time = False
 
 
     def get_reg_vector_type(self, reg):
         return "; (reg {}) <{} x i{}>".format(reg.index, reg.size // reg.precision,  reg.precision)
 
-    def compile_expr_to_rosette(self, input_expr ,output_expr, function_name, output_file):
+
+    def get_rosette_expression_str(self, input_expr ,output_expr, function_name):
+        print("GET EXPRESSION STR ")
         expr_str = output_expr.emit_context_expr_string(add_output_type_info = True, use_reg_only = True, hydride_compatible = True)
         regs = get_unique_context_registers(input_expr)
         reg_type_info = [self.get_reg_vector_type(reg) for reg in regs]
@@ -36,9 +41,7 @@ class HydrideCompiler(EggLogCompiler):
 
         content += [expr_str]
 
-        print("Writing expression to output file: ", output_file)
-        with open(output_file, "a+") as AppendFile:
-            AppendFile.write("\n".join(content)+"\n")
+        return "\n".join(content)
 
 
 
@@ -71,19 +74,58 @@ class HydrideCompiler(EggLogCompiler):
 
 
     def compile_hydride(self):
-        assert not self.input_file_path is None, "Expected Input file"
+        assert len(self.input_tests) != 0, "Expected Input tests"
         assert not self.output_file_path is None, "Expected Output file"
 
-        input_expr_str = None
-        with open(self.input_file_path, "r") as InputFile:
-            input_expr_str = InputFile.read()
+        results = [0] * len(self.input_tests)
 
-        input_expr = read_string_to_dsl(input_expr_str, self.src_dsl_list)
-        output_expr = self.compile_expr(input_expr)
+        PARALLEL = False
 
-        assert not self.function_name is None , "Expected function name"
+        def process_test(i):
+            print("PROCESS TEST", i)
+            function_name , input_expr_str = self.input_tests[i]
+            print(function_name)
+            print(input_expr_str)
+            input_expr = read_string_to_dsl(input_expr_str, self.src_dsl_list)
+            output_expr = self.compile_expr(input_expr)
+            output_type_def = self.get_rosette_expression_str(input_expr ,output_expr, function_name)
+            print(output_type_def)
 
-        self.compile_expr_to_rosette(input_expr, output_expr, self.function_name, self.output_file_path)
+            results[i] = output_type_def
+
+
+        start_time = time.time()
+
+        if PARALLEL:
+
+            pool = concurrent.futures.ThreadPoolExecutor(max_workers=self.pool_size)
+            for i in range(len(self.input_tests)):
+                pool.submit(process_test, i)
+
+
+            pool.shutdown(wait=True)
+            print("Completed compiling pool...")
+        else:
+            for i in range(len(self.input_tests)):
+                process_test(i)
+
+
+
+        end_time = time.time()
+
+        elapsed = end_time - start_time
+
+        self.compile_times.append(("EggLogParallel", elapsed))
+
+        print(results)
+
+
+        with open(self.output_file_path, "w+") as LLVMInputFile:
+            LLVMInputFile.write("\n".join(results))
+
+
+
+
 
 
 

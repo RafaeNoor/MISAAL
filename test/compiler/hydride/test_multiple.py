@@ -51,15 +51,15 @@ src_expr = read_string_to_dsl(pattern_str_from, halide_dsl_list)
 
 
 
+NUM_TESTS = 2
 
 
 tests = []
+for i in range(NUM_TESTS):
+    test_str = src_expr.emit_context_expr_string(use_reg_only = False)
+    test_name = "hydride.node.test_func"+str(i)
 
-
-test_str = src_expr.emit_context_expr_string(use_reg_only = False)
-test_name = "hydride.node.test_func"
-
-tests.append((test_name, test_str))
+    tests.append((test_name, test_str))
 
 
 

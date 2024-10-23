@@ -62,7 +62,7 @@ def get_matching_context(nested_expr, dsl_list):
                     ctx_arg =  ctx.context_args[idx]
 
                     if ctx_arg.size != int(arg[3]):
-                        print("Size does not match", ctx_arg.size, int(arg[3]))
+                        #print("Size does not match", ctx_arg.size, int(arg[3]))
                         continue
 
                     #input_prec = int(arg[2].split("int")[-1])
@@ -163,7 +163,6 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         reg_size = 8
         if not expecting_return_size is None:
-            print("Reg index reg size:", expecting_return_size)
             reg_size = expecting_return_size
 
         reg = Reg(reg_index_term, 8, reg_size)
@@ -178,7 +177,6 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         reg_size = 8
         if not expecting_return_size is None:
-            print("Buffer index reg size:", expecting_return_size)
             reg_size = expecting_return_size
 
         reg = Reg(reg_index_term, 8, reg_size)

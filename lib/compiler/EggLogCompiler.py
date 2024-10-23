@@ -1,4 +1,5 @@
 from compiler.Compiler import *
+from utils.DSLInstructionUtils import get_random_tempfile_name
 from utils.EggLogUtils import *
 import os
 import subprocess as sb
@@ -9,16 +10,14 @@ import time
 
 class EggLogCompiler(CompilerBase):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_file_name = None, egg_pkg_path = None):
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
         self.egg_pkg_path = egg_pkg_path
         self.input_cost = 100
         self.output_cost = 1
         self.run_iterations = run_iterations
-        if egg_file_name is None:
-            egg_file_name = "temp.egg"
-        self.egg_file_name = egg_file_name
         self.compile_times = []
+        self.measure_egglog_time = True
 
     def initialize_class_map(self):
         pass
@@ -83,7 +82,8 @@ class EggLogCompiler(CompilerBase):
         egg_log_stream = self.execute_cmd(exec_cmd, cur_dir = self.egg_pkg_path)
 
         elapsed = time.time() - start_time
-        self.compile_times.append(("EggLog", elapsed))
+        if self.measure_egglog_time:
+            self.compile_times.append(("EggLog", elapsed))
 
         final_expression_str = egg_log_stream.strip().split("\n")[-1]
         return final_expression_str
@@ -110,13 +110,16 @@ class EggLogCompiler(CompilerBase):
 
         statements.append(emit_egg_extract_expr(src_expr_name))
 
-        print("Creating egg file:\t", self.egg_file_name)
+        egg_file_name = get_random_tempfile_name() + ".egg"
 
-        with open(self.egg_file_name, "w+") as EggFile:
+        print("Creating egg file:\t", egg_file_name)
+
+        with open(egg_file_name, "w+") as EggFile:
             EggFile.write("\n".join(statements))
 
-        final_expression_str= self.execute_egglog_file(self.egg_file_name)
+        final_expression_str= self.execute_egglog_file(egg_file_name)
 
+        print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
 
         return output_expression
