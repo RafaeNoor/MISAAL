@@ -4,7 +4,7 @@ from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.halide_sema import halide_semantics
 from common.DSLParser import parse_dict
 from utils.ReadDSL import read_string_to_dsl
-from egg_config import EGG_PKG_PATH
+from utils.egg_config import EGG_PKG_PATH
 
 
 import os
