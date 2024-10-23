@@ -4,6 +4,7 @@ import time
 from common.Types import *
 from  common.Instructions import Context
 from utils.ReadDSL import read_string_to_dsl
+from utils.EggLogUtils import is_birewrite_valid
 import subprocess
 import os
 import tempfile
@@ -47,6 +48,8 @@ class Pattern:
 def parse_pattern_from_string(from_pattern, to_pattern, src_dsl_list, target_dsl_list, bidirectional = True, src_language = None, target_language = None):
     input_expr = read_string_to_dsl(from_pattern, src_dsl_list)
     output_expr = read_string_to_dsl(to_pattern, target_dsl_list)
+
+    bidirectional = bidirectional and is_birewrite_valid(input_expr, output_expr)
 
     return Pattern(input_expr, output_expr, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, bidirectional = bidirectional, src_language = src_language, target_language = target_language)
 
