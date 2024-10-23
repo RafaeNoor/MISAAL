@@ -1,6 +1,7 @@
 #include "Rosette.h"
 #include "DistributeVec.h"
 
+#include "misaal.h"
 #include "Bounds.h"
 #include "CSE.h"
 #include "CodeGen_Internal.h"
@@ -50,6 +51,12 @@ enum HydrideSupportedArchitecture {
     X86
 };
 
+enum Sign {
+    SIGNED,
+    UNSIGNED,
+    NOSIGN
+};
+
 typedef std::map<std::string, VarEncoding> Encoding;
 
 // For variables below load instruction
@@ -63,6 +70,12 @@ std::map<const Load *, unsigned> LoadToRegMap;  // Map racket register expressio
 
 std::map<unsigned, const Variable *> RegToVariableMap;  // Map racket register expressions to Halide Load Instructions
 std::map<const Variable *, unsigned> VariableToRegMap;  // Map racket register expressions to Halide Load Instructions
+                                                        //
+                                                        //
+
+ Sign getExprSign(Type e){
+    return e.is_int() ? Sign::SIGNED : Sign::UNSIGNED;
+}
 
 // Targets such as HVX do not have division
 // operations, so we must replace operations
@@ -240,22 +253,28 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
         }
     }
 
-    std::string print_binary_op(std::string bv_name, std::string int_name, Expr a, Expr b, bool is_vector_op) {
-        if (is_vector_op) {
-            indent.push(indent.top() + 1);
-            std::string rkt_lhs = dispatch(a);
-            std::string rkt_rhs = dispatch(b);
-            indent.pop();
-            return tabs() + "(vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + ")";
-        } else {  // if (mode.top() == VarEncoding::Bitvector) {
-            std::string rkt_lhs = dispatch(a);
-            std::string rkt_rhs = dispatch(b);
-            return tabs() + "(sca-" + bv_name + " " + rkt_lhs + " " + rkt_rhs + ")";
-        }  // else {
-        // std::string rkt_lhs = dispatch(a);
-        // std::string rkt_rhs = dispatch(b);
-        // return tabs() + "(" + int_name + " " + rkt_lhs + " " + rkt_rhs + ")";
-        // }
+    std::string print_binary_op(std::string bv_name, std::string int_name, Expr a, Expr b, Sign sign, size_t lanes, size_t bits) {
+        indent.push(indent.top() + 1);
+        std::string rkt_lhs = dispatch(a);
+        std::string rkt_rhs = dispatch(b);
+
+
+        std::string type_suffix = " " + std::to_string(bits) + " " + std::to_string(lanes * bits);
+        indent.pop();
+        std::string expr = "";
+        switch (sign){
+            case Sign::SIGNED:
+                expr = tabs() + "(typed:signed-vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                break;
+            case Sign::UNSIGNED:
+                expr = tabs() + "(typed:unsigned-vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                break;
+            case Sign::NOSIGN:
+                expr = tabs() + "(typed:vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                break;
+        }
+        return expr;
+
     }
 
 public:
@@ -358,13 +377,13 @@ public:
             const Variable *vop = bi->first;
 
             if (vop->name == op->name) {
-                std::string reg_name = "reg_" + std::to_string(VariableToRegMap[vop]);
+                std::string reg_name = "(reg (bv " + std::to_string(VariableToRegMap[vop]) + " 8))";
                 return tabs() + reg_name;
             }
         }
 
         if (VariableToRegMap.find(op) != VariableToRegMap.end()) {
-            std::string reg_name = "reg_" + std::to_string(VariableToRegMap[op]);
+            std::string reg_name = "(reg (bv " + std::to_string(VariableToRegMap[op]) + " 8))";
             return tabs() + reg_name;
         }
 
@@ -373,7 +392,8 @@ public:
         std::string bits = std::to_string(op->type.bits() * op->type.lanes());
         unsigned reg_counter = (RegToLoadMap.size() + RegToVariableMap.size());
 
-        std::string reg_name = "reg_" + std::to_string(reg_counter);
+
+        std::string reg_name = "(reg (bv " + std::to_string(reg_counter) + " 8))";
         std::cout << op->name << " maps to " << reg_name << "\n";
 
         RegToVariableMap[reg_counter] = op;
@@ -421,7 +441,9 @@ public:
             return "";
         }
 
-        std::string add_str = print_binary_op("add", "+", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        std::string add_str = print_binary_op("add", "+", op->a, op->b, Sign::NOSIGN, lanes, bits);
 
         return add_str;
     }
@@ -433,7 +455,10 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("sub", "-", op->a, op->b, op->type.is_vector());
+
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("sub", "-", op->a, op->b, Sign::NOSIGN, lanes, bits);
     }
 
     std::string visit(const Mul *op) {
@@ -443,7 +468,10 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("mul", "*", op->a, op->b, op->type.is_vector());
+
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("mul", "*", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
     std::string visit(const Div *op) {
@@ -453,7 +481,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("div", "quotient", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("div", "quotient", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const Mod *op) {
@@ -463,7 +493,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("mod", "modulo", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("mod", "modulo", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const Min *op) {
@@ -473,7 +505,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        std::string min_emit = print_binary_op("min", "min", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        std::string min_emit = print_binary_op("min", "min", op->a, op->b, getExprSign(op->type), lanes, bits);
 
         return min_emit;
     }
@@ -485,7 +519,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("max", "max", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("max", "max", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const EQ *op) {
@@ -495,7 +531,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("eq", "eq?", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("eq", "eq?", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const NE *op) {
@@ -505,7 +543,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("ne", "ne?", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("ne", "ne?", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const LT *op) {
@@ -515,7 +555,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("lt", "<", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("lt", "<", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
     std::string visit(const LE *op) {
@@ -525,7 +567,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("le", "<=", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("le", "<=", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
     std::string visit(const GT *op) {
@@ -535,7 +579,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("gt", ">", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("gt", ">", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const GE *op) {
@@ -545,7 +591,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("ge", ">", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("ge", ">", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
     std::string visit(const And *op) {
@@ -555,7 +603,10 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("and", "and", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+
+        return print_binary_op("and", "and", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
     std::string visit(const Or *op) {
@@ -565,7 +616,9 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        return print_binary_op("or", "or", op->a, op->b, op->type.is_vector());
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        return print_binary_op("or", "or", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
     std::string visit(const Not *op) {
@@ -750,12 +803,12 @@ public:
         indent.pop();
 
         if (LoadToRegMap.find(op) != LoadToRegMap.end()) {
-            return "reg_" + std::to_string(LoadToRegMap[op]);
+            return "reg" + std::to_string(LoadToRegMap[op]);
         }
 
         // Traverse loads and check if equal?
         if (LoadToRegMap.find(op) != LoadToRegMap.end()) {
-            return "reg_" + std::to_string(LoadToRegMap[op]);
+            return "(reg (bv " + std::to_string(LoadToRegMap[op]) + " 8))";
         }
 
         if (op->type.is_scalar() && mode.top() == VarEncoding::Integer)
@@ -765,16 +818,14 @@ public:
 
             std::string bits = std::to_string(op->type.bits() * 1);
             unsigned reg_counter = RegToLoadMap.size() + RegToVariableMap.size();
-            std::string reg_name = "reg_" + std::to_string(reg_counter);
+            std::string reg_name = "(reg (bv " + std::to_string(reg_counter) + " 8))"; 
             RegToLoadMap[reg_counter] = op;
             LoadToRegMap[op] = reg_counter;
-            // std::string load_buff = define_load_buffer(op);
-            return tabs() + reg_name;  //" (?? (bitvector "+ std::to_string(op->type.bits())+")"+")";
-            // return tabs() + "(load-sca " + op->name + " " + rkt_idx + ")";
+            return tabs() + reg_name;  
         } else {
             std::string bits = std::to_string(op->type.bits() * op->type.lanes());
             unsigned reg_counter = RegToLoadMap.size() + RegToVariableMap.size();
-            std::string reg_name = "reg_" + std::to_string(reg_counter);
+            std::string reg_name = "(reg (bv " + std::to_string(reg_counter) + " 8))";
             RegToLoadMap[reg_counter] = op;
             LoadToRegMap[op] = reg_counter;
             // std::string load_buff = define_load_buffer(op);
@@ -798,6 +849,8 @@ public:
         indent.pop();
         return tabs() + "(ramp " + rkt_base + " " + rkt_stride + " " + rkt_lanes + ")";
     }
+
+
 
     std::string visit(const Select *op) {
 
@@ -1611,6 +1664,17 @@ public:
     }
 };
 
+misaal::TARGET get_misaal_target(HydrideSupportedArchitecture _arch){
+    switch(_arch){
+        case HydrideSupportedArchitecture::HVX:
+            return misaal::TARGET::HVX;
+        case HydrideSupportedArchitecture::X86:
+            return misaal::TARGET::x86;
+        case HydrideSupportedArchitecture::ARM:
+            return misaal::TARGET::ARM;
+    }
+}
+
 // This IR mutator optimizes vector expressions for the Hexagon HVX ISA
 class IROptimizer : public IRMutator {
 
@@ -1618,7 +1682,7 @@ public:
     using IRMutator::mutate;
 
     IROptimizer(FuncValueBounds fvb, HydrideSupportedArchitecture _arch, std::set<const BaseExprNode *> &ms, int oid, std::string name)
-        : arch(_arch), func_value_bounds(fvb), mutated_exprs(ms), optimizer_id(oid), benchmark_name(name) {
+        : arch(_arch), func_value_bounds(fvb), mutated_exprs(ms), optimizer_id(oid), benchmark_name(name), RewriteCompiler(misaal::MisaalCompiler(get_misaal_target(_arch))) {
     }
 
     bool isConstantValue(const Expr v) {
@@ -1892,7 +1956,8 @@ public:
             skipped_synthesis = true;
         } else {
             // Re-write expression using synthesis
-            optimized_expr = synthesize_impl(spec_expr, expr);
+            //optimized_expr = synthesize_impl(spec_expr, expr);
+            optimized_expr = misaal_rewrite_impl(spec_expr);
         }
 
         // Replace abstracted abstractions
@@ -1921,6 +1986,8 @@ public:
         return IRMutator::mutate(return_expr);
     }
 
+    void run_rewrites();
+
 private:
     HydrideSupportedArchitecture arch;
     FuncValueBounds func_value_bounds;
@@ -1933,6 +2000,8 @@ private:
     std::vector<std::string> let_decl_order;
 
     std::map<std::string, Expr> abstractions;
+
+    misaal::MisaalCompiler RewriteCompiler;
 
     /* Helper functions and visitors */
 
@@ -3150,6 +3219,9 @@ private:
     // synthesis
     Expr synthesize_impl(Expr spec_expr, Expr orig_expr);
 
+    Expr misaal_rewrite_impl(Expr spec_expr);
+
+
     std::string benchmark_name;
 };
 
@@ -3216,38 +3288,11 @@ public:
     }
 
     std::string define_load_buffer(const Load *op) {
-        std::string reg_name = "reg_" + std::to_string(LoadToRegMap[op]);
-        size_t bitwidth = op->type.bits() * op->type.lanes();
-
-        std::string elemT = "'" + type_to_rake_elem_type(op->type, false, true);
-
-        if (elemT == "'") {
-            debug(0) << "Define_load_buffer escaping early for " << reg_name << "of bitwidth " << bitwidth << "\n";
-            return "";
-        }
-
-        std::string define_bitvector_str = "(define " + reg_name + "_bitvector" + " " + "(bv 0 (bitvector " + std::to_string(bitwidth) + ")" + "))";
-
-        std::string define_buffer_str = "(define " + reg_name + " (halide:create-buffer " + reg_name + "_bitvector " + elemT + ")" + ")";
-
-        return define_bitvector_str + "\n" + define_buffer_str;
+        return "";
     }
 
     std::string define_variable_buffer(const Variable *op) {
-        std::string reg_name = "reg_" + std::to_string(VariableToRegMap[op]);
-        size_t bitwidth = op->type.bits() * op->type.lanes();
-
-        std::string elemT = "'" + type_to_rake_elem_type(op->type, false, true);
-
-        if (elemT == "'") {
-            debug(0) << "Define_variable_buffer escaping early for " << reg_name << "of bitwidth " << bitwidth << "\n";
-            return "";
-        }
-
-        std::string define_bitvector_str = "(define " + reg_name + "_bitvector" + " " + "(bv 0 (bitvector " + std::to_string(bitwidth) + ")" + "))";
-        std::string define_buffer_str = "(define " + reg_name + " (halide:create-buffer " + reg_name + "_bitvector " + elemT + ")" + ")";
-
-        return define_bitvector_str + "\n" + define_buffer_str;
+        return "";
     }
 
     std::string get_reg_id(int reg_id) {
@@ -3273,29 +3318,11 @@ public:
     }
 
     std::string emit_symbolic_buffers() {
-        std::string buffers = "";
-        for (auto bi = LoadToRegMap.begin(); bi != LoadToRegMap.end(); bi++) {
-            const Load *op = bi->first;
-            buffers += define_load_buffer(op) + "\n";
-        }
-
-        for (auto bi = VariableToRegMap.begin(); bi != VariableToRegMap.end(); bi++) {
-            const Variable *op = bi->first;
-            buffers += define_variable_buffer(op) + "\n";
-        }
-
-        return buffers;
+        return "";
     }
 
     std::string emit_symbolic_buffers_vector(std::string vector_name) {
-        std::string buffers = "(define " + vector_name + " (vector ";
-        for (auto bi = LoadToRegMap.begin(); bi != LoadToRegMap.end(); bi++) {
-            const Load *op = bi->first;
-            buffers += "reg_" + std::to_string(LoadToRegMap[op]) + " ";
-        }
-
-        buffers += "))";
-        return buffers;
+        return "";
     }
 
     std::string emit_racket_imports() {
@@ -3377,6 +3404,33 @@ public:
         return "(save-synth-map \"" + fpath + "\" \"" + hash_name + "\" synth-log)";
     }
 };
+
+void IROptimizer::run_rewrites() {
+    RewriteCompiler.compile_expression("/tmp/"+benchmark_name, benchmark_name);
+}
+
+Expr IROptimizer::misaal_rewrite_impl(Expr spec_expr) {
+
+    std::cout << "Input expression to synthesize: " << spec_expr << "\n";
+
+    RegToLoadMap.clear();
+    LoadToRegMap.clear();
+
+    RegToVariableMap.clear();
+    VariableToRegMap.clear();
+
+    Encoding encoding = get_encoding(spec_expr, let_vars, linearized_let_vars);
+
+    auto spec_dispatch = get_expr_racket_dispatch(spec_expr, encoding, let_vars);
+    std::string expr = spec_dispatch(spec_expr, false /* set_mode */, false /* int_mode */);
+
+    std::string expr_name = "hydride.node." + benchmark_name + "." + std::to_string(expr_id);
+    RewriteCompiler.add_expression_to_compile(expr, expr_name);
+
+    SkipNodes.clear();
+
+    return spec_expr;
+}
 
 Expr IROptimizer::synthesize_impl(Expr spec_expr, Expr orig_expr) {
 
@@ -3553,6 +3607,61 @@ Stmt hydride_preprocess_x86(Stmt s) {
     return distributed;
 }
 
+Stmt misaal_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
+
+    debug(0) << "Hydride Optimize HVX"
+             << "\n";
+
+    Stmt distributed;
+
+    const char *disable_preprocess = getenv("HL_DISABLE_PREPROCESS");
+    if (disable_preprocess) {
+        debug(0) << "Disabling pre-processing pass\n";
+        distributed = s;
+    } else {
+
+        std::set<const IRNode *> DeadStmts;
+        auto FLS = Hydride::FoldLoadStores(DeadStmts);
+        auto folded = FLS.mutate(s);
+        debug(0) << "Printing Folded Stmt:\n";
+        debug(0) << folded << "\n";
+
+        debug(0) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+
+        auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
+        debug(0) << "Printing Pruned Stmt:\n";
+        debug(0) << pruned << "\n";
+
+        std::vector<unsigned> hvx_vector_sizes = {2048, 1024};
+
+        // bool model_sat_support = false;
+        bool model_sat_support = true;
+
+        const char *enable_hydride = getenv("HL_BENCH_MATMUL");
+        if (enable_hydride) {
+            debug(0) << "Setting model saturating support true"
+                     << "\n";
+            model_sat_support = true;
+        }
+        distributed = distribute_vector_exprs(pruned, hvx_vector_sizes, model_sat_support);
+        // distributed = distribute_vector_exprs(s, hvx_vector_sizes, model_sat_support);
+        debug(0) << "Distributed Stmt:\n";
+        debug(0) << distributed << "\n";
+    }
+
+    srand(time(0));
+    int random_seed = rand() % 1024;
+
+    const char *benchmark_name = getenv("HYDRIDE_BENCHMARK");
+    std::string name = benchmark_name ? std::string(benchmark_name) : "misaal";
+    auto Optimizer = Hydride::IROptimizer(fvb, HydrideSupportedArchitecture::HVX, mutated_exprs, random_seed, name);
+    auto Result = Optimizer.mutate(distributed);
+    Optimizer.run_rewrites();
+
+    return Result;
+}
+
+
 Stmt hydride_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
 
     debug(0) << "Hydride Optimize HVX"
@@ -3713,13 +3822,15 @@ Stmt optimize_x86_instructions_synthesis(Stmt s, const Target &t, FuncValueBound
 
 Stmt optimize_hexagon_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
 
+    debug(0) << "Optimizing with MISAAL! "<< "\n";
+
     // s = ReplaceDiv().mutate(s);
     // debug(0) << "Module  (firrst replace div):" << s << "\n";
 
     std::set<const BaseExprNode *> mutated_exprs;
     debug(0) << "Input Statement to Compile through HVX:\n"
              << s << "\n";
-    s = hydride_optimize_hvx(fvb, s, mutated_exprs);
+    s = misaal_optimize_hvx(fvb, s, mutated_exprs);
 
     debug(0) << "Module with hydride calls:"
              << "\n";

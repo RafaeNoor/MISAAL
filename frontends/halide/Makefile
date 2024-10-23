@@ -525,6 +525,7 @@ SOURCE_FILES = \
   VectorInfo.cpp \
   HydrideCodeGen.cpp \
   DistributeVec.cpp \
+  misaal.cpp \
   Rosette.cpp \
   Schedule.cpp \
   ScheduleFunctions.cpp \
@@ -711,6 +712,7 @@ HEADER_FILES = \
   VectorInfo.h \
   HydrideCodeGen.h \
   DistributeVec.h \
+  misaal.h \
   Rosette.h \
   Schedule.h \
   ScheduleFunctions.h \

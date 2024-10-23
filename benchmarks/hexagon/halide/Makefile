@@ -96,6 +96,6 @@ fully_connected/profile fully_connected/out fully_connected/bin: %:
 	mkdir $@
 
 clean:
-	rm -rf $(bin_dirs) $(out_dirs) $(prof_dirs) pmu_statsfile.txt stats_dump.iss.0
+	rm -rf $(bin_dirs) $(out_dirs) $(prof_dirs) pmu_statsfile.txt stats_dump.iss.0 ./*.py ./*.egg ./*.txt ./*.rkt ./test.out
 	
 

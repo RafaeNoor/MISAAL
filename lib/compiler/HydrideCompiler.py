@@ -6,6 +6,7 @@ from utils.ReadDSL import read_string_to_dsl
 import sys
 import time
 import os
+import shutil
 
 
 class HydrideCompiler(EggLogCompiler):
@@ -69,6 +70,14 @@ class HydrideCompiler(EggLogCompiler):
         elapsed = time.time() - start_time
 
         self.compile_times.append(("LLVM Legalize", elapsed))
+
+        # Copy the final generated bitcode to the desired location
+        final_bitcode_name = llvm_out_file + ".legalize.ll"
+        copy_destination = llvm_out_file + ".ll"
+
+        if os.path.exists(final_bitcode_name):
+            shutil.copyfile(final_bitcode_name, copy_destination)
+
 
 
 
