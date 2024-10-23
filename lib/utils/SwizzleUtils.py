@@ -3,6 +3,7 @@ import copy
 import json
 import os
 
+from utils.WriteDSL import write_dsl_dict_to_file, convert_dsl_list_to_dict
 
 
 class Swizzle:
@@ -337,6 +338,81 @@ def get_swizzle_derivation_eq_class(swizzle_map_path, swizzle_dsl_list, target_d
                     changed = True
                     eq_class_summary[target_eq_class.name].append(swizzle_eq_class.name)
     return eq_class_summary
+
+
+
+
+
+# After converting swizzles to equivlance classes, Hydride may fold
+# target specific swizzles into the same classes which have similar behavior
+# but have different typing behavior. For instance, the same equivlance class
+# may have swizzles which take in smaller inputs to construct larger inputs, take in
+# larger inputs to produce smaller inputs, take in equal size inputs and produce
+# same size inputs. This functio seperates these classes into these different categories
+# or (others) to aid when enumerating
+def split_swizzle_eq_class_by_size_behavior(dsl_list, output_dsl_name, output_path):
+
+
+
+    def create_updated_swizzles(ctx_classes, parent_dsl):
+        if len(ctx_classes) == 0:
+            return None
+
+        orig_name = parent_dsl.name
+
+        dsl_inst_copy = copy.deepcopy(parent_dsl)
+
+        ctx_0 = ctx_classes[0]
+
+        dsl_inst_copy.name = ctx_0.name
+        dsl_inst_copy.contexts = []
+
+        for ctx in ctx_classes:
+            ctx_copy = copy.deepcopy(ctx)
+            ctx_copy.dsl_name = dsl_inst_copy.name +"_dsl"
+            ctx_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
+            dsl_inst_copy.contexts.append(ctx_copy)
+
+        # Updated semantic function def according to ctx_0 name
+        print("=====")
+        print("ORIG NAME", parent_dsl.name, "should become", ctx_0.name)
+        print("PRE",dsl_inst_copy.semantics[0])
+        dsl_inst_copy.semantics[0] = dsl_inst_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
+        print("POST",dsl_inst_copy.semantics[0])
+        return dsl_inst_copy
+
+
+    updated_dsl_list = []
+
+    for dsl_inst in dsl_list:
+
+        same_size_ctxs = []
+        increase_size_ctxs = []
+        decrease_size_ctxs = []
+
+        for ctx in dsl_inst.contexts:
+
+            if ctx.in_vectsize > ctx.out_vectsize:
+                decrease_size_ctxs.append(ctx)
+            elif ctx.in_vectsize < ctx.out_vectsize:
+                increase_size_ctxs.append(ctx)
+            elif ctx.in_vectsize == ctx.out_vectsize:
+                same_size_ctxs.append(ctx)
+
+        test_variants = [ same_size_ctxs, increase_size_ctxs, decrease_size_ctxs]
+
+        for variant in test_variants:
+            new_inst  = create_updated_swizzles(variant, dsl_inst)
+            if not new_inst is None:
+                updated_dsl_list.append(new_inst)
+
+
+    write_dsl_dict_to_file(convert_dsl_list_to_dict(updated_dsl_list),output_dsl_name, output_path)
+
+
+    return updated_dsl_list
+
+
 
 
 

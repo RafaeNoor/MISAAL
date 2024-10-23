@@ -66,8 +66,6 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         gc.collect()
 
     def property_holds_on_candidate(self, candidate):
-
-
         src_ctx = candidate[0]
         dst_ctx = candidate[1]
         output_size = candidate[3]
@@ -80,11 +78,14 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
         valid_dst_conc = next(valid_dst_conc)
 
+        LIMIT = 1
+
+        count = 0
         input_sizes_visited = []
+
+        contains_swizzle = self.count_contexts(src_ctx, "swizzle") != 0
+
         for valid_src_conc in valid_src_conc_gen:
-
-            contains_swizzle = self.count_contexts(valid_src_conc, "swizzle") != 0
-
             regs = get_unique_context_registers(valid_src_conc)
             reg_sizes = sorted([reg.size for reg in regs])
 
@@ -98,22 +99,32 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                 print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
                 continue
 
+            count += 1
 
-            success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc)
+            dst_copy = copy.deepcopy(valid_dst_conc)
+
+            success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
 
             if success:
+                print("SUCCESS!")
                 key = self.serialize_candidate(candidate)
                 self.simplify_map[key] = (src_expr_str, dst_expr_str)
                 return success
 
-            if not contains_swizzle:
+            if not contains_swizzle or count >= LIMIT:
                 break
+
+
+
 
         return False
 
 
     def serialize_candidate(self, candidate):
-        return candidate[0].emit_context_expr_string()+"_"+candidate[1].emit_context_expr_string()
+        if isinstance(candidate[1], Reg):
+            return candidate[0].emit_context_expr_string()+"_Reg"
+        else:
+            return candidate[0].emit_context_expr_string()+"_"+candidate[1].emit_context_expr_string()
 
     def get_property_on_candidate(self, candidate):
         key = self.serialize_candidate(candidate)

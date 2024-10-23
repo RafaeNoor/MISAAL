@@ -39,7 +39,7 @@ def get_matching_context(nested_expr, dsl_list):
     # indices until we have a matching context
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
-    print("Checking:", nested_expr[1:])
+    #print("Checking:", nested_expr[1:])
     for idx, arg in enumerate(nested_expr[1:]):
 
         new_matching_context_indices = []

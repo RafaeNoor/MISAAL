@@ -37,7 +37,8 @@ from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
 from sema.halide_sema import halide_semantics
 from sema.hex_swizzles import hvx_swizzles
-from sema.x86_swizzles import x86_swizzles
+#from sema.x86_swizzles import x86_swizzles
+from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles
 from sema.arm_swizzles import arm_swizzles
 
 from sema.ARMSema import arm_semantics
@@ -87,6 +88,9 @@ TARGET_TO_SEMA = {
     "hvx": hvx_semantics,
     "halide_hvx": halide_semantics,
     "arm" : arm_semantics,
+    "x86_swizzles":  x86_swizzles,
+    "hvx_swizzles": hvx_swizzles,
+    "arm_swizzles": arm_swizzles,
 }
 
 
@@ -95,6 +99,9 @@ TARGET_TO_SWIZZLE = {
     "hvx": hvx_swizzles,
     "halide_hvx": {},
     "arm" : arm_swizzles,
+    "x86_swizzles":  {},
+    "hvx_swizzles": {},
+    "arm_swizzles": {},
 }
 
 TARGET_TO_SWIZZLE_DMAP = {
@@ -109,6 +116,9 @@ TARGET_TO_DESC = {
     "hvx": HVX_SYNTH_DESC,
     "halide_hvx": HALIDE_HVX_SYNTH_DESC,
     "arm": ARM_SYNTH_DESC,
+    "x86_swizzles":  X86_SYNTH_DESC,
+    "hvx_swizzles": HVX_SYNTH_DESC,
+    "arm_swizzles": ARM_SYNTH_DESC,
 }
 
 
@@ -121,11 +131,12 @@ commutative_path = "commutative_map.json"
 
 
 
-TARGETS = ["x86"]
+TARGETS = ["arm"]
 
 
 
 test_properties = [EqClassEqualDepthV4]
+#test_properties = [Commutative]
 
 
 for property in test_properties:
