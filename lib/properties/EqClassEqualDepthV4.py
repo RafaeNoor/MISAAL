@@ -24,7 +24,7 @@ import gc
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1, bidirectional_test = False):
 
 
 
@@ -39,6 +39,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         self.start_input_depth = start_input_depth
         self.start_output_depth = start_output_depth
         self.gc_log = []
+        self.bidirectional_test = bidirectional_test
 
 
 
@@ -111,8 +112,27 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                 self.simplify_map[key] = (src_expr_str, dst_expr_str)
                 return success
 
+
             if not contains_swizzle or count >= LIMIT:
                 break
+
+
+        if self.bidirectional_test:
+            print("Bidirectional test")
+
+            valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+            for valid_src_conc in valid_src_conc_gen:
+                dst_copy = copy.deepcopy(valid_dst_conc)
+                success, dst_expr_str, src_expr_str = self.synth_utils.double_grammar_synthesis(dst_copy, valid_src_conc)
+
+                if success:
+                    print("SUCCESS BIDIRECTIONAL!")
+                    key = self.serialize_candidate(candidate)
+                    self.simplify_map[key] = (src_expr_str, dst_expr_str)
+                    return success
+
+                if not contains_swizzle or count >= LIMIT:
+                    break
 
 
 
@@ -195,6 +215,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                         if not self.expr_contains(src_expr, dsl_inst.name):
                             continue
+
 
                         canonical_src_expr = self.canonicalizer.canonicalize(src_expr)
 
