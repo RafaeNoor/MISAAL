@@ -27,10 +27,16 @@ namespace misaal {
         std::string cmd = "python3 " + fname;
         auto start = std::chrono::system_clock::now();
         int ret_code = system(cmd.c_str());
+
+
         auto end = std::chrono::system_clock::now();
 
         std::chrono::duration<double> elapsed_seconds = end - start;
         std::cout << "Compilation took "<< elapsed_seconds.count() << " seconds ...\n";
+
+        if(ret_code != 0){
+            assert(false && " Error while running compilation script");
+        }
 
 
     }

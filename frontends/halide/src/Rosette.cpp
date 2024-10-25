@@ -166,7 +166,7 @@ class ReplaceDiv : public IRMutator {
     //             debug(0) << "======"
     //                      << "\n";
     //             debug(0) << "Orignal bits: " << bits << ", Original lanes: " << lanes << "\n";
-    //             Expr Broadcast2 = Broadcast::make(op->value, 2);
+    //             Expr oroadcast2 = Broadcast::make(op->value, 2);
     //             Expr ModifiedBroadcast = Broadcast::make(Broadcast2, lanes / 2);
     //             debug(0) << "Modified broadcast to " << ModifiedBroadcast << "\n";
     //             debug(0) << "Modified broadcast bits  " << ModifiedBroadcast.type().bits() << " and lanes " << ModifiedBroadcast.type().lanes() << "\n";
@@ -233,7 +233,7 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
 
     // Helper functions
 
-    std::string print_intrinsic(std::string name, std::vector<Expr> args, bool is_scalar_intrin) {
+    std::string print_intrinsic(std::string name, std::vector<Expr> args, bool is_scalar_intrin,Sign sign, size_t lanes, size_t bits) {
         if (is_scalar_intrin) {
             std::string rkt_args = "";
 
@@ -249,6 +249,21 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
                 rkt_args += "\n" + dispatch(args[i]);
             indent.pop();
 
+            std::string type_suffix = " " + std::to_string(bits) + " " + std::to_string(lanes * bits);
+
+            switch (sign){
+            case Sign::SIGNED:
+                return tabs() + "(typed:signed-vec-" + name + rkt_args + " " + type_suffix+ ")";
+                break;
+
+            case Sign::UNSIGNED:
+                return tabs() + "(typed:unsigned-vec-" + name + rkt_args + " " + type_suffix+ ")";
+                break;
+            case Sign::NOSIGN:
+                return tabs() + "(typed:vec-" + name + rkt_args + " " + type_suffix+ ")";
+                break;
+
+            }
             return tabs() + "(vec-" + name + rkt_args + ")";
         }
     }
@@ -648,11 +663,14 @@ public:
         }
 
         indent.push(0);
-        std::string rkt_type = std::to_string(op->lanes);
+
+        std::string bits = std::to_string(op->type.bits());
+        std::string lanes = std::to_string(op->lanes);
+        std::string rkt_type = " " + bits + " " + bits + " " + lanes +" ";
         std::string rkt_val = dispatch(op->value);
         // std::cout << "Broadcast "<<rkt_val << "to x"<<rkt_type <<"\n";
         indent.pop();
-        return tabs() + "(xBroadcast " + rkt_val + " " + rkt_type + ")";
+        return tabs() + "(typed:xBroadcast " + rkt_val + " " + rkt_type + ")";
     }
 
     std::string get_type_string(Type t) {
@@ -682,13 +700,22 @@ public:
             indent.pop();
             bool use_generalized_cast = true;
 
+            size_t iprec = op->value.type().bits();
+            std::string iprec_str = std::to_string(iprec);
+
+            size_t oprec = op->type.bits();
+            std::string oprec_str = std::to_string(oprec);
+            
+
             if (use_generalized_cast) {
                 std::string lanes_str = std::to_string(op->type.lanes());
                 std::string bits_str = std::to_string(op->type.bits());
+
+                std::string type_str = " " + iprec_str + " 1 " + lanes_str + " " +bits_str ;
                 if (op->type.is_uint()) {
-                    return tabs() + "(cast-uint" + "\n" + rkt_val + " " + lanes_str + " " + bits_str + ")";
+                    return tabs() + "(typed:cast-uint" + "\n" + rkt_val + " "+ type_str  + ")";
                 } else {
-                    return tabs() + "(cast-int" + "\n" + rkt_val + " " + lanes_str + " " + bits_str + ")";
+                    return tabs() + "(typed:cast-int" + "\n" + rkt_val + " " + type_str + ")";
                 }
             } else {
                 return tabs() + "(" + type_string + "\n" + rkt_val + ")";
@@ -722,6 +749,11 @@ public:
         std::set<string> cpp_types{"int8_t", "int16_t", "int32_t", "int64_t",
                                    "uint8_t", "uint16_t", "uint32_t", "uint64_t"};
 
+        size_t lanes = op->type.lanes();
+        size_t bits = op->type.bits();
+        Sign sign = getExprSign(op->type);
+
+
         if (cpp_types.count(op->name)) {
             std::string rkt_args = "";
 
@@ -746,32 +778,32 @@ public:
 
             return tabs() + "(" + op->name + rkt_args + ")";
         } else if (op->is_intrinsic(Call::saturating_add)) {
-            return print_intrinsic("sat-add", op->args, op->type.is_scalar());
+            return print_intrinsic("sat-add", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::saturating_sub)) {
-            return print_intrinsic("sat-sub", op->args, op->type.is_scalar());
+            return print_intrinsic("sat-sub", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::widening_mul)) {
-            return print_intrinsic("widen-mul", op->args, op->type.is_scalar());
+            return print_intrinsic("widen-mul", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::shift_right)) {
-            return print_intrinsic("shr", op->args, op->type.is_scalar());
+            return print_intrinsic("shr", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::shift_left)) {
-            return print_intrinsic("shl", op->args, op->type.is_scalar());
+            return print_intrinsic("shl", op->args, op->type.is_scalar(), Sign::NOSIGN, lanes, bits);
         } else if (op->is_intrinsic(Call::absd)) {
-            return print_intrinsic("absd", op->args, op->type.is_scalar());
+            return print_intrinsic("absd", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::bitwise_and)) {
-            return print_intrinsic("bwand", op->args, op->type.is_scalar());
+            return print_intrinsic("bwand", op->args, op->type.is_scalar(), Sign::NOSIGN, lanes, bits);
         } else if (op->is_intrinsic(Call::bitwise_not)) {
-            return print_intrinsic("bwnot", op->args, op->type.is_scalar());
+            return print_intrinsic("bwnot", op->args, op->type.is_scalar(), Sign::NOSIGN, lanes, bits);
         } else if (op->is_intrinsic(Call::abs)) {
-            return print_intrinsic("abs", op->args, op->type.is_scalar());
+            return print_intrinsic("abs", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::bitwise_xor)) {
-            return print_intrinsic("bwxor", op->args, op->type.is_scalar());
+            return print_intrinsic("bwxor", op->args, op->type.is_scalar(), Sign::NOSIGN, lanes, bits);
         } else if (op->is_intrinsic(Call::count_leading_zeros)) {
-            return print_intrinsic("clz", op->args, op->type.is_scalar());
+            return print_intrinsic("clz", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::if_then_else)) {
             vector<Expr> args_fixed = op->args;
             if (op->args[0].type().is_scalar())
                 args_fixed[0] = Broadcast::make(op->args[0], op->args[1].type().lanes());
-            return print_intrinsic("if", args_fixed, op->type.is_scalar());
+            return print_intrinsic("if", args_fixed, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::reinterpret)) {
             internal_assert(op->args.size() == 1);
             const std::string call_string = tabs() + "(vec-reinterpret" + "\n";
@@ -782,7 +814,7 @@ public:
             indent.pop();
             return call_string + arg + full_type_string + ")";
         } else {
-            return print_intrinsic(op->name, op->args, op->type.is_scalar());
+            return print_intrinsic(op->name, op->args, op->type.is_scalar(), sign, lanes, bits);
         }
     }
 
@@ -1730,7 +1762,7 @@ public:
 
         /* Disqualify expressions we do not currently support */
 
-        debug(0) << "Current expression: " << expr << "\n";
+        debug(1) << "Current expression: " << expr << "\n";
 
         // If the expression produces a scalar output, ignore it
         if (!expr.type().is_vector()) {
@@ -3406,7 +3438,9 @@ public:
 };
 
 void IROptimizer::run_rewrites() {
-    RewriteCompiler.compile_expression("/tmp/"+benchmark_name, benchmark_name);
+    if(expr_id != 0) {
+        RewriteCompiler.compile_expression("/tmp/"+benchmark_name, benchmark_name);
+    }
 }
 
 Expr IROptimizer::misaal_rewrite_impl(Expr spec_expr) {
@@ -3423,6 +3457,8 @@ Expr IROptimizer::misaal_rewrite_impl(Expr spec_expr) {
 
     auto spec_dispatch = get_expr_racket_dispatch(spec_expr, encoding, let_vars);
     std::string expr = spec_dispatch(spec_expr, false /* set_mode */, false /* int_mode */);
+
+    debug(0) << "Halide expr:\n" << spec_expr << ",  text expression:\n " << expr << "\n";
 
     std::string expr_name = "hydride.node." + benchmark_name + "." + std::to_string(expr_id);
     RewriteCompiler.add_expression_to_compile(expr, expr_name);
