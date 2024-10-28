@@ -1,4 +1,7 @@
 from compiler.Pattern import Pattern, parse_pattern_from_string
+from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
+from utils.DSLInstructionUtils import *
+from common.Types import *
 
 
 def create_patterns(props, combined_dsl_list):
@@ -27,4 +30,61 @@ def create_patterns(props, combined_dsl_list):
 
             patterns.append(pattern)
     return patterns
+
+
+def get_possible_output_sizes_for_eq_class(ctx, dsl_list):
+    eq_class = get_eq_class_for_ctx(ctx, dsl_list)
+    output_sizes = [ctx.out_vectsize for ctx in eq_class.contexts]
+    return list(set(output_sizes))
+
+
+
+
+
+def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
+    # First do a quick check to test that both src and expression contexts
+    # have some member which produces the required output size to side step
+    # synthesis.
+    src_supports_output_size = True
+    if isinstance(src_ctx, Context):
+        src_root_eq_class = get_eq_class_for_ctx(src_ctx, combined_dsl_list)
+        src_supports_output_size = src_root_eq_class.supports_output_size(output_size)
+
+    if not src_supports_output_size:
+        return False
+
+    dst_supports_output_size = True
+    if isinstance(dst_ctx, Context):
+        dst_root_eq_class = get_eq_class_for_ctx(dst_ctx, combined_dsl_list)
+        dst_supports_output_size = dst_root_eq_class.supports_output_size(output_size)
+
+    if not dst_supports_output_size:
+        return False
+
+    return True
+
+def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
+
+    if  not can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
+        return False, "", ""
+
+
+    valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, combined_dsl_list)
+    valid_src_conc = next(valid_src_conc_gen)
+
+
+
+    valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
+    valid_dst_conc = next(valid_dst_conc_gen)
+
+
+    synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True)
+    success, src_expr_str, dst_expr_str = synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc)
+
+    return success, src_expr_str, dst_expr_str
+
+
+
+
+
 

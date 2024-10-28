@@ -1219,3 +1219,11 @@ def deduplicate_dsl_list(dsl_list):
 
     return unique
 
+
+def get_eq_class_for_ctx(ctx, dsl_list):
+    for dsl_inst in dsl_list:
+        for ctx_ in dsl_inst.contexts:
+            if ctx_.name == ctx.name:
+                return dsl_inst
+
+    return None
