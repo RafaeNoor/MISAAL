@@ -179,10 +179,17 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                 self.current_output_depth = output_depth
                 for dsl_inst in self.input_dsl_list:
                     relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(dsl_inst)
+                    relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
+                    relavent_output_subset = deduplicate_dsl_list(relavent_output_subset)
+
                     relavent_output_subset.reverse()
                     print("Relavent set for ",dsl_inst.name)
                     for idx, ros in enumerate(relavent_output_subset):
+                        print(idx, ".", ros.name)
+
+                    print("Relavent Swizzles set for ",dsl_inst.name)
+                    for idx, ros in enumerate(relavent_swizzle_subset):
                         print(idx, ".", ros.name)
 
                     sample_ctx = dsl_inst.get_sample_context()
@@ -208,8 +215,10 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                             continue
 
 
+
                         if get_expr_depth(src_expr) != input_depth:
                             continue
+
 
 
 
@@ -242,6 +251,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                 continue
 
 
+                            #if not isinstance(target_expr, Reg) and not self.expr_contains(target_expr, dsl_inst.name):
+                            #    continue
 
 
                             if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
@@ -260,6 +271,10 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                     if not self.canonicalizer.isCanonical(target_expr, canonical_target_expr):
                                         self.canon_skipped_dst += 1
                                         continue
+
+                                # Equality check
+                                if self.canonicalizer.isCanonical(target_expr, src_expr):
+                                    continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
                                 candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_expr.out_vectsize)

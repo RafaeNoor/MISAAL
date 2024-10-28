@@ -417,3 +417,36 @@ def split_swizzle_eq_class_by_size_behavior(dsl_list, output_dsl_name, output_pa
 
 
 
+# For frontends such as Halide, we often have to split vectors and concatenate vectors at different stages
+# of the expression. To create the identities required to do so, we first create an identity repair map
+# with expressions which extract/ concat slices and the operations themselves. This repair map can be used to derive
+# such properties
+def create_swizzle_identity_map(dsl_list):
+    legal_bv_ops = ["extract", "concat"]
+    extract_concat_dsl_list = []
+
+    for dsl_inst in dsl_list:
+        dsl_ops = dsl_inst.get_semantics_ops_list()
+
+        valid = True
+        for op in dsl_ops:
+            if op not in legal_bv_ops:
+                valid = False
+                break
+
+        if valid:
+            sample_ctx = dsl_inst.get_sample_context()
+            extract_concat_dsl_list.append(sample_ctx)
+
+    swizzle_map = {}
+
+    for extract_op in extract_concat_dsl_list:
+        swizzle_map[extract_op.name] = []
+
+        for dsl_inst in dsl_list:
+            sample_ctx = dsl_inst.get_sample_context()
+            swizzle_map[extract_op.name].append(sample_ctx.name)
+
+    return swizzle_map
+
+

@@ -36,10 +36,14 @@ from properties.ExtractLaneSlice import ExtractLaneSlice
 from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
 from sema.halide_sema import halide_semantics
-from sema.hex_swizzles import hvx_swizzles
+#from sema.hex_swizzles import hvx_swizzles
+from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles
+
+
 #from sema.x86_swizzles import x86_swizzles
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles
-from sema.arm_swizzles import arm_swizzles
+#from sema.arm_swizzles import arm_swizzles
+from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles
 
 from sema.ARMSema import arm_semantics
 from sema.repairs_sema import repair_semantics
@@ -87,6 +91,7 @@ TARGET_TO_SEMA = {
     "x86": x86_semantics,
     "hvx": hvx_semantics,
     "halide_hvx": halide_semantics,
+    "halide": halide_semantics,
     "arm" : arm_semantics,
     "x86_swizzles":  x86_swizzles,
     "hvx_swizzles": hvx_swizzles,
@@ -98,6 +103,7 @@ TARGET_TO_SWIZZLE = {
     "x86": x86_swizzles,
     "hvx": hvx_swizzles,
     "halide_hvx": {},
+    "halide": {},
     "arm" : arm_swizzles,
     "x86_swizzles":  {},
     "hvx_swizzles": {},
@@ -108,12 +114,14 @@ TARGET_TO_SWIZZLE_DMAP = {
     "hvx": "hvx_swizzle_derivation_map.JSON",
     "arm": "arm_swizzle_derivation_map.JSON",
     "x86": "x86_swizzle_derivation_map.JSON",
+    "halide" : "halide_swizzle_derivation_map.JSON",
 }
 
 
 TARGET_TO_DESC = {
     "x86": X86_SYNTH_DESC,
     "hvx": HVX_SYNTH_DESC,
+    "halide": HALIDE_HVX_SYNTH_DESC,
     "halide_hvx": HALIDE_HVX_SYNTH_DESC,
     "arm": ARM_SYNTH_DESC,
     "x86_swizzles":  X86_SYNTH_DESC,
@@ -131,7 +139,7 @@ commutative_path = "commutative_map.json"
 
 
 
-TARGETS = ["arm"]
+TARGETS = ["halide"]
 
 
 
@@ -280,7 +288,7 @@ for property in test_properties:
             forward_path_name = "repair_forward_map_{}.json".format(target)
             swizzle_forward_path = TARGET_TO_SWIZZLE_DMAP[target]
             commutative_path = "commutative_map.json"
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 2,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 3,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
 
 
 

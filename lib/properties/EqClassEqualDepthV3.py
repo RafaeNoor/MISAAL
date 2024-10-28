@@ -293,9 +293,11 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
         max_out = 0
         max_ctx = None
 
+        NOT_EXCEED = 2048
+
         for ctx in valid_contexts:
             print(ctx.name)
-            if ctx.out_vectsize > max_out:
+            if ctx.out_vectsize > max_out and ctx.out_vectsize < NOT_EXCEED:
                 max_out = ctx.out_vectsize
                 max_ctx = ctx
 

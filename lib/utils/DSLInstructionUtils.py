@@ -1204,3 +1204,18 @@ def get_process_virtual_memory_megabytes():
 
 def get_process_physical_memory_megabytes():
     return psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
+
+
+def deduplicate_dsl_list(dsl_list):
+
+    names = []
+    unique = []
+
+    for dsl_inst in dsl_list:
+        if dsl_inst.name in names:
+            continue
+        names.append(dsl_inst.name)
+        unique.append(dsl_inst)
+
+    return unique
+
