@@ -4,6 +4,7 @@ from  utils.DSLInstructionUtils import *
 from utils.ReadDSL import read_string_to_dsl
 import copy
 from  common.Types import *
+from utils.ConcretizeUtils import get_valid_concretization_generator
 
 class EnumeratePattern(Property):
 
@@ -50,10 +51,28 @@ class EnumeratePattern(Property):
         src_expr = copy.deepcopy(candidate[0])
         dst_expr = copy.deepcopy(candidate[1])
         output_size = candidate[2]
-        ctx = candidate[3]
+        ctx = copy.deepcopy(candidate[3])
 
 
-        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, self.dsl_list, output_size, required_src_ctx = ctx)
+        eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
+
+        valid_src_conc_gen = get_valid_concretization_generator(src_expr, output_size, self.dsl_list)
+
+        for valid_src_conc in valid_src_conc_gen:
+            if valid_src_conc.name == ctx.name:
+                src_expr = valid_src_conc
+                break
+
+        # Get valid concretization of src expression with required context in root and
+        # then create filtered list
+
+        filtered_list = [e for e in self.dsl_list if e.name != eq_class.name]
+        eq_class_copy = copy.deepcopy(eq_class)
+        eq_class_copy.contexts = [ctx]
+        filtered_list += [eq_class_copy]
+
+
+        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = ctx)
 
         if success:
             self.context_map[key] = (src_expr_str, dst_expr_str)

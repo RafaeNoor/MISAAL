@@ -64,7 +64,7 @@ def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_lis
 
     return True
 
-def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size, required_src_ctx = None):
+def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , output_size, required_src_ctx = None):
 
     if  not can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
         return False, "", ""
@@ -82,12 +82,15 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  outp
 
 
 
+
+
     valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
     valid_dst_conc = next(valid_dst_conc_gen)
 
 
+
     synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True)
-    success, src_expr_str, dst_expr_str = synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc)
+    success, src_expr_str, dst_expr_str = synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc )
 
     return success, src_expr_str, dst_expr_str
 
