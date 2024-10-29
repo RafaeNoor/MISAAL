@@ -27,8 +27,13 @@ class EnumeratePattern(Property):
                 src_pattern_str = prop['property']['src']
                 dst_pattern_str = prop['property']['dst']
 
+                print(src_pattern_str)
                 src_expr = read_string_to_dsl(src_pattern_str, self.dsl_list)
                 dst_expr = read_string_to_dsl(dst_pattern_str, self.dsl_list)
+
+                if is_expression_constant(src_expr, self.dsl_list) or is_expression_constant(dst_expr, self.dsl_list):
+                    print("Constant expression encountered!")
+                    continue
 
                 possible_output_sizes = get_possible_output_sizes_for_eq_class(src_expr, self.dsl_list)
 

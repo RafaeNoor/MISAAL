@@ -1241,6 +1241,9 @@ def get_ctx_expr_dsl_names(expr, dsl_list):
     return []
 
 def is_expression_constant(expr, dsl_list):
+    if isinstance(expr, Reg):
+        return False
+
     expr_regs = get_unique_context_registers(expr)
     if len(expr_regs) == 0:
         return True
