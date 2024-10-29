@@ -14,6 +14,7 @@ import concurrent.futures
 import signal
 import psutil
 from Specification import Specification
+from utils.CodeSynthesizerDesc import create_synth_desc
 
 REMOVE_RKT_FILES = True
 
@@ -1227,3 +1228,53 @@ def get_eq_class_for_ctx(ctx, dsl_list):
                 return dsl_inst
 
     return None
+
+
+def get_ctx_expr_dsl_names(expr, dsl_list):
+    if isinstance(expr, Context):
+        eq_class = get_eq_class_for_ctx(expr, dsl_list)
+        names = [eq_class.name]
+        for arg in expr.context_args:
+            names += get_ctx_expr_dsl_names(arg, dsl_list)
+        return list(set(names))
+
+    return []
+
+def is_expression_constant(expr, dsl_list):
+    expr_regs = get_unique_context_registers(expr)
+    if len(expr_regs) == 0:
+        return True
+
+    double_grammar_desc = create_synth_desc("desc", True, [], "", "")
+    double_grammar_desc.emit_sema = True
+    double_grammar_desc.emit_interpreter = True
+
+    statements = []
+    dsl_subset_names = get_ctx_expr_dsl_names(expr, dsl_list)
+
+
+
+    if double_grammar_desc.emit_interpreter:
+        statements.append(double_grammar_desc.emit_interpreter_framework([x for x in dsl_list if x.name in dsl_subset_names]))
+
+
+
+    sym_env = "(define sym-env (vector {}))".format(" ".join(["(?? (bitvector {}))".format(reg.size) for reg in expr_regs]))
+
+    statements.append(sym_env)
+
+    result_expr = "(define result ({}\n{}\n sym-env))".format(double_grammar_desc.interpreter_name, expr.emit_context_expr_string())
+
+    statements.append(result_expr)
+
+    exit_cond = "(cond [(concrete? result)  (exit 0)] [else (exit 1)])"
+
+    statements.append(exit_cond)
+
+    ret_code = execute_racket_file(statements)
+
+    return ret_code.returncode == 0
+
+
+
+
