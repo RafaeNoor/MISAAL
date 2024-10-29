@@ -1,4 +1,6 @@
 #from Pattern import *
+from utils.ReadDSL import read_string_to_dsl
+from common.DSLParser import parse_dict
 from common.Instructions import *
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 
@@ -54,7 +56,7 @@ def get_output_sizes(expr : Context, dsl_list : list):
   for dsl_inst in dsl_list:
     assert isinstance(dsl_inst, DSLInstruction) == True
     dsl_inst_name = get_barename(dsl_inst.name)
-    expr_name = get_barename(expr.name)
+    expr_name = get_barename(expr.dsl_name)
     if expr_name == dsl_inst_name:
       for ctx in dsl_inst.contexts:
         output_sizes.add(ctx.out_vectsize)
@@ -65,13 +67,15 @@ def get_output_sizes(expr : Context, dsl_list : list):
 def get_input_sizes(expr : Context, dsl_list : list, 
                     input_sizes_dict : dict = dict()):
   assert isinstance(expr, Context) == True
+  print("\nget_input_sizes")
+  print(expr.emit_context_expr_string())
   dict_idx = -1
   if len(input_sizes_dict.keys()) == 0:
     dict_idx = 0
   for dsl_inst in dsl_list:
     assert isinstance(dsl_inst, DSLInstruction) == True
     dsl_inst_name = get_barename(dsl_inst.name)
-    expr_name = get_barename(expr.name)
+    expr_name = get_barename(expr.dsl_name)
     if expr_name == dsl_inst_name:
       for ctx_idx, ctx in enumerate(dsl_inst.contexts):
         if dict_idx == 0:
@@ -93,6 +97,14 @@ def get_input_sizes(expr : Context, dsl_list : list,
         result[key] = value
   input_sizes_dict = result
   return input_sizes_dict
+
+
+def generalize_rule(lhs_to_rhs_patterns : dict):
+  print("lhs_to_rhs_patterns:")
+  print(lhs_to_rhs_patterns)
+  for lhs_expr, rhs_expr in lhs_to_rhs_patterns.items():
+    print(lhs_expr.emit_context_expr_string())
+    print(rhs_expr.emit_context_expr_string())
 
 
 def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
@@ -128,8 +140,13 @@ def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
           print(src_expr_str)
           print("Corresponding RHS concretization:")
           print(dst_expr_str)
+          src_expr = read_string_to_dsl(src_expr_str, lhs_dsl_list)
+          dst_expr = read_string_to_dsl(dst_expr_str, rhs_dsl_list)
+          lhs_to_rhs_patterns[src_expr] = dst_expr
       else:
-          print("FAILURE!") 
+          print("FAILURE!")
+  generalize_rule(lhs_to_rhs_patterns)
+      
         
 
 def generalize_rules(lhs_expr : Context, lhs_dsl_list : list,
@@ -140,8 +157,7 @@ def generalize_rules(lhs_expr : Context, lhs_dsl_list : list,
   print(len(lhs_dsl_list))
   print("len(rhs_dsl_list):")
   print(len(rhs_dsl_list))
-  generate_candidates(lhs_expr, lhs_dsl_list, \
-                      rhs_expr, rhs_dsl_list)
+  generate_candidates(lhs_expr, lhs_dsl_list, rhs_expr, rhs_dsl_list)
 
 
 #def generalize_pattern(pattern : Pattern):
@@ -150,27 +166,56 @@ def generalize_rules(lhs_expr : Context, lhs_dsl_list : list,
 #  #generalize_rules(lhs_expr, rhs_expr)
 
 
-from utils.ReadDSL import read_string_to_dsl
-from common.DSLParser import parse_dict
-from sema.ARMSema import arm_semantics
-from sema.halide_sema import halide_semantics
+def test1():
+  from sema.ARMSema import arm_semantics
+  from sema.halide_sema import halide_semantics
 
-# Uncomment below line to keep intermediate racket files
-#keep_temporary_files()
+  # Uncomment below line to keep intermediate racket files
+  #keep_temporary_files()
 
-# Parse the dictionay into a list of DSLInstruction types
-arm_dsl_list = parse_dict(arm_semantics)
-halide_dsl_list = parse_dict(halide_semantics)
+  # Parse the dictionay into a list of DSLInstruction types
+  arm_dsl_list = parse_dict(arm_semantics)
+  halide_dsl_list = parse_dict(halide_semantics)
 
-arm_expr_str = "(vhadd_s32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 1 -1 0 16 0 16)"
-halide_expr_str = "(typed:unsigned-vec-halving_add (reg (bv #x01 8)) (reg (bv #x00 8)) 8 32)"
+  arm_expr_str = "(vhadd_s32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 1 -1 0 16 0 16)"
+  halide_expr_str = "(typed:unsigned-vec-halving_add (reg (bv #x01 8)) (reg (bv #x00 8)) 8 32)"
 
-arm_expr_ctx = read_string_to_dsl(arm_expr_str, arm_dsl_list)
-halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
+  arm_expr_ctx = read_string_to_dsl(arm_expr_str, arm_dsl_list)
+  halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
 
-print("="*5, "Pretty Printing Expressions", "="*5)
-print(arm_expr_ctx.emit_context_expr_string())
-print(halide_expr_ctx.emit_context_expr_string())
+  print("="*5, "Pretty Printing Expressions", "="*5)
+  print(arm_expr_ctx.emit_context_expr_string())
+  print(halide_expr_ctx.emit_context_expr_string())
 
-generalize_rules(halide_expr_ctx, halide_dsl_list, arm_expr_ctx, arm_dsl_list)
+  generalize_rules(halide_expr_ctx, halide_dsl_list, arm_expr_ctx, arm_dsl_list)
 
+
+def test2():
+  from sema.hex_swizzles_v3 import hvx_swizzles
+  from sema.hexsemantics import hvx_semantics
+
+  # Uncomment below line to keep intermediate racket files
+  #keep_temporary_files()
+
+  # Parse the dictionay into a list of DSLInstruction types
+  #joint_dict = hvx_swizzles | hvx_semantics
+  joint_dict = {**hvx_swizzles, **hvx_semantics}
+  hvx_dsl_list = parse_dict(joint_dict)
+
+  lhs_expr_str = "(hvx_swizzle_43 (hexagon_V6_vpackwuh_sat_128B (reg (bv #x00 8)) (reg (bv #x01 8)) \
+                  1024 1024 0 512 16 0 512 16 0 32 1 32 0 32 1 16 0) 1024 32 0 32 16 32 2 0)"
+  rhs_expr_str = "(hexagon_V6_vsathub_128B (reg (bv #x00 8)) (reg (bv #x01 8)) \
+                  1024 1024 0 512 16 16 0 32 1 0 0)"
+
+  lhs_expr_ctx = read_string_to_dsl(lhs_expr_str, hvx_dsl_list)
+  rhs_expr_ctx = read_string_to_dsl(rhs_expr_str, hvx_dsl_list)
+
+  print("="*5, "Pretty Printing Expressions", "="*5)
+  print(lhs_expr_ctx.emit_context_expr_string())
+  print(rhs_expr_ctx.emit_context_expr_string())
+
+  generalize_rules(lhs_expr_ctx, hvx_dsl_list, rhs_expr_ctx, hvx_dsl_list)
+
+
+if __name__ == "__main__":
+  test2()
