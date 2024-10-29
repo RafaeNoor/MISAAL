@@ -35,7 +35,7 @@ def create_patterns(props, combined_dsl_list):
 
 def get_possible_output_sizes_for_eq_class(ctx, dsl_list):
     eq_class = get_eq_class_for_ctx(ctx, dsl_list)
-    output_sizes = [ctx.out_vectsize for ctx in eq_class.contexts]
+    output_sizes = [ctx_.out_vectsize for ctx_ in eq_class.contexts]
     return list(set(output_sizes))
 
 
@@ -64,14 +64,21 @@ def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_lis
 
     return True
 
-def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
+def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size, required_src_ctx = None):
 
     if  not can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
         return False, "", ""
 
 
     valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, combined_dsl_list)
-    valid_src_conc = next(valid_src_conc_gen)
+    if required_src_ctx is None:
+        valid_src_conc = next(valid_src_conc_gen)
+    else:
+        for valid_src_conc in valid_src_conc_gen:
+            if valid_src_conc.name == required_src_ctx.name:
+                break
+
+
 
 
 

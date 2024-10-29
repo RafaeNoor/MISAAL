@@ -35,11 +35,12 @@ class EnumeratePattern(Property):
                     print("Constant expression encountered!")
                     continue
 
-                possible_output_sizes = get_possible_output_sizes_for_eq_class(src_expr, self.dsl_list)
+                src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
 
-                for size in possible_output_sizes:
+                for ctx in src_eq_class.contexts:
+                    size = ctx.out_vectsize
                     if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
-                        yield (src_expr, dst_expr, size)
+                        yield (src_expr, dst_expr, size, ctx)
 
 
 
@@ -49,9 +50,10 @@ class EnumeratePattern(Property):
         src_expr = copy.deepcopy(candidate[0])
         dst_expr = copy.deepcopy(candidate[1])
         output_size = candidate[2]
+        ctx = candidate[3]
 
 
-        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, self.dsl_list, output_size)
+        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, self.dsl_list, output_size, required_src_ctx = ctx)
 
         if success:
             self.context_map[key] = (src_expr_str, dst_expr_str)
@@ -60,7 +62,7 @@ class EnumeratePattern(Property):
         return success
 
     def serialize_candidate(self, candidate):
-        key = "+".join([candidate[0].emit_context_expr_string(), candidate[1].emit_context_expr_string(), str(candidate[2])])
+        key = "+".join([candidate[0].emit_context_expr_string(), candidate[1].emit_context_expr_string(), str(candidate[2]), candidate[3].name])
         return key
 
     def get_property_on_candidate(self, candidate):
@@ -68,7 +70,7 @@ class EnumeratePattern(Property):
 
         src_expr_str, dst_expr_str = self.context_map[key]
 
-        return {'src': src_expr_str, 'dst': dst_expr_str, 'output_size': candidate[2], 'original_src_expr': candidate[0].emit_context_expr_string(), "original_dst_expr": candidate[1].emit_context_expr_string()}
+        return {'src': src_expr_str, 'dst': dst_expr_str, 'output_size': candidate[2], 'original_src_expr': candidate[0].emit_context_expr_string(), "original_dst_expr": candidate[1].emit_context_expr_string(), "src_ctx": candidate[3].name}
 
 
     def emit_property_to_egg(self, property_map):
