@@ -564,7 +564,8 @@
     ],
     "hexagon_V6_vminuh_128B": [
         "typed:unsigned-vec-sat-sub",
-        "typed:unsigned-vec-min"
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min"
     ],
     "hexagon_V6_vgtb_128B": [
         "typed:signed-vec-lt"
@@ -573,6 +574,7 @@
         "typed:signed-vec-min",
         "typed:unsigned-vec-sat-sub",
         "typed:signed-vec-max",
+        "typed:unsigned-vec-max",
         "typed:vec-bwand",
         "typed:unsigned-vec-min",
         "typed:unsigned-vec-sat-add",
