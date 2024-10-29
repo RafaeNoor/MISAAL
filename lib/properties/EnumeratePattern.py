@@ -9,6 +9,7 @@ class EnumeratePattern(Property):
 
 
     def __init__(self, dsl_list = [], synth_desc = None, input_patterns_dict = {}):
+
         super().__init__(name = "EnumeratePattern" ,dsl_list = dsl_list, synth_desc = synth_desc, is_candidate_generator = True)
         self.input_patterns_dict = input_patterns_dict
         self.context_map = {}

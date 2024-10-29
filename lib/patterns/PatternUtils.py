@@ -1,6 +1,7 @@
 from compiler.Pattern import Pattern, parse_pattern_from_string
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.DSLInstructionUtils import *
+from utils.ConcretizeUtils import get_valid_concretization_generator
 from common.Types import *
 
 

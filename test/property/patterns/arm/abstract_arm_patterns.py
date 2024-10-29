@@ -18,11 +18,11 @@ pattern_file_path = "arm_test_patterns.json"
 with open(pattern_file_path, "r") as PatternFile:
     input_patterns = json.load(PatternFile)
 
-prop = EnumeratePattern(dsl_list = combined_dsl_list,  input_patterns_dict = input_patterns)
+prop = EnumeratePattern(dsl_list = combined_dsl_list,  input_patterns_dict = input_patterns, synth_desc = ARM_SYNTH_DESC)
 
-prop.parallel = False
-prop.POOL_SIZE = 2
-prop.BATCH_SIZE = 16
+prop.parallel = True
+prop.POOL_SIZE = 3
+prop.BATCH_SIZE = 8
 prop.notify_enabled = False
 
 
