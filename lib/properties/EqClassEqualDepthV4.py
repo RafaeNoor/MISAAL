@@ -227,6 +227,11 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         if not self.expr_contains(src_expr, dsl_inst.name):
                             continue
 
+                        if self.count_contexts(src_expr, dsl_inst.name) != 1:
+                            continue
+
+
+
                         if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 4:
                             continue
 
