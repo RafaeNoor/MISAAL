@@ -230,6 +230,9 @@ def is_expression_template_valid(template):
     if isinstance(template[0], Reg):
         return True
 
+    if isinstance(template[0], ConstBitVector):
+        return True
+
 
     for sub_temp in template[1]:
         if not is_expression_template_valid(sub_temp[0]):
@@ -245,6 +248,10 @@ def materialize_expression_template(valid_template):
     expr = valid_template[0]
 
     if isinstance(expr, Reg):
+        #print("Materialize reg size:", expr.size, expr.precision)
+        return expr
+
+    if isinstance(expr, ConstBitVector):
         #print("Materialize reg size:", expr.size, expr.precision)
         return expr
 
@@ -299,6 +306,10 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
         yield [Reg(ref_expr.index, ref_expr.precision, output_size, signed = ref_expr.signed), None]
         return []
 
+    if isinstance(ref_expr, ConstBitVector):
+        yield [ConstBitVector(ref_expr.value, output_size, name = ref_expr.name), None]
+        return []
+
 
     assert isinstance(ref_expr, Context)
 
@@ -329,8 +340,8 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
     for ctx in dsl_inst.contexts:
         ctx_sym_args = get_ctx_sym_args(ctx)
 
-        if ctx_sym_args  != num_sym_args:
-            continue
+        #if ctx_sym_args  != num_sym_args:
+        #    continue
 
         if ctx.out_vectsize is None:
             continue

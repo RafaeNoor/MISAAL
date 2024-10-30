@@ -1223,6 +1223,8 @@ def deduplicate_dsl_list(dsl_list):
 
 def get_eq_class_for_ctx(ctx, dsl_list):
     for dsl_inst in dsl_list:
+        if ctx.dsl_name.split("_dsl")[0] == dsl_inst.name:
+            return dsl_inst
         for ctx_ in dsl_inst.contexts:
             if ctx_.name == ctx.name:
                 return dsl_inst

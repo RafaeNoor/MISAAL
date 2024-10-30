@@ -94,6 +94,8 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
         for valid_src_conc in valid_src_conc_gen:
             if valid_src_conc.name == required_src_ctx.name:
                 break
+            assert valid_src_conc.name == required_src_ctx.name
+
 
 
 
@@ -104,6 +106,8 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
     valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
     valid_dst_conc = next(valid_dst_conc_gen)
 
+    print("Src expression: ", valid_src_conc.emit_context_expr_string())
+    print("target expression: ", valid_dst_conc.emit_context_expr_string())
 
 
     synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True)

@@ -28,17 +28,27 @@ class EnumeratePattern(Property):
                 src_pattern_str = prop['property']['src']
                 dst_pattern_str = prop['property']['dst']
 
-                print(src_pattern_str)
                 src_expr = read_string_to_dsl(src_pattern_str, self.dsl_list)
                 dst_expr = read_string_to_dsl(dst_pattern_str, self.dsl_list)
+
+
+
+
+
+
 
                 if is_expression_constant(src_expr, self.dsl_list) or is_expression_constant(dst_expr, self.dsl_list):
                     print("Constant expression encountered!")
                     continue
 
+
                 src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
 
+
+
                 for ctx in src_eq_class.contexts:
+                    #if get_num_symbolic_args(ctx) != root_expr_sym_args:
+                    #    continue
                     size = ctx.out_vectsize
                     if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
                         yield (src_expr, dst_expr, size, ctx)
@@ -60,8 +70,10 @@ class EnumeratePattern(Property):
 
         for valid_src_conc in valid_src_conc_gen:
             if valid_src_conc.name == ctx.name:
+                print("Found matching context!")
                 src_expr = valid_src_conc
                 break
+
 
         # Get valid concretization of src expression with required context in root and
         # then create filtered list

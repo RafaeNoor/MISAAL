@@ -102,7 +102,15 @@ class EqClassExpandGenerator:
                 return
 
             elif isinstance(ref_arg, ConstBitVector) and isinstance(f_arg, BitVector):
-                return
+
+                if ref_arg.size == f_arg.size:
+                    clause_str = ref_arg.get_dsl_value() +"\t\t\t\t"+ref_arg.get_rkt_comment()
+                    clause_tokens.append(clause_str)
+                else:
+                    const_bv_val = ConstBitVector(ref_arg.value, f_arg.size, name = ref_arg.name)
+                    clause_str = const_bv_val.get_dsl_value() +"\t\t\t\t"+const_bv_val.get_rkt_comment()
+                    clause_tokens.append(clause_str)
+
 
             elif isinstance(ref_arg, Context) :
                 assert isinstance(f_arg, BitVector), "Corresponding argument must be a symbolic parameter"

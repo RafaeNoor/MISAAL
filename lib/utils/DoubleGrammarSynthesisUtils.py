@@ -238,6 +238,7 @@ class DoubleGrammarSynthesisUtils:
 
         src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
 
+
         if is_src_grammar:
             statements.append(src_expression_grammar)
             src_expression = "(define src-expr\n ({})\n)".format(src_expression_label)
