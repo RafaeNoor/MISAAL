@@ -341,7 +341,7 @@ impl<L: SynthLanguage> Ruleset<L> {
         }
         let mut candidates = Ruleset::default();
         let extract = Extractor::new(egraph, AstSize);
-
+        let mut iter_var = 0;
         for ids in by_cvec.values() {
             let exprs: Vec<_> = ids.iter().map(|&id| extract.find_best(id).1).collect();
             for (idx, e1) in exprs.iter().enumerate() {
@@ -366,10 +366,12 @@ impl<L: SynthLanguage> Ruleset<L> {
                         println!("lhs {:?}", e1);
                         println!("rhs {:?}\n\n\n", e2);
                         candidates.add_from_recexprs(e1, e2);
+                        iter_var += 1;
                     }
                 }
             }
         }
+        println!("Total Num of Exprs {}", iter_var);
         candidates
     }
 
@@ -432,8 +434,8 @@ impl<L: SynthLanguage> Ruleset<L> {
                 // candidate has merged (derivable from other rewrites)
                 continue;
             } else {
-                // self.add(rule);
-                let halide_pattern_is_extractable = |pat: &Pattern<L>| {
+                self.add(rule);
+                /* let halide_pattern_is_extractable = |pat: &Pattern<L>| {
                     pat.ast.as_ref().iter().all(|n| match n {
                         ENodeOrVar::ENode(n) => n.is_halide_allowed_op(),
                         ENodeOrVar::Var(_) => true,
@@ -448,7 +450,7 @@ impl<L: SynthLanguage> Ruleset<L> {
                 if halide_pattern_is_extractable(&rule.lhs) && hvx_pattern_is_extractable(&rule.rhs)
                 {
                     self.add(rule);
-                }
+                } */
             }
         }
     }
