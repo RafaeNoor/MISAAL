@@ -44,14 +44,19 @@ class EnumeratePattern(Property):
 
                 src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
 
+                dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
 
-                for ctx in src_eq_class.contexts:
-                    #if get_num_symbolic_args(ctx) != root_expr_sym_args:
-                    #    continue
-                    size = ctx.out_vectsize
-                    if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
-                        yield (src_expr, dst_expr, size, ctx)
+
+                for src_ctx in src_eq_class.contexts:
+                    size = src_ctx.out_vectsize
+                    for dst_ctx in dst_eq_class.contexts:
+
+                        if src_ctx.out_vectsize != dst_ctx.out_vectsize:
+                            continue
+
+                        if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
+                            yield (src_expr, dst_expr, size, src_ctx, dst_ctx)
 
 
 
@@ -61,30 +66,46 @@ class EnumeratePattern(Property):
         src_expr = copy.deepcopy(candidate[0])
         dst_expr = copy.deepcopy(candidate[1])
         output_size = candidate[2]
-        ctx = copy.deepcopy(candidate[3])
+        src_ctx = copy.deepcopy(candidate[3])
+        dst_ctx = copy.deepcopy(candidate[4])
+
+        print("Testing for", src_ctx.name, dst_ctx.name)
 
 
-        eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
+        src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
+        dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
         valid_src_conc_gen = get_valid_concretization_generator(src_expr, output_size, self.dsl_list)
 
         for valid_src_conc in valid_src_conc_gen:
-            if valid_src_conc.name == ctx.name:
-                print("Found matching context!")
+            if valid_src_conc.name == src_ctx.name:
+                print("Found matching src context!")
                 src_expr = valid_src_conc
+                break
+
+        valid_dst_conc_gen = get_valid_concretization_generator(dst_expr, output_size, self.dsl_list)
+
+        for valid_dst_conc in valid_dst_conc_gen:
+            if valid_dst_conc.name == dst_ctx.name:
+                print("Found matching dst context!")
+                dst_expr = valid_dst_conc
                 break
 
 
         # Get valid concretization of src expression with required context in root and
         # then create filtered list
 
-        filtered_list = [e for e in self.dsl_list if e.name != eq_class.name]
-        eq_class_copy = copy.deepcopy(eq_class)
-        eq_class_copy.contexts = [ctx]
-        filtered_list += [eq_class_copy]
+        filtered_list = [e for e in self.dsl_list if e.name not in [src_eq_class.name, dst_eq_class.name]]
+        src_eq_class_copy = copy.deepcopy(src_eq_class)
+        src_eq_class_copy.contexts = [src_ctx]
+        filtered_list += [src_eq_class_copy]
+
+        dst_eq_class_copy = copy.deepcopy(dst_eq_class)
+        dst_eq_class_copy.contexts = [dst_ctx]
+        filtered_list += [dst_eq_class_copy]
 
 
-        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = ctx)
+        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = src_ctx, required_dst_ctx = dst_ctx)
 
         if success:
             self.context_map[key] = (src_expr_str, dst_expr_str)
@@ -93,7 +114,7 @@ class EnumeratePattern(Property):
         return success
 
     def serialize_candidate(self, candidate):
-        key = "+".join([candidate[0].emit_context_expr_string(), candidate[1].emit_context_expr_string(), str(candidate[2]), candidate[3].name])
+        key = "+".join([candidate[0].emit_context_expr_string(), candidate[1].emit_context_expr_string(), str(candidate[2]), candidate[3].name, candidate[4].name])
         return key
 
     def get_property_on_candidate(self, candidate):
@@ -101,7 +122,7 @@ class EnumeratePattern(Property):
 
         src_expr_str, dst_expr_str = self.context_map[key]
 
-        return {'src': src_expr_str, 'dst': dst_expr_str, 'output_size': candidate[2], 'original_src_expr': candidate[0].emit_context_expr_string(), "original_dst_expr": candidate[1].emit_context_expr_string(), "src_ctx": candidate[3].name}
+        return {'src': src_expr_str, 'dst': dst_expr_str, 'output_size': candidate[2], 'original_src_expr': candidate[0].emit_context_expr_string(), "original_dst_expr": candidate[1].emit_context_expr_string(), "src_ctx": candidate[3].name, "dst_ctx": candidate[4].name}
 
 
     def emit_property_to_egg(self, property_map):

@@ -26,7 +26,6 @@ def create_patterns(props, combined_dsl_list):
             input_expr = value[0]['property'][src_key_name]
             output_expr = value[0]['property'][dst_key_name]
 
-
             pattern = parse_pattern_from_string(input_expr, output_expr, combined_dsl_list, combined_dsl_list, src_language = "SRC", target_language = "TARGET", bidirectional = True)
 
             patterns.append(pattern)
@@ -81,7 +80,7 @@ def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_lis
 
     return True
 
-def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , output_size, required_src_ctx = None):
+def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , output_size, required_src_ctx = None, required_dst_ctx = None):
 
     if  not can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
         return False, "", ""
@@ -97,17 +96,21 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
             assert valid_src_conc.name == required_src_ctx.name
 
 
-
-
-
-
-
-
     valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
-    valid_dst_conc = next(valid_dst_conc_gen)
+    if required_dst_ctx is None:
+        valid_dst_conc = next(valid_dst_conc_gen)
+    else:
+        for valid_dst_conc in valid_dst_conc_gen:
+            if valid_dst_conc.name == required_dst_ctx.name:
+                break
+            assert valid_dst_conc.name == required_dst_ctx.name
 
-    print("Src expression: ", valid_src_conc.emit_context_expr_string())
-    print("target expression: ", valid_dst_conc.emit_context_expr_string())
+
+
+
+
+
+
 
 
     synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True)

@@ -282,6 +282,7 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
     valid = False
 
     for valid_template in valid_expression_templates:
+
         if not is_expression_template_valid(valid_template):
             continue
         valid = True
@@ -448,6 +449,7 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
                     continue
                 yield [valid_ctx, [(config_0, sym_idx)]]
         else:
+            print(ref_expr.emit_context_expr_string())
             assert False, "Unreachable number of sym args {}".format(num_sym_args)
 
 
