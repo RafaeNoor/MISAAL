@@ -710,12 +710,14 @@ public:
             if (use_generalized_cast) {
                 std::string lanes_str = std::to_string(op->type.lanes());
                 std::string bits_str = std::to_string(op->type.bits());
+                
+                std::string suffix = oprec > iprec ? "-extend" : "-truncate";
 
                 std::string type_str = " " + iprec_str + " 1 " + lanes_str + " " +bits_str ;
                 if (op->type.is_uint()) {
-                    return tabs() + "(typed:cast-uint" + "\n" + rkt_val + " "+ type_str  + ")";
+                    return tabs() + "(typed:cast-uint" + suffix + "\n" + rkt_val + " "+ type_str  + ")";
                 } else {
-                    return tabs() + "(typed:cast-int" + "\n" + rkt_val + " " + type_str + ")";
+                    return tabs() + "(typed:cast-int" + suffix+ "\n" + rkt_val + " " + type_str + ")";
                 }
             } else {
                 return tabs() + "(" + type_string + "\n" + rkt_val + ")";

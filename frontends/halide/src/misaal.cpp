@@ -56,7 +56,8 @@ from compiler.HydrideCompiler import HydrideCompiler\n\
 from utils.egg_config import EGG_PKG_PATH\n\
 from sema.hexsemantics_new import semantics as hvx_semantics\n\
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
-from sema.halide_sema import halide_semantics\n\
+#from sema.halide_sema import halide_semantics\n\
+from sema.halide_decomposed import halide_decomposed as halide_semantics\n\
 from sema.hex_swizzles import hvx_swizzles\n\
 from sema.x86_swizzles import x86_swizzles\n\
 from sema.arm_swizzles import arm_swizzles\n\
