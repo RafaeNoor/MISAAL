@@ -40,6 +40,23 @@ def get_possible_output_sizes_for_eq_class(ctx, dsl_list):
 
 
 
+def deduplicate_patterns(patterns):
+    unique_patterns = []
+    for s_idx, pattern in enumerate(patterns):
+        insert = True
+        for j in range(s_idx + 1, len(patterns)):
+            other_pattern = patterns[j]
+
+            if other_pattern.equal_to(pattern):
+                insert = False
+                break
+        if insert:
+            unique_patterns.append(pattern)
+    return unique_patterns
+
+
+
+
 
 
 def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
