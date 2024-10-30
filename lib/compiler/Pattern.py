@@ -42,6 +42,28 @@ class Pattern:
         print("To Expression:")
         print(target_expr_str)
 
+    def equal_to(self, other_pattern):
+        def get_expr_str(expr):
+            if isinstance(expr,Context):
+                return expr.emit_context_expr_string()
+            else:
+                return "Reg"
+
+        srq_equal_src = get_expr_str(other_pattern.src_expr) == get_expr_str(self.src_expr)
+        dst_equal_dst = get_expr_str(other_pattern.target_expr) == get_expr_str(self.target_expr)
+
+        src_equal_dst = get_expr_str(other_pattern.src_expr) == get_expr_str(self.target_expr)
+        dst_equal_src = get_expr_str(other_pattern.src_expr) == get_expr_str(self.src_expr)
+
+
+        equal_forward = srq_equal_src and dst_equal_dst
+        equal_backward = src_equal_dst and dst_equal_src
+
+
+        return equal_forward or equal_backward
+
+
+
 
 
 

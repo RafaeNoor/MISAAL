@@ -372,7 +372,7 @@ class DoubleGrammarSynthesisUtils:
 
 
 
-    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2):
+    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2, target = "hvx"):
         src_ctx = copy.deepcopy(src_expr)
 
         print(emit_compact_context_expr_str(src_ctx))
@@ -488,7 +488,7 @@ class DoubleGrammarSynthesisUtils:
 
         dst_expression_label = None
 
-        TARGET = "x86"
+        TARGET = target
         spec = get_hydride_spec_from_ctx(src_ctx)
         spec.set_target(TARGET)
         # Use Hydride heurstic based synthesis for Destination but

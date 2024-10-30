@@ -1,17 +1,17 @@
 {
     "_mm256_dpbusd_epi32": [
         "typed:signed-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-add",
         "typed:signed-vec-sat-add",
         "typed:signed-vector_reduce_add",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-widen-mul"
     ],
     "_mm256_mulhrs_epi16": [
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul"
@@ -19,7 +19,7 @@
     "_mm512_fmadd_epi32": [
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-add",
         "typed:unsigned-vec-sat-add",
         "typed:unsigned-vec-mul",
@@ -28,30 +28,30 @@
     "_mm256_maddubs_epi16": [
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-add",
         "typed:signed-vector_reduce_add",
         "typed:signed-vec-sat-add",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-widen-mul"
     ],
     "_mm_mul_su32": [
         "typed:signed-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:unsigned-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
         "typed:unsigned-vec-widen-mul"
     ],
     "_mm256_rol_epi32": [
         "typed:vec-bwand",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:vec-add",
         "typed:unsigned-vec-max",
         "typed:signed-vec-sat-add",
         "typed:vec-shl",
-        "typed:cast-int",
+        "typed:cast-int-truncate",
         "typed:unsigned-vec-rounding_shift_right",
         "typed:signed-vec-mod",
         "typed:signed-vec-shr",
@@ -68,12 +68,12 @@
         "typed:unsigned-vec-sat-sub"
     ],
     "_mm256_ror_epi32": [
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:vec-add",
         "typed:unsigned-vec-max",
         "typed:signed-vec-sat-add",
         "typed:vec-shl",
-        "typed:cast-int",
+        "typed:cast-int-truncate",
         "typed:unsigned-vec-rounding_shift_right",
         "typed:signed-vec-min",
         "typed:unsigned-vec-shr",
@@ -99,7 +99,7 @@
     "_mm512_mulhi_epu32": [
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:unsigned-vec-mul",
         "typed:unsigned-vec-widen-mul"
     ],
@@ -116,8 +116,8 @@
     ],
     "_mm256_mul_epi32": [
         "typed:signed-vec-mul",
-        "typed:cast-uint",
-        "typed:cast-int",
+        "typed:cast-uint-extend",
+        "typed:cast-int-extend",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-widen-mul",
@@ -177,11 +177,13 @@
         "typed:signed-vec-shr"
     ],
     "_mm_broadcastmb_epi64": [
-        "typed:cast-int",
-        "typed:cast-uint"
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend"
     ],
     "_mm512_cvtusepi64_epi32": [
-        "typed:vec-saturate"
+        "typed:vec-saturate",
+        "typed:cast-int-truncate",
+        "typed:cast-uint-truncate"
     ],
     "_mm_hsub_epi16": [
         "typed:vec-bwnot",
@@ -197,10 +199,10 @@
         "typed:signed-vec-max"
     ],
     "_mm_hsub_pi32": [
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-add",
         "typed:vec-bwnot",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-sub",
         "typed:unsigned-vec-sat-sub"
     ],
@@ -223,10 +225,10 @@
         "typed:vec-add"
     ],
     "_mm_hadd_pi32": [
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-add",
         "typed:vec-bwnot",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-sub"
     ],
     "_mm512_sllv_epi16": [
@@ -240,8 +242,8 @@
         "typed:unsigned-vec-mul"
     ],
     "_mm512_cvtepu8_epi32": [
-        "typed:cast-int",
-        "typed:cast-uint"
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend"
     ],
     "_mm256_hsub_epi32": [
         "typed:vec-bwnot",

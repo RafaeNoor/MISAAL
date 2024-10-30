@@ -293,7 +293,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
         max_out = 0
         max_ctx = None
 
-        NOT_EXCEED = 2048
+        NOT_EXCEED = 2048 + 1
 
         for ctx in valid_contexts:
             print(ctx.name)

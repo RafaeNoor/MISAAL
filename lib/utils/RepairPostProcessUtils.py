@@ -324,3 +324,23 @@ def create_repair_swizzle_map(dsl_list, swizzle_list):
 
     return repair_swizzle_map
 
+
+def invert_repair_map(repair_map):
+    orig_keys = [key for key in repair_map]
+
+    orig_items = []
+
+    for key in orig_keys:
+        orig_items += repair_map[key]
+
+    orig_items = list(set(orig_items))
+
+    inverted_map = {}
+    for key in orig_items:
+        inverted_map[key] = []
+
+    for key in orig_keys:
+        for item in repair_map[key]:
+            if key not in inverted_map[item]:
+                inverted_map[item].append(key)
+    return inverted_map

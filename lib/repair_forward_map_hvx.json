@@ -3,12 +3,12 @@
         "typed:unsigned-vec-widen-mul",
         "typed:signed-vec-sat-add",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-sat-sub",
         "typed:vec-sub",
         "typed:signed-vec-mul",
         "typed:vec-shl",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
@@ -18,10 +18,10 @@
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vdmpyhisat_128B": [
@@ -29,21 +29,21 @@
         "typed:signed-vec-sat-add",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vmpabus_acc_128B": [
         "typed:signed-vec-sat-add",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-sat-sub",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
@@ -51,7 +51,7 @@
     "hexagon_V6_vmpyub_acc_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
@@ -61,20 +61,20 @@
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vrmpybus_acc_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
@@ -82,11 +82,11 @@
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
@@ -95,10 +95,10 @@
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyiewh_acc_128B": [
@@ -106,10 +106,10 @@
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vrmpybv_128B": [
@@ -117,10 +117,10 @@
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
@@ -128,9 +128,9 @@
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
@@ -139,11 +139,11 @@
         "typed:signed-vec-sat-add",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vdmpyhvsat_acc_128B": [
@@ -151,22 +151,22 @@
         "typed:signed-vec-sat-add",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vdmpyhb_acc_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
@@ -176,17 +176,17 @@
         "typed:vec-saturate",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vmpahb_acc_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:signed-vec-sat-add",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-sat-sub",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
@@ -197,7 +197,8 @@
         "typed:signed-vec-widen-mul",
         "typed:vec-saturate",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
+        "typed:cast-int-truncate",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyh_acc_128B": [
@@ -205,16 +206,16 @@
         "typed:signed-vec-sat-add",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpabusv_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
@@ -225,55 +226,55 @@
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpybv_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vmpyihb_128B": [
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vmpyub_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vasrh_acc_128B": [
         "typed:signed-vec-sat-add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-truncate",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyieoh_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vmpauhb_128B": [
@@ -282,11 +283,11 @@
         "typed:signed-vec-halving_add",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-sat-sub",
         "typed:vec-sub",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add",
         "typed:xBroadcast"
     ],
@@ -295,18 +296,18 @@
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vaslh_acc_128B": [
         "typed:signed-vec-sat-add",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:slice_vectors",
         "typed:vec-shl",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vasruhubrndsat_128B": [
@@ -314,7 +315,7 @@
         "typed:signed-vec-sat-add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:vec-bwnot",
         "typed:signed-vector_reduce_add",
@@ -322,17 +323,19 @@
         "typed:unsigned-vec-rounding_shift_right",
         "typed:slice_vectors",
         "typed:signed-vec-rounding_shift_right",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyiewuh_128B": [
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend",
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vaddcarrysat_128B": [
         "typed:signed-vec-sat-add",
@@ -347,63 +350,67 @@
         "typed:unsigned-vec-widen-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vmpyiowh_128B": [
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-truncate",
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vmpyih_128B": [
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vmpyewuh_64_128B": [
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
         "typed:signed-vec-mul",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend",
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vmpyuhe_128B": [
         "typed:unsigned-vec-widen-mul",
         "typed:unsigned-vec-mul",
         "typed:signed-vec-widen-mul",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:signed-vec-mul",
         "typed:unsigned-vec-rounding_mul_shift_right",
-        "typed:cast-int"
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vrounduhub_128B": [
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:vec-sub",
         "typed:vec-bwnot",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vlsrh_128B": [
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:signed-vector_reduce_add",
         "typed:unsigned-vec-shr",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vaslw_acc_128B": [
         "typed:unsigned-vec-sat-add",
@@ -422,22 +429,22 @@
         "typed:unsigned-vec-max"
     ],
     "hexagon_V6_vaddubh_acc_128B": [
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vroundwuh_128B": [
         "typed:signed-vec-rounding_halving_add",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:signed-vec-min",
         "typed:vec-sub",
         "typed:signed-vec-mod",
         "typed:slice_vectors",
         "typed:signed-vec-max",
         "typed:unsigned-vec-min",
-        "typed:cast-int"
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vasruwuhrndsat_128B": [
         "typed:signed-vec-sat-add",
@@ -447,13 +454,11 @@
         "typed:vec-saturate",
         "typed:signed-vec-sat-sub",
         "typed:vec-sub",
-        "typed:cast-uint",
         "typed:vec-bwnot",
         "typed:slice_vectors",
         "typed:vec-shl",
         "typed:unsigned-vec-min",
         "typed:unsigned-vec-halving_add",
-        "typed:cast-int",
         "typed:unsigned-vec-sat-sub",
         "typed:vec-add",
         "typed:unsigned-vec-absd"
@@ -462,27 +467,23 @@
         "typed:signed-vec-rounding_halving_add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
         "typed:slice_vectors",
-        "typed:unsigned-vec-min",
-        "typed:cast-int"
+        "typed:unsigned-vec-min"
     ],
     "hexagon_V6_vaslh_128B": [
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
         "typed:vec-shl",
-        "typed:cast-int"
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vasrhubsat_128B": [
         "typed:signed-vec-rounding_halving_add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
         "typed:vec-bwnot",
-        "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:slice_vectors"
     ],
     "hexagon_V6_vavgwrnd_128B": [
         "typed:vec-sub",
@@ -499,8 +500,10 @@
         "typed:vec-add"
     ],
     "hexagon_V6_vaddubh_128B": [
-        "typed:cast-uint",
-        "typed:cast-int",
+        "typed:cast-uint-extend",
+        "typed:cast-int-extend",
+        "typed:cast-uint-truncate",
+        "typed:cast-int-truncate",
         "typed:vec-add"
     ],
     "hexagon_V6_vaddhsat_128B": [
@@ -509,26 +512,28 @@
         "typed:vec-add"
     ],
     "hexagon_V6_vsubuhw_128B": [
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-extend",
         "typed:vec-sub",
-        "typed:cast-int",
+        "typed:cast-int-extend",
         "typed:signed-vec-mul"
     ],
     "hexagon_V6_vunpackh_128B": [
-        "typed:cast-uint",
-        "typed:cast-int"
+        "typed:cast-uint-extend",
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vsb_128B": [
-        "typed:cast-uint",
-        "typed:cast-int"
+        "typed:cast-uint-extend",
+        "typed:cast-int-extend"
     ],
     "hexagon_V6_vsathub_128B": [
         "typed:signed-vec-rounding_halving_add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint",
+        "typed:cast-uint-truncate",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:concat_vectors",
+        "typed:cast-int-truncate"
     ],
     "hexagon_V6_vaslw_128B": [
         "typed:vec-shl",
@@ -578,8 +583,8 @@
         "typed:vec-bwand",
         "typed:unsigned-vec-min",
         "typed:unsigned-vec-sat-add",
-        "typed:cast-uint",
-        "typed:cast-int",
+        "typed:cast-uint-extend",
+        "typed:cast-int-extend",
         "typed:vec-bwnot"
     ],
     "hexagon_V6_lvsplatb_128B": [
@@ -616,5 +621,12 @@
         "typed:xBroadcast",
         "typed:slice_vectors",
         "typed:concat_vectors"
+    ],
+    "hexagon_V6_vpackeh_128B":[
+        "typed:xBroadcast",
+        "typed:slice_vectors",
+        "typed:concat_vectors",
+        "typed:cast-uint-truncate",
+        "typed:cast-int-truncate"
     ]
 }

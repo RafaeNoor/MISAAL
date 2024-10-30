@@ -360,6 +360,9 @@ def split_swizzle_eq_class_by_size_behavior(dsl_list, output_dsl_name, output_pa
 
         orig_name = parent_dsl.name
 
+        if len(ctx_classes) == len(parent_dsl.contexts):
+            return parent_dsl
+
         dsl_inst_copy = copy.deepcopy(parent_dsl)
 
         ctx_0 = ctx_classes[0]
@@ -372,13 +375,15 @@ def split_swizzle_eq_class_by_size_behavior(dsl_list, output_dsl_name, output_pa
             ctx_copy.dsl_name = dsl_inst_copy.name +"_dsl"
             ctx_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
             dsl_inst_copy.contexts.append(ctx_copy)
-
-        # Updated semantic function def according to ctx_0 name
-        print("=====")
-        print("ORIG NAME", parent_dsl.name, "should become", ctx_0.name)
-        print("PRE",dsl_inst_copy.semantics[0])
-        dsl_inst_copy.semantics[0] = dsl_inst_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
-        print("POST",dsl_inst_copy.semantics[0])
+        if ctx_0.extensions != None and 'halide' not in ctx_0.extensions:
+            pass
+        else:
+            # Updated semantic function def according to ctx_0 name
+            print("=====")
+            print("ORIG NAME", parent_dsl.name, "should become", ctx_0.name)
+            print("PRE",dsl_inst_copy.semantics[0])
+            dsl_inst_copy.semantics[0] = dsl_inst_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
+            print("POST",dsl_inst_copy.semantics[0])
         return dsl_inst_copy
 
 

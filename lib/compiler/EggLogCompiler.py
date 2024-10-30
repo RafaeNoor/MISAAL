@@ -2,6 +2,7 @@ from compiler.Compiler import *
 from utils.DSLInstructionUtils import get_random_tempfile_name
 from utils.EggLogUtils import *
 import os
+import copy
 import subprocess as sb
 from utils.ReadDSL import read_string_to_dsl
 import time
@@ -18,6 +19,7 @@ class EggLogCompiler(CompilerBase):
         self.run_iterations = run_iterations
         self.compile_times = []
         self.measure_egglog_time = True
+        self.memo = {}
 
     def initialize_class_map(self):
         pass
@@ -89,8 +91,20 @@ class EggLogCompiler(CompilerBase):
         return final_expression_str
 
 
+    def has_compiled_expr(self, expr):
+        key = expr.emit_context_expr_string()
+        return key in self.memo
+
+    def get_compiled_expr(self,expr):
+        key = expr.emit_context_expr_string()
+        return copy.deepcopy(self.memo[key])
 
     def apply_rewrite(self, expr, compiler_functionality, reg_data_structures):
+
+        if self.has_compiled_expr(expr):
+            return get_compiled_expr(expr)
+
+        key = expr.emit_context_expr_string()
 
         statements = []
 
@@ -121,6 +135,8 @@ class EggLogCompiler(CompilerBase):
 
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
+
+        self.memo[key] = output_expression
 
         return output_expression
 

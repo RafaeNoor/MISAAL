@@ -86,9 +86,20 @@ class EqClassEqualDepthV3Synth(EqClassEqualDepthV3):
                 self.current_output_depth = output_depth
                 for input_inst in self.input_dsl_list:
                     relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(input_inst)
+                    relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(input_inst)
+                    relavent_output_subset = deduplicate_dsl_list(relavent_output_subset)
 
                     sample_ctx = input_inst.get_sample_context()
+
+                    print("Relavent set for ",input_inst.name)
+                    for idx, ros in enumerate(relavent_output_subset):
+                        print(idx, ".", ros.name)
+
+                    print("Relavent Swizzles set for ",input_inst.name)
+                    for idx, ros in enumerate(relavent_swizzle_subset):
+                        print(idx, ".", ros.name)
+
 
 
                     if sample_ctx.out_vectsize == None:

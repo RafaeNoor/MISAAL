@@ -95,6 +95,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
             input_sizes_visited.append(reg_sizes)
 
+            print("Input sizes to test", reg_sizes)
 
             if valid_src_conc is None or valid_dst_conc is None:
                 print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
@@ -178,6 +179,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
             for output_depth in range(output_start, max_out):
                 self.current_output_depth = output_depth
                 for dsl_inst in self.input_dsl_list:
+
                     relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(dsl_inst)
                     relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
@@ -223,6 +225,9 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
                         if not self.expr_contains(src_expr, dsl_inst.name):
+                            continue
+
+                        if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 4:
                             continue
 
 
@@ -274,6 +279,12 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                                 # Equality check
                                 if self.canonicalizer.isCanonical(target_expr, src_expr):
+                                    continue
+
+                                # TEMP:
+                                #if not isinstance(target_expr,Reg) and  not self.expr_contains(target_expr, dsl_inst.name):
+                                #    continue
+                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 4:
                                     continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)

@@ -96,7 +96,14 @@ class HydrideCompiler(EggLogCompiler):
             print(function_name)
             print(input_expr_str)
             input_expr = read_string_to_dsl(input_expr_str, self.src_dsl_list)
-            output_expr = self.compile_expr(input_expr)
+            key = input_expr.emit_context_expr_string()
+
+            if self.has_compiled_expr(input_expr):
+                print("Already compiled expression!")
+                output_expr = self.get_compiled_expr(input_expr)
+            else:
+                output_expr = self.compile_expr(input_expr)
+
             output_type_def = self.get_rosette_expression_str(input_expr ,output_expr, function_name)
             print(output_type_def)
 
