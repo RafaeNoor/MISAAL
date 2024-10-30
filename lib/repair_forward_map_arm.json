@@ -147,7 +147,7 @@
         "typed:slice_vectors",
         "typed:vec-saturate",
         "typed:cast-int-extend",
-        "typed:cast-int-extend-truncate"
+        "typed:cast-int-truncate"
     ],
     "vmul_u32": [
         "typed:signed-vector_reduce_add",
