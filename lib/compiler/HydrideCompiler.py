@@ -20,7 +20,7 @@ class HydrideCompiler(EggLogCompiler):
         self.intrinsics_file = intrinsics_file
         self.hydride_root_path = hydride_root_path
         self.input_tests = tests
-        self.pool_size = 4
+        self.pool_size = 8
         self.measure_egglog_time = False
 
 
@@ -90,9 +90,35 @@ class HydrideCompiler(EggLogCompiler):
         #assert len(self.input_tests) != 0, "Expected Input tests"
         assert not self.output_file_path is None, "Expected Output file"
 
-        results = [0] * len(self.input_tests)
+
+        # First preprocess all unique expressions in parallel to
+        # overlap compilation of as many expressions as possible,
+        # then compile expressions sequentially by memoizing
 
         PARALLEL = True
+
+        start_time = time.time()
+        unique_expressions = list(set([expr for (name, expr) in self.input_tests]))
+        print(len(unique_expressions), "unique expressions to compile")
+
+        def process_unique(i):
+            print("PROCESS UNIQUE", i)
+            input_expr_str = unique_expressions[i]
+            print(input_expr_str)
+            input_expr = read_string_to_dsl(input_expr_str, self.src_dsl_list)
+            key = input_expr.emit_context_expr_string()
+            output_expr = self.compile_expr(input_expr)
+
+        if PARALLEL:
+            pool = concurrent.futures.ThreadPoolExecutor(max_workers=self.pool_size)
+            for i in range(len(unique_expressions)):
+                pool.submit(process_unique, i)
+            pool.shutdown(wait=True)
+            print("Completed compiling pool...")
+        else:
+            for i in range(len(unique_expressions)):
+                process_unique(i)
+
 
         def process_test(i):
             print("PROCESS TEST", i)
@@ -114,20 +140,11 @@ class HydrideCompiler(EggLogCompiler):
             results[i] = output_type_def
 
 
-        start_time = time.time()
 
-        if PARALLEL:
+        results = [0] * len(self.input_tests)
 
-            pool = concurrent.futures.ThreadPoolExecutor(max_workers=self.pool_size)
-            for i in range(len(self.input_tests)):
-                pool.submit(process_test, i)
-
-
-            pool.shutdown(wait=True)
-            print("Completed compiling pool...")
-        else:
-            for i in range(len(self.input_tests)):
-                process_test(i)
+        for i in range(len(self.input_tests)):
+            process_test(i)
 
 
 
