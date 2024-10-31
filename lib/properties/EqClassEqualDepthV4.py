@@ -180,6 +180,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                 self.current_output_depth = output_depth
                 for dsl_inst in self.input_dsl_list:
 
+
                     relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(dsl_inst)
                     relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
@@ -198,14 +199,17 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
                     if sample_ctx.out_vectsize == None:
+                        print("Skipping as samle context has no outvect size")
                         continue
 
                     src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
 
                     if src_ctx.out_vectsize == None:
+                        print("Skipping as src context has no outvect size")
                         continue
 
                     if len(relavent_output_subset) == 0:
+                        print("Output set empty")
                         continue
 
                     src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize)
@@ -227,8 +231,11 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         if not self.expr_contains(src_expr, dsl_inst.name):
                             continue
 
+
                         if self.count_contexts(src_expr, dsl_inst.name) != 1:
                             continue
+
+
 
 
 

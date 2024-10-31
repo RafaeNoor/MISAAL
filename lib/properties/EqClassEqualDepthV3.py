@@ -106,7 +106,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
             if substr is None:
                 return 1  + child_results
             else:
-                if substr in expr.name:
+                if substr in expr.name or substr in expr.dsl_name:
                     return 1 + child_results
             return child_results
         return 0

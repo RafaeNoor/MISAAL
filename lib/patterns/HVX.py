@@ -8,6 +8,7 @@ from common.DSLParser import parse_dict
 from utils.ReadDSL import read_string_to_dsl
 import os
 import json
+import pickle
 
 from patterns.PatternUtils import create_patterns, deduplicate_patterns
 from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
@@ -30,44 +31,56 @@ props = [
     #hvx_EqClassEqualDepthV4
 ]
 
-for tf in test_files:
-    with open(tf, "r") as ReadFile:
-        props.append(json.load(ReadFile))
-
-parsed_patterns = create_patterns(props, combined_dsl_list)
 
 
-pattern_str_from = """
-(typed:vec-add
-(reg (bv 0 4))
-(reg (bv 1 4))
-32
-2048
-)
-"""
+pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
+
+HVX_patterns = []
+
+if os.path.exists(pickle_file_name):
+    print("Found existing pattern pickle file", pickle_file_name)
+    with open(pickle_file_name, "rb") as handle:
+        HVX_patterns = pickle.load(handle)
+    print("Read {} patterns".format(len(HVX_patterns)))
+else:
+    for tf in test_files:
+        with open(tf, "r") as ReadFile:
+            props.append(json.load(ReadFile))
+
+    parsed_patterns = create_patterns(props, combined_dsl_list)
 
 
-pattern_str_to = """
-(hexagon_V6_vaddhsat_128B_dsl
-(reg (bv 0 4))
-(reg (bv 1 4))
-2048
-2048
-0
-2048
-32
--1
-0
-)
-
-"""
+    pattern_str_from = """
+    (typed:vec-add
+    (reg (bv 0 4))
+    (reg (bv 1 4))
+    32
+    2048
+    )
+    """
 
 
+    pattern_str_to = """
+    (hexagon_V6_vaddhsat_128B_dsl
+    (reg (bv 0 4))
+    (reg (bv 1 4))
+    2048
+    2048
+    0
+    2048
+    32
+    -1
+    0
+    )
 
-pattern = parse_pattern_from_string(pattern_str_from, pattern_str_to, halide_dsl_list, hvx_dsl_list, src_language = "halide", target_language = "hvx")
-HVX_patterns = [pattern] + parsed_patterns
+    """
+    pattern = parse_pattern_from_string(pattern_str_from, pattern_str_to, halide_dsl_list, hvx_dsl_list, src_language = "halide", target_language = "hvx")
+    HVX_patterns = [pattern] + parsed_patterns
 
-print("Total Patterns Pre Deduplication:", len(HVX_patterns))
-HVX_patterns = deduplicate_patterns(HVX_patterns)
+    print("Total Patterns Pre Deduplication:", len(HVX_patterns))
+    HVX_patterns = deduplicate_patterns(HVX_patterns)
 
-print("Total Patterns Post Deduplication:", len(HVX_patterns))
+    print("Total Patterns Post Deduplication:", len(HVX_patterns))
+
+    with open(pickle_file_name, "wb") as handle:
+        pickle.dump(HVX_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)

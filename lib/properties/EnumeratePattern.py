@@ -32,17 +32,19 @@ class EnumeratePattern(Property):
                 dst_expr = read_string_to_dsl(dst_pattern_str, self.dsl_list)
 
 
-
-
-
-
-
-                if is_expression_constant(src_expr, self.dsl_list) or is_expression_constant(dst_expr, self.dsl_list):
-                    print("Constant expression encountered!")
+                try:
+                    if is_expression_constant(src_expr, self.dsl_list) or is_expression_constant(dst_expr, self.dsl_list):
+                        print("Constant expression encountered!")
+                        continue
+                except:
+                    print("Exception when checking constant")
                     continue
 
 
                 src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
+
+                if isinstance(dst_expr, Reg):
+                    continue
 
                 dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
@@ -51,12 +53,15 @@ class EnumeratePattern(Property):
                 for src_ctx in src_eq_class.contexts:
                     size = src_ctx.out_vectsize
                     for dst_ctx in dst_eq_class.contexts:
+                        try:
+                            if src_ctx.out_vectsize != dst_ctx.out_vectsize:
+                                continue
 
-                        if src_ctx.out_vectsize != dst_ctx.out_vectsize:
+                            if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
+                                yield (src_expr, dst_expr, size, src_ctx, dst_ctx)
+                        except:
+                            print("Encountered exception")
                             continue
-
-                        if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
-                            yield (src_expr, dst_expr, size, src_ctx, dst_ctx)
 
 
 
@@ -71,47 +76,53 @@ class EnumeratePattern(Property):
 
         print("Testing for", src_ctx.name, dst_ctx.name)
 
-
-        src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
-        dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
-
-        valid_src_conc_gen = get_valid_concretization_generator(src_expr, output_size, self.dsl_list)
-
-        for valid_src_conc in valid_src_conc_gen:
-            if valid_src_conc.name == src_ctx.name:
-                print("Found matching src context!")
-                src_expr = valid_src_conc
-                break
-
-        valid_dst_conc_gen = get_valid_concretization_generator(dst_expr, output_size, self.dsl_list)
-
-        for valid_dst_conc in valid_dst_conc_gen:
-            if valid_dst_conc.name == dst_ctx.name:
-                print("Found matching dst context!")
-                dst_expr = valid_dst_conc
-                break
+        try:
 
 
-        # Get valid concretization of src expression with required context in root and
-        # then create filtered list
+            src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
+            dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
-        filtered_list = [e for e in self.dsl_list if e.name not in [src_eq_class.name, dst_eq_class.name]]
-        src_eq_class_copy = copy.deepcopy(src_eq_class)
-        src_eq_class_copy.contexts = [src_ctx]
-        filtered_list += [src_eq_class_copy]
+            valid_src_conc_gen = get_valid_concretization_generator(src_expr, output_size, self.dsl_list)
 
-        dst_eq_class_copy = copy.deepcopy(dst_eq_class)
-        dst_eq_class_copy.contexts = [dst_ctx]
-        filtered_list += [dst_eq_class_copy]
+            for valid_src_conc in valid_src_conc_gen:
+                if valid_src_conc.name == src_ctx.name:
+                    print("Found matching src context!")
+                    src_expr = valid_src_conc
+                    break
+
+            valid_dst_conc_gen = get_valid_concretization_generator(dst_expr, output_size, self.dsl_list)
+
+            for valid_dst_conc in valid_dst_conc_gen:
+                if valid_dst_conc.name == dst_ctx.name:
+                    print("Found matching dst context!")
+                    dst_expr = valid_dst_conc
+                    break
 
 
-        success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = src_ctx, required_dst_ctx = dst_ctx)
-
-        if success:
-            self.context_map[key] = (src_expr_str, dst_expr_str)
+            # Get valid concretization of src expression with required context in root and
+            # then create filtered list
 
 
-        return success
+            filtered_list = [e for e in self.dsl_list if e.name not in [src_eq_class.name, dst_eq_class.name]]
+            src_eq_class_copy = copy.deepcopy(src_eq_class)
+            src_eq_class_copy.contexts = [src_ctx]
+            filtered_list += [src_eq_class_copy]
+
+            dst_eq_class_copy = copy.deepcopy(dst_eq_class)
+            dst_eq_class_copy.contexts = [dst_ctx]
+            filtered_list += [dst_eq_class_copy]
+
+
+            success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = src_ctx, required_dst_ctx = dst_ctx)
+
+            if success:
+                self.context_map[key] = (src_expr_str, dst_expr_str)
+
+
+            return success
+        except:
+            print("Caught exception")
+            return False
 
     def serialize_candidate(self, candidate):
         key = "+".join([candidate[0].emit_context_expr_string(), candidate[1].emit_context_expr_string(), str(candidate[2]), candidate[3].name, candidate[4].name])

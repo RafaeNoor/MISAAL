@@ -63,7 +63,8 @@ from sema.x86_swizzles import x86_swizzles\n\
 from sema.arm_swizzles import arm_swizzles\n\
 from sema.ARMSema import arm_semantics\n\
 from sema.repairs_sema import repair_semantics\n\
-from common.DSLParser import parse_dict\n";
+from common.DSLParser import parse_dict\n\
+import sys\n";
         return imports;
 
     }
@@ -212,9 +213,16 @@ from common.DSLParser import parse_dict\n";
         std::string common_imports  = get_compiler_python_import();
         statements.push_back(common_imports);
 
+        std::string pattern_alias_input = "misaal_input_patterns";
+        std::string pattern_imports_input = "from patterns.Halide import Halide_patterns as "+pattern_alias_input;
+        statements.push_back(pattern_imports_input);
+
+        std::string pattern_alias_output = "misaal_output_patterns";
+        std::string pattern_imports_output = get_patterns_import(pattern_alias_output);
+        statements.push_back(pattern_imports_output);
         std::string pattern_alias = "misaal_patterns";
-        std::string pattern_imports = get_patterns_import(pattern_alias);
-        statements.push_back(pattern_imports);
+
+        statements.push_back(pattern_alias + " = " + pattern_alias_input + " + " + pattern_alias_output );
 
         // Parse Input and Output DSL Lists
 
@@ -244,6 +252,9 @@ from common.DSLParser import parse_dict\n";
         std::string tests_desc = prepare_rewrite_specs(test_name);
         statements.push_back(tests_desc);
 
+        // Exit if no tests to compile
+        std::string early_exit = "if len("+test_name+") == 0:\n\tsys.exit(0)";
+        statements.push_back(early_exit);
         std::string compiler_name = "misaal_compiler";
 
         std::string compiler_def = define_misaal_compiler(compiler_name, test_name,  input_dsl_name, output_dsl_name, pattern_alias, output_path);
