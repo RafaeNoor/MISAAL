@@ -83,6 +83,7 @@ def can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_lis
 def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , output_size, required_src_ctx = None, required_dst_ctx = None):
 
     if  not can_pattern_be_abstracted_for_output_size(src_ctx, dst_ctx, combined_dsl_list,  output_size):
+        print("Pattern can't be abstracted for given size")
         return False, "", ""
 
 
@@ -93,7 +94,9 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
         for valid_src_conc in valid_src_conc_gen:
             if valid_src_conc.name == required_src_ctx.name:
                 break
-            assert valid_src_conc.name == required_src_ctx.name
+        if valid_src_conc.name != required_src_ctx.name:
+            print("No Valid src expr")
+            return False, "", ""
 
 
     valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
@@ -103,7 +106,9 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
         for valid_dst_conc in valid_dst_conc_gen:
             if valid_dst_conc.name == required_dst_ctx.name:
                 break
-            assert valid_dst_conc.name == required_dst_ctx.name
+        if valid_dst_conc.name != required_dst_ctx.name:
+            print("No Valid dst expr")
+            return False, "", ""
 
 
 
