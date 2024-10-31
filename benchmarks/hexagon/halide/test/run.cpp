@@ -10,6 +10,12 @@
 
 #if tensor_add
   #include "tensor_add_hvx128.h"
+#elif max_pool
+  #include "max_pool_hvx128.h"
+#elif median3x3
+  #include "median3x3_hvx128.h"
+#elif dilate3x3
+  #include "dilate3x3_hvx128.h"
 #endif
 
 #define LOG2VLEN 7
@@ -127,6 +133,105 @@ int main(int argc, char **argv) {
   free(simple_output);
   #endif
 
+#if max_pool
+      halide_dimension_t c_dim{ 0, 1024, 1 };
+      halide_dimension_t x_dim{ 0, width / 32, 128 };
+      halide_dimension_t y_dim{ 0, height / 32, 128 * (width / 32) };
+      halide_dimension_t b_dim{ 0, 1, 128 * (width / 32) * (height / 32) };
+      halide_dimension_t shape[4] = { c_dim, x_dim, y_dim, b_dim };
+
+    unsigned char *input  = (unsigned char *)memalign(1 << LOG2VLEN, width*height*sizeof(unsigned char));
+    unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*sizeof(unsigned char));
+
+
+      Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+      Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = max_pool_hvx128(input_buf, 2, 2, 8, 8, 5, 225, output_buf);
+          if (error != 0) {
+              printf("max_pool_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - max_pool(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+      free(input);
+      free(output);
+#endif
+
+#if median3x3
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    unsigned char *input  = (unsigned char *)memalign(1 << LOG2VLEN, width*height*sizeof(unsigned char));
+    unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*sizeof(unsigned char));
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = median3x3_hvx128(input_buf, output_buf);
+        if (error != 0) {
+            printf("median3x3_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - median3x3(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / width / height);
+
+      free(input);
+      free(output);
+#endif
+
+
+
+  #if dilate3x3
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    unsigned char *input  = (unsigned char *)memalign(1 << LOG2VLEN, width*height*sizeof(unsigned char));
+    unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*sizeof(unsigned char));
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = dilate3x3_hvx128(input_buf, output_buf);
+        if (error != 0) {
+            printf("dilate3x3_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - dilate3x3(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+      free(input);
+      free(output);
+  #endif
 
 
 
