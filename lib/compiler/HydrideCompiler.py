@@ -83,12 +83,16 @@ class HydrideCompiler(EggLogCompiler):
 
 
     def compile_hydride(self):
-        assert len(self.input_tests) != 0, "Expected Input tests"
+        if len(self.input_tests) == 0:
+            print("No expressions for MISAAL to compile")
+            return
+
+        #assert len(self.input_tests) != 0, "Expected Input tests"
         assert not self.output_file_path is None, "Expected Output file"
 
         results = [0] * len(self.input_tests)
 
-        PARALLEL = False
+        PARALLEL = True
 
         def process_test(i):
             print("PROCESS TEST", i)

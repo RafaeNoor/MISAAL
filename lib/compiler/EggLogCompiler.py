@@ -14,6 +14,8 @@ class EggLogCompiler(CompilerBase):
     def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
         self.egg_pkg_path = egg_pkg_path
+        self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
+        self.egglog_bin = os.path.join(self.egg_pkg_path, "target","debug","egglog")
         self.input_cost = 100
         self.output_cost = 1
         self.run_iterations = run_iterations
@@ -48,7 +50,7 @@ class EggLogCompiler(CompilerBase):
         return [emit_egg_define_reg(reg) for reg in expr_regs]
 
     def execute_cmd(self, cmd, cur_dir = None):
-        output_stream_name= "egg.out.txt"
+        output_stream_name= "egg.out.txt"+get_random_tempfile_name()
 
 
         with open(output_stream_name, "w+") as OutStream:
@@ -70,18 +72,15 @@ class EggLogCompiler(CompilerBase):
 
 
     def execute_egglog_file(self, fname):
-        # Work around until I figure out how to execute outside of pkg directory
-        example_path = os.path.join(self.egg_pkg_path, "example")
 
-        cp_to_example_cmd = ["cp", fname, example_path]
-        self.execute_cmd(cp_to_example_cmd)
 
-        target_egg_file = os.path.join(example_path, fname)
-        exec_cmd = ["cargo", "run" , target_egg_file]
+
+
+        exec_cmd = [self.egglog_bin ,fname]
 
         start_time = time.time()
 
-        egg_log_stream = self.execute_cmd(exec_cmd, cur_dir = self.egg_pkg_path)
+        egg_log_stream = self.execute_cmd(exec_cmd)
 
         elapsed = time.time() - start_time
         if self.measure_egglog_time:
