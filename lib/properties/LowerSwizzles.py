@@ -29,7 +29,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
 
 
-        super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth = start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list)
+        super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = 1, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth = start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list)
         #super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map)
         self.name = "LowerSwizzles"
 
@@ -171,13 +171,16 @@ class LowerSwizzles(EqClassEqualDepthV4):
                     relavent_output_subset = deduplicate_dsl_list(relavent_output_subset)
 
                     relavent_output_subset.reverse()
+
                     print("Relavent set for ",dsl_inst.name)
                     for idx, ros in enumerate(relavent_output_subset):
                         print(idx, ".", ros.name)
+                        pass
 
                     print("Relavent Swizzles set for ",dsl_inst.name)
                     for idx, ros in enumerate(relavent_swizzle_subset):
                         print(idx, ".", ros.name)
+                        pass
 
 
 
@@ -231,10 +234,11 @@ class LowerSwizzles(EqClassEqualDepthV4):
                                 continue
 
 
-                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_expr.out_vectsize, max_leaves = 5)
+
+
+                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_expr.out_vectsize, max_leaves = 4)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
-
                             if self.should_garbage_collect(target_count):
                                 self.collect_garbage()
 
@@ -247,6 +251,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
                             if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
                                 canonical_target_expr = self.canonicalizer.canonicalize(target_expr)
+
 
                                 if self.use_canon_map:
                                     canon_map_key = canonical_target_expr.emit_context_expr_string()
@@ -261,18 +266,15 @@ class LowerSwizzles(EqClassEqualDepthV4):
                                     if not self.canonicalizer.isCanonical(target_expr, canonical_target_expr):
                                         self.canon_skipped_dst += 1
                                         continue
-
                                 # Equality check
                                 if self.canonicalizer.isCanonical(target_expr, src_expr):
                                     continue
 
-                                # TEMP:
-                                #if not isinstance(target_expr,Reg) and  not self.expr_contains(target_expr, dsl_inst.name):
-                                #    continue
-                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 5:
+                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 4:
                                     continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
+
                                 candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_expr.out_vectsize, dsl_inst)
 
 

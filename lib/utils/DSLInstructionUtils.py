@@ -1292,6 +1292,7 @@ def parse_dict_with_bounded(sema, keep_duplicate = False):
     for dsl_inst in dsl_list:
         if dsl_inst.has_bounded_behavior():
             updated_inst = convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst)
+
             final_list.append(updated_inst)
         else:
             final_list.append(dsl_inst)

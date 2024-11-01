@@ -6,6 +6,7 @@ from sema.halide_decomposed import halide_decomposed as halide_semantics
 from sema.hex_swizzles import hvx_swizzles
 from common.DSLParser import parse_dict
 from utils.ReadDSL import read_string_to_dsl
+from utils.DSLInstructionUtils import parse_dict_with_bounded
 import os
 import json
 import pickle
@@ -14,21 +15,21 @@ from patterns.PatternUtils import create_patterns, deduplicate_patterns
 from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
 
 halide_dsl_list = parse_dict(halide_semantics)
-hvx_dsl_list = parse_dict(hvx_semantics)
+hvx_dsl_list = parse_dict_with_bounded(hvx_semantics)
 hvx_swizzles_dsl_list = parse_dict(hvx_swizzles)
 
 
 combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
 
 test_files = [
-    #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
+    #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
     "/home/arnoor2/MISAAL/test/property/eq_class_enumeration/hvx/tempEnumxHVX_hvx_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py"
 ]
 
 
 props = [
-    #hvx_EqClassEqualDepthV4
 ]
 
 

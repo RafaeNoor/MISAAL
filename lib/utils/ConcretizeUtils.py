@@ -160,10 +160,13 @@ def get_possible_input_sizes_of_eq_class(ctx_, dsl_list):
         for ctx in dsl_inst.contexts:
             if ctx.name == ctx_.name:
                 ret_size = True
+                break
 
-            for arg in ctx.context_args:
-                if isinstance(arg, BitVector):
-                    sizes.append(arg.size)
+        if ret_size:
+            for ctx in dsl_inst.contexts:
+                for arg in ctx.context_args:
+                    if isinstance(arg, BitVector):
+                        sizes.append(arg.size)
 
         if ret_size:
             return set(sizes)
