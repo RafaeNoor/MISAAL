@@ -628,5 +628,21 @@
         "typed:concat_vectors",
         "typed:cast-uint-truncate",
         "typed:cast-int-truncate"
+    ],
+
+    "hexagon_V6_vasrhv_128B": [
+        "typed:vec-shl",
+        "typed:signed-vec-shr",
+        "typed:unsigned-vec-shr"
+    ],
+   "hexagon_V6_vlsrwv_128B" : [
+        "typed:vec-shl",
+        "typed:signed-vec-shr",
+        "typed:unsigned-vec-shr"
+    ],
+    "hexagon_V6_vaslhv_128B": [
+        "typed:vec-shl",
+        "typed:signed-vec-shr",
+        "typed:unsigned-vec-shr"
     ]
 }
