@@ -1,5 +1,5 @@
 from compiler.Compiler import *
-from utils.DSLInstructionUtils import get_random_tempfile_name
+from utils.DSLInstructionUtils import *
 from utils.EggLogUtils import *
 import os
 import copy
@@ -11,17 +11,52 @@ import time
 
 class EggLogCompiler(CompilerBase):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None):
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, prune_patterns = False):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
         self.egglog_bin = os.path.join(self.egg_pkg_path, "target","debug","egglog")
         self.input_cost = 100
+        self.prune_patterns = prune_patterns
         self.output_cost = 1
         self.run_iterations = run_iterations
         self.compile_times = []
         self.measure_egglog_time = True
         self.memo = {}
+
+
+
+    def get_reachable_patterns_only(self, expr):
+
+
+
+        reachable_patterns = []
+        reachable_dsl_names = get_ctx_expr_dsl_names(expr, self.src_dsl_list + self.target_dsl_list)
+        while True:
+            num_reachable = len(reachable_patterns)
+
+            for i in range(len(self.patterns)):
+                if i in reachable_patterns:
+                    continue
+
+                pi = self.patterns[i]
+
+                if pi.does_pattern_contain_eq_class(reachable_dsl_names):
+                    reachable_patterns.append(i)
+                    reachable_dsl_names += pi.get_pattern_eq_classes()
+                    reachable_dsl_names = list(set(reachable_dsl_names))
+
+            num_reachable_end = len(reachable_patterns)
+
+            print("Reachable dsl_names:", reachable_dsl_names)
+            if num_reachable_end == num_reachable:
+                break
+
+        return [self.patterns[i] for i in range(len(self.patterns))  if i in reachable_patterns ]
+
+
+
+
 
     def initialize_class_map(self):
         pass
@@ -33,11 +68,18 @@ class EggLogCompiler(CompilerBase):
         pass
 
 
-    def emit_pattern_matching_based_compiler(self):
+    def emit_pattern_matching_based_compiler(self, expr):
         egglog_decls = emit_egg_datatypes_two_dsl(self.src_dsl_list, self.target_dsl_list, input_cost = self.input_cost, output_cost = self.output_cost)
 
+        test_patterns = self.patterns
+        if self.prune_patterns:
+            reachable_patterns = self.get_reachable_patterns_only(expr)
+
+            print("Pruned patterns for expression ... # Patterns reduced from ", len(test_patterns), "to", len(reachable_patterns))
+            test_patterns = reachable_patterns
+
         egglog_patterns = []
-        for pattern in self.patterns:
+        for pattern in test_patterns:
             rewrite = emit_rewrite_expr(pattern.src_expr, pattern.target_expr, bidirectional = pattern.bidirectional)
             egglog_patterns.append(rewrite)
 

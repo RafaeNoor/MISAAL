@@ -5,6 +5,7 @@ from common.Types import *
 from  common.Instructions import Context
 from utils.ReadDSL import read_string_to_dsl
 from utils.EggLogUtils import is_birewrite_valid
+from utils.DSLInstructionUtils import *
 import subprocess
 import os
 import tempfile
@@ -23,6 +24,25 @@ class Pattern:
         self.src_language = src_language
         self.target_language = target_language
         self.bidirectional = bidirectional
+
+    def get_pattern_eq_classes(self):
+        dsl_list = self.src_dsl_list + self.target_dsl_list
+        expr_names = get_ctx_expr_dsl_names(self.src_expr, dsl_list)
+        expr_names += get_ctx_expr_dsl_names(self.target_expr, dsl_list)
+        return list(set(expr_names))
+
+    def does_pattern_contain_eq_class(self, dsl_list_names):
+        dsl_list = self.src_dsl_list + self.target_dsl_list
+        expr_names = get_ctx_expr_dsl_names(self.src_expr, dsl_list)
+        expr_names += get_ctx_expr_dsl_names(self.target_expr, dsl_list)
+        expr_names =  list(set(expr_names))
+
+        for dsl_list_name in dsl_list_names:
+            if dsl_list_name in expr_names:
+                return True
+        return False
+
+
 
     def set_name(name):
         self.name = name
