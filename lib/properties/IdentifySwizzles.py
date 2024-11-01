@@ -6,7 +6,7 @@ from  common.Types import *
 class IdentifySwizzles(Property):
 
 
-    def __init__(self, dsl_list = [], synth_desc = None,  profile_prefix = "_prof", num_input_sources = [2, 4]):
+    def __init__(self, dsl_list = [], synth_desc = None,  profile_prefix = "_prof", num_input_sources = [1, 2, 4]):
         super().__init__(name = "IdentifySwizzles" ,dsl_list = dsl_list, synth_desc = synth_desc)
         self.profile_prefix  = profile_prefix
         self.num_input_sources = num_input_sources
@@ -37,6 +37,7 @@ class IdentifySwizzles(Property):
         for dsl_inst in self.dsl_list:
             if "mask" in dsl_inst.name:
                 continue
+
             if dsl_inst.has_bounded_behavior():
                 dsl_inst = convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst)
             #if dsl_inst.name not in ["vdotq_s32"]:
@@ -522,12 +523,16 @@ class IdentifySwizzles(Property):
 
             result_datum = {}
 
+            alt_result_datum = {}
+
+
 
             result_datum = {"swizzle_args": shuffle_vector_result, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1, "output_prec": output_prec}
 
             if combine_slices:
-                result_datum['result_size'] = len(shuffle_vector_result) * input_prec
-                result_datum['prec'] = input_prec
+                alt_result_datum = copy.deepcopy(result_datum)
+                alt_result_datum['result_size'] = len(shuffle_vector_result) * input_prec
+                alt_result_datum['prec'] = input_prec
 
 
 
@@ -537,6 +542,239 @@ class IdentifySwizzles(Property):
 
             if result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(result_datum) :
                 inter_shuffle_contexts.append(result_datum)
+
+            if combine_slices and alt_result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(alt_result_datum) :
+                inter_shuffle_contexts.append(alt_result_datum)
+
+            def insert_if_legal(datum):
+                if datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(datum):
+                    inter_shuffle_contexts.append(datum)
+
+            for result_size in self.synth_desc.target_vector_sizes:
+                for prec in self.elem_bitwidths:
+                    operand_datum_copy = copy.deepcopy(operand_datum)
+                    result_datum_copy = copy.deepcopy(result_datum)
+                    alt_result_datum_copy = copy.deepcopy(alt_result_datum)
+
+                    operand_datum_copy['result_size'] = result_size
+                    operand_datum_copy['prec'] = prec
+                    operand_datum_copy['output_prec'] = prec
+                    operand_datum_copy['operand_size'] = result_size
+                    insert_if_legal(operand_datum_copy)
+
+                    result_datum_copy['result_size'] = result_size
+                    result_datum_copy['prec'] = prec
+                    result_datum_copy['output_prec'] = prec
+                    result_datum_copy['operand_size'] = result_size
+                    insert_if_legal(result_datum_copy)
+
+                    if combine_slices:
+                        alt_result_datum_copy['result_size'] = result_size
+                        alt_result_datum_copy['prec'] = prec
+                        alt_result_datum_copy['output_prec'] = prec
+                        alt_result_datum_copy['operand_size'] = result_size
+                        insert_if_legal(alt_result_datum_copy)
+
+
+
+
+
+
+            """
+            # Adding doubling of precision (and register bitwidth)
+            DOUBLE_KEYS = ['result_size', 'prec', 'operand_size', 'output_prec']
+
+            if input_prec * 2 in self.elem_bitwidths:
+                doubled_operand_datum = copy.deepcopy(operand_datum)
+                for key in DOUBLE_KEYS:
+                    doubled_operand_datum[key] = operand_datum[key] * 2
+
+                if doubled_operand_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(doubled_operand_datum):
+                    inter_shuffle_contexts.append(doubled_operand_datum)
+
+
+            if output_prec * 2 in self.elem_bitwidths:
+                doubled_result_datum = copy.deepcopy(result_datum)
+                for key in DOUBLE_KEYS:
+                    doubled_result_datum[key] = result_datum[key] * 2
+
+                if doubled_result_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(doubled_result_datum):
+                    inter_shuffle_contexts.append(doubled_result_datum)
+            """
+
+
+
+        return inter_shuffle_contexts
+
+    def generate_inter_iteration_access_swizzle_orig(self, var_to_size_map, streams, max_distinct_inputs, target_vector_sizes, input_prec, output_prec, output_size, combine_slices = False ):
+        """SIMD operations which access non-contigous slices across iterations. For example:
+
+        op [a0, a1, a2, a3] = [fn[a0], fn[a2], fn[a1], fn[a3]]
+
+        In such cases we can derive two different swizzles:
+        1. Reorder the input such that the output is produced in a contigous manner:
+            swizzle_operand([a0, a1, a2, a3]) => [a0, a2 , a1, a3]
+            op[ a0, a2, a1, a3 ]  =[fn[a0], fn[a1], fn[a2], fn[a3]]
+
+        2. Reorder the output such that operation is applied on elements
+            in a contigous manner
+
+            ;output index:    0        1       2       3           0       2       1       3
+            swizzle_output([fn[a0], fn[a2], fn[a1], fn[a3]]) => [fn[a0], fn[a1], fn[a2], fn[a3]]
+
+        We find such relations across operands and outputs. Currently, we limit ourselves
+        to those operands and outputs which contain the same number of elements (but the element-bitwidth
+        can be different, and in most of these cases is).
+        """
+
+        inter_shuffle_contexts = []
+
+
+        for test_key in list(streams.keys()):
+            a_streams = streams[test_key]
+            a_size = var_to_size_map[test_key]
+            base_vect_size = None
+
+            # For HVX and other targets, operands actually take mixed precision, so we should
+            # determine the specific prec being used for a given stream
+
+            input_prec = self.identify_stream_precision(a_streams)
+            print("Stream precision identified to be: ", input_prec, "for ", a_streams[0])
+
+
+            num_input_elems = a_size // input_prec
+            num_output_elems = output_size // output_prec
+
+            if num_input_elems != num_output_elems:
+                continue
+
+
+            base_vect_size = None
+            for target_size in target_vector_sizes:
+                if target_size >= a_size and target_size % a_size == 0:
+                    print("Using Target Size:", target_size)
+                    base_vect_size = target_size
+                    break
+
+
+            if base_vect_size == None:
+                print("Unable to split ", a_size ,"into", target_vector_sizes)
+                continue
+
+
+            # Each element of access pair is defined as:
+            # (input_idx, output_idx)
+            access_pair = []
+
+            range_map = {}
+            for idx, a_iter in enumerate(reversed(a_streams)):
+
+                # Only those instructions which access a single element for at-least one operand per iteration to calculate the outut are considered in this method. Multiple accesses for an operand within a single iteration are handled seperately.
+                if len(a_iter) != 1:
+                    break
+
+
+                input_slice = a_iter[0]
+
+
+                if input_slice in range_map:
+                    memo_entry = range_map[input_slice]
+                    memo_result = (memo_entry[0], idx)
+
+                    access_pair.append(memo_result)
+                    continue
+
+
+                hi = int(input_slice.split(" ")[0])
+                lo = int(input_slice.split(" ")[1])
+
+                input_idx = lo // input_prec
+
+                datum = (input_idx, idx)
+
+                range_map[input_slice] = datum
+
+                access_pair.append(datum)
+
+
+            # Check if regular access
+
+            regular_access = True
+            for input_idx, output_idx in access_pair:
+
+                if input_idx != output_idx:
+                    regular_access = False
+                    break
+            if regular_access:
+                # Check the other operand
+                continue
+
+
+            print("Found Inter-Iteration swizzle candidate")
+            print(access_pair)
+
+            # Swizzle operand for ordering
+            shuffle_vector_operands = sorted(access_pair, key = lambda x : x[1])
+
+
+            # Swizzle result according to operand ordering
+            shuffle_vector_result = sorted(access_pair, key = lambda x : x[0])
+
+            print("Access Pair Shuffled according to operands")
+            print(shuffle_vector_operands)
+
+
+            print("Access Pair Shuffled according to Result")
+            print(shuffle_vector_result)
+
+
+
+
+            shuffle_vector_operands = [(0, input_idx) for (input_idx, output_idx) in shuffle_vector_operands]
+
+            shuffle_vector_result = [(0, output_idx) for (input_idx, output_idx) in shuffle_vector_result]
+
+            operand_datum = {"swizzle_args": shuffle_vector_operands, "result_size": a_size, "operand_size": a_size, "prec": input_prec, "num_sources": 1, "output_prec": input_prec}
+
+
+
+
+
+
+            result_datum = {}
+
+            alt_result_datum = {}
+
+            alt_input_datum = {}
+
+
+            result_datum = {"swizzle_args": shuffle_vector_result, "result_size": output_size, "operand_size": output_size, "prec": output_prec, "num_sources": 1, "output_prec": output_prec}
+
+            if combine_slices:
+                alt_result_datum = copy.deepcopy(result_datum)
+                alt_result_datum['result_size'] = len(shuffle_vector_result) * input_prec
+                alt_result_datum['prec'] = input_prec
+
+                alt_input_datum = copy.deepcopy(result_datum)
+                alt_input_datum['result_size'] = len(shuffle_vector_result) * input_prec // 2
+                alt_input_datum['prec'] = input_prec // 2
+                alt_input_datum['output_prec'] = input_prec // 2
+
+
+
+
+            if operand_datum not in inter_shuffle_contexts and self.is_swizzle_datum_legal(operand_datum):
+                inter_shuffle_contexts.append(operand_datum)
+
+
+            if result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(result_datum) :
+                inter_shuffle_contexts.append(result_datum)
+
+            if combine_slices and alt_result_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(alt_result_datum) :
+                inter_shuffle_contexts.append(alt_result_datum)
+
+            if combine_slices and alt_input_datum not in inter_shuffle_contexts  and self.is_swizzle_datum_legal(alt_input_datum) :
+                inter_shuffle_contexts.append(alt_input_datum)
 
 
             # Adding doubling of precision (and register bitwidth)
@@ -737,6 +975,28 @@ class IdentifySwizzles(Property):
 
         if operand_size not in self.synth_desc.target_vector_sizes:
             return False
+
+        swizzle_mask = datum['swizzle_args']
+
+        if len(swizzle_mask) != datum['result_size'] // datum['output_prec']:
+            return False
+
+        # If reads outside of input
+        num_inputs = datum['num_sources']
+        num_input_elems = datum['operand_size'] // datum['prec']
+
+
+        for operand_index, total_index in swizzle_mask:
+            intra_operand_index = total_index - (operand_index * num_input_elems)
+            if intra_operand_index >= num_input_elems:
+                return False
+
+
+
+
+
+
+
 
         return True
 
