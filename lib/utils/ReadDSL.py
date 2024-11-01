@@ -195,6 +195,17 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         return const_bv
 
+    elif first_term == 'LIT':
+
+        lit_value = nested_expr[1]
+        lit_value = hex(int(lit_value))
+        lit_value = "#x" + lit_value[2:]
+        lit_size = nested_expr[2]
+
+        const_bv = ConstBitVector(lit_value, int(lit_size))
+
+        return const_bv
+
     elif first_term == 'int-imm':
 
         lit_value = nested_expr[1][1]
