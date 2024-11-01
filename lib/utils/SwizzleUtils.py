@@ -92,7 +92,9 @@ class Swizzle:
             operand = operands[operand_index]
 
             intra_operand_index = total_index - (operand_index * len(operand))
-
+            #print(shuffle_vector_args)
+            #print("Intra operand index:", intra_operand_index)
+            #print("Operand size:", len(operand))
             result.append(operand[intra_operand_index])
 
         return result

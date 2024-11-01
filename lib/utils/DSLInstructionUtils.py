@@ -15,6 +15,7 @@ import signal
 import psutil
 from Specification import Specification
 from utils.CodeSynthesizerDesc import create_synth_desc
+from common.DSLParser import parse_dict
 
 REMOVE_RKT_FILES = True
 
@@ -1282,4 +1283,32 @@ def is_expression_constant(expr, dsl_list):
 
 
 
+
+def parse_dict_with_bounded(sema, keep_duplicate = False):
+    dsl_list = parse_dict(sema, keep_duplicate = keep_duplicate)
+
+    final_list = []
+
+    for dsl_inst in dsl_list:
+        if dsl_inst.has_bounded_behavior():
+            updated_inst = convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst)
+            final_list.append(updated_inst)
+        else:
+            final_list.append(dsl_inst)
+    return final_list
+
+
+def create_context_expr_with_fresh_regs(ctx):
+    assert isinstance(ctx, Context)
+
+    arg_sizes = [arg.size for arg in ctx.context_args if isinstance(arg, BitVector)]
+    arg_idxs = [idx for idx, arg in enumerate(ctx.context_args) if isinstance(arg, BitVector)]
+    ctx_copy = copy.deepcopy(ctx)
+
+    for enum_idx, index in enumerate(arg_idxs):
+        arg_size = arg_sizes[enum_idx]
+        reg = Reg(str(enum_idx), 8, arg_size)
+        ctx_copy.context_args[index] = reg
+
+    return ctx_copy
 

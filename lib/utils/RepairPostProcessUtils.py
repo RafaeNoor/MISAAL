@@ -293,7 +293,7 @@ def create_repair_identity_map(dsl_list, include_self = True):
 
 
 def create_repair_swizzle_map(dsl_list, swizzle_list):
-    legal_bv_ops = ["extract", "concat", "sign-extend", "zero-extend", "bvssat", "bvusat"]
+    legal_bv_ops = ["extract", "concat", "sign-extend", "zero-extend", "bvssat", "bvusat", "bitvector->integer"]
     extract_concat_dsl_list = []
 
     for dsl_inst in dsl_list:

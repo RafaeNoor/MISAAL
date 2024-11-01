@@ -12,7 +12,7 @@
 
 
 
-hvx_swizzles = {
+semantcs = {
 
           "hvx_swizzle_49" : {
             "target_instructions" : {
