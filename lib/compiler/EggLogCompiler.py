@@ -25,9 +25,31 @@ class EggLogCompiler(CompilerBase):
         self.memo = {}
 
 
+    def remove_concat_slice_only_patterns(self):
+        # Remove all patterns which have just slices and concats only
+        pruned_patterns = []
+
+        for pattern in self.patterns:
+            ops = pattern.get_pattern_eq_classes()
+            test_ops = ['typed:concat_vectors', 'typed:slice_vectors']
+
+            if len(test_ops) != len(ops):
+                pruned_patterns.append(pattern)
+                continue
+
+
+            skip = all([op in ops for op in test_ops])
+
+            if not skip:
+                pruned_patterns.append(pattern)
+
+
+        self.patterns = pruned_patterns
+
+
 
     def get_reachable_patterns_only(self, expr):
-
+        self.remove_concat_slice_only_patterns()
 
 
         reachable_patterns = []
@@ -48,7 +70,6 @@ class EggLogCompiler(CompilerBase):
 
             num_reachable_end = len(reachable_patterns)
 
-            print("Reachable dsl_names:", reachable_dsl_names)
             if num_reachable_end == num_reachable:
                 break
 

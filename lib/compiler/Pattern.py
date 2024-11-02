@@ -72,11 +72,15 @@ class Pattern:
         srq_equal_src = get_expr_str(other_pattern.src_expr) == get_expr_str(self.src_expr)
         dst_equal_dst = get_expr_str(other_pattern.target_expr) == get_expr_str(self.target_expr)
 
-        src_equal_dst = get_expr_str(other_pattern.src_expr) == get_expr_str(self.target_expr)
-        dst_equal_src = get_expr_str(other_pattern.src_expr) == get_expr_str(self.src_expr)
-
-
         equal_forward = srq_equal_src and dst_equal_dst
+
+        if equal_forward:
+            return True
+
+        src_equal_dst = get_expr_str(other_pattern.src_expr) == get_expr_str(self.target_expr)
+        dst_equal_src = get_expr_str(other_pattern.target_expr) == get_expr_str(self.src_expr)
+
+
         equal_backward = src_equal_dst and dst_equal_src
 
 
