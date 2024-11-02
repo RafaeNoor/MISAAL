@@ -30,8 +30,8 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = 1, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth = start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list)
-        #super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map)
         self.name = "LowerSwizzles"
+        self.lowered_swizzles_ctx = []
 
 
 
@@ -95,6 +95,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
             if success:
                 print("SUCCESS!")
+                self.lowered_swizzles_ctx.append(src_ctx.name)
                 key = self.serialize_candidate(candidate)
                 self.simplify_map[key] = (src_expr_str, dst_expr_str)
                 return success
@@ -165,7 +166,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
                             continue
 
 
-                    relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(dsl_inst)
+                    relavent_swizzle_subset = []
                     relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(dsl_inst)
                     relavent_output_subset = deduplicate_dsl_list(relavent_output_subset)
@@ -198,7 +199,8 @@ class LowerSwizzles(EqClassEqualDepthV4):
                     src_expressions = []
 
                     for ctx in dsl_inst.contexts:
-                        src_expressions.append(create_context_expr_with_fresh_regs(ctx))
+                        if not ctx.out_vectsize is None:
+                            src_expressions.append(create_context_expr_with_fresh_regs(ctx))
 
 
                     self.src_canon_map.clear()
@@ -239,6 +241,8 @@ class LowerSwizzles(EqClassEqualDepthV4):
                         target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_expr.out_vectsize, max_leaves = 4)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
+                            if src_expr.name in self.lowered_swizzles_ctx:
+                                break
                             if self.should_garbage_collect(target_count):
                                 self.collect_garbage()
 
@@ -279,5 +283,33 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
 
                                 yield candidate
+
+
+    def get_relavent_swizzle_dsl_subset(self, dsl_inst):
+        return []
+
+    def get_relavent_output_dsl_subset(self, dsl):
+        legal_bv_ops = ["extract", "concat", "sign-extend", "zero-extend", "bvssat", "bvusat", "bitvector->integer"]
+
+        relevant  = []
+        for dsl_inst in self.output_dsl_list:
+            dsl_ops = dsl_inst.get_semantics_ops_list()
+
+            valid = True
+            for op in dsl_ops:
+                if op not in legal_bv_ops:
+                    valid = False
+                    break
+
+            sample_ctx = dsl_inst.get_sample_context()
+
+            if sample_ctx.out_vectsize is None:
+                valid = False
+
+            if valid:
+                relevant.append(dsl_inst)
+
+        return relevant
+
 
 

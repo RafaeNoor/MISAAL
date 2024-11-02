@@ -73,6 +73,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         output_size = candidate[3]
 
 
+        test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list
         valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
 
 
@@ -106,7 +107,25 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
             dst_copy = copy.deepcopy(valid_dst_conc)
 
+
             success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
+
+            if not success:
+                break
+
+            # Confirm that the parsed expressions match the required structure
+            synth_src_expr = read_string_to_dsl(src_expr_str, test_dsl_list)
+
+            # isCanonical matches structure according to DSL list
+            if not self.canonicalizer.isCanonical(synth_src_expr, valid_src_conc):
+                continue
+
+            synth_dst_expr = read_string_to_dsl(dst_expr_str, test_dsl_list)
+
+            # isCanonical matches structure according to DSL list
+            if not self.canonicalizer.isCanonical(synth_dst_expr, dst_copy):
+                continue
+
 
             if success:
                 print("SUCCESS!")
