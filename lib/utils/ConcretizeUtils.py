@@ -172,6 +172,30 @@ def get_possible_input_sizes_of_eq_class(ctx_, dsl_list):
             return set(sizes)
     return set()
 
+def get_possible_output_sizes_of_eq_class(ctx_, dsl_list):
+
+    if isinstance(ctx_, Reg):
+        return set()
+
+    for dsl_inst in dsl_list:
+        sizes = []
+        ret_size = False
+        for ctx in dsl_inst.contexts:
+            if ctx.name == ctx_.name:
+                ret_size = True
+                break
+
+        if ret_size:
+            for ctx in dsl_inst.contexts:
+                if ctx.out_vectsize is None:
+                    continue
+
+                sizes.append(ctx.out_vectsize)
+
+        if ret_size:
+            return set(sizes)
+    return set()
+
 
 # Testing if a valid concretization of function exists
 

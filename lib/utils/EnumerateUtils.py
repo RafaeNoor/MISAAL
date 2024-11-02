@@ -51,24 +51,17 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
             for idx, c_arg in enumerate(rctx.context_args):
                 if isinstance(c_arg, BitVector):
-                    #corresponding_exprs = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1)
                     symbolic_indices.append(idx)
-                    #gen = CountItemsWrapper(corresponding_exprs)
-                    #generators.append(gen)
-
-            #print("Symbolic indicies for ", rctx, "is", symbolic_indices)
-
-
 
             if len(symbolic_indices) == 4:
 
                 generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                 for expr0 in generator_0:
 
-                    #expr0_out_sizes = get_possible_input_sizes_of_eq_class(expr0, dsl_list)
+                    expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
                     # Short circuit any expressions which can't be bound together anyways
-                    #if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                    #    continue
+                    if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
+                        continue
 
                     if not is_expr_valid(expr0):
                         break
@@ -78,10 +71,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                     for expr1 in generator_1:
 
 
-                        #expr1_out_sizes = get_possible_input_sizes_of_eq_class(expr1, dsl_list)
+                        expr1_out_sizes = get_possible_output_sizes_of_eq_class(expr1, dsl_list)
                         # Short circuit any expressions which can't be bound together anyways
-                        #if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
-                        #    continue
+                        if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
+                            continue
 
                         if not is_expr_valid(expr1):
                             break
@@ -90,10 +83,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                         for expr2 in generator_2:
 
-                            #expr2_out_sizes = get_possible_input_sizes_of_eq_class(expr2, dsl_list)
+                            expr2_out_sizes = get_possible_output_sizes_of_eq_class(expr2, dsl_list)
                             # Short circuit any expressions which can't be bound together anyways
-                            #if not isinstance(expr2, Reg) and  len(expr2_out_sizes.intersection(rctx_input_sizes)) == 0:
-                            #    continue
+                            if not isinstance(expr2, Reg) and  len(expr2_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                continue
 
                             if not is_expr_valid(expr2):
                                 break
@@ -101,10 +94,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                             generator_3 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                             for expr3 in generator_3:
 
-                                #expr3_out_sizes = get_possible_input_sizes_of_eq_class(expr3, dsl_list)
+                                expr3_out_sizes = get_possible_output_sizes_of_eq_class(expr3, dsl_list)
                                 # Short circuit any expressions which can't be bound together anyways
-                                #if not isinstance(expr3, Reg) and  len(expr3_out_sizes.intersection(rctx_input_sizes)) == 0:
-                                #    continue
+                                if not isinstance(expr3, Reg) and  len(expr3_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                    continue
 
                                 if not is_expr_valid(expr3):
                                     break
@@ -121,10 +114,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                 generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                 for expr0 in generator_0:
 
-                    #expr0_out_sizes = get_possible_input_sizes_of_eq_class(expr0, dsl_list)
+                    expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
                     # Short circuit any expressions which can't be bound together anyways
-                    #if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                    #    continue
+                    if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
+                        continue
 
                     if not is_expr_valid(expr0):
                         break
@@ -132,10 +125,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                     generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                     for expr1 in generator_1:
 
-                        #expr1_out_sizes = get_possible_input_sizes_of_eq_class(expr1, dsl_list)
+                        expr1_out_sizes = get_possible_output_sizes_of_eq_class(expr1, dsl_list)
                         # Short circuit any expressions which can't be bound together anyways
-                        #if not isinstance(expr1, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                        #    continue
+                        if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
+                            continue
 
                         if not is_expr_valid(expr1):
                             break
@@ -144,10 +137,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
                         for expr2 in generator_2:
 
-                            #expr2_out_sizes = get_possible_input_sizes_of_eq_class(expr2, dsl_list)
+                            expr2_out_sizes = get_possible_output_sizes_of_eq_class(expr2, dsl_list)
                             # Short circuit any expressions which can't be bound together anyways
-                            #if not isinstance(expr2, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                            #    continue
+                            if not isinstance(expr2, Reg) and len(expr2_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                continue
 
                             if not is_expr_valid(expr2):
                                 break
@@ -164,10 +157,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
                 for expr0 in generator_0:
 
-                    #expr0_out_sizes = get_possible_input_sizes_of_eq_class(expr0, dsl_list)
+                    expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
                     # Short circuit any expressions which can't be bound together anyways
-                    #if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                    #    continue
+                    if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
+                        continue
 
                     if not is_expr_valid(expr0):
                         break
@@ -176,10 +169,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                     for expr1 in generator_1:
 
 
-                        #expr1_out_sizes = get_possible_input_sizes_of_eq_class(expr1, dsl_list)
+                        expr1_out_sizes = get_possible_output_sizes_of_eq_class(expr1, dsl_list)
                         # Short circuit any expressions which can't be bound together anyways
-                        #if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
-                        #    continue
+                        if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
+                            continue
 
                         if not is_expr_valid(expr1):
                            break
@@ -193,10 +186,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                 generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                 for expr0 in generator_0:
 
-                    #expr0_out_sizes = get_possible_input_sizes_of_eq_class(expr0, dsl_list)
+                    expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
                     # Short circuit any expressions which can't be bound together anyways
-                    #if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
-                    #    continue
+                    if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
+                        continue
 
                     if not is_expr_valid(expr0):
                         break

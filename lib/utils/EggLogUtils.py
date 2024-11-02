@@ -68,7 +68,7 @@ def egg_sanatize_name(name):
 
     return remove_dsl
 
-def emit_egg_dsl_decl(dsl_inst, cost = 1, swizzle_cost = 25):
+def emit_egg_dsl_decl(dsl_inst, cost = 1, swizzle_cost = 1):
     tokens = []
 
     tokens.append(egg_sanatize_name(dsl_inst.name))

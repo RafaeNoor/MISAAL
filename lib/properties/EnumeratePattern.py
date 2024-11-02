@@ -7,6 +7,7 @@ import copy
 from  common.Types import *
 from utils.ConcretizeUtils import get_valid_concretization_generator
 from common.StructDef import StructDef
+from utils.CanonicalizeExpressions import CanonicalizeExpression
 
 class EnumeratePattern(Property):
 
@@ -16,6 +17,7 @@ class EnumeratePattern(Property):
         super().__init__(name = "EnumeratePattern" ,dsl_list = dsl_list, synth_desc = synth_desc, is_candidate_generator = True)
         self.input_patterns_dict = input_patterns_dict
         self.context_map = {}
+        self.canon_utils = CanonicalizeExpression()
 
 
 
@@ -34,14 +36,6 @@ class EnumeratePattern(Property):
                 src_expr = read_string_to_dsl(src_pattern_str, self.dsl_list)
                 dst_expr = read_string_to_dsl(dst_pattern_str, self.dsl_list)
 
-
-                try:
-                    if is_expression_constant(src_expr, self.dsl_list) or is_expression_constant(dst_expr, self.dsl_list):
-                        print("Constant expression encountered!")
-                        continue
-                except:
-                    print("Exception when checking constant")
-                    continue
 
 
                 src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
@@ -123,20 +117,7 @@ class EnumeratePattern(Property):
             # then create filtered list
 
 
-            if False:
-                filtered_list = [e for e in self.dsl_list if e.name not in [src_eq_class.name, dst_eq_class.name]]
-
-                src_ctx = copy.deepcopy(candidate[3])
-                dst_ctx = copy.deepcopy(candidate[4])
-                src_eq_class_copy = copy.deepcopy(src_eq_class)
-                src_eq_class_copy.contexts = [src_ctx]
-                filtered_list += [src_eq_class_copy]
-
-                dst_eq_class_copy = copy.deepcopy(dst_eq_class)
-                dst_eq_class_copy.contexts = [dst_ctx]
-                filtered_list += [dst_eq_class_copy]
-            else:
-                filtered_list = self.dsl_list
+            filtered_list = self.dsl_list
 
 
 
@@ -144,6 +125,25 @@ class EnumeratePattern(Property):
             success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = src_ctx, required_dst_ctx = dst_ctx)
             end_time = time.time()
             print("Find conc expression time Elapsed time", end_time-start_time)
+
+            if not success:
+                return False
+
+            # Confirm that the parsed expressions match the required structure
+            synth_src_expr = read_string_to_dsl(src_expr_str, self.dsl_list)
+
+            # isCanonical matches structure according to DSL list
+            if not self.canon_utils.isCanonical(synth_src_expr, src_expr):
+                return False
+
+            synth_dst_expr = read_string_to_dsl(dst_expr_str, self.dsl_list)
+
+            # isCanonical matches structure according to DSL list
+            if not self.canon_utils.isCanonical(synth_dst_expr, dst_expr):
+                return False
+
+
+
 
 
             if success:
