@@ -279,8 +279,8 @@ def materialize_expression_template(valid_template):
 
 
 
-def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
-    valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list)
+def get_valid_concretization_generator(ref_expr, output_size, dsl_list, root_ctx_name = None):
+    valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, root_ctx_name = root_ctx_name)
 
     valid = False
 
@@ -303,7 +303,7 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
 
 
 
-def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
+def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, root_ctx_name = None):
 
     if isinstance(ref_expr, Reg):
         #print("Creating reg of required size: ", output_size)
@@ -342,13 +342,20 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
     valid_ctxs = []
 
     for ctx in dsl_inst.contexts:
+
+
         ctx_sym_args = get_ctx_sym_args(ctx)
 
         #if ctx_sym_args  != num_sym_args:
         #    continue
 
+        if not root_ctx_name is None and ctx.name != root_ctx_name:
+            continue
+
         if ctx.out_vectsize is None:
             continue
+
+
 
         if ctx.out_vectsize == output_size:
             valid_ctxs.append(ctx)

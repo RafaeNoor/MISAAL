@@ -1313,3 +1313,26 @@ def create_context_expr_with_fresh_regs(ctx):
 
     return ctx_copy
 
+
+
+def is_expr_concat_slice_only(expr, dsl_list):
+    if not isinstance(expr, Context):
+        return False
+
+    dsl_names = get_ctx_expr_dsl_names(expr, dsl_list)
+
+    test_ops = ['typed:concat_vectors', 'typed:slice_vectors', 'typed:xBroadcast']
+
+    cond1 = any([op in dsl_names for op in test_ops])
+
+    cond2 = not any([op not in test_ops for op in dsl_names])
+
+    #print(test_ops)
+    #print(dsl_names)
+    #print(cond1)
+    #print(cond2)
+
+    return cond1 and cond2
+
+
+

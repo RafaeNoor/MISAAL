@@ -86,29 +86,41 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
         print("Pattern can't be abstracted for given size")
         return False, "", ""
 
+    if required_src_ctx is None or required_dst_ctx is None:
+        return False, "", ""
 
-    valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, combined_dsl_list)
-    if required_src_ctx is None:
-        valid_src_conc = next(valid_src_conc_gen)
+    valid_src_conc = None
+    valid_dst_conc = None
+
+    if  src_ctx.name != required_src_ctx.name:
+        valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, combined_dsl_list)
+        if required_src_ctx is None:
+            valid_src_conc = next(valid_src_conc_gen)
+        else:
+            for valid_src_conc in valid_src_conc_gen:
+                if valid_src_conc.name == required_src_ctx.name:
+                    break
+            if valid_src_conc.name != required_src_ctx.name:
+                print("No Valid src expr")
+                return False, "", ""
     else:
-        for valid_src_conc in valid_src_conc_gen:
-            if valid_src_conc.name == required_src_ctx.name:
-                break
-        if valid_src_conc.name != required_src_ctx.name:
-            print("No Valid src expr")
-            return False, "", ""
+        print("SRC CONTEXT ALREADY MATCHES")
+        valid_src_conc = src_ctx
 
-
-    valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
-    if required_dst_ctx is None:
-        valid_dst_conc = next(valid_dst_conc_gen)
+    if dst_ctx.name != required_dst_ctx.name:
+        valid_dst_conc_gen = get_valid_concretization_generator(dst_ctx, output_size, combined_dsl_list)
+        if required_dst_ctx is None:
+            valid_dst_conc = next(valid_dst_conc_gen)
+        else:
+            for valid_dst_conc in valid_dst_conc_gen:
+                if valid_dst_conc.name == required_dst_ctx.name:
+                    break
+            if valid_dst_conc.name != required_dst_ctx.name:
+                print("No Valid dst expr")
+                return False, "", ""
     else:
-        for valid_dst_conc in valid_dst_conc_gen:
-            if valid_dst_conc.name == required_dst_ctx.name:
-                break
-        if valid_dst_conc.name != required_dst_ctx.name:
-            print("No Valid dst expr")
-            return False, "", ""
+        print("DST CONTEXT ALREADY MATCHES")
+        valid_dst_conc = dst_ctx
 
 
 
@@ -118,7 +130,7 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
 
 
 
-    synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True)
+    synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = combined_dsl_list, output_dsl_list = combined_dsl_list, swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, required_src_name = src_ctx.name, required_dst_name = dst_ctx.name)
     success, src_expr_str, dst_expr_str = synth_utils.double_grammar_synthesis(valid_src_conc, valid_dst_conc )
 
     return success, src_expr_str, dst_expr_str

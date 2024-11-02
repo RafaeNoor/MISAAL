@@ -17,7 +17,8 @@ halide_dsl_list = parse_dict(halide_semantics)
 combined_dsl_list = halide_dsl_list
 
 test_files = [
-    "/home/arnoor2/MISAAL/targets/halide/tmpHalideEnum_halide-swizzles_intermediate_results.py"
+    "/home/arnoor2/MISAAL/targets/halide/tmpHalideEnum_halide-swizzles_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/halide/EnumeratePattern_halide-enumerate_intermediate_results.py",
 ]
 
 

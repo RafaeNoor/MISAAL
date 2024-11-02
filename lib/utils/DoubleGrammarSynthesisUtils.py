@@ -12,7 +12,7 @@ import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True, required_src_name = None, required_dst_name = None):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
@@ -21,6 +21,9 @@ class DoubleGrammarSynthesisUtils:
         self.force_contains_all_regs = force_contains_all_regs
         self.contains_reg_def = ContainsRegDef()
         self.use_any_reg = use_any_reg
+        self.required_src_name = required_src_name
+        self.required_dst_name = required_dst_name
+
 
 
     def get_registers(self, ctx):
@@ -95,25 +98,6 @@ class DoubleGrammarSynthesisUtils:
 
 
 
-        #if isinstance(dst_ctx, Reg):
-        #    print("Early return: Dst expression is a context")
-        #    return False, "", ""
-
-
-
-        #dst_eq_class = self.get_eq_class(dst_ctx.dsl_name)
-
-        #matching_ctx = False
-        #for ctx in dst_eq_class.contexts:
-        #    if ctx.out_vectsize == src_ctx.out_vectsize:
-        #        matching_ctx = True
-
-        #if not matching_ctx:
-        #    print("Early return: No matching context")
-        #    return False, "", ""
-
-
-
         src_output_size = src_ctx.out_vectsize
         if not custom_src_output_size is None:
             src_output_size = custom_src_output_size
@@ -145,37 +129,6 @@ class DoubleGrammarSynthesisUtils:
             reg_arg_idx_map[key] = 0
         print(reg_arg_map)
 
-        """
-        dst_regs = self.get_registers(dst_ctx)
-
-        common_param =  False
-
-
-        for idx, arg in enumerate(dst_regs):
-            reg = None
-            key = str(arg.size)
-            if key not in reg_arg_idx_map:
-                # Create a new register for every left over values
-                reg = Reg(str(len(src_ctx_regs)), precision, arg.size)
-                src_ctx_regs.append(reg)
-            else:
-                index = reg_arg_idx_map[key]
-                reg = reg_arg_map[key][index]
-                updated_index = (index + 1) % len(reg_arg_map[key])
-                reg_arg_idx_map[key] = updated_index
-
-            if int(reg.index) < src_regs_count:
-                common_param = True
-
-            arg.index = reg.index
-            arg.precision = reg.precision
-            arg.size = reg.size
-            arg.signed = reg.signed
-
-        if not common_param:
-            print("Early return: No common param")
-            return False, "" , ""
-        """
 
 
         statements = []
@@ -236,7 +189,7 @@ class DoubleGrammarSynthesisUtils:
 
         GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
 
-        src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
+        src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src", required_root_name = self.required_src_name)
 
 
         if is_src_grammar:
@@ -250,7 +203,7 @@ class DoubleGrammarSynthesisUtils:
         dst_expression_label = None
 
         GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
-        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
+        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst", required_root_name = self.required_dst_name)
 
         statements.append(dst_expression_grammar)
 
