@@ -3,7 +3,10 @@ HALIDE_DIR ?=/home/arnoor2/MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
 benchmarks = gaussian3x3 \
-			 dilate3x3 
+			 dilate3x3  \
+			 dilate5x5 \
+			 dilate7x7 \
+			 max_pool 
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 

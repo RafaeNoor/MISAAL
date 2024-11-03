@@ -12,6 +12,10 @@
 #include "dilate3x3.h"
 #elif benchmark_dilate5x5
 #include "dilate5x5.h"
+#elif benchmark_dilate7x7
+#include "dilate7x7.h"
+#elif benchmark_max_pool
+#include "max_pool.h"
 #endif
 
 #define LOG2VLEN 7
@@ -189,6 +193,62 @@ int main(int argc, char **argv) {
          (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
+#if benchmark_dilate7x7
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  benchmark([&]() {
+    int error = dilate7x7(input_buf, output_buf);
+    if (error != 0) {
+      printf("dilate7x7 pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - dilate7x7(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+
+#if benchmark_max_pool
+  halide_dimension_t c_dim{0, 1024, 1};
+  halide_dimension_t x_dim{0, width / 32, 128};
+  halide_dimension_t y_dim{0, height / 32, 128 * (width / 32)};
+  halide_dimension_t b_dim{0, 1, 128 * (width / 32) * (height / 32)};
+  halide_dimension_t shape[4] = {c_dim, x_dim, y_dim, b_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+
+  benchmark([&]() {
+    int error = max_pool(input_buf, 2, 2, 8, 8, 5, 225, output_buf);
+    if (error != 0) {
+      printf("max_pool pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - max_pool(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
 
 
   free(input);
