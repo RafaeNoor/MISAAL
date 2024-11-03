@@ -9,7 +9,7 @@ import json
 import pickle
 
 
-from patterns.PatternUtils import create_patterns, deduplicate_patterns
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel
 
 halide_dsl_list = parse_dict(halide_semantics)
 
@@ -43,6 +43,8 @@ else:
     Halide_patterns =  parsed_patterns
 
     print("Total Patterns Pre Deduplication:", len(Halide_patterns))
+    Halide_patterns = prune_redundant_patterns(Halide_patterns, combined_dsl_list)
+    print("Total Patterns After Removing redundant patterns:", len(Halide_patterns))
     Halide_patterns = deduplicate_patterns(Halide_patterns)
 
     print("Total Patterns Post Deduplication:", len(Halide_patterns))

@@ -47,13 +47,13 @@ def emit_egg_datatypes(dsl_list, cost = 1):
 
 
 
-def emit_egg_datatypes_two_dsl(input_dsl_list, output_dsl_list,  input_cost = 1, output_cost = 1):
+def emit_egg_datatypes_two_dsl(input_dsl_list, output_dsl_list,  input_cost = 1, output_cost = 1, swizzle_cost = 1):
 
     symbolic_bvs = emit_egg_decl_bv()
     scalars = emit_egg_decl_scalar()
 
-    input_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = input_cost) for dsl_inst in input_dsl_list]
-    output_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = output_cost) for dsl_inst in output_dsl_list]
+    input_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = input_cost, swizzle_cost = swizzle_cost) for dsl_inst in input_dsl_list]
+    output_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = output_cost, swizzle_cost = swizzle_cost) for dsl_inst in output_dsl_list]
 
     comment = "; Declaring constructs for instructions"
 

@@ -1243,6 +1243,15 @@ def get_ctx_expr_dsl_names(expr, dsl_list):
 
     return []
 
+def get_ctx_expr_ctx_names(expr, dsl_list):
+    if isinstance(expr, Context):
+        names = [expr.name]
+        for arg in expr.context_args:
+            names += get_ctx_expr_ctx_names(arg, dsl_list)
+        return list(set(names))
+
+    return []
+
 def is_expression_constant(expr, dsl_list):
     if isinstance(expr, Reg):
         return False
@@ -1336,3 +1345,6 @@ def is_expr_concat_slice_only(expr, dsl_list):
 
 
 
+def expr_contains_swizzles(expr, dsl_list):
+    expr_names = get_ctx_expr_dsl_names(expr, dsl_list)
+    return any(["swizzle" in name for name in expr_names])

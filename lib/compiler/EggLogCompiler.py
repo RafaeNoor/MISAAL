@@ -4,6 +4,7 @@ from utils.EggLogUtils import *
 import os
 import copy
 import subprocess as sb
+import psutil
 from utils.ReadDSL import read_string_to_dsl
 import time
 
@@ -21,6 +22,7 @@ class EggLogCompiler(CompilerBase):
         self.output_cost = 1
         self.run_iterations = run_iterations
         self.compile_times = []
+        self.memory_usages = []
         self.measure_egglog_time = True
         self.memo = {}
 
@@ -89,8 +91,8 @@ class EggLogCompiler(CompilerBase):
         pass
 
 
-    def emit_pattern_matching_based_compiler(self, expr):
-        egglog_decls = emit_egg_datatypes_two_dsl(self.src_dsl_list, self.target_dsl_list, input_cost = self.input_cost, output_cost = self.output_cost)
+    def emit_pattern_matching_based_compiler(self, expr, swizzle_cost = 1):
+        egglog_decls = emit_egg_datatypes_two_dsl(self.src_dsl_list, self.target_dsl_list, input_cost = self.input_cost, output_cost = self.output_cost, swizzle_cost = swizzle_cost )
 
         test_patterns = self.patterns
         if self.prune_patterns:
@@ -119,7 +121,15 @@ class EggLogCompiler(CompilerBase):
         with open(output_stream_name, "w+") as OutStream:
             if cur_dir is None:
                 print("$[ Egg Compiler ]: "," ".join(cmd))
-                sb.run(" ".join(cmd), shell = True, stdout = OutStream, stderr = OutStream)
+
+                proc = sb.Popen(cmd, start_new_session=True, stdout = OutStream, stderr = OutStream)
+                process = psutil.Process(proc.pid)
+                mem_info = process.memory_info()
+                proc.wait()
+                rss = mem_info.rss
+                vms = mem_info.vms
+                self.memory_usages.append((rss,vms))
+                #sb.run(" ".join(cmd), shell = True, stdout = OutStream, stderr = OutStream)
             else:
                 print("$[ Egg Compiler: {} ]: ".format(cur_dir)," ".join(cmd))
                 sb.run(" ".join(cmd), shell = True, cwd = cur_dir, stdout = OutStream, stderr = OutStream)
@@ -198,6 +208,12 @@ class EggLogCompiler(CompilerBase):
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
 
+        if expr_contains_swizzles(output_expression, self.target_dsl_list):
+            # Emit another swizzle pass to lower swizzle expressions
+            print("Expression contains swizzles, need to lower swizzles")
+            output_expression = self.run_swizzle_lowering_pipeline(output_expression, num_regs)
+
+
         self.memo[key] = output_expression
 
         return output_expression
@@ -225,6 +241,58 @@ class EggLogCompiler(CompilerBase):
 
         print("=="*20)
         print("Total", ":", total)
+
+        print("=======", "Virtual Memory", "=======")
+        peak_vms = -1
+        for rss, vms in self.memory_usages:
+            peak_vms = max(peak_vms, vms)
+            MB = vms / (1024 * 1024)
+            print("-", MB, "Megabytes")
+        print("=="*20)
+        print("Peak", ":", peak_vms / (1024 * 1024), "Megabytes")
+
+        print("=======", "Physical Memory", "=======")
+        peak_rss = -1
+        for rss, vms in self.memory_usages:
+            peak_rss = max(peak_rss, rss)
+            MB = rss / (1024 * 1024)
+            print("-", MB, "Megabytes")
+        print("=="*20)
+        print("Peak", ":", peak_rss / (1024 * 1024), "Megabytes")
+
+    def run_swizzle_lowering_pipeline(self, expr):
+        expr_regs = get_context_registers(expr)
+        expr_regs = self.get_unique_registers(expr_regs)
+
+        reg_data_structures = self.convert_reg_to_compiler_datastructure(expr_regs)
+        compiler_functionality = self.emit_pattern_matching_based_compiler(expr, swizzle_cost = min(self.input_cost, self.output_cost * 10))
+
+        statements = []
+
+        statements.append(compiler_functionality)
+        statements += [defn for label, defn in reg_data_structures]
+
+        num_regs = len(reg_data_structures)
+
+        src_expr_name = "swizzleexpr"
+        src_expr_egg = emit_expr_to_egg(expr)
+        define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
+        statements.append(define_src_expr)
+
+        statements.append(emit_egg_run_iter(self.run_iterations))
+        statements.append(emit_egg_extract_expr(src_expr_name))
+        egg_file_name = get_random_tempfile_name() + ".egg"
+
+        print("Creating swizzle egg file:\t", egg_file_name)
+
+        with open(egg_file_name, "w+") as EggFile:
+            EggFile.write("\n".join(statements))
+
+        final_expression_str= self.execute_egglog_file(egg_file_name)
+
+        print("EGG LOG PRODUCED", final_expression_str)
+        output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
+        return output_expression
 
 
 

@@ -11,7 +11,7 @@ import os
 import json
 import pickle
 
-from patterns.PatternUtils import create_patterns, deduplicate_patterns
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel
 from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
 
 halide_dsl_list = parse_dict(halide_semantics)
@@ -79,6 +79,9 @@ else:
     HVX_patterns = [pattern] + parsed_patterns
 
     print("Total Patterns Pre Deduplication:", len(HVX_patterns))
+
+    HVX_patterns = prune_redundant_patterns(HVX_patterns, combined_dsl_list)
+    print("Total Patterns After Removing redundant patterns:", len(HVX_patterns))
     HVX_patterns = deduplicate_patterns(HVX_patterns)
 
     print("Total Patterns Post Deduplication:", len(HVX_patterns))

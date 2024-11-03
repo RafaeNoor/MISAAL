@@ -1,4 +1,5 @@
 from compiler.Pattern import Pattern, parse_pattern_from_string
+import concurrent.futures
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.DSLInstructionUtils import *
 from utils.ConcretizeUtils import get_valid_concretization_generator
@@ -54,6 +55,42 @@ def deduplicate_patterns(patterns):
     return unique_patterns
 
 
+def deduplicate_patterns_parallel(patterns, pool_size = 8, parallel = True):
+
+    mask = [False] * len(patterns)
+
+    def worker(s_idx):
+        insert = True
+        pattern_i = patterns[s_idx]
+        for j in range(s_idx + 1, len(patterns)):
+            other_pattern = patterns[j]
+
+            if other_pattern.equal_to(pattern_i):
+                insert = False
+                break
+        mask[s_idx] =  insert
+
+    if parallel:
+        pool = concurrent.futures.ThreadPoolExecutor(max_workers=pool_size)
+        for s_idx, pattern in enumerate(patterns):
+            pool.submit(worker, s_idx)
+
+
+        pool.shutdown(wait=True)
+    else:
+        for s_idx, pattern in enumerate(patterns):
+            worker(s_idx)
+
+
+
+    unique_patterns = []
+    for idx, mask_val in enumerate(mask):
+        if mask_val:
+            unique_patterns.append(patterns)
+
+
+
+    return unique_patterns
 
 
 
@@ -137,6 +174,28 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
 
 
 
+def prune_redundant_patterns(patterns, dsl_list):
+    useful_patterns = []
+
+    for p in patterns:
+        if is_redundant_pattern(p, dsl_list):
+            continue
+
+        useful_patterns.append(p)
+    return useful_patterns
 
 
 
+def is_redundant_pattern(pattern, dsl_list):
+    src_names = get_ctx_expr_ctx_names(pattern.src_expr, dsl_list)
+    dst_names = get_ctx_expr_ctx_names(pattern.target_expr, dsl_list)
+
+    if len(src_names) == 0:
+        return False
+
+    if len(dst_names) == 0:
+        return False
+
+    pattern_names = set(src_names + dst_names)
+    # Pattern is redundant if all context names are the same
+    return len(pattern_names) == 1

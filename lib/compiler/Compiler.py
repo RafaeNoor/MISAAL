@@ -32,7 +32,7 @@ class CompilerBase:
     def initialize_reg_class(self):
         raise NotImplementedError()
 
-    def emit_pattern_matching_based_compiler(self, expr):
+    def emit_pattern_matching_based_compiler(self, expr, swizzle_cost = 1):
         raise NotImplementedError()
 
     def convert_reg_to_compiler_datastructure(self, expr_regs):
