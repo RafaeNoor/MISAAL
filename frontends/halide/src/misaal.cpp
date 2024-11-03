@@ -56,11 +56,10 @@ from compiler.HydrideCompiler import HydrideCompiler\n\
 from utils.egg_config import EGG_PKG_PATH\n\
 from sema.hexsemantics_new import semantics as hvx_semantics\n\
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
-#from sema.halide_sema import halide_semantics\n\
 from sema.halide_decomposed import halide_decomposed as halide_semantics\n\
-from sema.hex_swizzles import hvx_swizzles\n\
-from sema.x86_swizzles import x86_swizzles\n\
-from sema.arm_swizzles import arm_swizzles\n\
+from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles\n\
+from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles\n\
+from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles\n\
 from sema.ARMSema import arm_semantics\n\
 from sema.repairs_sema import repair_semantics\n\
 from common.DSLParser import parse_dict\n\
@@ -214,8 +213,13 @@ import sys\n";
         statements.push_back(common_imports);
 
         std::string pattern_alias_input = "misaal_input_patterns";
-        std::string pattern_imports_input = "from patterns.Halide import Halide_patterns as "+pattern_alias_input;
-        statements.push_back(pattern_imports_input);
+        if(import_frontend_patterns){
+            std::string pattern_imports_input = "from patterns.Halide import Halide_patterns as "+pattern_alias_input;
+            statements.push_back(pattern_imports_input);
+        } else {
+            std::string pattern_imports_input = pattern_alias_input + " = []";
+            statements.push_back(pattern_imports_input);
+        }
 
         std::string pattern_alias_output = "misaal_output_patterns";
         std::string pattern_imports_output = get_patterns_import(pattern_alias_output);

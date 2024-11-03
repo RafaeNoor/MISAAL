@@ -34,6 +34,10 @@ namespace misaal {
                 assert(HYDRIDE_PATH && "HYDRIDE_ROOT path not defined");
                 MISAAL_ROOT = MISAAL_PATH;
                 HYDRIDE_ROOT = HYDRIDE_PATH;
+
+                const char* MISAAL_DISABLE_FRONTEND_PATTERNS = std::getenv("MISAAL_DISABLE_FRONTEND_PATTERNS");  
+                import_frontend_patterns = !(MISAAL_DISABLE_FRONTEND_PATTERNS);
+
             }
             void add_expression_to_compile(std::string expr, std::string name);
             void compile_expression(std::string output_bitcode_path, std::string benchmark);
@@ -66,6 +70,8 @@ namespace misaal {
             std::vector<CompilerQuery> Expressions;
 
             int rewrite_iterations = 5;
+
+            bool import_frontend_patterns = true;
 
 
     };

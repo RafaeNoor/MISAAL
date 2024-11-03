@@ -784,7 +784,7 @@ public:
         } else if (op->is_intrinsic(Call::saturating_sub)) {
             return print_intrinsic("sat-sub", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::widening_mul)) {
-            return print_intrinsic("widen-mul", op->args, op->type.is_scalar(), sign, lanes, bits);
+            return print_intrinsic("widen-mul", op->args, op->type.is_scalar(), sign, lanes, op->args[0].type().bits());
         } else if (op->is_intrinsic(Call::shift_right)) {
             return print_intrinsic("shr", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::shift_left)) {
@@ -3794,6 +3794,41 @@ Stmt hydride_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const Bas
     return Result;
 }
 
+
+Stmt misaal_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
+    debug(0) << "Hydride Optimize X86"
+             << "\n";
+    std::set<const IRNode *> DeadStmts;
+    auto FLS = Hydride::FoldLoadStores(DeadStmts);
+    auto folded = FLS.mutate(s);
+    debug(1) << "Printing Folded Stmt:\n";
+    debug(1) << folded << "\n";
+
+    debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+
+    auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
+    debug(1) << "Printing Pruned Stmt:\n";
+    debug(1) << pruned << "\n";
+
+    std::vector<unsigned> x86_vector_sizes = {512, 256, 128};
+    auto distributed = distribute_vector_exprs(pruned, x86_vector_sizes, true);
+    debug(0) << "Distributed Stmt:\n";
+    debug(0) << distributed << "\n";
+
+    srand(time(0));
+    int random_seed = rand() % 1024;
+
+    const char *benchmark_name = getenv("HYDRIDE_BENCHMARK");
+    std::string name = benchmark_name ? std::string(benchmark_name) : "misaal";
+
+    auto Optimizer = Hydride::IROptimizer(fvb, HydrideSupportedArchitecture::X86, mutated_exprs, random_seed, name);
+    auto Result = Optimizer.mutate(distributed);
+    Optimizer.run_rewrites();
+
+
+    return Result;
+}
+
 Stmt hydride_optimize_arm(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
 
     debug(0) << "Hydride Optimize ARM"
@@ -3853,7 +3888,12 @@ Stmt hydride_optimize_arm(FuncValueBounds fvb, const Stmt &s, std::set<const Bas
 Stmt optimize_x86_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
 
     std::set<const BaseExprNode *> mutated_exprs;
-    s = hydride_optimize_x86(fvb, s, mutated_exprs);
+    bool use_misaal = true;
+    if (use_misaal){
+        s = misaal_optimize_x86(fvb, s, mutated_exprs);
+    } else {
+        s = hydride_optimize_x86(fvb, s, mutated_exprs);
+    }
 
     return s;
 }
