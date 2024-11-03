@@ -6,7 +6,12 @@ benchmarks = gaussian3x3 \
 			 dilate3x3  \
 			 dilate5x5 \
 			 dilate7x7 \
-			 max_pool 
+			 max_pool  \
+			 sobel3x3 \
+			 sobel5x5 \
+			 blur3x3 \
+			 blur5x5 \
+			 blur7x7
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
