@@ -37,6 +37,10 @@ namespace misaal {
 
                 const char* MISAAL_DISABLE_FRONTEND_PATTERNS = std::getenv("MISAAL_DISABLE_FRONTEND_PATTERNS");  
                 import_frontend_patterns = !(MISAAL_DISABLE_FRONTEND_PATTERNS);
+                const char* MISAAL_EQ_SAT_ITERS = std::getenv("MISAAL_EQ_SAT_ITERS");  
+                if(MISAAL_EQ_SAT_ITERS){
+                    rewrite_iterations = std::stoi(MISAAL_EQ_SAT_ITERS);
+                }
 
             }
             void add_expression_to_compile(std::string expr, std::string name);
