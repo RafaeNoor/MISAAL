@@ -47,7 +47,8 @@ class Property:
 
         self.notify_enabled = True
         self.notify_count = self.BATCH_SIZE
-        self.notify_to = 'arnoor2@illinois.edu'
+        #self.notify_to = 'arnoor2@illinois.edu'
+        self.notify_to = 'baronia3@illinois.edu'
         self.notify_iter = 0
 
 

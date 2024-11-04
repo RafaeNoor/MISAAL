@@ -1,0 +1,8 @@
+{
+    "hexagon_V6_vminuh_128B": [
+        "typed:unsigned-vec-sat-sub",
+        "typed:unsigned-vec-max",
+        "typed:unsigned-vec-min",
+        "typed:signed-vec-min"
+    ]
+}

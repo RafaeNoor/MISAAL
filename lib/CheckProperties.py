@@ -116,16 +116,12 @@ commutative_path = "commutative_map.json"
 
 
 
+#TARGETS = ["x86"]
+TARGETS = ["hvx"]
 
 
-
-
-
-TARGETS = ["x86"]
-
-
-
-test_properties = [EqClassEqualDepthV4]
+#test_properties = [EqClassEqualDepthV4]
+test_properties = [EqClassEqualDepthV3]
 
 
 for property in test_properties:

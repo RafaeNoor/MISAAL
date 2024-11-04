@@ -1,0 +1,1 @@
+(hexagon_V6_vminuh_128B_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 1024 1024 0 1024 8 0 0)

@@ -415,16 +415,14 @@ fn main() {
     let mut rules_34: Ruleset<MISAALLang> = Ruleset::default();
 
     /* let lang_34 = Lang::new(
-        // &["0", "1", "2", "3"],
-        // &["a", "b", "c"],
-        &["0", "1"],
-        &["a", "b"],
+        &["0", "1", "2", "3"],
+        &["a", "b", "c", "d"],
         &[
             &[],
             &[
+                "hexagon_V6_vlsrwv_128B",
                 "typed:unsigned-vec-div",
                 "typed:unsigned-vec-shr",
-                "hexagon_V6_vlsrwv_128B",
             ],
         ],
     ); */
@@ -456,6 +454,24 @@ fn main() {
             "d".to_string(),
         ]));
 
+    /* let wkld_34_d2 = Workload::new(&["(bop e e)", "v"])
+           .plug("e", &Workload::new(&["(bop v v)", "v"]))
+           .plug(
+               "bop",
+               &Workload::new(&[
+                   "hexagon_V6_vlsrwv_128B",
+                   "typed:unsigned-vec-div",
+                   "typed:unsigned-vec-shr",
+               ]),
+           )
+           .plug("v", &Workload::new(&["a", "b", "c", "d"]))
+           .filter(Filter::Canon(vec![
+               "a".to_string(),
+               "b".to_string(),
+               "c".to_string(),
+               "d".to_string(),
+           ]));
+    */
     println!("---- STARTING D2 WKLD ----");
 
     rules_34.extend(run_workload(
@@ -497,6 +513,34 @@ fn main() {
     println!("---- RULES for RELEVANCE SET 34 D3 ----");
     rules_34.pretty_print();
     println!("------------------------------------");
+
+    let wkld_34_d4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 4)
+        .plug("VAR", &Workload::new(&lang_34.vars))
+        .plug("VAL", &Workload::empty())
+        .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
+        .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
+        .filter(Filter::Canon(vec![
+            "a".to_string(),
+            "b".to_string(),
+            "c".to_string(),
+            "d".to_string(),
+        ]));
+
+    println!("---- STARTING D4 WKLD ----");
+
+    rules_34.extend(run_workload(
+        wkld_34_d4,
+        rules_34.clone(),
+        Limits::synthesis(),
+        Limits::minimize(),
+        true,
+    ));
+
+    println!("---------- ENDING D4 WKLD ------------------");
+    println!("---- RULES for RELEVANCE SET 34 D4 ----");
+    rules_34.pretty_print();
+    println!("------------------------------------");
+
     /* let mut rules_37: Ruleset<MISAALLang> = Ruleset::default();
 
     let lang_37 = Lang::new(

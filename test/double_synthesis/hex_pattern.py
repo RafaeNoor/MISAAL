@@ -25,6 +25,9 @@ hvx_expr_str = sys.argv[2]
 halide_expr_str = sys.argv[1]
 
 
+# halide_expr_str = " (typed:unsigned-vec-shr (reg (bv #x01 8)) (typed:unsigned-vec-shr (reg (bv #x01 8)) (reg (bv #x00 8)) 16 1024) 16 1024) "
+# hvx_expr_str = " (hexagon_V6_vlsrwv_128B (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 16))) (reg (bv #x01 8)) 1024 1024 0 1024 16 1 0) "
+
 hvx_expr_ctx = read_string_to_dsl(hvx_expr_str, hvx_dsl_list)
 halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
 
@@ -36,7 +39,8 @@ print(halide_expr_ctx.emit_context_expr_string())
 synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list,
                                           output_dsl_list = halide_dsl_list,
                                           # Force all source expression to be used in the left hand side (i.e. src expression)
-                                          force_contains_all_regs = True
+                                          force_contains_all_regs = True,
+                                          use_any_reg = False
                                           )
 
 

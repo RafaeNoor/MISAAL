@@ -8,7 +8,8 @@ def send_email(to, subject, content):
     msg.set_content(content)
 
     msg['Subject'] = subject
-    msg['From'] = 'arnoor2@illinois.edu'
+    #msg['From'] = 'arnoor2@illinois.edu'
+    msg['From'] = 'baronia3@illinois.edu'
     msg['To'] = to
     # Send the message via our own SMTP server.
     s = smtplib.SMTP('localhost')
