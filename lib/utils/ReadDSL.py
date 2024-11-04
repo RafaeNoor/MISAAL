@@ -41,6 +41,7 @@ def get_matching_context(nested_expr, dsl_list):
     #print(dsl_name)
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
+    num_reg_like_arguments = 0
     #print("Checking:", nested_expr[1:])
     for idx, arg in enumerate(nested_expr[1:]):
 
@@ -48,6 +49,11 @@ def get_matching_context(nested_expr, dsl_list):
 
         if not isinstance(arg, str):
             # May be parsing halide expresison,  check if this is a buffer index
+
+
+
+            if isinstance(arg, list) and arg[0] != 'lit':
+                num_reg_like_arguments += 1
 
             if isinstance(arg, list) and arg[0] == 'buffer-index':
 
@@ -122,6 +128,18 @@ def get_matching_context(nested_expr, dsl_list):
         matching_context_indices = new_matching_context_indices
 
     if len(matching_context_indices) != 1:
+        # Split on registers
+        print("Num reg like arguments",num_reg_like_arguments)
+
+        for ctx_idx in  range(len(matching_context_indices)):
+            test_ctx = matching_dsl_inst.contexts[ctx_idx]
+            num_ctx_args =  sum([1 for arg in test_ctx.context_args if isinstance(arg, BitVector)])
+
+
+            if num_reg_like_arguments ==  num_ctx_args:
+                matching_context_indices = [ctx_idx]
+                break
+
         print("MATCHING INDICES: ", matching_context_indices)
         print("Matching dsl_inst: ",matching_dsl_inst.name)
         matching_context_indices = [matching_context_indices[0]]

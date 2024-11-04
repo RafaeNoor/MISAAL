@@ -29,6 +29,7 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_x86-casts_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_assoc_x86-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_dp_cast_x86-enumerate_intermediate_results.py",
 ]
 
 

@@ -1,4 +1,5 @@
 from properties.Property import *
+import sys
 import gc
 from patterns.PatternUtils import *
 from  utils.DSLInstructionUtils import *
@@ -30,8 +31,17 @@ class EnumeratePattern(Property):
             prop_list = self.input_patterns_dict[key]
             prop_list = prop_list[:1]
             for prop in prop_list:
-                src_pattern_str = prop['property']['src']
-                dst_pattern_str = prop['property']['dst']
+                src_pattern_str = None
+                dst_pattern_str = None
+                if 'src' in prop['property']:
+                    src_pattern_str = prop['property']['src']
+                    dst_pattern_str = prop['property']['dst']
+                elif 'input_expression' in prop['property']:
+                    src_pattern_str = prop['property']['input_expression']
+                    dst_pattern_str = prop['property']['output_expression']
+                else:
+                    assert False, "Unable to identify keys"
+
 
                 src_expr = read_string_to_dsl(src_pattern_str, self.dsl_list)
                 dst_expr = read_string_to_dsl(dst_pattern_str, self.dsl_list)
@@ -46,9 +56,15 @@ class EnumeratePattern(Property):
                 dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
 
+                #if any([is_expr_concat_slice_only(expr, self.dsl_list) for expr in [src_expr, dst_expr]]):
+                #    continue
+
+
+
 
                 for src_ctx in src_eq_class.contexts:
                     size = src_ctx.out_vectsize
+
                     for dst_ctx in dst_eq_class.contexts:
                         try:
                             if src_ctx.out_vectsize != dst_ctx.out_vectsize:

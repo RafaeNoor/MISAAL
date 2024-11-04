@@ -281,7 +281,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                         print(src_expr.emit_context_expr_string())
 
-                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_expr.out_vectsize, max_leaves = 5)
+                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
 
@@ -323,7 +323,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                     continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
-                                candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_expr.out_vectsize)
+                                candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_ctx.out_vectsize)#src_expr.out_vectsize)
 
 
                                 yield candidate
@@ -398,3 +398,5 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
         return relavent_outputs + relavent_swizzles
+
+
