@@ -66,6 +66,7 @@ class HydrideCompiler(EggLogCompiler):
         cmd = ["python3", low_level_gen_script, self.output_file_path, self.llvm_so_path, self.intrinsics_file, " ".join(self.llvm_flags), llvm_out_file]
 
         cmd_str = " ".join(cmd)
+        print(cmd_str)
         sb.run(cmd_str, shell = True)
         elapsed = time.time() - start_time
 

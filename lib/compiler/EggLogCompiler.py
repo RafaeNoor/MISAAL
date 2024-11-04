@@ -117,6 +117,46 @@ class EggLogCompiler(CompilerBase):
         egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
         return egg_log_desc
 
+    def emit_swizzle_pattern_matching_based_compiler(self, expr, swizzle_cost = 1):
+        egglog_decls = emit_egg_datatypes_two_dsl(self.src_dsl_list, self.target_dsl_list, input_cost = self.input_cost, output_cost = self.output_cost, swizzle_cost = swizzle_cost )
+
+        test_patterns = self.get_swizzle_only_patterns(self.patterns)
+        print("# Swizzle only patterns:", len(test_patterns))
+
+        egglog_patterns = []
+        for pattern in test_patterns:
+            rewrite = emit_rewrite_expr(pattern.src_expr, pattern.target_expr, bidirectional = pattern.bidirectional)
+            egglog_patterns.append(rewrite)
+
+
+        # Read in axioms file:
+        with open(self.axioms_file, "r") as AxiomFile:
+            axioms = AxiomFile.read()
+
+
+        egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
+        return egg_log_desc
+
+    def get_swizzle_only_patterns(self, patterns):
+        swizzle_only_patterns = []
+
+        def is_swizzle_only_pattern(pat):
+            ops = pat.get_pattern_eq_classes()
+
+            contains_halide = any(["typed" in op for op in ops])
+
+            if contains_halide:
+                return False
+
+            contains_swizzle = any(["swizzle" in op for op in ops])
+
+            return contains_swizzle
+
+        for pat in patterns:
+            if is_swizzle_only_pattern(pat):
+                swizzle_only_patterns.append(pat)
+        return swizzle_only_patterns
+
 
     def convert_reg_to_compiler_datastructure(self, expr_regs):
         return [emit_egg_define_reg(reg) for reg in expr_regs]
@@ -131,10 +171,15 @@ class EggLogCompiler(CompilerBase):
 
                 proc = sb.Popen(cmd, start_new_session=True, stdout = OutStream, stderr = OutStream)
                 process = psutil.Process(proc.pid)
-                mem_info = process.memory_info()
+                rss = 0
+                vms = 0
+                while proc.poll() is None:
+                    time.sleep(0.5)
+                    mem_info = process.memory_info()
+                    vms = max(mem_info.vms, vms)
+                    rss = max(mem_info.rss, rss)
                 proc.wait()
-                rss = mem_info.rss
-                vms = mem_info.vms
+                print("Process completed")
                 self.memory_usages.append((rss,vms))
                 #sb.run(" ".join(cmd), shell = True, stdout = OutStream, stderr = OutStream)
             else:
@@ -218,7 +263,9 @@ class EggLogCompiler(CompilerBase):
         if expr_contains_swizzles(output_expression, self.target_dsl_list):
             # Emit another swizzle pass to lower swizzle expressions
             print("Expression contains swizzles, need to lower swizzles")
-            output_expression = self.run_swizzle_lowering_pipeline(output_expression, num_regs)
+            output_expression = self.run_swizzle_lowering_pipeline(output_expression)
+        else:
+            print("Expression does not contain swizzles")
 
 
         self.memo[key] = output_expression
@@ -267,12 +314,13 @@ class EggLogCompiler(CompilerBase):
         print("=="*20)
         print("Peak", ":", peak_rss / (1024 * 1024), "Megabytes")
 
+
     def run_swizzle_lowering_pipeline(self, expr):
         expr_regs = get_context_registers(expr)
         expr_regs = self.get_unique_registers(expr_regs)
 
         reg_data_structures = self.convert_reg_to_compiler_datastructure(expr_regs)
-        compiler_functionality = self.emit_pattern_matching_based_compiler(expr, swizzle_cost = min(self.input_cost, self.output_cost * 10))
+        compiler_functionality = self.emit_swizzle_pattern_matching_based_compiler(expr, swizzle_cost = min(self.input_cost, self.output_cost * 10))
 
         statements = []
 
