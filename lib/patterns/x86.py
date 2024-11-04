@@ -24,9 +24,9 @@ MISAAL_ROOT = os.getenv('MISAAL_SRC')
 combined_dsl_list = halide_dsl_list +x86_dsl_list + x86_swizzles_dsl_list
 
 test_files = [
-    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_x86-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_broadcasts_x86-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_x86-casts_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_broadcasts_x86-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-casts_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_assoc_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_dp_cast_x86-enumerate_intermediate_results.py",
@@ -38,7 +38,7 @@ props = [
 
 
 
-pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/x86.pickle"
+pickle_file_name = MISAAL_ROOT+ "/lib/patterns/x86.pickle"
 
 x86_patterns = []
 

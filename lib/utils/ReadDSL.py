@@ -106,7 +106,6 @@ def get_matching_context(nested_expr, dsl_list):
             ctx = matching_dsl_inst.contexts[ci]
             ctx_arg =  ctx.context_args[idx]
 
-
             if isinstance(ctx_arg, LaneSize) and is_numeric:
                 # value
                 if int(ctx_arg.value) == parameter_value:
@@ -131,7 +130,7 @@ def get_matching_context(nested_expr, dsl_list):
         # Split on registers
         print("Num reg like arguments",num_reg_like_arguments)
 
-        for ctx_idx in  range(len(matching_context_indices)):
+        for ctx_idx in  matching_context_indices:
             test_ctx = matching_dsl_inst.contexts[ctx_idx]
             num_ctx_args =  sum([1 for arg in test_ctx.context_args if isinstance(arg, BitVector)])
 
