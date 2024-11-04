@@ -1,0 +1,60 @@
+
+
+;; Signed Widen Mul 
+(rewrite
+    (typed_signed-vec-widen-mul v1 v2 iprec isize)
+
+    (typed_signed-vec-mul
+        (typed_cast-int-extend v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed_cast-int-extend v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+(rewrite
+    (typed_signed-vec-mul
+        (typed_cast-int-extend v1 iprec isigned olane oprec)
+        (typed_cast-int-extend v2 iprec isigned olane oprec)
+        oprec osize 
+    )
+
+    (typed_signed-vec-widen-mul v1 v2 iprec (* iprec olane))
+    )
+
+;; Unsigned Widen Mul
+(rewrite
+    (typed_unsigned-vec-widen-mul v1 v2 iprec isize)
+
+    (typed_unsigned-vec-mul
+        (typed_cast-uint-extend v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed_cast-uint-extend v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+
+(rewrite
+    (typed_unsigned-vec-mul
+        (typed_cast-uint-extend v1 iprec isigned olane oprec)
+        (typed_cast-uint-extend v2 iprec isigned olane oprec)
+        oprec osize 
+    )
+
+    (typed_unsigned-vec-widen-mul v1 v2 iprec (* iprec olane))
+
+)
+
+
+
+;; Literals Casts
+(rewrite
+     (LIT val prec)
+    (typed_cast-int-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
+    :when ((< val 255))
+)
+
+(rewrite
+     (LIT val prec)
+    (typed_cast-uint-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
+    :when ((< val 255))
+)

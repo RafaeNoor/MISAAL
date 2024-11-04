@@ -19,11 +19,16 @@ x86_dsl_list = parse_dict(x86_semantics)
 x86_swizzles_dsl_list = parse_dict(x86_swizzles)
 
 
+MISAAL_ROOT = os.getenv('MISAAL_SRC')
+
 combined_dsl_list = halide_dsl_list +x86_dsl_list + x86_swizzles_dsl_list
 
 test_files = [
-    "/home/arnoor2/MISAAL/lib/EnumeratePattern_x86-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/lib/EnumeratePattern_broadcasts_x86-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_x86-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_broadcasts_x86-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/x86/EnumeratePattern_x86-casts_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_assoc_x86-enumerate_intermediate_results.py",
 ]
 
 

@@ -1,4 +1,4 @@
-x86_Associative={
+{
     "_mm512_or_epi32_(0, 1)": [
         {
             "property_name": "Associative",
