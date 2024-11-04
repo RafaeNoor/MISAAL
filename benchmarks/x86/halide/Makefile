@@ -13,7 +13,9 @@ benchmarks = gaussian3x3 \
 			 blur5x5 \
 			 blur7x7 \
 			 gaussian5x5 \
-			 gaussian7x7
+			 gaussian7x7 \
+			 median3x3 \
+			 batched_matmul_256_32bit
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 

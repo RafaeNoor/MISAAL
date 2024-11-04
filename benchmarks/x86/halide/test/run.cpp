@@ -26,12 +26,16 @@
 #include "blur5x5.h"
 #elif benchmark_blur7x7
 #include "blur7x7.h"
+#elif benchmark_median3x3
+#include "median3x3.h"
 #elif benchmark_gaussian3x3
 #include "gaussian3x3.h"
 #elif benchmark_gaussian5x5
 #include "gaussian5x5.h"
 #elif benchmark_gaussian7x7
 #include "gaussian7x7.h"
+#elif benchmark_batched_matmul_256_32bit
+#include "batched_matmul_256_32bit.h"
 #endif
 
 #define LOG2VLEN 7
@@ -504,6 +508,66 @@ int main(int argc, char **argv) {
 
   printf("AppReported (): Image %dx%d - gaussian7x7(128B): %lld cycles (%0.4f "
          "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_median3x3
+  printf("\t*** median3x3\n");
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  benchmark([&]() {
+    int error = median3x3(input_buf, output_buf);
+    if (error != 0) {
+      printf("median3x3 pipeline failed: %d\n", error);
+    }
+  });
+#if DEBUG
+
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - median3x3(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / width / height);
+#endif
+
+#if benchmark_batched_matmul_256_32bit
+
+  constexpr int dims_3 = 3;
+  int32_t matrix_size = 256;
+
+  int num_batches = 4;
+  halide_dimension_t x_dim{0, matrix_size, 1};
+  halide_dimension_t y_dim{0, matrix_size, matrix_size};
+  halide_dimension_t b_dim{0, num_batches, matrix_size * matrix_size};
+  halide_dimension_t shape[3] = {x_dim, y_dim, b_dim};
+
+  int16_t matATensor[matrix_size * matrix_size * num_batches];
+  int16_t matBTensor[matrix_size * matrix_size * num_batches];
+  int32_t outputTensor[matrix_size * matrix_size * num_batches];
+
+  Halide::Runtime::Buffer<int16_t> matA((int16_t *)matATensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matB((int16_t *)matBTensor, dims_3, shape);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)outputTensor, dims_3,
+                                              shape);
+
+  cycles = benchmark([&]() {
+    int error = batched_matmul_256_32bit(matA, matB, output_buf);
+    if (error != 0) {
+      printf("batched_matmul_256_32bit pipeline failed: %d\n", error);
+    }
+  });
+
+  printf("AppReported (): Image %dx%d - batched_matmul_256_32bit(): %lld "
+         "cycles (%0.4f cycles/pixel)\n",
          (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
