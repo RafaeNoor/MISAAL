@@ -924,16 +924,25 @@ public:
             return rkt_lhs;
         }
 
+        size_t iprec = vectors[0].type().bits();
+        size_t ilanes = vectors[0].type().lanes();
+        size_t isize =  iprec * ilanes;
+
+        std::string iprec_str = std::to_string(iprec);
+        std::string isize_str = std::to_string(isize);
+
+        std::string type_str = " " + iprec_str + " " + isize_str +" ";
+
         if (is_even) {
             int mid_point = (end + start) / 2;
             std::string rkt_lhs = emit_general_concat_vectors(vectors, start, mid_point);
             std::string rkt_rhs = emit_general_concat_vectors(vectors, mid_point, end);
-            return "(concat_vectors\n" + rkt_lhs + " " + rkt_rhs + ")\n";
+            return "(typed:concat_vectors\n" + rkt_lhs + " " + rkt_rhs + type_str + ")\n";
         } else {
             // Seperate out odd element from the end
             std::string concat_even = emit_general_concat_vectors(vectors, start, end - 1);
 
-            return "(concat_vectors\n" + concat_even + " " + dispatch(vectors[end - 1]) + ")\n";
+            return "(typed:concat_vectors\n" + concat_even + " " + dispatch(vectors[end - 1]) + type_str + ")\n";
         }
     }
 
