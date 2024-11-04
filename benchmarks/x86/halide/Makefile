@@ -11,7 +11,9 @@ benchmarks = gaussian3x3 \
 			 sobel5x5 \
 			 blur3x3 \
 			 blur5x5 \
-			 blur7x7
+			 blur7x7 \
+			 gaussian5x5 \
+			 gaussian7x7
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 

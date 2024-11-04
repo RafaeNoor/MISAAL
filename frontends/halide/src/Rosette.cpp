@@ -705,22 +705,20 @@ public:
 
             size_t oprec = op->type.bits();
             std::string oprec_str = std::to_string(oprec);
+
+            
+            std::string lanes_str = std::to_string(op->type.lanes());
+            std::string bits_str = std::to_string(op->type.bits());
+            
+            std::string suffix = oprec > iprec ? "-extend" : "-truncate";
+
             
 
-            if (use_generalized_cast) {
-                std::string lanes_str = std::to_string(op->type.lanes());
-                std::string bits_str = std::to_string(op->type.bits());
-                
-                std::string suffix = oprec > iprec ? "-extend" : "-truncate";
-
-                std::string type_str = " " + iprec_str + " 1 " + lanes_str + " " +bits_str ;
-                if (op->type.is_uint()) {
-                    return tabs() + "(typed:cast-uint" + suffix + "\n" + rkt_val + " "+ type_str  + ")";
-                } else {
-                    return tabs() + "(typed:cast-int" + suffix+ "\n" + rkt_val + " " + type_str + ")";
-                }
+            std::string type_str = " " + iprec_str + " 1 " + lanes_str + " " +bits_str ;
+            if (op->type.is_uint()) {
+                return tabs() + "(typed:cast-uint" + suffix + "\n" + rkt_val + " "+ type_str  + ")";
             } else {
-                return tabs() + "(" + type_string + "\n" + rkt_val + ")";
+                return tabs() + "(typed:cast-int" + suffix+ "\n" + rkt_val + " " + type_str + ")";
             }
         }
     }
@@ -837,7 +835,7 @@ public:
         indent.pop();
 
         if (LoadToRegMap.find(op) != LoadToRegMap.end()) {
-            return "reg" + std::to_string(LoadToRegMap[op]);
+            return "(reg (bv " + std::to_string(LoadToRegMap[op]) + " 8))";
         }
 
         // Traverse loads and check if equal?
@@ -2564,6 +2562,36 @@ private:
             }
             return IRMutator::visit(op);
         }
+
+        Expr visit(const Cast *op) override {
+
+            if (op->type.is_float()){
+                return IRMutator::visit(op);
+            }
+            size_t oprec = op->type.bits();
+            size_t iprec = op->value.type().bits();
+
+            if(oprec > iprec){
+                // Extend case
+
+                // Split Double casts into 
+                // 2 single casts
+                if(oprec / iprec == 4){
+                    debug(0) << "Lowering double cast-extend!\n";
+                    Expr operand = op->value;
+                    Expr FirstCast = Cast::make(op->type.narrow(), operand);
+                    Expr SecondCast = Cast::make(op->type, FirstCast); 
+                    return mutate(SecondCast);
+                }
+
+            }            
+
+            return IRMutator::visit(op);
+
+        }
+
+
+
     };
 
     class FloatFinder : public IRVisitor {

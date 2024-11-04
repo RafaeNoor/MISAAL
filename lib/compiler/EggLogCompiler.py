@@ -25,6 +25,8 @@ class EggLogCompiler(CompilerBase):
         self.memory_usages = []
         self.measure_egglog_time = True
         self.memo = {}
+        self.MISAAL_ROOT = os.getenv('MISAAL_SRC')
+        self.axioms_file = os.path.join(self.MISAAL_ROOT, "targets","halide","axioms.egg")
 
 
     def remove_concat_slice_only_patterns(self):
@@ -107,7 +109,12 @@ class EggLogCompiler(CompilerBase):
             egglog_patterns.append(rewrite)
 
 
-        egg_log_desc = "\n".join([egglog_decls] + egglog_patterns)
+        # Read in axioms file:
+        with open(self.axioms_file, "r") as AxiomFile:
+            axioms = AxiomFile.read()
+
+
+        egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
         return egg_log_desc
 
 
