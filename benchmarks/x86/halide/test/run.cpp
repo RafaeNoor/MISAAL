@@ -40,6 +40,15 @@
 #include "max_pool_add.h"
 #elif benchmark_matmul_256_32bit_bias_add
 #include "matmul_256_32bit_bias_add.h"
+#elif benchmark_average_pool
+#include "average_pool.h"
+#elif benchmark_average_pool_add
+#include "average_pool_add.h"
+#elif benchmark_l2norm
+#include "l2norm.h"
+#elif benchmark_add
+#include "add.h"
+
 #endif
 
 #define LOG2VLEN 7
@@ -673,6 +682,121 @@ int main(int argc, char **argv) {
          "cycles (%0.4f cycles/pixel)\n",
          (int)width, (int)height, cycles, (float)cycles / (width * height));
 
+#endif
+
+#if benchmark_average_pool
+  halide_dimension_t c_dim{0, 1024, 1};
+  halide_dimension_t x_dim{0, width / 32, 128};
+  halide_dimension_t y_dim{0, height / 32, 128 * (width / 32)};
+  halide_dimension_t b_dim{0, 1, 128 * (width / 32) * (height / 32)};
+  halide_dimension_t shape[4] = {c_dim, x_dim, y_dim, b_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+
+  benchmark([&]() {
+    int error = average_pool(input_buf, 2, 2, 8, 8, 5, 225, output_buf);
+    if (error != 0) {
+      printf("average_pool pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - average_pool(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_average_pool_add
+  halide_dimension_t c_dim{0, 1024, 1};
+  halide_dimension_t x_dim{0, width / 32, 128};
+  halide_dimension_t y_dim{0, height / 32, 128 * (width / 32)};
+  halide_dimension_t b_dim{0, 1, 128 * (width / 32) * (height / 32)};
+  halide_dimension_t shape[4] = {c_dim, x_dim, y_dim, b_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+
+  benchmark([&]() {
+    int error =
+        average_pool_add(input_buf, input_buf, 2, 2, 8, 8, 5, 225, output_buf);
+    if (error != 0) {
+      printf("average_pool_add pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - average_pool_add(128B): %lld cycles "
+         "(%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_l2norm
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  cycles = benchmark([&]() {
+    int error = l2norm(input_buf, 0, output_buf);
+    if (error != 0) {
+      printf("l2norm pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - l2norm(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_add
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input1_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> input2_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  benchmark([&]() {
+    int error =
+        add(input1_buf, 0, 100, input2_buf, 0, 100, 0, 5, 225, output_buf);
+    if (error != 0) {
+      printf("add pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input1_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - add(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
   free(input);
