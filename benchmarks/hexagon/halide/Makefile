@@ -7,7 +7,23 @@ LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 HEXAGON_SIM ?= /shared/akashk4/Hexagon_SDK/3.5.3/tools/HEXAGON_Tools/8.3.07/Tools/bin/hexagon-sim
 HEXAGON_CLANG ?= /shared/akashk4/Hexagon_SDK/3.5.3/tools/HEXAGON_Tools/8.3.07/Tools/bin/hexagon-clang++
 
-benchmarks = tensor_add 
+benchmarks = tensor_add \
+			 tensor_mul \
+			 tensor_shr \
+			 tensor_shl \
+			 max_pool \
+			 blur3x3 \
+			 blur5x5 \
+			 blur7x7 \
+			 median3x3 \
+			 dilate3x3 \
+			 dilate5x5 \
+			 dilate7x7 \
+			 average_pool \
+			 sobel3x3 \
+			 batched_matmul_256_32bit \
+			 average_pool_add \
+			 max_pool_add
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 out_dirs = $(addsuffix /out,$(benchmarks))
@@ -17,7 +33,7 @@ prof_dirs = $(addsuffix /profile,$(benchmarks))
 ENABLE_HYDRIDE ?= 1
 INT_BW ?= 16
 STARTING_HASH ?= "empty_hash" 
-
+MISAAL_EQ_SAT_ITERS ?= 3
 
 hannk = hannk/common_halide.cpp
 
@@ -35,7 +51,7 @@ $(benchmarks): %: %/bin %/out %/profile
 		-o $@/bin/$@_generator \
 		-L $(HALIDE_DIR)/lib -lHalide $(shell $(LLVM_CONFIG) --system-libs --link-static)
 
-	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib; export HYDRIDE_BENCHMARK=$@_hvx; HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HYDRIDE_TARGET=hvx  ./$@/bin/$@_generator  \
+	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib; export HYDRIDE_BENCHMARK=$@_hvx; HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HYDRIDE_TARGET=hvx  MISAAL_EQ_SAT_ITERS=$(MISAAL_EQ_SAT_ITERS)  ./$@/bin/$@_generator  \
 	    -t 0 \
 		-o $@/bin \
 		-g $@ \
@@ -96,6 +112,6 @@ fully_connected/profile fully_connected/out fully_connected/bin: %:
 	mkdir $@
 
 clean:
-	rm -rf $(bin_dirs) $(out_dirs) $(prof_dirs) pmu_statsfile.txt stats_dump.iss.0 ./*.py ./*.egg ./*.txt ./*.rkt ./test.out
+	rm -rf $(bin_dirs) $(out_dirs) $(prof_dirs) pmu_statsfile.txt stats_dump.iss.0 ./*.py ./*.egg ./*.txt ./*.rkt ./test.out ./*egg*
 	
 
