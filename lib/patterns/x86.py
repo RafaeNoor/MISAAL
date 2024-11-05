@@ -12,7 +12,6 @@ import json
 import pickle
 
 from patterns.PatternUtils import create_patterns, deduplicate_patterns
-from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
 
 halide_dsl_list = parse_dict(halide_semantics)
 x86_dsl_list = parse_dict(x86_semantics)
