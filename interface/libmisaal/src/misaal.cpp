@@ -62,14 +62,14 @@ from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles
 from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles\n\
 from sema.ARMSema import arm_semantics\n\
 from sema.repairs_sema import repair_semantics\n\
-from common.DSLParser import parse_dict\n\
+from utils.DSLInstructionUtils import parse_dict_with_bounded\n\
 import sys\n";
         return imports;
 
     }
 
     std::string MisaalCompiler::parse_dict(std::string output_name, std::string dict_name){
-        return output_name + " = parse_dict(" +  dict_name + ")"; 
+        return output_name + " = parse_dict_with_bounded(" +  dict_name + ")"; 
     }
 
     std::string MisaalCompiler::join(std::vector<std::string>& statements, std::string join_on){
