@@ -48,7 +48,10 @@
 #include "l2norm.h"
 #elif benchmark_add
 #include "add.h"
-
+#elif benchmark_matmul_bias_relu_matmul
+#include "matmul_bias_relu_matmul.h"
+#elif benchmark_matmul_bias_gelu_matmul
+#include "matmul_bias_gelu_matmul.h"
 #endif
 
 #define LOG2VLEN 7
@@ -797,6 +800,132 @@ int main(int argc, char **argv) {
   printf("AppReported (): Image %dx%d - add(128B): %lld cycles (%0.4f "
          "cycles/pixel)\n",
          (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_matmul_bias_relu_matmul
+
+  constexpr int dims_3 = 3;
+  int32_t matrix_size = 256;
+
+  int bias_size = 64;
+  halide_dimension_t x_dim{0, matrix_size, 1};
+  halide_dimension_t y_dim{0, matrix_size, matrix_size * 1};
+  halide_dimension_t b_dim{0, bias_size, matrix_size * matrix_size};
+
+  /*
+  halide_dimension_t x_dim{ 0, matrix_size, matrix_size };
+  halide_dimension_t y_dim{ 0, matrix_size, matrix_size * matrix_size };
+  halide_dimension_t b_dim{ 0, bias_size, 1 };
+  */
+
+  halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+  printf("Allocating memory!\n");
+
+  int16_t *matATensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int16_t *matBTensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int16_t *matCTensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int32_t *outputTensor = (int32_t *)malloc(matrix_size * matrix_size *
+                                            bias_size * sizeof(int32_t));
+  int32_t *bias_ = (int32_t *)malloc(bias_size * sizeof(int32_t));
+
+  printf("Creating runtime buffers!\n");
+
+  Halide::Runtime::Buffer<int16_t> matA((int16_t *)matATensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matB((int16_t *)matBTensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matC((int16_t *)matCTensor, dims_3, shape);
+
+  halide_dimension_t bias_dim{0, bias_size, 1};
+  halide_dimension_t bias_shape[1] = {bias_dim};
+
+  Halide::Runtime::Buffer<int32_t> bias_buf((int32_t *)bias_, 1, bias_shape);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)outputTensor, dims_3,
+                                              shape);
+
+  printf("About to launch kernel!\n");
+  cycles = benchmark([&]() {
+    int error = matmul_bias_relu_matmul(matA, matB, matC, bias_buf, output_buf);
+    if (error != 0) {
+      printf("matmul_bias_relu_matmul pipeline failed: %d\n", error);
+    }
+  });
+
+  free(matATensor);
+  free(matBTensor);
+  free(matCTensor);
+  free(outputTensor);
+  free(bias_);
+
+  printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add(): %lld "
+         "cycles (%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+#if benchmark_matmul_bias_gelu_matmul
+
+  constexpr int dims_3 = 3;
+  int32_t matrix_size = 256;
+
+  int bias_size = 64;
+  halide_dimension_t x_dim{0, matrix_size, 1};
+  halide_dimension_t y_dim{0, matrix_size, matrix_size * 1};
+  halide_dimension_t b_dim{0, bias_size, matrix_size * matrix_size};
+
+  /*
+  halide_dimension_t x_dim{ 0, matrix_size, matrix_size };
+  halide_dimension_t y_dim{ 0, matrix_size, matrix_size * matrix_size };
+  halide_dimension_t b_dim{ 0, bias_size, 1 };
+  */
+
+  halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+  printf("Allocating memory!\n");
+
+  int16_t *matATensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int16_t *matBTensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int16_t *matCTensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int32_t *outputTensor = (int32_t *)malloc(matrix_size * matrix_size *
+                                            bias_size * sizeof(int32_t));
+  int32_t *bias_ = (int32_t *)malloc(bias_size * sizeof(int32_t));
+
+  printf("Creating runtime buffers!\n");
+
+  Halide::Runtime::Buffer<int16_t> matA((int16_t *)matATensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matB((int16_t *)matBTensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matC((int16_t *)matCTensor, dims_3, shape);
+
+  halide_dimension_t bias_dim{0, bias_size, 1};
+  halide_dimension_t bias_shape[1] = {bias_dim};
+
+  Halide::Runtime::Buffer<int32_t> bias_buf((int32_t *)bias_, 1, bias_shape);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)outputTensor, dims_3,
+                                              shape);
+
+  printf("About to launch kernel!\n");
+  cycles = benchmark([&]() {
+    int error = matmul_bias_gelu_matmul(matA, matB, matC, bias_buf, output_buf);
+    if (error != 0) {
+      printf("matmul_bias_gelu_matmul pipeline failed: %d\n", error);
+    }
+  });
+
+  free(matATensor);
+  free(matBTensor);
+  free(matCTensor);
+  free(outputTensor);
+  free(bias_);
+
+  printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add(): %lld "
+         "cycles (%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+
 #endif
 
   free(input);
