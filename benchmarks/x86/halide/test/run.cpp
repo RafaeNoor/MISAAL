@@ -36,6 +36,10 @@
 #include "gaussian7x7.h"
 #elif benchmark_batched_matmul_256_32bit
 #include "batched_matmul_256_32bit.h"
+#elif benchmark_max_pool_add
+#include "max_pool_add.h"
+#elif benchmark_matmul_256_32bit_bias_add
+#include "matmul_256_32bit_bias_add.h"
 #endif
 
 #define LOG2VLEN 7
@@ -571,6 +575,105 @@ int main(int argc, char **argv) {
          (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
+#if benchmark_max_pool_add
+  halide_dimension_t c_dim{0, 1024, 1};
+  halide_dimension_t x_dim{0, width / 32, 128};
+  halide_dimension_t y_dim{0, height / 32, 128 * (width / 32)};
+  halide_dimension_t b_dim{0, 1, 128 * (width / 32) * (height / 32)};
+  halide_dimension_t shape[4] = {c_dim, x_dim, y_dim, b_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+
+  benchmark([&]() {
+    int error =
+        max_pool_add(input_buf, input_buf, 2, 2, 8, 8, 5, 225, output_buf);
+    if (error != 0) {
+      printf("max_pool_add pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - max_pool(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_matmul_256_32bit_bias_add
+
+  printf("benchmark matmul_256_32bit_bias_add!\n");
+
+  constexpr int dims_3 = 3;
+  int32_t matrix_size = 256;
+
+  int bias_size = 64;
+  halide_dimension_t x_dim{0, matrix_size, 1};
+  halide_dimension_t y_dim{0, matrix_size, matrix_size * 1};
+  halide_dimension_t b_dim{0, bias_size, matrix_size * matrix_size};
+  halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+  printf("Allocating memory!\n");
+
+  /*
+  int16_t matATensor[matrix_size * matrix_size * bias_size ];
+  int16_t matBTensor[matrix_size * matrix_size * bias_size ];
+  int32_t bias_[bias_size];
+  int32_t outputTensor[matrix_size * matrix_size * bias_size ];
+  */
+
+  /*
+  int16_t* matATensor = (int16_t*) aligned_malloc(matrix_size * matrix_size *
+  bias_size * sizeof(int16_t), 1 << LOG2VLEN); int16_t* matBTensor = (int16_t*)
+  aligned_malloc(matrix_size * matrix_size * bias_size *  sizeof(int16_t), 1 <<
+  LOG2VLEN); int32_t* outputTensor = (int32_t*) aligned_malloc(matrix_size *
+  matrix_size * bias_size * sizeof(int32_t), 1 << LOG2VLEN); int32_t* bias_ =
+  (int32_t*) aligned_malloc(bias_size * sizeof(int32_t), 1 << LOG2VLEN);
+  */
+
+  int16_t *matATensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int16_t *matBTensor = (int16_t *)malloc(matrix_size * matrix_size *
+                                          bias_size * sizeof(int16_t));
+  int32_t *outputTensor = (int32_t *)malloc(matrix_size * matrix_size *
+                                            bias_size * sizeof(int32_t));
+  int32_t *bias_ = (int32_t *)malloc(bias_size * sizeof(int32_t));
+
+  printf("Creating runtime buffers!\n");
+
+  Halide::Runtime::Buffer<int16_t> matA((int16_t *)matATensor, dims_3, shape);
+  Halide::Runtime::Buffer<int16_t> matB((int16_t *)matBTensor, dims_3, shape);
+
+  halide_dimension_t bias_dim{0, bias_size, 1};
+  halide_dimension_t bias_shape[1] = {bias_dim};
+
+  Halide::Runtime::Buffer<int32_t> bias_buf((int32_t *)bias_, 1, bias_shape);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)outputTensor, dims_3,
+                                              shape);
+
+  printf("About to launch kernel!\n");
+  cycles = benchmark([&]() {
+    int error = matmul_256_32bit_bias_add(matA, matB, bias_buf, output_buf);
+    if (error != 0) {
+      printf("matmul_256_32bit_bias_add pipeline failed: %d\n", error);
+    }
+  });
+
+  free(matATensor);
+  free(matBTensor);
+  free(outputTensor);
+  free(bias_);
+
+  printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add(): %lld "
+         "cycles (%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
 
   free(input);
   free(output);
