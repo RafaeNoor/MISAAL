@@ -30,6 +30,7 @@ test_files = [
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_assoc_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_dp_cast_x86-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/x86/LowerSwizzles_filtered_x86_intermediate_results.py",
 ]
 
 
