@@ -178,7 +178,26 @@
     ],
     "_mm_broadcastmb_epi64": [
         "typed:cast-int-extend",
-        "typed:cast-uint-extend"
+        "typed:cast-uint-extend",
+        "typed:slice_vectors",
+        "typed:xBroadcast"
+    ],
+    "_mm_broadcast_i32x2": [
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:xBroadcast",
+        "typed:slice_vectors"
+    ],
+    "_mm512_broadcastq_epi64": [
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:xBroadcast",
+        "typed:slice_vectors"
+    ],
+    "_mm256_cvtepi64_epi32" : [
+        "typed:vec-saturate",
+        "typed:cast-int-truncate",
+        "typed:cast-uint-truncate"
     ],
     "_mm512_cvtusepi64_epi32": [
         "typed:vec-saturate",

@@ -16,9 +16,12 @@ halide_dsl_list = parse_dict(halide_semantics)
 
 combined_dsl_list = halide_dsl_list
 
+MISAAL_ROOT = os.getenv('MISAAL_SRC')
+
 test_files = [
-    "/home/arnoor2/MISAAL/targets/halide/tmpHalideEnum_halide-swizzles_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/halide/EnumeratePattern_halide-enumerate_intermediate_results.py",
+    MISAAL_ROOT+ "/targets/halide/tmpHalideEnum_halide-swizzles_intermediate_results.py",
+    MISAAL_ROOT+"/targets/halide/EnumeratePattern_halide-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/halide/EnumeratePattern_double_broadcast_halide-enumerate_intermediate_results.py",
 ]
 
 
@@ -29,7 +32,7 @@ for tf in test_files:
     with open(tf, "r") as ReadFile:
         props.append(json.load(ReadFile))
 
-pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/halide.pickle"
+pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
 
 Halide_patterns = []
 

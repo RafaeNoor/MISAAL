@@ -216,6 +216,8 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         lit_value = nested_expr[1]
         lit_value = hex(int(lit_value))
+        if lit_value.startswith("-"):
+            lit_value = lit_value[1:]
         lit_value = "#x" + lit_value[2:]
         lit_size = nested_expr[2]
 

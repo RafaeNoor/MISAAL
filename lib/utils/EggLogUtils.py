@@ -167,7 +167,7 @@ def emit_bv_to_egg(expr):
 
 def emit_const_bv_to_egg(expr):
     if "#x" in expr.value:
-        hex_str = "0x"+ expr.value.split("#x")[-1]
+        hex_str = "0x"+ expr.value.strip().split("#x")[-1]
         return "(LIT {} {})".format(int(hex_str, 16), expr.size)
     elif "#b" in expr.value:
         binary_str = expr.value.split("#b")[-1]

@@ -347,6 +347,7 @@
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyh_128B": [
+        "typed:xBroadcast", 
         "typed:unsigned-vec-widen-mul",
         "typed:signed-vec-widen-mul",
         "typed:unsigned-vec-mul",
@@ -406,11 +407,12 @@
     "hexagon_V6_vlsrh_128B": [
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint-truncate",
+        "typed:cast-uint-extend",
         "typed:signed-vector_reduce_add",
         "typed:unsigned-vec-shr",
         "typed:slice_vectors",
-        "typed:cast-int-truncate"
+        "typed:cast-int-extend",
+        "typed:xBroadcast"
     ],
     "hexagon_V6_vaslw_acc_128B": [
         "typed:unsigned-vec-sat-add",
@@ -550,6 +552,7 @@
         "typed:unsigned-vec-max"
     ],
     "hexagon_V6_vlsrw_128B": [
+        "typed:xBroadcast", 
         "typed:signed-vec-shr",
         "typed:unsigned-vec-shr",
         "typed:unsigned-vec-rounding_shift_right",

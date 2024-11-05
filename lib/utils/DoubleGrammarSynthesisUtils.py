@@ -1,5 +1,7 @@
 from utils.DSLInstructionUtils import *
 from utils.CodeSynthesizerDesc import *
+from utils.CanonicalizeExpressions import CanonicalizeExpression
+from utils.ReadDSL import read_string_to_dsl
 from common.Types import *
 from common.StructDef import StructDef
 from  common.Instructions import Context
@@ -12,7 +14,7 @@ import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True, required_src_name = None, required_dst_name = None):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True, required_src_name = None, required_dst_name = None, ensure_structure = False):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
@@ -23,6 +25,7 @@ class DoubleGrammarSynthesisUtils:
         self.use_any_reg = use_any_reg
         self.required_src_name = required_src_name
         self.required_dst_name = required_dst_name
+        self.ensure_structure = ensure_structure
 
 
 
@@ -276,8 +279,29 @@ class DoubleGrammarSynthesisUtils:
                 synth_dst_str = ReadFile.read()
             os.remove(read_from_fname_dst)
 
+        if self.ensure_structure and is_simplified:
+            src_expr = self.read_str_to_expr(synth_src_str)
+            dst_expr = self.read_str_to_expr(synth_dst_str)
 
-        return is_simplified, synth_src_str, synth_dst_str
+            if self.structure_matches(src_expr, src_ctx) and self.structure_matches(dst_expr, dst_ctx):
+                return is_simplified, synth_src_str, synth_dst_str
+            else:
+                return False , "", ""
+
+
+        else:
+            return is_simplified, synth_src_str, synth_dst_str
+
+
+    def read_str_to_expr(self, expr_str):
+        combined_list = self.input_dsl_list + self.output_dsl_list + self.swizzle_dsl_list + self.auxilary_dsl_list
+
+        return read_string_to_dsl(expr_str, combined_list)
+
+    def structure_matches(self, expr, ref_expr):
+        canon_utils = CanonicalizeExpression()
+        return canon_utils.isCanonical(expr, ref_expr)
+
 
     def get_context_input_sizes(self, ctx):
         return sorted([arg.size for arg in ctx.context_args if isinstance(arg, BitVector)])
