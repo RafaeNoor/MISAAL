@@ -64,7 +64,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
                     if not is_expr_valid(expr0):
-                        break
+                        continue
 
 
                     generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
@@ -77,7 +77,8 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                             continue
 
                         if not is_expr_valid(expr1):
-                            break
+                            continue
+
 
 
                         generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
@@ -89,7 +90,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                                 continue
 
                             if not is_expr_valid(expr2):
-                                break
+                                continue
 
                             generator_3 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                             for expr3 in generator_3:
@@ -100,7 +101,8 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                                     continue
 
                                 if not is_expr_valid(expr3):
-                                    break
+                                    continue
+
 
 
                                 copied_rctx = copy_fn(rctx)
@@ -120,7 +122,8 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
                     if not is_expr_valid(expr0):
-                        break
+                        continue
+
 
                     generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                     for expr1 in generator_1:
@@ -131,7 +134,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                             continue
 
                         if not is_expr_valid(expr1):
-                            break
+                            continue
 
                         generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
 
@@ -143,7 +146,8 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                                 continue
 
                             if not is_expr_valid(expr2):
-                                break
+                                continue
+
 
                             copied_rctx = copy_fn(rctx)
                             copied_rctx.context_args[symbolic_indices[0]] = expr0
@@ -163,7 +167,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
                     if not is_expr_valid(expr0):
-                        break
+                        continue
 
                     generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                     for expr1 in generator_1:
@@ -175,7 +179,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                             continue
 
                         if not is_expr_valid(expr1):
-                           break
+                            continue
 
                         copied_rctx = copy_fn(rctx)
                         copied_rctx.context_args[symbolic_indices[0]] = expr0
@@ -192,7 +196,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
                     if not is_expr_valid(expr0):
-                        break
+                        continue
 
                     copied_rctx = copy_fn(rctx)
                     copied_rctx.context_args[symbolic_indices[0]] = expr0
