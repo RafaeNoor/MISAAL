@@ -58,3 +58,48 @@
     (typed_cast-uint-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
     :when ((< val 255))
 )
+
+;; Halide casts of broadcast is equal to broadcast of casts
+
+(rewrite 
+ (typed_xBroadcast
+  (typed_cast-int-extend  reg_0 iprec 1 1 oprec)
+  isize
+  isize
+  factor
+ )
+
+ (typed_cast-int-extend  
+  (typed_xBroadcast
+   reg_0
+   iprec 
+   iprec
+   factor
+  )
+
+  iprec  1 factor oprec
+ )
+
+ )
+
+
+(rewrite 
+ (typed_xBroadcast
+  (typed_cast-uint-extend  reg_0 iprec 1 1 oprec)
+  isize
+  isize
+  factor
+ )
+
+ (typed_cast-uint-extend  
+  (typed_xBroadcast
+   reg_0
+   iprec 
+   iprec
+   factor
+  )
+
+  iprec  1 factor oprec
+ )
+
+ )

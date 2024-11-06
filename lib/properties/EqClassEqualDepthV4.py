@@ -71,6 +71,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         src_ctx = candidate[0]
         dst_ctx = candidate[1]
         output_size = candidate[3]
+        print("OUTPUT SIZE", output_size)
 
 
         test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list
@@ -235,6 +236,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     if len(relavent_output_subset) == 0:
                         print("Output set empty")
                         continue
+                    print("output_size = ", src_ctx.out_vectsize)
 
                     src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize)
 
@@ -254,6 +256,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                         if self.count_contexts(src_expr, dsl_inst.name) != 1:
                             continue
+
+                        print("Source expression output size:", src_expr.out_vectsize)
 
 
 
@@ -279,6 +283,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                 self.canon_skipped_src += 1
                                 continue
 
+
+
                         print(src_expr.emit_context_expr_string())
 
                         target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
@@ -291,7 +297,6 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
-
 
 
 
