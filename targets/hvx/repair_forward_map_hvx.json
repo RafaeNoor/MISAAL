@@ -9,7 +9,6 @@
         "typed:signed-vec-mul",
         "typed:vec-shl",
         "typed:cast-int-extend",
-        "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
     ],
@@ -121,7 +120,6 @@
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:cast-int-extend",
-        "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpybv_acc_128B": [
@@ -218,7 +216,6 @@
         "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-mul",
-        "typed:unsigned-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
     ],
@@ -407,11 +404,12 @@
     "hexagon_V6_vlsrh_128B": [
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint-truncate",
+        "typed:cast-uint-extend",
         "typed:signed-vector_reduce_add",
         "typed:unsigned-vec-shr",
         "typed:slice_vectors",
-        "typed:cast-int-truncate"
+        "typed:cast-int-extend",
+        "typed:xBroadcast"
     ],
     "hexagon_V6_vaslw_acc_128B": [
         "typed:unsigned-vec-sat-add",
@@ -488,7 +486,9 @@
     ],
     "hexagon_V6_vavgwrnd_128B": [
         "typed:vec-sub",
-        "typed:vec-add"
+        "typed:vec-add",
+        "typed:signed-vec-rounding_halving_add",
+        "typed:unsigned-vec-rounding_halving_add"
     ],
     "hexagon_V6_vunpackoh_128B": [
         "typed:unsigned-vec-sat-add",
@@ -551,6 +551,7 @@
         "typed:unsigned-vec-max"
     ],
     "hexagon_V6_vlsrw_128B": [
+        "typed:xBroadcast", 
         "typed:signed-vec-shr",
         "typed:unsigned-vec-shr",
         "typed:unsigned-vec-rounding_shift_right",
@@ -561,6 +562,10 @@
         "typed:vec-bwand"
     ],
     "hexagon_V6_vnavgw_128B": [
+        "typed:unsigned-vec-halving_add",
+        "typed:signed-vec-halving_add"
+    ],
+    "hexagon_V6_vavguw_128B": [
         "typed:unsigned-vec-halving_add",
         "typed:signed-vec-halving_add"
     ],
@@ -645,5 +650,9 @@
         "typed:vec-shl",
         "typed:signed-vec-shr",
         "typed:unsigned-vec-shr"
+    ], 
+    "hexagon_V6_vabsdiffh_128B": [
+        "typed:unsigned-vec-absd"
     ]
+
 }

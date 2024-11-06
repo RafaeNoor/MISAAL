@@ -32,6 +32,7 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_avgrnd_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_hvx_swizzle_hvx_intermediate_results_addon.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_hvx_combine_simpl_hvx_intermediate_results.py",
 ]
 
 
