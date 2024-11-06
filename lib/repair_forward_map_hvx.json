@@ -9,7 +9,6 @@
         "typed:signed-vec-mul",
         "typed:vec-shl",
         "typed:cast-int-extend",
-        "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
     ],
@@ -217,7 +216,6 @@
         "typed:cast-uint-extend",
         "typed:vec-sub",
         "typed:signed-vec-mul",
-        "typed:unsigned-vec-rounding_mul_shift_right",
         "typed:vec-add",
         "typed:xBroadcast"
     ],

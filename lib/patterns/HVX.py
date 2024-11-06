@@ -31,6 +31,7 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_right_w_hvx-enumerate_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_avgrnd_hvx-enumerate-absd_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_hvx_swizzle_hvx_intermediate_results_addon.py",
 ]
 
 
