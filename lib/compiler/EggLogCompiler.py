@@ -353,7 +353,7 @@ class EggLogCompiler(CompilerBase):
 
         statements.append(emit_egg_run_iter(self.run_iterations))
         statements.append(emit_egg_extract_expr(src_expr_name))
-        egg_file_name = get_random_tempfile_name() + ".egg"
+        egg_file_name = "swizzle." + get_random_tempfile_name() + ".egg"
 
         print("Creating swizzle egg file:\t", egg_file_name)
 

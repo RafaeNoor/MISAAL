@@ -55,6 +55,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
         combined_list += [src_eq_class_copy]
 
 
+        synth_utils = DoubleGrammarSynthesisUtils(input_dsl_list = self.input_dsl_list, output_dsl_list = self.output_dsl_list, swizzle_dsl_list = self.swizzle_dsl_list, auxilary_dsl_list = [], force_contains_all_regs = True, required_src_name = src_ctx.name)
 
 
 
@@ -91,7 +92,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
             dst_copy = copy.deepcopy(valid_dst_conc)
 
-            success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
+            success, src_expr_str, dst_expr_str = synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
 
             if success:
                 print("SUCCESS!")
@@ -111,7 +112,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
             valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, combined_list)
             for valid_src_conc in valid_src_conc_gen:
                 dst_copy = copy.deepcopy(valid_dst_conc)
-                success, dst_expr_str, src_expr_str = self.synth_utils.double_grammar_synthesis(dst_copy, valid_src_conc)
+                success, dst_expr_str, src_expr_str = synth_utils.double_grammar_synthesis(dst_copy, valid_src_conc)
 
                 if success:
                     print("SUCCESS BIDIRECTIONAL!")
@@ -162,8 +163,10 @@ class LowerSwizzles(EqClassEqualDepthV4):
                 for dsl_inst in self.input_dsl_list:
 
                     if not self.filter_list is None:
+                        print("Swizzle filter list")
                         if dsl_inst.name not in self.filter_list:
                             continue
+
 
 
                     relavent_swizzle_subset = []
@@ -249,6 +252,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
+
 
 
 
