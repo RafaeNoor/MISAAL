@@ -3158,7 +3158,7 @@ semantics = {
                   "Extensions" : "['hvx']",
       },
         },
-            "semantics" : ['"(define (hexagon_V6_vaslh_128B  %arg2 VuV RtV %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg0 %arg1 %arg3 )"', '"(define VdV"', '"(apply"', '"concat"', '"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"', '" (apply"', '" concat"', '" (for/list ([i.new0 (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"', '"  (define %lastidx0 (-  %elemsize0  1))"', '"  (define %1 (+  i.new0  %lastidx0))"', '"  (define %2 (extract  %1 i.new0 VuV))"', '"  (define %3 (bvand  RtV  %arg2))"', '"  (define %4.ab0 (bvsizeext  %2 %arg1 %arg0))"', '"  (define %5 (bvshl  %4.ab0  %3))"', '"  (define %8.high.idx (- %elemsize0 1))"', '"  (define %8.low.idx 0)"', '"  (define %8 (extract  %8.high.idx %8.low.idx %5))"', '"  %8"', '" )"', '" )"', '")"', '")"', '")"', '"(bvpadhighbits  VdV %arg3)"', '")"', '""'],
+            "semantics" : ['"(define (hexagon_V6_vaslh_128B  %arg2 VuV RtV %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg0 %arg1 %arg3 )"', '"(define VdV"', '"(apply"', '"concat"', '"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"', '" (apply"', '" concat"', '" (for/list ([i.new0 (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"', '"  (define %lastidx0 (-  %elemsize0  1))"', '"  (define %1 (+  i.new0  %lastidx0))"', '" (define %2 (extract  %1 i.new0 VuV))"', '"  (define %3 (bvand  RtV  RtV ))"', '"  (define %4.ab0 (bvsizeext  %2 %arg1 %arg0))"', '"  (define %5 (bvshl  %4.ab0  %3))"', '"  (define %8.high.idx (- %elemsize0 1))"', '"  (define %8.low.idx 0)"', '"  (define %8 (extract  %8.high.idx %8.low.idx %5))"', '"  %8"', '" )"', '" )"', '")"', '")"', '")"', '"(bvpadhighbits  VdV %arg3)"', '")"', '""'],
       },
 
           "hexagon_V6_vandnqrt_acc_128B" : {
@@ -5326,7 +5326,7 @@ semantics = {
                   "Extensions" : "['hvx']",
       },
         },
-            "semantics" : ['"(define (hexagon_V6_vaslw_128B  %arg0 VuV RtV %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg1 )"', '"(define VdV"', '"(apply"', '"concat"', '"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"', '" (apply"', '" concat"', '" (for/list ([i.new0 (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"', '"  (define %lastidx0 (-  %elemsize0  1))"', '"  (define %1 (+  i.new0  %lastidx0))"', '"  (define %2 (extract  %1 i.new0 VuV))"', '"  (define %3 (bvand  RtV  %arg0))"', '"  (define %4 (bvshl  %2  %3))"', '"  %4"', '" )"', '" )"', '")"', '")"', '")"', '"(bvpadhighbits  VdV %arg1)"', '")"', '""'],
+            "semantics" : ['"(define (hexagon_V6_vaslw_128B  %arg0 VuV RtV %vectsize0 %outerlanesize0 %innerlaneoffset0 %innerlanesize0 %elemsize0 %arg1 )"', '"(define VdV"', '"(apply"', '"concat"', '"(for/list ([%outer.it (reverse (range 0 %vectsize0 %outerlanesize0))])"', '" (apply"', '" concat"', '" (for/list ([i.new0 (reverse (range %innerlaneoffset0 %innerlanesize0 %elemsize0))])"', '"  (define %lastidx0 (-  %elemsize0  1))"', '"  (define %1 (+  i.new0  %lastidx0))"', '"  (define %2 (extract  %1 i.new0 VuV))"', '"  (define %3 (bvand  RtV  RtV))"', '"  (define %4 (bvshl  %2  %3))"', '"  %4"', '" )"', '" )"', '")"', '")"', '")"', '"(bvpadhighbits  VdV %arg1)"', '")"', '""'],
       },
 
           "hexagon_V6_vavguw_128B" : {
