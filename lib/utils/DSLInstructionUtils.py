@@ -1330,6 +1330,7 @@ def is_expr_concat_slice_only(expr, dsl_list):
 
     dsl_names = get_ctx_expr_dsl_names(expr, dsl_list)
 
+
     test_ops = ['typed:concat_vectors', 'typed:slice_vectors', 'typed:xBroadcast']
 
     cond1 = any([op in dsl_names for op in test_ops])

@@ -56,8 +56,9 @@ class EnumeratePattern(Property):
                 dst_eq_class = get_eq_class_for_ctx(dst_expr, self.dsl_list)
 
 
-                #if any([is_expr_concat_slice_only(expr, self.dsl_list) for expr in [src_expr, dst_expr]]):
+                #if not any([is_expr_concat_slice_only(expr, self.dsl_list) for expr in [src_expr, dst_expr]]):
                 #    continue
+
 
 
 

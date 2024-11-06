@@ -24,12 +24,13 @@ import gc
 # Version of EqClassEqualDepthV4 where the repair map is the entire DSL List
 class SwizzleTransferableV2(EqClassEqualDepthV4):
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1, bidirectional_test = False):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, same_swizzle_class = True):
 
         with open("empty_file.json", "w+") as EmptyFile:
             EmptyFile.write("{}\n")
         super().__init__(dsl_list = dsl_list,  source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, output_depth = output_depth, forward_map_path = "empty_file.json", swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = "empty_file.json", commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth =start_output_depth, bidirectional_test = bidirectional_test)
         self.name = "SwizzleTransferableV2"
+        self.same_swizzle_class = True
 
 
 
@@ -103,6 +104,8 @@ class SwizzleTransferableV2(EqClassEqualDepthV4):
 
                     src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize, max_leaves = 4)
 
+
+
                     self.src_canon_map.clear()
                     for src_expr in src_expressions:
 
@@ -136,8 +139,28 @@ class SwizzleTransferableV2(EqClassEqualDepthV4):
                                 self.canon_skipped_src += 1
                                 continue
 
+                        src_swizzle_inst = None
+                        if self.same_swizzle_class:
+                            src_dsl_names = get_ctx_expr_dsl_names(src_expr, relavent_swizzle_subset + [dsl_inst])
+                            src_dsl_names = list(set(src_dsl_names))
+                            num_swizzle_classes = sum([1 for name in src_dsl_names if "swizzle" in name])
 
-                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 4)
+                            if num_swizzle_classes != 1:
+                                continue
+                            else:
+                                src_swizzle_name = [name for name in src_dsl_names if "swizzle" in name][0]
+                                src_swizzle_inst = self.get_eq_class(src_swizzle_name)
+
+
+
+
+                        target_enum_set = relavent_output_subset
+
+                        if self.same_swizzle_class:
+                            target_enum_set = [dsl_inst, src_swizzle_inst]
+
+
+                        target_expressions = create_exhaustive_expressions_generator_v2(target_enum_set, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 4)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
 
