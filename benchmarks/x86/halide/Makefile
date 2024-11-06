@@ -26,7 +26,11 @@ benchmarks = gaussian3x3 \
 			 matmul_256_32bit_bias_add_relu \
 			 matmul_256_32bit_bias_add_gelu \
 			 matmul_256_32bit_bias_add \
-			 matmul_256_32bit_bias_add_add
+			 matmul_256_32bit_bias_add_add \
+			 mul \
+			 softmax \
+			 fully_connected \
+			 depthwise_conv
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
@@ -94,39 +98,38 @@ endif
 
 #-lpng -lpthread -ldl -ljpeg 
 	
-fully_connected: %: %/bin
-# 	Compile the generator
-	g++ --std=c++17 -fno-rtti -O3 -DLOG2VLEN=7 \
-		-I $(HALIDE_DISTRIB)/include -I $(HALIDE_DISTRIB)/tools \
-		-g $@/src/$@_generator.cpp $(HALIDE_DISTRIB)/tools/GenGen.cpp \
-		$(hannk) \
-		-o $@/bin/$@_generator \
-		-L $(HALIDE_DISTRIB)/lib -lHalide $(shell $(LLVM_ROOT)/bin/llvm-config --system-libs --link-static)
-
-# 	Use the generator (to get a manual schedule which is the default)
+#fully_connected: %: %/bin
+## 	Compile the generator
+#	g++ --std=c++17 -fno-rtti -O3 -DLOG2VLEN=7 \
+#		-I $(HALIDE_DISTRIB)/include -I $(HALIDE_DISTRIB)/tools \
+#		-g $@/src/$@_generator.cpp $(HALIDE_DISTRIB)/tools/GenGen.cpp \
+#		$(hannk) \
+#		-o $@/bin/$@_generator \
+#		-L $(HALIDE_DISTRIB)/lib -lHalide $(shell $(LLVM_ROOT)/bin/llvm-config --system-libs --link-static)
 #
-	 export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib; HL_EXPR_DEPTH=$(EXPR_DEPTH) $(STARTING_HASH_FLAG) HYDRIDE_BENCHMARK=$@_x86_depth$(EXPR_DEPTH)_rafae HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_SYNTH_BW=$(SYNTH_BITWIDTH) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) HYDRIDE_DECOMPOSE_LET=1 ./$@/bin/$@_generator \
-		-t 0 \
-		-o $@/bin \
-		-g $@ \
-		output.type=uint8 \
-		-e static_library,stmt,h,llvm_assembly,assembly \
-		-f $@ target=$(TARGET)
-	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;HL_EXPR_DEPTH=$(EXPR_DEPTH) HL_ENABLE_HYDRIDE=0 HL_DEBUG_CODEGEN=1 HYDRIDE_DECOMPOSE_LET=1  HL_SYNTH_BW=$(SYNTH_BITWIDTH) ./$@/bin/$@_generator \
-		-r halide_runtime_x86 \
-		-o $@/bin \
-		-e object,c_header \
-		target=$(TARGET)
-
-	$(CC) -Dbenchmark_$@ --std=c++17 \
-		-O0 -march=native -mavx512vl -mavx512ifma \
-		-I $(HALIDE_DISTRIB)/include -I ./$@/bin \
-		-lstdc++ -ldl -pthread \
-		test/run.cpp \
-		test/stubs.cpp \
-		$@/bin/$@.a \
-		$@/bin/halide_runtime_x86.o \
-		-o $@/bin/$@_run.out
+## 	Use the generator (to get a manual schedule which is the default)
+##
+#	 export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib; HL_EXPR_DEPTH=$(EXPR_DEPTH) $(STARTING_HASH_FLAG) HYDRIDE_BENCHMARK=$@_x86_depth$(EXPR_DEPTH)_rafae HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_SYNTH_BW=$(SYNTH_BITWIDTH) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) HYDRIDE_DECOMPOSE_LET=1 ./$@/bin/$@_generator \
+#		-t 0 \
+#		-o $@/bin \
+#		-g $@ \
+#		-e static_library,stmt,h,llvm_assembly,assembly \
+#		-f $@ target=$(TARGET)
+#	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;HL_EXPR_DEPTH=$(EXPR_DEPTH) HL_ENABLE_HYDRIDE=0 HL_DEBUG_CODEGEN=1 HYDRIDE_DECOMPOSE_LET=1  HL_SYNTH_BW=$(SYNTH_BITWIDTH) ./$@/bin/$@_generator \
+#		-r halide_runtime_x86 \
+#		-o $@/bin \
+#		-e object,c_header \
+#		target=$(TARGET)
+#
+#	$(CC) -Dbenchmark_$@ --std=c++17 \
+#		-O0 -march=native -mavx512vl -mavx512ifma \
+#		-I $(HALIDE_DISTRIB)/include -I ./$@/bin \
+#		-lstdc++ -ldl -pthread \
+#		test/run.cpp \
+#		test/stubs.cpp \
+#		$@/bin/$@.a \
+#		$@/bin/halide_runtime_x86.o \
+#		-o $@/bin/$@_run.out
 	
 ifeq ($(BENCHMARK),1) 
 

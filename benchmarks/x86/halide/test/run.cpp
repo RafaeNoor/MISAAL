@@ -58,6 +58,14 @@
 #include "matmul_256_32bit_bias_add.h"
 #elif benchmark_matmul_256_32bit_bias_add_add
 #include "matmul_256_32bit_bias_add_add.h"
+#elif benchmark_mul
+#include "mul.h"
+#elif benchmark_softmax
+#include "softmax.h"
+#elif benchmark_fully_connected
+#include "fully_connected.h"
+#elif benchmark_depthwise_conv
+#include "depthwise_conv.h"
 #endif
 
 #define LOG2VLEN 7
@@ -1112,6 +1120,176 @@ int main(int argc, char **argv) {
   printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add_add(): %lld "
          "cycles (%0.4f cycles/pixel)\n",
          (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+#if benchmark_mul
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input1_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> input2_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  benchmark([&]() {
+    int error =
+        mul(input1_buf, 2, input2_buf, 5, 5, 10000, 1, 5, 225, output_buf);
+    if (error != 0) {
+      printf("mul pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input1_buf(x, y), output_buf(x, y));
+#endif
+
+  printf("AppReported (): Image %dx%d - mul(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_softmax
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+  float exec_time = benchmark([&]() {
+    int error = softmax(input_buf, 0, 100, 0, 5, 225, output_buf);
+    if (error != 0) {
+      printf("softmax pipeline failed: %d\n", error);
+    }
+  });
+
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+
+  printf("AppReported (HVX128B-mode): Image %dx%d - softmax(128B): %lld cycles "
+         "(%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / width / height);
+
+  printf("Execution took %0.4f s\n", exec_time);
+#endif
+
+#if benchmark_fully_connected
+  int *bias =
+      (int *)aligned_malloc(width * height * sizeof(int),
+                            1 << LOG2VLEN); //(int*)memalign(1 << LOG2VLEN,
+                                            // width * height * sizeof(int));
+  for (int i = 0; i < (width * height); i++)
+    bias[i] = 10000;
+
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  halide_dimension_t i_dim{0, width * height, 1};
+  halide_dimension_t b_shape[2] = {i_dim};
+
+  Halide::Runtime::Buffer<uint8_t> mat_a_(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> mat_b_(input, dims, shape);
+  Halide::Runtime::Buffer<int32_t> bias_((int *)bias, 1, b_shape);
+  Halide::Runtime::Buffer<uint8_t> output_(output, dims, shape);
+
+  cycles = benchmark([&]() {
+    int error = fully_connected(
+        /* _input_buffer */ mat_a_, /* _input_zero */ 3,
+        /*_filter_buffer */ mat_b_, /* _filter_zero */ 5,
+        /*_bias_buffer */ bias_, /* _output_zero */ 7,
+        /* _output_multiplier */ 32767, /* _output_shift */ 1, /* _output_min */
+        5, /* _output_max */ 250, /* _output_buffer */ output_);
+    if (error != 0) {
+      printf("fully_connected pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             mat_a_(x, y), output_(x, y));
+#endif
+
+  printf("AppReported (HVX128B-mode): Image %dx%d - fully_connected(128B): "
+         "%lld cycles (%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_depthwise_conv
+
+  int custom_width = 128;
+  int custom_height = 128;
+
+  printf("Running Depthwise Conv!");
+
+  int divider = 4;
+  int stride_i_dim3 = 1024 * (custom_width/divider);
+  int stride_i_dim4 = stride_i_dim3 * (custom_height/divider);
+  halide_dimension_t input_shape[4] = {{0, 1024, 1}, {0, custom_width/divider, 1024}, {0, custom_height/divider,stride_i_dim3}, {0, 1,stride_i_dim4}};
+  size_t num_input_elem = 1024 * (custom_width/divider) * (custom_height/divider) * 1;
+  uint8_t* inputTensor = (uint8_t*) aligned_malloc(num_input_elem * sizeof(uint8_t), 1 << LOG2VLEN);
+
+  Halide::Runtime::Buffer<uint8_t> input_(inputTensor, 4, input_shape);
+//   input_.set_name("input_");
+
+  halide_dimension_t filter_shape[3] = {{0, 1024, 1}, {0, 4, 1024}, {0, 4, 4*1024}};
+  size_t num_filter_elem = 1024 * 4 * 4 ;
+  uint8_t* filterTensor = (uint8_t*) aligned_malloc(num_filter_elem * sizeof(uint8_t), 1 << LOG2VLEN);
+  Halide::Runtime::Buffer<uint8_t> filter_(filterTensor, 3, filter_shape);
+//   filter_.set_name("filter_");
+
+
+  halide_dimension_t bias_shape[1] = {{0, custom_width*custom_height, 1}};
+  size_t num_bias_elem = custom_width * custom_height ;
+  int32_t* biasTensor = (int32_t*) aligned_malloc(num_bias_elem * sizeof(int32_t), 1 << LOG2VLEN);
+  Halide::Runtime::Buffer<int32_t> bias_(biasTensor, 1, bias_shape);
+//   bias_.set_name("bias_");
+
+
+
+  divider = 32;
+  int stride_o_dim3 = 1024 * (custom_width/divider);
+  int stride_o_dim4 = stride_o_dim3 * (custom_height/divider);
+  halide_dimension_t output_shape[4] = {{0, 1024, 1}, {0, custom_width/divider, 1024}, {0, custom_height/divider,stride_i_dim3}, {0, 1,stride_i_dim4}};
+  size_t num_output_elem = 1024 * (custom_width/divider) * (custom_height/divider) * 1;
+  uint8_t* outputTensor = (uint8_t*) aligned_malloc(num_output_elem * sizeof(uint8_t), 1 << LOG2VLEN);
+
+  Halide::Runtime::Buffer<uint8_t> output_buf(outputTensor, 4, output_shape);
+//   output_buf.set_name("output_buf");
+
+  int inv_depth_multiplier_ = -1;
+  uint8_t input_zero_ = 3;
+  uint8_t filter_zero_ = 5;
+  int depth_multiplier_ = 1;
+  int stride_x_ = 1;
+  int stride_y_ = 1;
+  int dilation_x_ = 1;
+  int dilation_y_ = 1;
+  int32_t output_multiplier_ = 32767;
+  uint32_t output_shift_ = 1;
+  uint8_t output_zero_ = 3;
+  uint8_t output_min_ =5;
+  uint8_t output_max_ = 250;
+
+
+
+     benchmark([&]() {
+            int error = depthwise_conv(input_,  input_zero_, filter_ ,  filter_zero_, bias_,  depth_multiplier_,  stride_x_,  stride_y_, dilation_x_, dilation_y_, output_multiplier_, output_shift_, output_zero_,  output_min_, output_max_, output_buf );
+            if (error != 0) {
+            printf("depthwise_conv pipeline failed: %d\n", error);
+            }
+            });
+
+
+    printf("AppReported (): Image %dx%d - depthwise_conv(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 
 #endif
 
