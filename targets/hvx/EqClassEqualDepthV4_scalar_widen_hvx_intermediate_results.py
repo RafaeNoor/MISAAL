@@ -1,0 +1,22 @@
+{
+    " (hexagon_V6_vmpyh_128B_dsl ; hexagon_V6_vmpyh_128B\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t (hexagon_V6_interleave_2_128B_dsl ; hexagon_V6_interleave_2_128B\n\t\t(reg (bv 1 (bitvector 8))) ; < 1 x i8> False\n\t\t16\n\t\t32\n\t )\n\t32\n\t32\n\t0\n\t512\n\t16\n\t0\n\t512\n\t16\n\t32\n\t1\n\t1\n\t1\n\t0\n\t32\n\t1024\n\t1\n\t1\n\t16\n\t16\n\t2\n\t0\n )_ (hvx_swizzle_3_dsl ; hvx_swizzle_3\n\t (typed:unsigned-vec-widen-mul ; typed:unsigned-vec-widen-mul_p16_s1024_signed_0\n\t\t (typed:xBroadcast ; typed:xBroadcast_is16_os1024_signed_None\n\t\t\t(buffer-index  0 'uint8 8) ; < 1 x i8> False\n\t\t\t16\n\t\t\t16\n\t\t\t64\n\t\t )\n\t\t(buffer-index  1 'uint8 8) ; < 1 x i8> False\n\t\t16\n\t\t1024\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t2016\n\t1952\n\t1888\n\t1824\n\t1760\n\t1696\n\t1632\n\t1568\n\t1504\n\t1440\n\t1376\n\t1312\n\t1248\n\t1184\n\t1120\n\t1056\n\t992\n\t1984\n\t1920\n\t928\n\t1856\n\t1792\n\t864\n\t1728\n\t1664\n\t800\n\t1600\n\t1536\n\t736\n\t1472\n\t1408\n\t672\n\t1344\n\t1280\n\t608\n\t1216\n\t1152\n\t544\n\t1088\n\t1024\n\t480\n\t960\n\t896\n\t416\n\t832\n\t768\n\t352\n\t704\n\t640\n\t288\n\t576\n\t512\n\t224\n\t448\n\t384\n\t160\n\t320\n\t256\n\t96\n\t192\n\t128\n\t32\n\t64\n\t0\n\t0\n )": [
+        {
+            "property_name": "EqClassEqualDepthV4_scalar_widen",
+            "property": {
+                "src": "(hexagon_V6_vmpyh_128B_dsl (reg (bv #x00 8)) (hexagon_V6_interleave_2_128B_dsl (reg (bv #x01 8)) 16 32) 32 32 0 512 16 0 512 16 32 1 0 0 0 32 1024 0 0 16 16 2 0)",
+                "dst": "(hvx_swizzle_3_dsl (typed:unsigned-vec-widen-mul (typed:xBroadcast (reg (bv #x01 8)) 16 16 64) (reg (bv #x00 8)) 16 1024) 32 32 0 32 32 2016 1952 1888 1824 1760 1696 1632 1568 1504 1440 1376 1312 1248 1184 1120 1056 992 1984 1920 928 1856 1792 864 1728 1664 800 1600 1536 736 1472 1408 672 1344 1280 608 1216 1152 544 1088 1024 480 960 896 416 832 768 352 704 640 288 576 512 224 448 384 160 320 256 96 192 128 32 64 0 0)"
+            }
+        }
+    ],
+
+    " (hexagon_V6_vmpyh_128B_dsl ; hexagon_V6_vmpyh_128B\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t (hexagon_V6_interleave_2_128B_dsl ; hexagon_V6_interleave_2_128B\n\t\t(reg (bv 1 (bitvector 8))) ; < 1 x i8> False\n\t\t16\n\t\t32\n\t )\n\t32\n\t32\n\t0\n\t512\n\t16\n\t0\n\t512\n\t16\n\t32\n\t1\n\t1\n\t1\n\t0\n\t32\n\t1024\n\t1\n\t1\n\t16\n\t16\n\t2\n\t0\n )_ (hvx_swizzle_3_dsl ; hvx_swizzle_3\n\t (typed:unsigned-vec-widen-mul ; typed:unsigned-vec-widen-mul_p16_s1024_signed_0\n\t\t (typed:xBroadcast ; typed:xBroadcast_is16_os1024_signed_None\n\t\t\t(buffer-index  0 'uint8 8) ; < 1 x i8> False\n\t\t\t16\n\t\t\t16\n\t\t\t64\n\t\t )\n\t\t(buffer-index  1 'uint8 8) ; < 1 x i8> False\n\t\t16\n\t\t1024\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t2016\n\t1952\n\t1888\n\t1824\n\t1760\n\t1696\n\t1632\n\t1568\n\t1504\n\t1440\n\t1376\n\t1312\n\t1248\n\t1184\n\t1120\n\t1056\n\t992\n\t1984\n\t1920\n\t928\n\t1856\n\t1792\n\t864\n\t1728\n\t1664\n\t800\n\t1600\n\t1536\n\t736\n\t1472\n\t1408\n\t672\n\t1344\n\t1280\n\t608\n\t1216\n\t1152\n\t544\n\t1088\n\t1024\n\t480\n\t960\n\t896\n\t416\n\t832\n\t768\n\t352\n\t704\n\t640\n\t288\n\t576\n\t512\n\t224\n\t448\n\t384\n\t160\n\t320\n\t256\n\t96\n\t192\n\t128\n\t32\n\t64\n\t0\n\t0\n )": [
+        {
+            "property_name": "EqClassEqualDepthV4_scalar_widen",
+            "property": {
+                "src": "(hexagon_V6_vmpyh_128B_dsl (reg (bv #x00 8)) (hexagon_V6_interleave_2_128B_dsl (reg (bv #x01 8)) 16 32) 32 32 0 512 16 0 512 16 32 1 0 0 0 32 1024 0 0 16 16 2 0)",
+                "dst": "(hvx_swizzle_3_dsl (typed:unsigned-vec-widen-mul (typed:xBroadcast (reg (bv #x01 8)) 16 16 64) (reg (bv #x00 8)) 16 1024) 32 32 0 32 32 2016 1952 1888 1824 1760 1696 1632 1568 1504 1440 1376 1312 1248 1184 1120 1056 992 1984 1920 928 1856 1792 864 1728 1664 800 1600 1536 736 1472 1408 672 1344 1280 608 1216 1152 544 1088 1024 480 960 896 416 832 768 352 704 640 288 576 512 224 448 384 160 320 256 96 192 128 32 64 0 0)"
+            }
+        }
+    ]
+
+}

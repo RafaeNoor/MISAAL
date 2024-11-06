@@ -121,7 +121,6 @@
         "typed:signed-vec-mul",
         "typed:signed-vector_reduce_add",
         "typed:cast-int-extend",
-        "typed:signed-vec-rounding_mul_shift_right",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpybv_acc_128B": [
@@ -489,7 +488,9 @@
     ],
     "hexagon_V6_vavgwrnd_128B": [
         "typed:vec-sub",
-        "typed:vec-add"
+        "typed:vec-add",
+        "typed:signed-vec-rounding_halving_add",
+        "typed:unsigned-vec-rounding_halving_add"
     ],
     "hexagon_V6_vunpackoh_128B": [
         "typed:unsigned-vec-sat-add",
@@ -563,6 +564,10 @@
         "typed:vec-bwand"
     ],
     "hexagon_V6_vnavgw_128B": [
+        "typed:unsigned-vec-halving_add",
+        "typed:signed-vec-halving_add"
+    ],
+    "hexagon_V6_vavguw_128B": [
         "typed:unsigned-vec-halving_add",
         "typed:signed-vec-halving_add"
     ],
@@ -647,5 +652,9 @@
         "typed:vec-shl",
         "typed:signed-vec-shr",
         "typed:unsigned-vec-shr"
+    ], 
+    "hexagon_V6_vabsdiffh_128B": [
+        "typed:unsigned-vec-absd"
     ]
+
 }

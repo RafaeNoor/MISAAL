@@ -25,7 +25,12 @@ test_files = [
     #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
     "/home/arnoor2/MISAAL/test/property/eq_class_enumeration/hvx/tempEnumxHVX_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py"
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_scalar_widen_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_right_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_right_w_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate-absd_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_avgrnd_hvx-enumerate-absd_intermediate_results.py",
 ]
 
 
