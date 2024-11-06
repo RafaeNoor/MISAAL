@@ -17,7 +17,7 @@ class EggLogCompiler(CompilerBase):
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
         self.egglog_bin = os.path.join(self.egg_pkg_path, "target","debug","egglog")
-        self.input_cost = 100
+        self.input_cost = 1000
         self.prune_patterns = prune_patterns
         self.output_cost = 1
         self.run_iterations = run_iterations
@@ -260,7 +260,11 @@ class EggLogCompiler(CompilerBase):
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
 
-        if expr_contains_swizzles(output_expression, self.target_dsl_list):
+        if self.expr_contains_src_language(output_expression, "typed"):
+            print("Expression contains src language, need additional eq sat")
+            output_expression = self.compile_expr(output_expression)
+
+        if expr_contains_swizzles(output_expression, self.target_dsl_list + self.src_dsl_list):
             # Emit another swizzle pass to lower swizzle expressions
             print("Expression contains swizzles, need to lower swizzles")
             output_expression = self.run_swizzle_lowering_pipeline(output_expression)
@@ -272,6 +276,14 @@ class EggLogCompiler(CompilerBase):
 
         return output_expression
 
+    def expr_contains_src_language(self, expr, prefix):
+        if not isinstance(expr, Context):
+            return False
+        dsl_names = get_ctx_expr_dsl_names(expr, self.target_dsl_list + self.src_dsl_list)
+
+        return any([prefix in dsl_name for dsl_name in dsl_names])
+
+
     def parse_egglog_output_expr(self, expr_str, num_regs):
 
         expression_str = expr_str
@@ -279,7 +291,8 @@ class EggLogCompiler(CompilerBase):
         for i in range(num_regs):
             expression_str = expression_str.replace("(SYMBV {})".format(i), "(reg (bv {} 8))".format(i))
 
-        output_expr = read_string_to_dsl(expression_str, self.target_dsl_list)
+        print("expression_str", expression_str)
+        output_expr = read_string_to_dsl(expression_str, self.target_dsl_list + self.src_dsl_list)
 
         return output_expr
 
@@ -296,6 +309,7 @@ class EggLogCompiler(CompilerBase):
         print("=="*20)
         print("Total", ":", total)
 
+        print("\n\n")
         print("=======", "Virtual Memory", "=======")
         peak_vms = -1
         for rss, vms in self.memory_usages:
@@ -305,6 +319,7 @@ class EggLogCompiler(CompilerBase):
         print("=="*20)
         print("Peak", ":", peak_vms / (1024 * 1024), "Megabytes")
 
+        print("\n\n")
         print("=======", "Physical Memory", "=======")
         peak_rss = -1
         for rss, vms in self.memory_usages:
@@ -313,6 +328,7 @@ class EggLogCompiler(CompilerBase):
             print("-", MB, "Megabytes")
         print("=="*20)
         print("Peak", ":", peak_rss / (1024 * 1024), "Megabytes")
+        print("\n\n")
 
 
     def run_swizzle_lowering_pipeline(self, expr):
@@ -320,7 +336,7 @@ class EggLogCompiler(CompilerBase):
         expr_regs = self.get_unique_registers(expr_regs)
 
         reg_data_structures = self.convert_reg_to_compiler_datastructure(expr_regs)
-        compiler_functionality = self.emit_swizzle_pattern_matching_based_compiler(expr, swizzle_cost = min(self.input_cost, self.output_cost * 10))
+        compiler_functionality = self.emit_swizzle_pattern_matching_based_compiler(expr, swizzle_cost = self.input_cost)
 
         statements = []
 
@@ -330,6 +346,7 @@ class EggLogCompiler(CompilerBase):
         num_regs = len(reg_data_structures)
 
         src_expr_name = "swizzleexpr"
+        print("Swizzle Expression:\n", expr.emit_context_expr_string())
         src_expr_egg = emit_expr_to_egg(expr)
         define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
         statements.append(define_src_expr)
