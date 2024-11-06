@@ -17,13 +17,16 @@ benchmarks = gaussian3x3 \
 			 median3x3 \
 			 batched_matmul_256_32bit \
 			 max_pool_add \
-			 matmul_256_32bit_bias_add \
 			 average_pool \
 			 average_pool_add \
 			 l2norm \
 			 add \
 			 matmul_bias_relu_matmul \
-			 matmul_bias_gelu_matmul
+			 matmul_bias_gelu_matmul \
+			 matmul_256_32bit_bias_add_relu \
+			 matmul_256_32bit_bias_add_gelu \
+			 matmul_256_32bit_bias_add \
+			 matmul_256_32bit_bias_add_add
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
