@@ -283,5 +283,9 @@
         "typed:unsigned-vec-rounding_shift_right",
         "typed:unsigned-vec-shr",
         "typed:unsigned-vec-rounding_mul_shift_right"
+    ],
+    "_mm512_srav_epi16": [
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr"
     ]
 }
