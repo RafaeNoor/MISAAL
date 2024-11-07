@@ -1,12 +1,13 @@
 #from Pattern import *
 import multiprocessing
 import itertools
+import sys
 
 from utils.ReadDSL import read_string_to_dsl
 from common.DSLParser import parse_dict
 from common.Instructions import *
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
-    
+
 
 class GeneralizedContext:
   def __init__(self, ctx : Context):
@@ -14,7 +15,7 @@ class GeneralizedContext:
     self.args = list()
     # Concrete values of abstracted constants are kept track of here
     self.arg_names_to_val = dict()
-    
+
   def __eq__(self, ctx):
     if not isinstance(ctx, GeneralizedContext):
       return False
@@ -27,10 +28,10 @@ class GeneralizedContext:
         if arg1 != arg2:
           return False
     return True
-  
+
   def __ne__(self, ctx):
     return not self.__eq__(ctx)
-    
+
   def print(self):
     # self.org_ctx.print_context()
     # print("self.args:")
@@ -327,7 +328,7 @@ def get_generalized_arg_and_val(prefix : str, arg_names_to_val : dict):
   return None, None
 
 
-def get_expr_to_arg_names_dict_for(expr : Context, reference_expr : GeneralizedContext, 
+def get_expr_to_arg_names_dict_for(expr : Context, reference_expr : GeneralizedContext,
                                    expr_to_arg_names_dict = dict()):
   for arg in expr.context_args:
     if isinstance(arg, Context):
@@ -649,8 +650,8 @@ def generalize_rule(lhs_to_rhs_patterns : dict):
   for expr in generalized_rhs_exprs:
     expr.print()
   return generalized_lhs_exprs, generalized_rhs_exprs
-  
-    
+
+
 def generalize_rules(lhs_expr : Context, lhs_dsl_list : list,
                       rhs_expr : Context, rhs_dsl_list : list):
   assert isinstance(rhs_expr, Context) == True
@@ -724,7 +725,7 @@ def test2():
 
 def test3():
   from sema.hex_swizzles_v3 import hvx_swizzles
-  from sema.hexsemantics import hvx_semantics
+  from sema.hexsemantics_new import semantics as hvx_semantics
 
   # Uncomment below line to keep intermediate racket files
   #keep_temporary_files()
@@ -749,7 +750,36 @@ def test3():
   generalize_rules(lhs_expr_ctx, hvx_dsl_list, rhs_expr_ctx, hvx_dsl_list)
 
 
+
+def test_halide():
+  from sema.halide_decomposed import halide_decomposed as halide_semantics
+
+  # Uncomment below line to keep intermediate racket files
+  #keep_temporary_files()
+
+  # Parse the dictionay into a list of DSLInstruction types
+  halide_dsl_list = parse_dict(halide_semantics)
+
+  # This rule is for splitting vector add on large vectors into concatenation of
+  # smaller vector adds using slice vector.
+
+  src_halide_str = "(typed:vec-add (reg (bv #x00 8)) (reg (bv #x01 8)) 64 1024)"
+  dst_halide_str = "(typed:concat_vectors (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 8 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 8 1 8 64 1024) 64 512) (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 0 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 0 1 8 64 1024) 64 512) 64 512)"
+
+  src_expr_ctx = read_string_to_dsl(src_halide_str, halide_dsl_list)
+  dst_expr_ctx = read_string_to_dsl(dst_halide_str, halide_dsl_list)
+
+  print("="*5, "Pretty Printing Expressions", "="*5)
+  print(src_expr_ctx.emit_context_expr_string())
+  print(dst_expr_ctx.emit_context_expr_string())
+
+  generalize_rules(src_expr_ctx, halide_dsl_list, dst_expr_ctx, halide_dsl_list)
+
+
 if __name__ == "__main__":
+  test_halide()
+  print("\n\n\n\n\n\n\n")
+  sys.exit()
   test1()
   print("\n\n\n\n\n\n\n")
   test2()
