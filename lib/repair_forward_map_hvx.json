@@ -298,7 +298,8 @@
         "typed:signed-vec-mul",
         "typed:slice_vectors",
         "typed:cast-int-extend",
-        "typed:vec-add"
+        "typed:vec-add", 
+        "typed:signed-vec-rounding_mul_shift_right"
     ],
     "hexagon_V6_vaslh_acc_128B": [
         "typed:xBroadcast", 
