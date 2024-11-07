@@ -12,6 +12,7 @@ class GeneralizedContext:
   def __init__(self, ctx : Context):
     self.org_ctx = ctx
     self.args = list()
+    # Concrete values of abstracted constants are kept track of here
     self.arg_names_to_val = dict()
     
   def __eq__(self, ctx):
@@ -73,6 +74,7 @@ class GeneralizedPattern:
     self.rhs_generalized_ctxs = None
 
 
+# Just make sure that a given expression is consistent with a given list
 def verify_expression(expr : Context, dsl_inst_list : list):
   assert isinstance(expr, Context) == True
   for dsl_inst in dsl_inst_list:
@@ -118,6 +120,7 @@ def get_barename(name : str):
   return name
 
 
+# Get all possible concrete output sizes for an expression
 def get_output_sizes(expr : Context, dsl_list : list):
   assert isinstance(expr, Context) == True
   output_sizes = set()
@@ -132,6 +135,7 @@ def get_output_sizes(expr : Context, dsl_list : list):
   return list(output_sizes)
 
 
+# Get all possible concrete input sizes for an expression
 def get_input_sizes(expr : Context, dsl_list : list):
   assert isinstance(expr, Context) == True
   print("\nget_input_sizes")
@@ -162,6 +166,7 @@ def get_input_sizes(expr : Context, dsl_list : list):
   return None
 
 
+# Generate new patterns using double synthesis
 def pattern_gen(output_size, input_sizes_list, lhs_expr, lhs_dsl_list,
                 rhs_dsl_list, rhs_expr, lhs_to_rhs_patterns, synthesizer):
   for input_sizes in input_sizes_list:
@@ -189,23 +194,26 @@ def pattern_gen(output_size, input_sizes_list, lhs_expr, lhs_dsl_list,
         print("FAILURE!")
 
 
-def exprs_are_equal(expr1 : Context, expr2 : Context):
+# Function to check if two expressions are the same
+def are_exprs_equal(expr1 : Context, expr2 : Context):
   if len(expr1.context_args) != len(expr2.context_args):
     return False
   for arg1, arg2 in zip(expr1.context_args, expr2.context_args):
     if type(arg1) != type(arg2):
       return False
     if isinstance(arg1, Context):
-      if exprs_are_equal(arg1, arg2) == False:
+      if are_exprs_equal(arg1, arg2) == False:
         return False
     elif isinstance(arg1, Reg):
-      continue
+      if arg1.index != arg2.index:
+        return False
     else:
       if arg1.value != arg2.value:
         return False
   return True
 
 
+# Generates different candidate rules
 def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
                         rhs_expr : Context, rhs_dsl_list : list):
   print("\n\nGENERATE CANDIDATES")
@@ -237,7 +245,7 @@ def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
     for process in process_list:
       process.join()
     for src_expr, dst_expr in lhs_to_rhs_patterns.items():
-      if exprs_are_equal(src_expr, lhs_expr) and exprs_are_equal(dst_expr, rhs_expr):
+      if are_exprs_equal(src_expr, lhs_expr) and are_exprs_equal(dst_expr, rhs_expr):
         print("EQUAL EXPRS")
         return lhs_to_rhs_patterns
     lhs_to_rhs_patterns[lhs_expr] = rhs_expr
@@ -248,7 +256,7 @@ def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
     pattern_gen(output_sizes[0], input_sizes, lhs_expr, lhs_dsl_list, \
                   rhs_dsl_list, rhs_expr, lhs_to_rhs_patterns, synthesizer)
     for src_expr, dst_expr in lhs_to_rhs_patterns.items():
-      if exprs_are_equal(src_expr, lhs_expr) and exprs_are_equal(dst_expr, rhs_expr):
+      if are_exprs_equal(src_expr, lhs_expr) and are_exprs_equal(dst_expr, rhs_expr):
         print("EQUAL EXPRS")
         return lhs_to_rhs_patterns
     lhs_to_rhs_patterns[lhs_expr] = rhs_expr
@@ -333,6 +341,7 @@ def get_expr_to_arg_names_dict_for(expr : Context, reference_expr : GeneralizedC
   return expr_to_arg_names_dict
 
 
+# Generalize an expression with respect to a given equivalent generalized expression
 def generalize_expr_based_on_ref(expr : Context, reference_expr : GeneralizedContext,
                                  prefixes_to_counters : dict = None):
   # Extract information such as precision, length, etc. based on reference
@@ -441,6 +450,7 @@ def generalize_expr_based_on_ref(expr : Context, reference_expr : GeneralizedCon
   return generalized_expr
 
 
+# Generalize expressions on the same side
 def generalize_same_side_exprs(exprs : list, prefixes_to_counters : dict = dict()):
   print("generalize_same_side_exprs")
   if len(exprs) < 2:
@@ -540,10 +550,60 @@ def generalize_same_side_exprs(exprs : list, prefixes_to_counters : dict = dict(
           else:
             new_arg_name = var
         else:
-          new_arg_name = var + " / " + str(arg_ratio)
+          new_arg_name = "(/ " + var + " " + str(arg_ratio) + ")"
         expr.arg_names_to_val[new_arg_name] = expr.args[arg_idx]
         expr.args[arg_idx] = new_arg_name
   return True
+
+
+# Function to check if two generalized expressions are equivalent.
+def are_generalized_exprs_equal(expr1 : GeneralizedContext, expr2 : GeneralizedContext):
+  if len(expr1.args) != len(expr2.args):
+    return False
+  for arg1, arg2 in zip(expr1.args, expr2.args):
+    if type(arg1) != type(arg2):
+      return False
+    if isinstance(arg1, Context):
+      if are_exprs_equal(arg1, arg2) == False:
+        return False
+    elif isinstance(arg1, Reg):
+      if arg1.index != arg2.index:
+        return False
+    elif isinstance(arg1, Integer):
+      if arg1.value != arg2.value:
+        return False
+    else:
+      if arg1 != arg2:
+        return False
+  return True
+
+
+# Redundant generalized expressions can be removed
+def remove_redundant_rules(exprs1 : list, exprs2 : list):
+  print("REMOVE REDUNDANT RULES")
+  # Find redudant rules
+  remove_list = set()
+  assert len(exprs1) == len(exprs2)
+  for idx in range(len(exprs1)):
+    if idx in remove_list:
+      continue
+    for check_idx in range(len(exprs1)):
+      if check_idx in remove_list:
+        continue
+      if idx == check_idx:
+        continue
+      if are_generalized_exprs_equal(exprs1[idx], exprs1[check_idx]) == True:
+        if are_generalized_exprs_equal(exprs2[idx], exprs2[check_idx]) == True:
+          remove_list.add(check_idx)
+  # Remove redundant rules
+  new_exprs1 = list()
+  new_exprs2 = list()
+  for idx in range(len(exprs1)):
+     if idx in remove_list:
+       continue
+     new_exprs1.append(exprs1[idx])
+     new_exprs2.append(exprs2[idx])
+  return new_exprs1, new_exprs2
 
 
 def generalize_rule(lhs_to_rhs_patterns : dict):
@@ -579,6 +639,15 @@ def generalize_rule(lhs_to_rhs_patterns : dict):
   print("\n\n\n\ngeneralized_rhs_exprs:")
   for expr in generalized_rhs_exprs:
     expr.print()
+  # Remove redundant expressions
+  generalized_lhs_exprs, generalized_rhs_exprs = \
+    remove_redundant_rules(generalized_lhs_exprs, generalized_rhs_exprs)
+  print("\n\n\n\n\ngeneralized_lhs_exprs:")
+  for expr in generalized_lhs_exprs:
+    expr.print()
+  print("\n\n\n\ngeneralized_rhs_exprs:")
+  for expr in generalized_rhs_exprs:
+    expr.print()
   return generalized_lhs_exprs, generalized_rhs_exprs
   
     
@@ -591,7 +660,9 @@ def generalize_rules(lhs_expr : Context, lhs_dsl_list : list,
   print("len(rhs_dsl_list):")
   print(len(rhs_dsl_list))
   lhs_to_rhs_patterns = generate_candidates(lhs_expr, lhs_dsl_list, rhs_expr, rhs_dsl_list)
-  generalize_rule(lhs_to_rhs_patterns)
+  generalized_lhs_exprs, generalized_rhs_exprs = generalize_rule(lhs_to_rhs_patterns)
+  # Zip results to get list of lhs and rhs of rules
+  return zip(generalized_lhs_exprs, generalized_rhs_exprs)
 
 
 #def generalize_pattern(pattern : Pattern):
