@@ -36,6 +36,7 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_hvx_combine_simpl_hvx_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_scalar_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_acc_hvx-enumerate-absd_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_sat_hvx-enumerate_intermediate_results.py",
 ]
 
 
