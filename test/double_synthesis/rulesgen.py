@@ -6,6 +6,7 @@ import sys
 from utils.ReadDSL import read_string_to_dsl
 from common.DSLParser import parse_dict
 from common.Instructions import *
+from utils.DSLInstructionUtils import keep_temporary_files
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 
 
@@ -422,6 +423,10 @@ def generalize_expr_based_on_ref(expr : Context, reference_expr : GeneralizedCon
             print(prefix)
             prefixes_to_counters = update_prefix_counter(prefix, prefixes_to_counters)
             new_arg = prefix + "_" + str(prefixes_to_counters[prefix])
+        print("new_arg:")
+        print(new_arg)
+        print("arg.value:")
+        print(arg.value)
         generalized_expr.args.append(new_arg)
         generalized_expr.arg_names_to_val[new_arg] = arg
       else:
@@ -446,6 +451,10 @@ def generalize_expr_based_on_ref(expr : Context, reference_expr : GeneralizedCon
         else:
           generalized_expr.args.append(arg)
           continue
+        print("new_arg:")
+        print(new_arg)
+        print("arg.value:")
+        print(arg.value)
         generalized_expr.args.append(new_arg)
         generalized_expr.arg_names_to_val[new_arg] = arg
   return generalized_expr
@@ -552,6 +561,82 @@ def generalize_same_side_exprs(exprs : list, prefixes_to_counters : dict = dict(
             new_arg_name = var
         else:
           new_arg_name = "(/ " + var + " " + str(arg_ratio) + ")"
+        expr.arg_names_to_val[new_arg_name] = expr.args[arg_idx]
+        expr.args[arg_idx] = new_arg_name
+    # Abstract away constants and express them in terms of two arguments.
+    # First create pairs of tuples that are worth trying
+    tuple_list = list()
+    for idx in range(len(args)):
+      expr = exprs[idx]
+      if idx == 0:
+        arg_names = expr.arg_names_to_val.keys()
+        for idx in range(len(arg_names)):
+          if "/" in arg_names[idx]:
+            continue
+          for check_idx in range(len(arg_names)):
+            if check_idx == idx:
+              continue
+            if "/" in arg_names[check_idx]:
+              continue
+            if expr.arg_names_to_val[arg_names[idx]].value \
+              > expr.arg_names_to_val[arg_names[check_idx]].value:
+              if expr.arg_names_to_val[arg_names[check_idx]].value == 0:
+                continue
+              tuple_list.append((arg_names[idx], arg_names[check_idx]))
+            elif expr.arg_names_to_val[arg_names[idx]].value \
+              < expr.arg_names_to_val[arg_names[check_idx]].value:
+              if expr.arg_names_to_val[arg_names[idx]].value == 0:
+                continue
+              tuple_list.append((arg_names[check_idx], arg_names[idx]))
+        break
+    print("tuple_list:")
+    print(tuple_list)
+    tuple_to_arg_ratio = dict()
+    excluded_tuples = set()
+    for idx in range(len(args)):
+      expr = exprs[idx]
+      for arg_tuple in tuple_list:
+        if arg_tuple in excluded_tuples:
+          continue
+        val = int(expr.arg_names_to_val[arg_tuple[0]].value \
+                / expr.arg_names_to_val[arg_tuple[1]].value)
+        if val == 1:
+          excluded_tuples.add(arg_tuple)
+          continue
+        if arg_tuple not in tuple_to_arg_ratio:
+          if val >= args[idx].value:
+            if args[idx].value == 0:
+              excluded_tuples.add(arg_tuple)
+              continue
+            tuple_to_arg_ratio[arg_tuple] = int(val / args[idx].value)
+          else:
+            if val == 0:
+              excluded_tuples.add(arg_tuple)
+              continue
+            tuple_to_arg_ratio[arg_tuple] =  int(args[idx].value / val)
+        if val >= args[idx].value:
+          if args[idx].value == 0:
+            excluded_tuples.add(arg_tuple)
+            del tuple_to_arg_ratio[arg_tuple]
+            continue
+          if tuple_to_arg_ratio[arg_tuple] != int(val / args[idx].value):
+            excluded_tuples.add(arg_tuple)
+            del tuple_to_arg_ratio[arg_tuple]
+        else:
+          if val == 0:
+            excluded_tuples.add(arg_tuple)
+            del tuple_to_arg_ratio[arg_tuple]
+            continue
+          if tuple_to_arg_ratio[arg_tuple] != int(args[idx].value / val):
+            excluded_tuples.add(arg_tuple)
+            del tuple_to_arg_ratio[arg_tuple]
+    # Abstract away constants and express them in terms of two arguments.
+    for idx in range(len(args)):
+      expr = exprs[idx]
+      for arg_tuple, arg_ratio in tuple_to_arg_ratio.items():
+        new_arg_name = "(/ " + arg_tuple[0] + " " + arg_tuple[1] + ")"
+        if arg_ratio != 1:
+          new_arg_name = "(/ " + new_arg_name + " " + str(arg_ratio) + ")"
         expr.arg_names_to_val[new_arg_name] = expr.args[arg_idx]
         expr.args[arg_idx] = new_arg_name
   return True
@@ -755,14 +840,13 @@ def test_halide():
   from sema.halide_decomposed import halide_decomposed as halide_semantics
 
   # Uncomment below line to keep intermediate racket files
-  #keep_temporary_files()
+  keep_temporary_files()
 
   # Parse the dictionay into a list of DSLInstruction types
   halide_dsl_list = parse_dict(halide_semantics)
 
   # This rule is for splitting vector add on large vectors into concatenation of
   # smaller vector adds using slice vector.
-
   src_halide_str = "(typed:vec-add (reg (bv #x00 8)) (reg (bv #x01 8)) 64 1024)"
   dst_halide_str = "(typed:concat_vectors (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 8 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 8 1 8 64 1024) 64 512) (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 0 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 0 1 8 64 1024) 64 512) 64 512)"
 
@@ -785,3 +869,4 @@ if __name__ == "__main__":
   test2()
   print("\n\n\n\n\n\n\n")
   test3()
+  
