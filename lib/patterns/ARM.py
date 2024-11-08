@@ -31,7 +31,7 @@ props = [
 
 
 
-pickle_file_name = MISAAL_ROOT+ "/lib/patterns/arm.pickle"
+pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM.pickle"
 
 arm_patterns = []
 

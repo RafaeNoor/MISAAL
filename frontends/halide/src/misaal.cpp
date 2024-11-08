@@ -146,7 +146,7 @@ import sys\n";
                 partial_import = "from patterns.HVX import HVX_patterns";
                 break;
             case ARM:
-                partial_import = "from patterns.ARM import ARM_patterns";
+                partial_import = "from patterns.ARM import arm_patterns";
                 break;
         };
 
