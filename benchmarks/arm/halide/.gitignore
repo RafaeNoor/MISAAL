@@ -1,0 +1,7 @@
+.vscode
+*.rkt
+*/*/*/bin
+*/*/tmp.txt
+*/ref
+arm-disable-hydride
+*_results

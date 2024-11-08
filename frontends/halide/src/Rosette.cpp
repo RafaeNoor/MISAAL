@@ -3866,6 +3866,60 @@ Stmt misaal_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const Base
     return Result;
 }
 
+Stmt misaal_optimize_arm(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
+
+    debug(0) << "Hydride Optimize ARM"
+             << "\n";
+
+    Stmt distributed;
+
+    const char *disable_preprocess = getenv("HL_DISABLE_PREPROCESS");
+    if (disable_preprocess) {
+        debug(0) << "Disabling pre-processing pass\n";
+        distributed = s;
+    } else {
+
+        std::set<const IRNode *> DeadStmts;
+        auto FLS = Hydride::FoldLoadStores(DeadStmts);
+        auto folded = FLS.mutate(s);
+        debug(0) << "Printing Folded Stmt:\n";
+        debug(0) << folded << "\n";
+
+        debug(0) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+
+        auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
+        debug(0) << "Printing Pruned Stmt:\n";
+        debug(0) << pruned << "\n";
+
+        std::vector<unsigned> arm_vector_sizes = {128, 64};
+
+        // bool model_sat_support = false;
+        bool model_sat_support = true;
+
+        const char *enable_hydride = getenv("HL_BENCH_MATMUL");
+        if (enable_hydride) {
+            debug(0) << "Setting model saturating support true"
+                     << "\n";
+            model_sat_support = true;
+        }
+        distributed = distribute_vector_exprs(pruned, arm_vector_sizes, model_sat_support);
+        // distributed = distribute_vector_exprs(s, hvx_vector_sizes, model_sat_support);
+        debug(0) << "Distributed Stmt:\n";
+        debug(0) << distributed << "\n";
+    }
+
+    srand(time(0));
+    int random_seed = rand() % 1024;
+
+    const char *benchmark_name = getenv("HYDRIDE_BENCHMARK");
+    std::string name = benchmark_name ? std::string(benchmark_name) : "misaal";
+    auto Optimizer = Hydride::IROptimizer(fvb, HydrideSupportedArchitecture::ARM, mutated_exprs, random_seed, name);
+    auto Result = Optimizer.mutate(distributed);
+    Optimizer.run_rewrites();
+
+    return Result;
+}
+
 Stmt hydride_optimize_arm(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
 
     debug(0) << "Hydride Optimize ARM"
@@ -3959,10 +4013,12 @@ Stmt optimize_hexagon_instructions_synthesis(Stmt s, const Target &t, FuncValueB
 
 Stmt optimize_arm_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
 
+    debug(0) << "Optimizing with MISAAL! "<< "\n";
+
     std::set<const BaseExprNode *> mutated_exprs;
-    debug(0) << "Input Statement to Compile through HVX:\n"
+    debug(0) << "Input Statement to Compile through ARM:\n"
              << s << "\n";
-    s = hydride_optimize_arm(fvb, s, mutated_exprs);
+    s = misaal_optimize_arm(fvb, s, mutated_exprs);
 
     debug(0) << "Module with hydride calls:"
              << "\n";
