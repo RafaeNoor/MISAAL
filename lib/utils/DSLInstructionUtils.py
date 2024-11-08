@@ -1349,3 +1349,11 @@ def is_expr_concat_slice_only(expr, dsl_list):
 def expr_contains_swizzles(expr, dsl_list):
     expr_names = get_ctx_expr_dsl_names(expr, dsl_list)
     return any(["swizzle" in name for name in expr_names])
+
+
+def get_dsl_inst_from_dsl_list(inst_name, dsl_list):
+    for dsl_inst in dsl_list:
+        if inst_name == dsl_inst.name:
+            return dsl_inst
+    assert False, inst_name+" not in dsl_list"
+    return None

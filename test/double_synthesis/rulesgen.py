@@ -6,7 +6,7 @@ import sys
 from utils.ReadDSL import read_string_to_dsl
 from common.DSLParser import parse_dict
 from common.Instructions import *
-from utils.DSLInstructionUtils import keep_temporary_files
+from utils.DSLInstructionUtils import keep_temporary_files, get_dsl_inst_from_dsl_list
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 
 
@@ -178,11 +178,12 @@ def pattern_gen(output_size, input_sizes_list, lhs_expr, lhs_dsl_list,
     print("input_sizes:")
     print(input_sizes)
     success, src_expr_str, dst_expr_str = synthesizer.double_grammar_synthesis(
-                                                      lhs_expr, rhs_expr,
-                                                      custom_src_output_size = output_size,
-                                                      custom_dst_output_size = output_size,
-                                                      custom_src_input_sizes = input_sizes,
-                                                      custom_target_input_sizes = input_sizes)
+        lhs_expr, rhs_expr,
+        custom_src_output_size = output_size,
+        custom_dst_output_size = output_size,
+        custom_src_input_sizes = input_sizes,
+        custom_target_input_sizes = input_sizes
+    )
     if success:
         print("SUCCESS at output size {}!".format(output_size))
         print("Corresponding LHS concretization:")
@@ -231,7 +232,10 @@ def generate_candidates(lhs_expr : Context, lhs_dsl_list : list,
   print(input_sizes)
   #num_lhs_inputs = get_symbolic_bvs(lhs_expr)
   #num_rhs_inputs = get_symbolic_bvs(rhs_expr)
-  synthesizer = DoubleGrammarSynthesisUtils(lhs_dsl_list, rhs_dsl_list)
+  synthesizer = DoubleGrammarSynthesisUtils(lhs_dsl_list, rhs_dsl_list,
+                                            use_any_reg = False,
+                                            ensure_structure = True
+                                            )
   # Launch multiple threads to generate patterns
   if len(output_sizes) != 1:
     manager = multiprocessing.Manager()
@@ -569,7 +573,7 @@ def generalize_same_side_exprs(exprs : list, prefixes_to_counters : dict = dict(
     for idx in range(len(args)):
       expr = exprs[idx]
       if idx == 0:
-        arg_names = expr.arg_names_to_val.keys()
+        arg_names = list(expr.arg_names_to_val.keys())
         for idx in range(len(arg_names)):
           if "/" in arg_names[idx]:
             continue
@@ -845,6 +849,7 @@ def test_halide():
   # Parse the dictionay into a list of DSLInstruction types
   halide_dsl_list = parse_dict(halide_semantics)
 
+
   # This rule is for splitting vector add on large vectors into concatenation of
   # smaller vector adds using slice vector.
   src_halide_str = "(typed:vec-add (reg (bv #x00 8)) (reg (bv #x01 8)) 64 1024)"
@@ -869,4 +874,4 @@ if __name__ == "__main__":
   test2()
   print("\n\n\n\n\n\n\n")
   test3()
-  
+
