@@ -3673,7 +3673,7 @@ Stmt hydride_preprocess_x86(Stmt s) {
     debug(0) << "Printing Pruned Stmt:\n";
     debug(0) << pruned << "\n";
 
-    std::vector<unsigned> x86_vector_sizes = {512, 256, 128};
+    std::vector<unsigned> x86_vector_sizes = {512, 256, 128, 64};
 
     bool model_sat_support = true;
 
@@ -3847,7 +3847,7 @@ Stmt misaal_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const Base
     debug(1) << "Printing Pruned Stmt:\n";
     debug(1) << pruned << "\n";
 
-    std::vector<unsigned> x86_vector_sizes = {512, 256, 128};
+    std::vector<unsigned> x86_vector_sizes = {512, 256, 128, 64};
     auto distributed = distribute_vector_exprs(pruned, x86_vector_sizes, true);
     debug(0) << "Distributed Stmt:\n";
     debug(0) << distributed << "\n";
