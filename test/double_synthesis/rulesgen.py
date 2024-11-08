@@ -849,11 +849,37 @@ def test_halide():
   # Parse the dictionay into a list of DSLInstruction types
   halide_dsl_list = parse_dict(halide_semantics)
 
+  concat_vec_name = "typed:concat_vectors"
+  slice_vec_name = "typed:slice_vectors"
+  add_vec_name = "typed:vec-add"
+
+
+  # Slice vector and concat vector actually contain the different versions of the same
+  # slicing concatenation which interpret the input vectors differently. E.g. one slicing
+  # operation might slice 1 64-bit value, and another might slice 2 32-bit values (essentially
+  # extracting the same slices). I'm filtering only one precision so that the double synthesis
+  # has consitency across the different parameterizations it generates.
+
+  concat_vec_dsl_inst = get_dsl_inst_from_dsl_list(concat_vec_name, halide_dsl_list)
+  slice_vec_dsl_inst = get_dsl_inst_from_dsl_list(slice_vec_name, halide_dsl_list)
+  add_vec_dsl_inst = get_dsl_inst_from_dsl_list(add_vec_name, halide_dsl_list)
+
+  concat_vec_dsl_inst.contexts = [ctx for ctx in concat_vec_dsl_inst.contexts if ctx.in_precision == 8]
+  slice_vec_dsl_inst.contexts = [ctx for ctx in slice_vec_dsl_inst.contexts if ctx.in_precision == 8]
+  add_vec_dsl_inst.contexts = [ctx for ctx in add_vec_dsl_inst.contexts if ctx.in_precision == 8]
+
+  names = [concat_vec_name, slice_vec_name, add_vec_name]
+
+  halide_dsl_list = [h for h in halide_dsl_list if h.name not in names]
+  halide_dsl_list += [concat_vec_dsl_inst, slice_vec_dsl_inst, add_vec_dsl_inst]
+
+
+
 
   # This rule is for splitting vector add on large vectors into concatenation of
   # smaller vector adds using slice vector.
-  src_halide_str = "(typed:vec-add (reg (bv #x00 8)) (reg (bv #x01 8)) 64 1024)"
-  dst_halide_str = "(typed:concat_vectors (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 8 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 8 1 8 64 1024) 64 512) (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 0 1 8 64 1024) (typed:slice_vectors (reg (bv #x01 8)) 0 1 8 64 1024) 64 512) 64 512)"
+  src_halide_str = "(typed:vec-add (reg (bv #x00 8)) (reg (bv #x01 8)) 8 1024)"
+  dst_halide_str = "(typed:concat_vectors (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 64 1 64 8 1024) (typed:slice_vectors (reg (bv #x01 8)) 64 1 64 8 1024) 8 512) (typed:vec-add (typed:slice_vectors (reg (bv #x00 8)) 0 1 64 8 1024) (typed:slice_vectors (reg (bv #x01 8)) 0 1 64 8 1024) 8 512) 8 512)"
 
   src_expr_ctx = read_string_to_dsl(src_halide_str, halide_dsl_list)
   dst_expr_ctx = read_string_to_dsl(dst_halide_str, halide_dsl_list)
@@ -863,6 +889,7 @@ def test_halide():
   print(dst_expr_ctx.emit_context_expr_string())
 
   generalize_rules(src_expr_ctx, halide_dsl_list, dst_expr_ctx, halide_dsl_list)
+  #generalize_rules(dst_expr_ctx, halide_dsl_list, src_expr_ctx, halide_dsl_list)
 
 
 if __name__ == "__main__":
