@@ -20,7 +20,7 @@ def emit_egg_atom(expr):
     return "(ATOM {})".format(expr)
 
 def emit_egg_decl_bv():
-    return "(LIT i64 i64 :cost 1) (SYMBV i64 :cost 1) (ATOM {} :cost 1)".format(HYDRIDE_EXPR_LABEL)
+    return "(LIT String i64 :cost 1) (SYMBV i64 :cost 1) (ATOM {} :cost 1)".format(HYDRIDE_EXPR_LABEL)
 
 def emit_egg_define_reg(reg):
     reg_name = "reg_{}".format(reg.index)
@@ -168,12 +168,12 @@ def emit_bv_to_egg(expr):
 def emit_const_bv_to_egg(expr):
     if "#x" in expr.value:
         hex_str = "0x"+ expr.value.strip().split("#x")[-1]
-        return "(LIT {} {})".format(int(hex_str, 16), expr.size)
+        return "(LIT \"{}\" {})".format(int(hex_str, 16), expr.size)
     elif "#b" in expr.value:
         binary_str = expr.value.split("#b")[-1]
-        return "(LIT {} {})".format(int(binary_str, 2), expr.size)
+        return "(LIT \"{}\" {})".format(int(binary_str, 2), expr.size)
     else:
-        return "(LIT {} {})".format(expr.value, expr.size)
+        return "(LIT \"{}\" {})".format(expr.value, expr.size)
 
 
 

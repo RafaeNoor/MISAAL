@@ -215,6 +215,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
     elif first_term == 'LIT':
 
         lit_value = nested_expr[1]
+        lit_value = lit_value.replace("\"","")
         lit_value = hex(int(lit_value))
         if lit_value.startswith("-"):
             lit_value = lit_value[1:]
