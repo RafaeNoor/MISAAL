@@ -120,7 +120,7 @@
   )
   16 1 factor 8 
  )
- (typed_vec-saturate  reg_0 16 0  factor 8 0)
+ (typed_vec-saturate  reg_0 16 1  factor 8 0)
  )
 
 (rewrite
@@ -138,7 +138,7 @@
   )
   32 1 factor 16 
  )
- (typed_vec-saturate  reg_0 32 0  factor 16 0)
+ (typed_vec-saturate  reg_0 32 1  factor 16 0)
  )
 
 
