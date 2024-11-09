@@ -262,7 +262,11 @@ class EggLogCompiler(CompilerBase):
 
         if self.expr_contains_src_language(output_expression, "typed"):
             print("Expression contains src language, need additional eq sat")
+            if isinstance(output_expression, Context):
+                print(output_expression.emit_context_expr_string())
             output_expression = self.compile_expr(output_expression)
+        else:
+            print("Expression is fully legal in out language + swizzle")
 
         if expr_contains_swizzles(output_expression, self.target_dsl_list + self.src_dsl_list):
             # Emit another swizzle pass to lower swizzle expressions

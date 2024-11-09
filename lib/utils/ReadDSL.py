@@ -24,6 +24,8 @@ def get_matching_context(nested_expr, dsl_list):
     else:
         dsl_name = nested_expr[0]
 
+    # Support replacing typed operations
+    dsl_name = dsl_name.replace("typed_", "typed:")
     #print("DSL Name to search:", dsl_name)
 
     matching_dsl_inst = None
@@ -38,7 +40,6 @@ def get_matching_context(nested_expr, dsl_list):
     # We iterate over the numeric arguments and at each step update matching_context
     # indices until we have a matching context
 
-    #print(dsl_name)
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
     num_reg_like_arguments = 0
@@ -121,7 +122,13 @@ def get_matching_context(nested_expr, dsl_list):
             elif not is_numeric and isinstance(ctx_arg, Bool):
                 if ctx_arg.value == parameter_value:
                     new_matching_context_indices.append(ci)
+            elif is_numeric and isinstance(ctx_arg, Bool):
+                if parameter_value != 1 and parameter_value != 0:
+                    if ctx_arg.to_int() == parameter_value:
+                        new_matching_context_indices.append(ci)
             else:
+                print(parameter_value)
+                print(ctx_arg)
                 assert False, "Corresponding argument in context must be numeric or boolean"
 
         matching_context_indices = new_matching_context_indices
