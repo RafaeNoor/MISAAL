@@ -18,6 +18,8 @@
   #include "median3x3_hvx128.h"
 #elif sobel3x3
   #include "sobel3x3_hvx128.h"
+#elif sobel5x5
+  #include "sobel5x5_hvx128.h"
 #elif dilate3x3
   #include "dilate3x3_hvx128.h"
 #elif dilate5x5
@@ -38,6 +40,22 @@
   #include "max_pool_add_hvx128.h"
 #elif average_pool_add
   #include "average_pool_add_hvx128.h"
+#elif gaussian3x3
+  #include "gaussian3x3_hvx128.h"
+#elif gaussian5x5
+  #include "gaussian5x5_hvx128.h"
+#elif gaussian7x7
+  #include "gaussian7x7_hvx128.h"
+#elif conv3x3a16
+  #include "conv3x3a16_hvx128.h"
+#elif softmax 
+  #include "softmax_hvx128.h"
+#elif add
+  #include "add_hvx128.h"
+#elif mul
+  #include "mul_hvx128.h"
+#elif l2norm
+  #include "l2norm_hvx128.h"
 #endif
 
 #define LOG2VLEN 7
@@ -617,6 +635,347 @@ unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*
       printf("AppReported (HVX128B-mode): Image %dx%d - max_pool_add(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
+  #if gaussian3x3
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 1, height-1, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = gaussian3x3_hvx128(input_buf, output_buf);
+        if (error != 0) {
+            printf("gaussian3x3_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d, true-val: %d\n", x, y, input_buf(x, y), output_buf(x, y),
+                
+                ((static_cast<int16_t>(input_buf(x-1, y-1)) * 1 + static_cast<int16_t>(input_buf(x, y-1)) * 2 + static_cast<int16_t>(input_buf(x+1, y-1)) * 1 +
+                    static_cast<int16_t>(input_buf(x-1, y)) * 2 + static_cast<int16_t>(input_buf(x, y)) * 4 + static_cast<int16_t>(input_buf(x+1, y)) * 2 +
+                    static_cast<int16_t>(input_buf(x-1, y+1)) * 1 + static_cast<int16_t>(input_buf(x, y+1)) * 2 + static_cast<int16_t>(input_buf(x+1, y+1) * 1)) + 8) >> 4
+                    
+                );
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - gaussian3x3(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+  #endif
+
+  #if gaussian5x5
+    halide_dimension_t x_dim{0, width, 1};
+    halide_dimension_t y_dim{0, height, width};
+    halide_dimension_t shape[2] = {x_dim, y_dim};
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = gaussian5x5_hvx128(input_buf, output_buf);
+        if (error != 0) {
+          printf("gaussian5x5_hvx128 pipeline failed: %d\n", error);
+        }
+      });
+    SIM_RELEASE_HVX;
+
+    for (int x=0; x<10; x++)
+      for (int y=0; y<10; y++)
+        printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - gaussian5x5(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles/(width*height));
+  #endif
+
+#if gaussian7x7
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = gaussian7x7_hvx128(input_buf, output_buf);
+        if (error != 0) {
+            printf("gaussian7x7_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - gaussian7x7(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+
+  #if conv3x3a16
+    signed char mask[9] =
+    {
+        1, 2, 1,
+        2, 4, 2,
+        1, 2, 1
+    };
+
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    halide_dimension_t mask_shape[2];
+    mask_shape[0].min = 0; mask_shape[0].extent = 3; mask_shape[0].stride = 1;
+    mask_shape[1].min = 0; mask_shape[1].extent = 3; mask_shape[1].stride = 3;
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+    Halide::Runtime::Buffer<int8_t> mask_buf(mask, dims, mask_shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = conv3x3a16_hvx128(input_buf, mask_buf, output_buf);
+        if (error != 0) {
+            printf("conv3x3a16_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - conv3x3a16(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+  #endif
+
+  #if sobel5x5
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = sobel5x5_hvx128(input_buf, output_buf);
+        if (error != 0) {
+            printf("sobel5x5_hvx128 pipeline failed: %d\n", error);
+        }
+        });
+    SIM_RELEASE_HVX;
+
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - sobel5x5(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+  #endif
+
+#if softmax
+    halide_dimension_t x_dim{ 0, width, 1 };
+    halide_dimension_t y_dim{ 0, height, width };
+    halide_dimension_t shape[2] = { x_dim, y_dim };
+
+    Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+    Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+        int error = softmax_hvx128(input_buf, 0, 100, 0, 5, 225, output_buf);
+        if (error != 0) {
+        printf("softmax pipeline failed: %d\n", error);
+        }
+    });
+          SIM_RELEASE_HVX;
+
+    for (int x = 0; x < 10; x++)
+        for (int y = 0; y < 10; y++)
+            printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - softmax(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / width / height);
+#endif
+
+#if add
+      halide_dimension_t x_dim{ 0, width, 1 };
+      halide_dimension_t y_dim{ 0, height, width };
+      halide_dimension_t shape[2] = { x_dim, y_dim };
+
+      Halide::Runtime::Buffer<uint8_t> input1_buf(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> input2_buf(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = add_hvx128(input1_buf, 0, 100, input2_buf, 0, 100, 0, 5, 225, output_buf);
+          if (error != 0) {
+              printf("add_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input1_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - add(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if mul
+      halide_dimension_t x_dim{ 0, width, 1 };
+      halide_dimension_t y_dim{ 0, height, width };
+      halide_dimension_t shape[2] = { x_dim, y_dim };
+
+      Halide::Runtime::Buffer<uint8_t> input1_buf(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> input2_buf(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = mul_hvx128(input1_buf, 2, input2_buf, 5, 5, 10000, 1, 5, 225, output_buf);
+          if (error != 0) {
+              printf("mul_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input1_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - mul(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if l2norm
+      halide_dimension_t x_dim{ 0, width, 1 };
+      halide_dimension_t y_dim{ 0, height, width };
+      halide_dimension_t shape[2] = { x_dim, y_dim };
+
+      Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = l2norm_hvx128(input_buf, 0, output_buf);
+          if (error != 0) {
+              printf("l2norm_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - l2norm(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+
+
+#if depthwise_conv
+
+  int factor = 1;
+  int custom_width = 128 * factor;
+  int custom_height = 128 * factor;
+
+  int num_channels =  8;
+
+
+  // Correctly set
+  // Unsigned 8-bit input tensor, indexed by ci, x, y, b.
+  halide_dimension_t input_shape[4] = {{0, num_channels , 1}, {0, custom_height, custom_width}, {0, custom_width, custom_height * custom_width}, {0, 1, (custom_width * custom_height) }};
+  //halide_dimension_t input_shape[4] = {{0, num_channels , 1}, {0, custom_height, 1}, {0, custom_width, 1}, {0, 1, 1 }};
+  size_t num_input_elem =  num_channels * custom_width * custom_height;
+  uint8_t* inputTensor = (uint8_t*) memalign(1 << LOG2VLEN, num_input_elem * sizeof(uint8_t));
+  Halide::Runtime::Buffer<uint8_t> input_(inputTensor, 4, input_shape);
+
+
+  int filter_width = 3;
+  int filter_height = 3;
+
+  // Correctly set
+  // A 3D array of 8-bit filter coefficients indexed by co, x, y.
+  halide_dimension_t filter_shape[3] = {{0, num_channels , 1}, {0, filter_height, filter_height * filter_width }, {0, filter_width, filter_height }};
+  size_t num_filter_elem =  num_channels * filter_height * filter_width ;
+  uint8_t* filterTensor = (uint8_t*) memalign(1 << LOG2VLEN,  num_filter_elem * sizeof(uint8_t));
+  Halide::Runtime::Buffer<uint8_t> filter_(filterTensor, 3, filter_shape);
+
+
+  // Correctly set
+  halide_dimension_t bias_shape[1] = {{0, num_channels, 1}};
+  size_t num_bias_elem =  num_channels ;
+  int32_t* biasTensor = (int32_t*) memalign(1 << LOG2VLEN,  num_bias_elem * sizeof(int32_t));
+  Halide::Runtime::Buffer<int32_t> bias_(biasTensor, 1, bias_shape);
+
+
+  int stride_x_ = 1;
+  int stride_y_ = 1;
+
+  // correctly set
+
+    // The stride specifies how the input [x, y] are sub-subsampled. For every
+    // spatial location [x, y] in the output buffer, the input buffer is sampled
+    // spatially at [x * stride, y * stride]. The caller should ensure that
+    // [x * stride, y * stride] is a valid spatial location in the input buffer.
+    // Generally, this means setting the output buffer's [width, height] to be
+    // the input buffer's [width, height] / stride.
+  int output_height = factor * custom_height / stride_x_;
+  int output_width = factor * custom_width / stride_y_;
+
+  halide_dimension_t output_shape[4] = {{0, num_channels , 1}, {0, output_height, output_height * output_width }, {0, output_width,  output_height}, {0, 1, output_width * output_height}};
+  //halide_dimension_t output_shape[4] = {{0, num_channels , 1}, {0, output_height, 1}, {0, output_width,  1}, {0, 1, 1}};
+
+  size_t num_output_elem =  num_channels * output_height * output_width * 1 ;
+  uint8_t* outputTensor = (uint8_t*) memalign(1 << LOG2VLEN, num_output_elem * sizeof(uint8_t));
+
+  Halide::Runtime::Buffer<uint8_t> output_buf(outputTensor, 4, output_shape);
+
+  int inv_depth_multiplier_ = -1;
+  uint8_t input_zero_ = 3;
+  uint8_t filter_zero_ = 5;
+  int depth_multiplier_ = 1;
+  int dilation_x_ = 1;
+  int dilation_y_ = 1;
+  int32_t output_multiplier_ = 32767;
+  uint32_t output_shift_ = 1;
+  uint8_t output_zero_ = 3;
+  uint8_t output_min_ =5;
+  uint8_t output_max_ = 250;
+
+
+      // Run in 128 byte mode
+     SIM_ACQUIRE_HVX;
+     SIM_SET_HVX_DOUBLE_MODE;
+     cycles = benchmark([&]() {
+            int error = depthwise_conv_hvx128(input_,  input_zero_, filter_ ,  filter_zero_, bias_,  depth_multiplier_,  stride_x_,  stride_y_, dilation_x_, dilation_y_, output_multiplier_, output_shift_, output_zero_,  output_min_, output_max_, output_buf );
+            if (error != 0) {
+            printf("depthwise_conv_hvx128 pipeline failed: %d\n", error);
+            }
+            });
+
+      SIM_RELEASE_HVX;
+
+
+    printf("AppReported (HVX128B-mode): Image %dx%d - depthwise_conv128(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
 
   free(input);
   free(output);
