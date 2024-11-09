@@ -123,9 +123,14 @@ def get_matching_context(nested_expr, dsl_list):
                 if ctx_arg.value == parameter_value:
                     new_matching_context_indices.append(ci)
             elif is_numeric and isinstance(ctx_arg, Bool):
-                if parameter_value != 1 and parameter_value != 0:
+                print(" Bool PARAMETER VALUE, ",parameter_value, " ctx_Arg value", ctx_arg.to_int())
+                print(type(parameter_value), type(ctx_arg.to_int()))
+                if parameter_value == 1 or parameter_value == 0:
                     if ctx_arg.to_int() == parameter_value:
+                        print("Boolean value matches")
                         new_matching_context_indices.append(ci)
+                else:
+                    print("Parameter value is neither")
             else:
                 print(parameter_value)
                 print(ctx_arg)

@@ -11,7 +11,7 @@ import shutil
 
 class HydrideCompiler(EggLogCompiler):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], tests = [],  intrinsics_file = None, hydride_root_path = None, llvm_out_file_name = "llvm.out", prune_patterns = False):
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], tests = [],  intrinsics_file = None, hydride_root_path = None, llvm_out_file_name = "llvm.out", prune_patterns = False, parallel = True):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations,  egg_pkg_path = egg_pkg_path, prune_patterns = prune_patterns)
         self.llvm_out_file_name = llvm_out_file_name
         self.llvm_so_path = llvm_so_path
@@ -19,6 +19,7 @@ class HydrideCompiler(EggLogCompiler):
         self.output_file_path = "test.out"
         self.intrinsics_file = intrinsics_file
         self.hydride_root_path = hydride_root_path
+        self.parallel = parallel
         self.input_tests = tests
         self.pool_size = 8
         self.measure_egglog_time = False
@@ -96,7 +97,7 @@ class HydrideCompiler(EggLogCompiler):
         # overlap compilation of as many expressions as possible,
         # then compile expressions sequentially by memoizing
 
-        PARALLEL = True
+        PARALLEL = self.parallel
 
         start_time = time.time()
         unique_expressions = list(set([expr for (name, expr) in self.input_tests]))

@@ -954,13 +954,18 @@ public:
             indent.pop();
             indent.push(0);
             mode.push(VarEncoding::Integer);
+            Type VecTy = op->vectors[0].type();
+            size_t iprec = VecTy.bits();
+            size_t isize = VecTy.bits() * VecTy.lanes();
+
+            std::string type_info = std::to_string(iprec) + " " + std::to_string(isize);
             std::string rkt_base = std::to_string(op->slice_begin());
             std::string rkt_stride = std::to_string(op->slice_stride());
             std::string rkt_len = std::to_string(op->indices.size());
             mode.pop();
             indent.pop();
 
-            return tabs() + "(slice_vectors\n" + rkt_vec + " " + rkt_base + " " + rkt_stride + " " + rkt_len + ")";
+            return tabs() + "(typed:slice_vectors\n" + rkt_vec + " " + rkt_base + " " + rkt_stride + " " + rkt_len + " " + type_info + ")";
         } else if (op->is_broadcast()) {
             indent.push(indent.top() + 1);
             std::string rkt_vec = dispatch(op->vectors[0]);
