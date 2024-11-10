@@ -35,7 +35,15 @@ benchmarks = tensor_add \
 			 mul \
 			 tensor_rounding_mul_shift_right \
 			 tensor_sat \
-			 l2norm 
+			 l2norm \
+			 matmul_256_32bit_bias_add \
+			 matmul_256_32bit_bias_add_relu \
+			 matmul_256_32bit_bias_add_gelu \
+			 matmul_bias_relu_matmul \
+			 matmul_bias_gelu_matmul\
+			 matmul_256_32bit_bias_add_add \
+			 conv_nn \
+			 depthwise_conv
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 out_dirs = $(addsuffix /out,$(benchmarks))

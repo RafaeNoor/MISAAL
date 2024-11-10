@@ -18,6 +18,8 @@
   #include "median3x3_hvx128.h"
 #elif sobel3x3
   #include "sobel3x3_hvx128.h"
+#elif depthwise_conv
+#include "depthwise_conv_hvx128.h"
 #elif sobel5x5
   #include "sobel5x5_hvx128.h"
 #elif dilate3x3
@@ -48,6 +50,8 @@
   #include "gaussian7x7_hvx128.h"
 #elif conv3x3a16
   #include "conv3x3a16_hvx128.h"
+#elif conv_nn
+  #include "conv_nn_hvx128.h"
 #elif softmax 
   #include "softmax_hvx128.h"
 #elif add
@@ -56,6 +60,18 @@
   #include "mul_hvx128.h"
 #elif l2norm
   #include "l2norm_hvx128.h"
+#elif matmul_256_32bit_bias_add
+#include "matmul_256_32bit_bias_add_hvx128.h"
+#elif matmul_256_32bit_bias_add_relu
+#include "matmul_256_32bit_bias_add_relu_hvx128.h"
+#elif matmul_256_32bit_bias_add_gelu
+#include "matmul_256_32bit_bias_add_gelu_hvx128.h"
+#elif matmul_256_32bit_bias_add_add
+#include "matmul_256_32bit_bias_add_add_hvx128.h"
+#elif matmul_bias_relu_matmul
+  #include "matmul_bias_relu_matmul_hvx128.h"
+#elif matmul_bias_gelu_matmul
+  #include "matmul_bias_gelu_matmul_hvx128.h"
 #endif
 
 #define LOG2VLEN 7
@@ -975,6 +991,439 @@ unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*
 
     printf("AppReported (HVX128B-mode): Image %dx%d - depthwise_conv128(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 
+#endif
+
+#if matmul_256_32bit_bias_add
+
+    printf("benchmark matmul_256_32bit_bias_add!\n");
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64;
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+    int32_t* bias_ = (int32_t*) memalign( 1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_256_32bit_bias_add_hvx128(matA, matB, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_256_32bit_bias_add pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+    free(matATensor); free(matBTensor); free(outputTensor); free(bias_);
+
+
+    printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+
+#if matmul_256_32bit_bias_add_relu
+
+    printf("benchmark matmul_256_32bit_bias_add_relu!\n");
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64;
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+    int32_t* bias_ = (int32_t*) memalign( 1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_256_32bit_bias_add_relu_hvx128(matA, matB, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_256_32bit_bias_add_relu pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+    free(matATensor); free(matBTensor); free(outputTensor); free(bias_);
+
+
+    printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add_relu(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+
+#if matmul_256_32bit_bias_add_gelu
+
+    printf("benchmark matmul_256_32bit_bias_add_gelu!\n");
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64;
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+    int32_t* bias_ = (int32_t*) memalign( 1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_256_32bit_bias_add_gelu_hvx128(matA, matB, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_256_32bit_bias_add_gelu pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+    free(matATensor); free(matBTensor); free(outputTensor); free(bias_);
+
+
+    printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add_gelu(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+
+
+
+
+#if matmul_256_32bit_bias_add_add
+
+    printf("benchmark matmul_256_32bit_bias_add_add!\n");
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64;
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim};
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+    int32_t* bias_ = (int32_t*) memalign( 1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_256_32bit_bias_add_add_hvx128(matA, matB,matB, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_256_32bit_bias_add_add pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+    free(matATensor); free(matBTensor); free(outputTensor); free(bias_);
+
+
+    printf("AppReported (): Image %dx%d - matmul_256_32bit_bias_add_add(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+#if matmul_bias_relu_matmul
+
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64; 
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim };
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int16_t* matCTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+
+    int32_t* bias_ = (int32_t*) memalign(1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+    Halide::Runtime::Buffer<int16_t> matC((int16_t*) matCTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+
+
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_bias_relu_matmul_hvx128(matA, matB, matC, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_bias_relu_matmul_hvx128 pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+
+
+    printf("AppReported (): Image %dx%d - batched(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+
+#if matmul_bias_gelu_matmul
+
+
+    constexpr int dims_3 = 3;
+    int32_t matrix_size = 256;
+    
+    int bias_size = 64; 
+    halide_dimension_t x_dim{ 0, matrix_size, 1 };
+    halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
+    halide_dimension_t b_dim{ 0, bias_size, matrix_size * matrix_size };
+    halide_dimension_t shape[3] = {b_dim, x_dim, y_dim };
+
+
+    printf("Allocating memory!\n");
+
+
+
+    int16_t* matATensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int16_t));
+    int16_t* matBTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int16_t* matCTensor = (int16_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size *  sizeof(int16_t));
+    int32_t* outputTensor = (int32_t*) memalign(1 << LOG2VLEN,matrix_size * matrix_size * bias_size * sizeof(int32_t));
+
+    int32_t* bias_ = (int32_t*) memalign(1 << LOG2VLEN, bias_size * sizeof(int32_t));
+
+
+    printf("Creating runtime buffers!\n");
+
+    Halide::Runtime::Buffer<int16_t> matA((int16_t*)matATensor, dims_3, shape);
+    Halide::Runtime::Buffer<int16_t> matB((int16_t*) matBTensor, dims_3, shape);
+
+    Halide::Runtime::Buffer<int16_t> matC((int16_t*) matCTensor, dims_3, shape);
+
+
+    halide_dimension_t bias_dim{ 0, bias_size, 1 };
+    halide_dimension_t bias_shape[1] = {bias_dim};
+
+    Halide::Runtime::Buffer<int32_t> bias_buf((int32_t*)bias_, 1 , bias_shape);
+
+
+    Halide::Runtime::Buffer<int32_t> output_buf((int32_t*)outputTensor, dims_3, shape);
+
+    printf("About to launch kernel!\n");
+
+    // Run in 128 byte mode
+    SIM_ACQUIRE_HVX;
+    SIM_SET_HVX_DOUBLE_MODE;
+    cycles = benchmark([&]() {
+            int error = matmul_bias_gelu_matmul_hvx128(matA, matB, matC, bias_buf, output_buf);
+            if (error != 0) {
+            printf("matmul_bias_gelu_matmul_hvx128 pipeline failed: %d\n", error);
+            }
+            });
+
+    SIM_RELEASE_HVX;
+
+
+
+    printf("AppReported (): Image %dx%d - batched(): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+#endif
+
+#if conv_nn
+      int* bias = (int*)memalign(1 << LOG2VLEN, width * height * sizeof(int));
+      for (int i = 0; i < (width * height); i++)
+          bias[i] = 10000;
+
+      width = 128;
+      height = 128;
+
+      halide_dimension_t c_dim{ 0, 1024, 1 };
+      halide_dimension_t x_dim{ 0, width / 32, 128 };
+      halide_dimension_t y_dim{ 0, height / 32, 128 * (width / 32) };
+      halide_dimension_t b_dim{ 0, 1, 128 * (width / 32) * (height / 32) };
+      halide_dimension_t shape[4] = { c_dim, x_dim, y_dim, b_dim };
+
+      halide_dimension_t i_dim{ 0, width * height, 1 };
+      halide_dimension_t b_shape[2] = { i_dim };
+
+      // A 6D array of filter coefficients indexed by ci % n, co % k, ci / n, co / k, x, y,
+
+      halide_dimension_t cim_dim{ 0, 4, 1 };
+      halide_dimension_t com_dim{ 0, 4, 4 };
+      halide_dimension_t cid_dim{ 0, 4, 4 * 4 };
+      halide_dimension_t cod_dim{ 0, 4, 4 * 4 * 4 };
+      halide_dimension_t fx_dim{ 0, 1, 4 * 4 * 4 * 4 };
+      halide_dimension_t fy_dim{ 0, 1, 4 * 4 * 4 * 4 };
+      halide_dimension_t f_shape[6] = { cim_dim, com_dim, cid_dim, cod_dim, x_dim, b_dim };
+
+      Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+      Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+      Halide::Runtime::Buffer<uint8_t> filter_buf(input, 6, f_shape);
+      Halide::Runtime::Buffer<int32_t> bias_((long*)bias, 1, b_shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = conv_nn_hvx128(input_buf, 3, filter_buf, 5, bias_, 1, 1, 1, 1, 32767, 1, 3, 5, 250, output_buf);
+          if (error != 0) {
+              printf("conv_nn_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - conv_nn_hvx128(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if debug
+      halide_dimension_t x_dim{ 0, width, 1 };
+      halide_dimension_t y_dim{ 0, height, width };
+      halide_dimension_t shape[2] = { x_dim, y_dim };
+
+      Halide::Runtime::Buffer<uint8_t> input1_buf(input, dims, shape);
+      Halide::Runtime::Buffer<int16_t> output_buf((int16_t*)output, dims, shape);
+
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = debug_hvx128(input1_buf, 20, output_buf);
+          if (error != 0) {
+              printf("debug_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input1_buf(x, y), output_buf(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - debug(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
 
   free(input);
