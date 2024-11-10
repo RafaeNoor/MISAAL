@@ -348,6 +348,7 @@
         "typed:vec-bwnot",
         "typed:vec-sub",
         "typed:signed-vec-min",
+        "typed:unsigned-vec-min",
         "typed:unsigned-vec-sat-sub"
     ],
     "vmvn_s16": [
@@ -364,6 +365,7 @@
     ],
     "vmax_u8": [
         "typed:signed-vec-max",
+        "typed:unsigned-vec-max",
         "typed:unsigned-vec-mod",
         "typed:vec-sub",
         "typed:unsigned-vec-sat-sub"

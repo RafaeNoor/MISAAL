@@ -23,6 +23,7 @@ combined_dsl_list = halide_dsl_list +arm_dsl_list + arm_swizzles_dsl_list
 
 test_files = [
     MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_max_min_arm-enumerate_intermediate_results.py",
 ]
 
 
