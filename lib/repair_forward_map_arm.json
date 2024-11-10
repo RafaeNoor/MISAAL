@@ -416,5 +416,61 @@
         "typed:vec-sub",
         "typed:cast-int-extend",
         "typed:cast-int-truncate"
+    ],
+    "vabdl_u32" : [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdl_high_u32" : [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdl_s8" : [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdl_s16" : [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdl_high_s16" : [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdq_s32": [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabdl_high_u8": [
+        "typed:unsigned-vec-absd"
+    ],
+    "vabal_high_u32":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vabal_high_u8":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vaba_u8":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vabal_u16":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vabal_high_s16":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vabal_s8":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
+    ],
+
+    "vabal_s32":[
+        "typed:unsigned-vec-absd",
+        "typed:vec-add"
     ]
+
 }
