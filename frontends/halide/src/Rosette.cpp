@@ -1111,8 +1111,12 @@ public:
         indent.push(indent.top() + 1);
         std::string rkt_val = dispatch(op->value);
         indent.pop();
-        return tabs() + "(vector_reduce '" + rkt_op + " " +
-               std::to_string(op->value.type().lanes() / op->type.lanes()) + "\n" + rkt_val + ")";
+        Type VecTy = op->value.type();
+        size_t iprec = VecTy.bits();
+        size_t isize = VecTy.lanes() * VecTy.bits();
+        std::string type_info = std::to_string(iprec) + " " + std::to_string(isize);
+        return tabs() + "(typed:signed-vector_reduce_ " + rkt_op + " " +
+               std::to_string(op->value.type().lanes() / op->type.lanes()) + "\n" + rkt_val+ " " +type_info + ")";
     }
 };
 
