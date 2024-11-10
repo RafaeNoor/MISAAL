@@ -4,6 +4,7 @@ LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
 benchmarks = matmul_256_32bit_bias_add \
 			 matmul_bias_relu_matmul \
+			 max_pool \
 			 dilate3x3 \
 			 dilate5x5 \
 			 dilate7x7 \
