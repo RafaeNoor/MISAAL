@@ -2,8 +2,12 @@ HALIDE_DISTRIB ?= /home/arnoor2/MISAAL/frontends/halide/distrib/
 HALIDE_DIR ?=/home/arnoor2/MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
-benchmarks = l2norm \
-			 matmul_256_32bit_bias_add
+benchmarks = matmul_256_32bit_bias_add \
+			 matmul_bias_relu_matmul \
+			 dilate3x3 \
+			 dilate5x5 \
+			 dilate7x7 \
+			 l2norm
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
@@ -92,7 +96,7 @@ fully_connected:
 		-o $@/$(BIN)/$@_generator \
 		-L $(HALIDE_DISTRIB)/lib -lHalide $(shell $(LLVM_CONFIG) --system-libs --link-static) $(ADDITIONAL)
 
-	export LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/lib; export HYDRIDE_BENCHMARK=$@_arm_depth$(EXPR_DEPTH)_misaal; time HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) MISAAL_DISABLE_FRONTEND_PATTERNS=1 HYDRIDE_TARGET=arm HYDRIDE_DISTRIBUTE_LOOK_AHEAD=1   HL_SYNTH_BW=$(SYNTH_BW) $(STARTING_HASH) ./$@/$(BIN)/$@_generator \
+	export LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/lib; export HYDRIDE_BENCHMARK=$@_arm_depth$(EXPR_DEPTH)_misaal; time HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) MISAAL_DISABLE_FRONTEND_PATTERNS=1 HYDRIDE_TARGET=arm HYDRIDE_DISTRIBUTE_LOOK_AHEAD=1 HL_SYNTH_BW=$(SYNTH_BW) $(STARTING_HASH) ./$@/$(BIN)/$@_generator \
 	    -t 0 \
 		-o $@/$(BIN) \
 		-g $@ output.type=uint8 \
