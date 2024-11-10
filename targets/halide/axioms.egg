@@ -179,3 +179,146 @@
  )
  (typed_vec-saturate  reg_0 16 1  factor 8 1)
  )
+
+
+(rewrite 
+(typed_signed-vec-rounding_mul_shift_right
+reg_0
+reg_1
+reg_2
+16
+2048
+)
+(typed_concat_vectors
+ (typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   64
+   1
+   64
+   16
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   64
+   1
+   64
+   16
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   64
+   1
+   64
+   16
+   2048
+  )
+  16
+  1024
+ )
+(typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   0 
+   1
+   64
+   16
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   0
+   1
+   64
+   16
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   0 
+   1
+   64
+   16
+   2048
+  )
+  16
+  1024
+ )
+ 
+ 16
+ 1024
+ )
+)
+
+(rewrite 
+(typed_signed-vec-rounding_mul_shift_right
+reg_0
+reg_1
+reg_2
+32
+2048
+)
+(typed_concat_vectors
+ (typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   32
+   1
+   32
+   32 
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   32 
+   1
+   32
+   32
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   32
+   1
+   32
+   32
+   2048
+  )
+  32
+  1024
+ )
+(typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   0 
+   1
+   32
+   32
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   0
+   1
+   32
+   32
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   0 
+   1
+   32
+   32
+   2048
+  )
+  32
+  1024
+ )
+ 
+ 32
+ 1024
+ )
+)

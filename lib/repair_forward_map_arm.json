@@ -281,14 +281,19 @@
     "vaddhn_u32": [
         "typed:slice_vectors"
     ],
+    "vmov_n_u16": [
+        "typed:xBroadcast"
+    ],
     "vmovl_s32": [
         "typed:vec-add",
         "typed:signed-vec-sat-add",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
         "typed:vec-saturate",
         "typed:vec-sub",
         "typed:slice_vectors",
-        "typed:cast-int"
+        "typed:cast-int-extend",
+        "typed:cast-int-truncate"
     ],
     "vmovl_high_s8": [
         "typed:signed-vec-shr",
@@ -297,12 +302,19 @@
         "typed:signed-vec-mul",
         "typed:signed-vec-rounding_shift_right",
         "typed:signed-vec-sat-add",
-        "typed:cast-uint",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
         "typed:vec-saturate",
         "typed:unsigned-vec-mul",
         "typed:vec-sub",
-        "typed:cast-int",
+        "typed:cast-int-extend",
+        "typed:cast-int-truncate",
         "typed:signed-vec-widen-mul"
+    ],
+    "vmovn_s16": [
+        "typed:cast-int-truncate",
+        "typed:cast-uint-truncate"
+
     ],
     "vadd_u16": [
         "typed:unsigned-vec-sat-add",
