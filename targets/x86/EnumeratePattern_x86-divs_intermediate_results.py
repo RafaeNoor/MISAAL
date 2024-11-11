@@ -279,5 +279,19 @@
                 "dst_ctx": "typed:signed-vec-div_p64_s512_signed_1"
             }
         }
+    ],
+    "_p64 (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed:signed-vec-div ; typed:signed-vec-div_p8_s512_signed_1\n\t(buffer-index  1 'uint8 512) ; < 64 x i8> False\n\t(buffer-index  0 'uint8 512) ; < 64 x i8> False\n\t8\n\t512\n )+512+_mm512_div_epi16+typed:signed-vec-div_p16_s512_signed_1": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 1 1 128 1 128 0)",
+                "dst": "(typed:signed-vec-div (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed:signed-vec-div ; typed:signed-vec-div_p8_s512_signed_1\n\t(buffer-index  1 'uint8 512) ; < 64 x i8> False\n\t(buffer-index  0 'uint8 512) ; < 64 x i8> False\n\t8\n\t512\n )",
+                "src_ctx": "_mm256_div_epi64",
+                "dst_ctx": "typed:signed-vec-div_p64_s256_signed_1"
+            }
+        }
     ]
 }
