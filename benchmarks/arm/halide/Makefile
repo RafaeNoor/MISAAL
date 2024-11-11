@@ -3,11 +3,21 @@ HALIDE_DIR ?=/home/arnoor2/MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
 benchmarks = matmul_256_32bit_bias_add \
+			 matmul_256_32bit_bias_add_add \
+			 matmul_256_32bit_bias_add_relu \
+			 matmul_256_32bit_bias_add_gelu \
 			 matmul_bias_relu_matmul \
+			 matmul_bias_gelu_matmul \
 			 max_pool \
 			 dilate3x3 \
 			 dilate5x5 \
 			 dilate7x7 \
+			 gaussian3x3 \
+			 gaussian5x5 \
+			 gaussian7x7 \
+			 mul \
+			 sobel3x3 \
+			 sobel5x5 \
 			 l2norm
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
