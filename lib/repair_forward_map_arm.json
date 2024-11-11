@@ -271,7 +271,19 @@
         "typed:signed-vec-shr",
         "typed:signed-vector_reduce_add",
         "typed:slice_vectors",
-        "typed:vec-shl"
+        "typed:vec-shl",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:xBroadcast"
+    ],
+    "vshll_high_n_s8": [
+        "typed:signed-vec-shr",
+        "typed:signed-vector_reduce_add",
+        "typed:slice_vectors",
+        "typed:vec-shl",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:xBroadcast"
     ],
     "vqmovn_u64": [
         "typed:cast-uint-truncate",
@@ -344,16 +356,98 @@
         "typed:cast-int-truncate"
     ],
     "vshrn_n_u64": [
+        "typed:xBroadcast",
         "typed:unsigned-vec-shr",
         "typed:signed-vec-shr",
         "typed:cast-uint-truncate",
         "typed:slice_vectors",
-        "typed:cast-int-truncate"
+        "typed:cast-int-truncate",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-saturate"
+    ],
+    "vshrn_n_s16": [
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-uint-truncate",
+        "typed:cast-uint-extend",
+        "typed:slice_vectors",
+        "typed:cast-int-truncate",
+        "typed:cast-int-extend",
+        "typed:vec-saturate"
+    ],
+    "vshrq_n_u8": [
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-uint-extend",
+        "typed:cast-uint-truncate",
+        "typed:slice_vectors",
+        "typed:cast-int-truncate",
+        "typed:cast-int-extend",
+        "typed:vec-saturate"
+    ],
+    "vshrn_n_s32": [
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-uint-truncate",
+        "typed:slice_vectors",
+        "typed:cast-int-truncate",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-saturate"
+    ],
+    "vsra_n_s64": [
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-add"
+    ],
+    "vsraq_n_s32": [
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-uint-truncate",
+        "typed:slice_vectors",
+        "typed:cast-int-truncate",
+        "typed:vec-saturate",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-add"
+    ],
+     "vsraq_n_u8" :[
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-add"
+    ],
+      "vsraq_n_u64" :[
+        "typed:xBroadcast",
+        "typed:unsigned-vec-shr",
+        "typed:signed-vec-shr",
+        "typed:cast-uint-truncate",
+        "typed:slice_vectors",
+        "typed:cast-int-truncate",
+        "typed:vec-saturate",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:vec-add"
     ],
     "vqshrnd_n_u64": [
         "typed:unsigned-vec-shr",
         "typed:signed-vec-shr",
-        "typed:vec-saturate"
+        "typed:vec-saturate",
+        "typed:vec-add",
+        "typed:cast-int-extend",
+        "typed:cast-uint-extend",
+        "typed:cast-int-truncate",
+        "typed:cast-uint-truncate"
     ],
     "vmin_u32": [
         "typed:unsigned-vec-absd",
@@ -415,7 +509,8 @@
         "typed:vec-bwnot",
         "typed:vec-sub",
         "typed:cast-int-extend",
-        "typed:cast-int-truncate"
+        "typed:cast-int-truncate",
+        "typed:xBroadcast"
     ],
     "vabdl_u32" : [
         "typed:unsigned-vec-absd"
