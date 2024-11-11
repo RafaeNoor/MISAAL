@@ -180,6 +180,26 @@
  (typed_vec-saturate  reg_0 16 1  factor 8 1)
  )
 
+(rewrite
+  (typed_cast-int-truncate  
+   (typed_signed-vec-max
+    (typed_signed-vec-min
+     reg_0
+     (typed_xBroadcast (LIT "2147483647" 64) 64 64 factor)
+     64
+     (* 64 factor)
+    )
+    (typed_xBroadcast (LIT "-2147483648" 64) 64 64 factor)
+    64
+    (* 64 factor)
+   )
+   64 1 factor  32
+  )
+  (typed_vec-saturate  reg_0 64 1  factor 32 1)
+ )
+
+
+
 
 (rewrite 
 (typed_signed-vec-rounding_mul_shift_right
