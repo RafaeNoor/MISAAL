@@ -1,6 +1,32 @@
 halide_decomposed = {
     "typed:cast-int-extend": {
         "target_instructions": {
+            "typed:cast-int_1_ip16_is2048_op32_os4096_signed_1": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 4,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    "halide"
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "16",
+                    "1",
+                    "128",
+                    "32"
+                ]
+            },
             "typed:cast-int_1_ip16_is1024_op32_os2048_signed_1": {
                 "in_vectsize": 1024,
                 "out_vectsize": 2048,
@@ -1117,6 +1143,32 @@ halide_decomposed = {
     },
     "typed:cast-uint-extend": {
         "target_instructions": {
+            "typed:cast-uint_1_ip16_is2048_op32_os4096_signed_0": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 4,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    "halide"
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "16",
+                    "1",
+                    "128",
+                    "32"
+                ]
+            },
             "typed:cast-uint_1_ip16_is1024_op32_os2048_signed_0": {
                 "in_vectsize": 1024,
                 "out_vectsize": 2048,
