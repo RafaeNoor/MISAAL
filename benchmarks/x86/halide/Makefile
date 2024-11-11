@@ -30,7 +30,8 @@ benchmarks = gaussian3x3 \
 			 mul \
 			 softmax \
 			 fully_connected \
-			 depthwise_conv
+			 depthwise_conv \
+			 tensor_shr
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 

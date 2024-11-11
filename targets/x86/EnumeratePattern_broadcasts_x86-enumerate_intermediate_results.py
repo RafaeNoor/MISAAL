@@ -1762,5 +1762,23 @@
                 "dst_ctx": "typed:slice_vectors_ip16_is128_op16_os64_signed_None_4_1_4"
             }
         }
+    ],
+    " (_mm512_broadcastq_epi64_dsl ; _mm512_set1_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t64\n\t64\n\t0\n\t512\n\t64\n\t0\n\t0\n )_ (typed:xBroadcast ; typed:xBroadcast_is16_os1024_signed_None\n\t(buffer-index  0 'uint8 8) ; < 1 x i8> False\n\t16\n\t16\n\t64\n )": [
+        {
+            "property_name": "EqClassEqualDepthV4_x86_set1epi64",
+            "property": {
+                "src": "(_mm512_broadcastq_epi64_dsl (reg (bv #x00 8)) 64 64 0 512 64 0 0)",
+                "dst": "(typed:xBroadcast (reg (bv #x00 8)) 64 64 8)"
+            }
+        }
+    ],
+    "_1 (_mm512_broadcastq_epi64_dsl ; _mm512_set1_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t64\n\t64\n\t0\n\t512\n\t64\n\t0\n\t0\n )_ (typed:xBroadcast ; typed:xBroadcast_is16_os1024_signed_None\n\t(buffer-index  0 'uint8 8) ; < 1 x i8> False\n\t16\n\t16\n\t64\n )": [
+        {
+            "property_name": "EqClassEqualDepthV4_x86_set1epi64",
+            "property": {
+                "src": "(_mm512_broadcastq_epi64_dsl (reg (bv #x00 8)) 64 64 0 256 64 0 0)",
+                "dst": "(typed:xBroadcast (reg (bv #x00 8)) 64 64 4)"
+            }
+        }
     ]
 }

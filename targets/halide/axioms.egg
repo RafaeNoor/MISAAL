@@ -342,3 +342,21 @@ reg_2
  1024
  )
 )
+
+
+
+;(rewrite
+; (typed_cast-uint-extend v1 iprec isigned olane oprec)
+; (typed_unsigned-vec-widen-mul 
+; v1 
+; (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+; iprec (* iprec olane))
+;)
+;(rewrite
+; (typed_cast-int-extend v1 iprec isigned olane oprec)
+; (typed_signed-vec-widen-mul 
+; v1 
+; (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+; iprec (* iprec olane))
+;)
+

@@ -23,11 +23,11 @@ MISAAL_ROOT = os.getenv('MISAAL_SRC')
 combined_dsl_list = halide_dsl_list +x86_dsl_list + x86_swizzles_dsl_list
 
 test_files = [
+    MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EqClassEqualDepthV3Synth_x86_swizzle_interleave.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_broadcasts_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-casts_intermediate_results.py",
-    MISAAL_ROOT+"/targets/x86/EnumeratePattern_x86-divs_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_assoc_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/EnumeratePattern_dp_cast_x86-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/x86/LowerSwizzles_filtered_x86_intermediate_results.py",

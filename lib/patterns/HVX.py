@@ -23,6 +23,7 @@ combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
 
 test_files = [
     #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePatternhvx_rmpy_hvx-enumerate_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/RoundMulShiftRightPatterns.py",
     "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
     "/home/arnoor2/MISAAL/test/property/eq_class_enumeration/hvx/tempEnumxHVX_hvx_intermediate_results.py",
