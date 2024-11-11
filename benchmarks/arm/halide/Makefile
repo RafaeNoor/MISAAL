@@ -15,6 +15,8 @@ benchmarks = matmul_256_32bit_bias_add \
 			 dilate5x5 \
 			 dilate7x7 \
 			 max_pool_add \
+			 average_pool \
+			 average_pool_add \
 			 add \
 			 gaussian3x3 \
 			 gaussian5x5 \
