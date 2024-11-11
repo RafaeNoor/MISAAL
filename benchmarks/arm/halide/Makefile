@@ -8,10 +8,14 @@ benchmarks = matmul_256_32bit_bias_add \
 			 matmul_256_32bit_bias_add_gelu \
 			 matmul_bias_relu_matmul \
 			 matmul_bias_gelu_matmul \
+			 batched_matmul_256_32bit \
+			 median3x3 \
 			 max_pool \
 			 dilate3x3 \
 			 dilate5x5 \
 			 dilate7x7 \
+			 max_pool_add \
+			 add \
 			 gaussian3x3 \
 			 gaussian5x5 \
 			 gaussian7x7 \
