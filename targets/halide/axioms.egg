@@ -46,7 +46,7 @@
 
 
 
-;; Literals Casts
+; Literals Casts
 (rewrite
      (LIT val prec)
     (typed_cast-int-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
@@ -59,7 +59,7 @@
     ;:when ((< val 255))
 )
 
-;; Halide casts of broadcast is equal to broadcast of casts
+; Halide casts of broadcast is equal to broadcast of casts
 
 (rewrite 
  (typed_xBroadcast
@@ -345,18 +345,81 @@ reg_2
 
 
 
-;(rewrite
-; (typed_cast-uint-extend v1 iprec isigned olane oprec)
-; (typed_unsigned-vec-widen-mul 
-; v1 
-; (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
-; iprec (* iprec olane))
-;)
-;(rewrite
-; (typed_cast-int-extend v1 iprec isigned olane oprec)
-; (typed_signed-vec-widen-mul 
-; v1 
-; (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
-; iprec (* iprec olane))
-;)
+(rewrite
+ (typed_cast-uint-extend v1 iprec isigned olane oprec)
+ (typed_unsigned-vec-widen-mul 
+ v1 
+ (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+ iprec (* iprec olane))
+)
+(rewrite
+ (typed_cast-int-extend v1 iprec isigned olane oprec)
+ (typed_signed-vec-widen-mul 
+ v1 
+ (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+ iprec (* iprec olane))
+)
+
+
+
+(rewrite 
+ (typed_cast-uint-truncate
+  (typed_unsigned-vec-min
+   reg_0
+   (typed_xBroadcast (LIT "255" 16)  16 16 factor ) 16 (* factor 16))  16 1 factor 8)
+
+(typed_vec-saturate  reg_0 16 1  factor 8 0)
+
+ )
+
+(birewrite 
+ (typed_vec-shl
+  reg_0
+  (typed_xBroadcast (LIT "1" prec)  prec prec factor )
+  prec
+  size
+ )
+ (typed_signed-vec-mul
+  reg_0 
+  (typed_xBroadcast (LIT "2" prec)  prec prec factor )
+  prec size
+ )
+ )
+
+
+(rewrite 
+ (typed_vec-shl
+  reg_0
+  (typed_xBroadcast (LIT "1" prec)  prec prec factor )
+  prec
+  size
+ )
+ (typed_vec-add
+  reg_0 
+  reg_0 
+  prec size
+ )
+ )
+
+(rewrite
+ (typed_signed-vec-shr
+  reg_0
+  reg_1
+  prec
+  size
+ )
+
+ (typed_vec-shl
+  reg_0
+  (typed_signed-vec-mul
+   reg_1 
+   (typed_xBroadcast (LIT "-1" prec)  prec prec (/ size prec))
+   prec size
+  )
+  prec
+  size
+ )
+
+
+ )
 
