@@ -27,7 +27,8 @@ test_files = [
     MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_max_min_arm-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_extend_truncate_arm-enumerate_intermediate_results.py",
     MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_absd_arm-enumerate_intermediate_results.py",
-    MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_shr_arm-enumerate_intermediate_results.py"
+    MISAAL_ROOT+"/targets/arm/EnumeratePattern_arm_shr_arm-enumerate_intermediate_results.py",
+    MISAAL_ROOT+"/targets/arm/EnumeratePatternarm_missing_absd_arm-enumerate_intermediate_results.py"
 ]
 
 
