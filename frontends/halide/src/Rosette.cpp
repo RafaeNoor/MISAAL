@@ -969,6 +969,9 @@ public:
         } else if (op->is_broadcast()) {
             indent.push(indent.top() + 1);
             std::string rkt_vec = dispatch(op->vectors[0]);
+            Type VecTy = op->vectors[0].type();
+            size_t input_lanes = VecTy.lanes();
+            std::string iprec_str = std::to_string(VecTy.bits() * input_lanes);
             indent.pop();
             indent.push(0);
             mode.push(VarEncoding::Integer);
@@ -976,7 +979,9 @@ public:
             mode.pop();
             indent.pop();
 
-            return tabs() + "(vec-broadcast " + rkt_fac + "\n" + rkt_vec + ")";
+            std::string type_info = " " + iprec_str + " " + iprec_str + " " + rkt_fac;
+            return tabs() + "(typed:xBroadcast " +  rkt_vec +" " + type_info +")";
+            //return tabs() + "(vec-broadcast " + rkt_fac + "\n" + rkt_vec + ")";
         } else if (op->is_interleave()) {
             switch (op->vectors.size()) {
             case 2: {
