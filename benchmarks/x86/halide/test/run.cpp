@@ -66,6 +66,10 @@
 #include "fully_connected.h"
 #elif benchmark_depthwise_conv
 #include "depthwise_conv.h"
+#elif benchmark_conv_nn
+#include "conv_nn.h"
+#elif benchmark_conv3x3a16
+#include "conv3x3a16.h"
 #endif
 
 #define LOG2VLEN 7
@@ -1291,6 +1295,101 @@ int main(int argc, char **argv) {
 
     printf("AppReported (): Image %dx%d - depthwise_conv(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 
+#endif
+
+#if benchmark_conv_nn
+  int *bias =
+      (int *)aligned_malloc(width * height * sizeof(int), 1 << LOG2VLEN);
+  // int* bias = (int*)memalign(1 << LOG2VLEN, width * height * sizeof(int));
+  for (int i = 0; i < (width * height); i++)
+    bias[i] = 10000;
+
+  width = 128;
+  height = 128;
+
+  halide_dimension_t c_dim{0, 1024, 1};
+  halide_dimension_t x_dim{0, width / 32, 128};
+  halide_dimension_t y_dim{0, height / 32, 128 * (width / 32)};
+  halide_dimension_t b_dim{0, 1, 128 * (width / 32) * (height / 32)};
+  halide_dimension_t shape[4] = {c_dim, x_dim, y_dim, b_dim};
+
+  halide_dimension_t i_dim{0, width * height, 1};
+  halide_dimension_t b_shape[2] = {i_dim};
+
+  // A 6D array of filter coefficients indexed by ci % n, co % k, ci / n, co /
+  // k, x, y,
+
+  halide_dimension_t cim_dim{0, 4, 1};
+  halide_dimension_t com_dim{0, 4, 4};
+  halide_dimension_t cid_dim{0, 4, 4 * 4};
+  halide_dimension_t cod_dim{0, 4, 4 * 4 * 4};
+  halide_dimension_t fx_dim{0, 1, 4 * 4 * 4 * 4};
+  halide_dimension_t fy_dim{0, 1, 4 * 4 * 4 * 4};
+  halide_dimension_t f_shape[6] = {cim_dim, com_dim, cid_dim,
+                                   cod_dim, x_dim,   b_dim};
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
+  Halide::Runtime::Buffer<uint8_t> filter_buf(input, 6, f_shape);
+  Halide::Runtime::Buffer<int32_t> bias_(bias, 1, b_shape);
+
+  cycles = benchmark([&]() {
+    int error = conv_nn(input_buf, 3, filter_buf, 5, bias_, 1, 1, 1, 1, 32767,
+                        1, 3, 5, 250, output_buf);
+    if (error != 0) {
+      printf("conv_nn pipeline failed: %d\n", error);
+    }
+  });
+
+#if DEBUG
+
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+
+#endif
+  printf("AppReported (): Image %dx%d - conv_nn(128B): %lld cycles (%0.4f "
+         "cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
+#if benchmark_conv3x3a16
+  signed char mask[9] = {1, 2, 1, 2, 4, 2, 1, 2, 1};
+
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  halide_dimension_t mask_shape[2];
+  mask_shape[0].min = 0;
+  mask_shape[0].extent = 3;
+  mask_shape[0].stride = 1;
+  mask_shape[1].min = 0;
+  mask_shape[1].extent = 3;
+  mask_shape[1].stride = 3;
+
+  Halide::Runtime::Buffer<uint8_t> input_buf(input, dims, shape);
+  Halide::Runtime::Buffer<uint8_t> output_buf(output, dims, shape);
+  Halide::Runtime::Buffer<int8_t> mask_buf(mask, dims, mask_shape);
+
+  float exec_time = benchmark([&]() {
+    int error = conv3x3a16(input_buf, mask_buf, output_buf);
+    if (error != 0) {
+      printf("conv3x3a16 pipeline failed: %d\n", error);
+    }
+  });
+
+  for (int x = 0; x < 10; x++)
+    for (int y = 0; y < 10; y++)
+      printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y,
+             input_buf(x, y), output_buf(x, y));
+
+  printf("AppReported (HVX128B-mode): Image %dx%d - conv3x3a16(128B): %lld "
+         "cycles (%0.4f cycles/pixel)\n",
+         (int)width, (int)height, cycles, (float)cycles / (width * height));
+
+  printf("Execution took %0.4f s\n", exec_time);
 #endif
 
   free(input);

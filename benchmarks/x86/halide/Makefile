@@ -31,7 +31,9 @@ benchmarks = gaussian3x3 \
 			 softmax \
 			 fully_connected \
 			 depthwise_conv \
-			 tensor_shr
+			 tensor_shr \
+			 conv_nn \
+			 conv3x3a16 
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
@@ -135,7 +137,7 @@ endif
 ifeq ($(BENCHMARK),1) 
 
 # Benchmark the generated binary
-	$@/bin/$@_run.out 1920 1080 ../test_vectors/football1920x1080.bin  $@/out/out.bin
+	$@/bin/$@_run.out 1920 1080 
 
 endif
 
