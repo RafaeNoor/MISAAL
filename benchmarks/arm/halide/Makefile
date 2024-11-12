@@ -17,6 +17,10 @@ benchmarks = matmul_256_32bit_bias_add \
 			 max_pool_add \
 			 average_pool \
 			 average_pool_add \
+			 blur3x3 \
+			 blur5x5 \
+			 blur7x7 \
+			 depthwise_conv \
 			 add \
 			 gaussian3x3 \
 			 gaussian5x5 \
