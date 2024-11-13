@@ -23,6 +23,9 @@ combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
 
 test_files = [
     #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_acc_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_vmpyh_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePatternhvx_swizzle_transfer_hvx-enumerate_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePatternhvx_rmpy_hvx-enumerate_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/RoundMulShiftRightPatterns.py",
     "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
@@ -39,7 +42,6 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_acc_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_sat_hvx-enumerate_intermediate_results.py",
 ]
-
 
 props = [
 ]
