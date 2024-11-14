@@ -59,8 +59,8 @@ public:
         // TODO: Figure out how to vectorize this efficiently without this
         // code duplication. We should be able to just vectorize and predicate
         // somehow.
-        //const int vector_size = 1024 / 16; //natural_vector_size<uint8_t>();
-        const int vector_size = natural_vector_size<uint8_t>();
+        const int vector_size = 1024 / 16; //natural_vector_size<uint8_t>();
+        //const int vector_size = natural_vector_size<uint8_t>();
         printf("Natural Vector Size: %d\n", vector_size);
         Expr output_channels = output_.dim(0).extent();
         // Changed specialization just for the natural vector size

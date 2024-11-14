@@ -41,8 +41,8 @@ public:
         // Schedule.
         const int vector_size = natural_vector_size<uint8_t>();
 
-        //const int hydride_vector_size = 2048 / 64; ;//natural_vector_size<uint8_t>();
-        const int hydride_vector_size = natural_vector_size<uint8_t>();
+        const int hydride_vector_size = 2048 / 64; ;//natural_vector_size<uint8_t>();
+        //const int hydride_vector_size = natural_vector_size<uint8_t>();
 
         output_
             .compute_root()

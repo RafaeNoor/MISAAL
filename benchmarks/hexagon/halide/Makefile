@@ -11,6 +11,7 @@ benchmarks = tensor_add \
 			 tensor_rounding_halving_add \
 			 tensor_mul \
 			 tensor_shr \
+			 tensor_shr_sat \
 			 tensor_shl \
 			 max_pool \
 			 blur3x3 \
@@ -43,7 +44,8 @@ benchmarks = tensor_add \
 			 matmul_bias_gelu_matmul\
 			 matmul_256_32bit_bias_add_add \
 			 conv_nn \
-			 depthwise_conv
+			 depthwise_conv \
+			 fully_connected
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 out_dirs = $(addsuffix /out,$(benchmarks))
@@ -102,7 +104,7 @@ fully_connected: %: %/bin %/out %/profile
 		-o $@/bin/$@_generator \
 		-L $(HALIDE_DIR)/lib -lHalide $(shell $(LLVM_CONFIG) --system-libs --link-static)
 
-	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;  export HYDRIDE_BENCHMARK=$@_hvx_depth$(EXPR_DEPTH); HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_EXPR_DEPTH=$(EXPR_DEPTH) HYDRIDE_TARGET=hvx   HL_SYNTH_BW=$(INT_BW) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) ./$@/bin/$@_generator \
+	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;  export HYDRIDE_BENCHMARK=$@_hvx_depth$(EXPR_DEPTH);HL_FORCE_HEXAGON_OPT=1  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_EXPR_DEPTH=$(EXPR_DEPTH) HYDRIDE_TARGET=hvx  HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  MISAAL_EQ_SAT_ITERS=$(MISAAL_EQ_SAT_ITERS)   HL_SYNTH_BW=$(INT_BW) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) ./$@/bin/$@_generator \
 	    -t 0 \
 		-o $@/bin \
 		-g $@ output.type=uint8 \
@@ -120,7 +122,7 @@ ifeq ($(sim),true)
 		$(HALIDE_DIR)/../src/runtime/hexagon_remote/bin/v65/libsim_qurt.a -lhexagon \
 		-o $@/bin/$@_run.out
 
-	$(HEXAGON_SIM) -mv66 --memfill 0x0 --simulated_returnval --nullptr=2 $@/bin/$@_run.out -- 1920 1080 ../test_vectors/football1920x1080.bin $@/out/out.bin
+	$(HEXAGON_SIM) -mv66 --memfill 0x0 --simulated_returnval --nullptr=2 $@/bin/$@_run.out -- 1920 1080 
 	
 	rm -f pmu_statsfile.txt stats_dump.iss.0
 endif

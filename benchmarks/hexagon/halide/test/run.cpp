@@ -72,6 +72,8 @@
   #include "matmul_bias_relu_matmul_hvx128.h"
 #elif matmul_bias_gelu_matmul
   #include "matmul_bias_gelu_matmul_hvx128.h"
+#elif fully_connected
+  #include "fully_connected_hvx128.h"
 #endif
 
 #define LOG2VLEN 7
@@ -237,35 +239,6 @@ unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*
   free(simple_output);
   #endif
 
-#if max_pool
-      halide_dimension_t c_dim{ 0, 1024, 1 };
-      halide_dimension_t x_dim{ 0, width / 32, 128 };
-      halide_dimension_t y_dim{ 0, height / 32, 128 * (width / 32) };
-      halide_dimension_t b_dim{ 0, 1, 128 * (width / 32) * (height / 32) };
-      halide_dimension_t shape[4] = { c_dim, x_dim, y_dim, b_dim };
-
-
-
-      Halide::Runtime::Buffer<uint8_t> input_buf(input, 4, shape);
-      Halide::Runtime::Buffer<uint8_t> output_buf(output, 4, shape);
-
-      // Run in 128 byte mode
-      SIM_ACQUIRE_HVX;
-      SIM_SET_HVX_DOUBLE_MODE;
-      cycles = benchmark([&]() {
-          int error = max_pool_hvx128(input_buf, 2, 2, 8, 8, 5, 225, output_buf);
-          if (error != 0) {
-              printf("max_pool_hvx128 pipeline failed: %d\n", error);
-          }
-          });
-      SIM_RELEASE_HVX;
-
-      for (int x = 0; x < 10; x++)
-          for (int y = 0; y < 10; y++)
-              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, input_buf(x, y), output_buf(x, y));
-
-      printf("AppReported (HVX128B-mode): Image %dx%d - max_pool(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
-#endif
 
 #if median3x3
     halide_dimension_t x_dim{ 0, width, 1 };
@@ -519,7 +492,7 @@ unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*
     constexpr int dims_3 = 3;
     int32_t matrix_size = 256;
     
-    int num_batches = 4; 
+    int num_batches = 1; 
     halide_dimension_t x_dim{ 0, matrix_size, 1 };
     halide_dimension_t y_dim{ 0, matrix_size, matrix_size * 1 };
     halide_dimension_t b_dim{ 0, num_batches, matrix_size * matrix_size };
@@ -1425,6 +1398,42 @@ unsigned char *output = (unsigned char *)memalign(1 << LOG2VLEN, width*height*4*
 
       printf("AppReported (HVX128B-mode): Image %dx%d - debug(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
 #endif
+
+#if fully_connected
+      int* bias = (int*)memalign(1 << LOG2VLEN, width * height * sizeof(int));
+      for (int i = 0; i < (width * height); i++)
+          bias[i] = 10000;
+
+      halide_dimension_t x_dim{ 0, width, 1 };
+      halide_dimension_t y_dim{ 0, height, width };
+      halide_dimension_t shape[2] = { x_dim, y_dim };
+
+      halide_dimension_t i_dim{ 0, width * height, 1 };
+      halide_dimension_t b_shape[2] = { i_dim };
+
+      Halide::Runtime::Buffer<uint8_t> mat_a_(input, dims, shape);
+      Halide::Runtime::Buffer<uint8_t> mat_b_(input, dims, shape);
+      Halide::Runtime::Buffer<int32_t> bias_((long*)bias, 1, b_shape);
+      Halide::Runtime::Buffer<uint8_t> output_(output, dims, shape);
+      
+      // Run in 128 byte mode
+      SIM_ACQUIRE_HVX;
+      SIM_SET_HVX_DOUBLE_MODE;
+      cycles = benchmark([&]() {
+          int error = fully_connected_hvx128(mat_a_, 3, mat_b_, 5, bias_, 7, 32767, 1, 5, 250, output_);
+          if (error != 0) {
+              printf("fully_connected_hvx128 pipeline failed: %d\n", error);
+          }
+          });
+      SIM_RELEASE_HVX;
+
+      for (int x = 0; x < 10; x++)
+          for (int y = 0; y < 10; y++)
+              printf("(x: %d, y: %d) ==> input-val: %d   output-val: %d\n", x, y, mat_a_(x, y), output_(x, y));
+
+      printf("AppReported (HVX128B-mode): Image %dx%d - fully_connected_hvx128(128B): %lld cycles (%0.4f cycles/pixel)\n", (int)width, (int)height, cycles, (float)cycles / (width * height));
+#endif
+
 
   free(input);
   free(output);

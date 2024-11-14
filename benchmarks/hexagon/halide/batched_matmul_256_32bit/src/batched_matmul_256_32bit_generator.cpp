@@ -30,7 +30,7 @@ public:
 
         output
             .compute_root()
-            .split(y, y, yi, 1, TailStrategy::ShiftInwards)
+            .split(y, y, yi, 4, TailStrategy::ShiftInwards)
             .split(x, x, xi, 64, TailStrategy::ShiftInwards)
             .split(xi, xi, xii, vector_size, TailStrategy::ShiftInwards)
             .vectorize(xii, vector_size)
