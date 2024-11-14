@@ -22,13 +22,16 @@ benchmarks = matmul_256_32bit_bias_add \
 			 blur5x5 \
 			 blur7x7 \
 			 depthwise_conv \
+			 conv3x3a16 \
+			 conv_nn \
+			 fully_connected \
+			 mul \
+			 sobel3x3 \
+			 sobel5x5 \
 			 add \
 			 gaussian3x3 \
 			 gaussian5x5 \
 			 gaussian7x7 \
-			 mul \
-			 sobel3x3 \
-			 sobel5x5 \
 			 l2norm
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
@@ -53,7 +56,8 @@ clean:
 	rm -rf /tmp/hydride.node*
 	rm -rf ./*.py ./*.egg ./*.txt ./*.rkt ./test.out ./egg*
 
-TARGET=arm-64-osx-no_bounds_query-no_asserts
+TARGET=arm-64-osx-arm_dot_prod-no_asserts-no_bounds_query
+#TARGET=arm-64-osx-no_asserts-no_bounds_query
 STARTING_HASH_FLAG=#HYDRIDE_INITIAL_HASH=starting_hash
 HALIDE_COMPILE_LLVM?=#HALIDE_COMPILE_LLVM=1
 HYDRIDE_DECOMPOSE_LET?=#0
@@ -83,7 +87,7 @@ $(benchmarks): %: %/$(BIN)
 		-g $@ \
 		-e static_library,stmt,h,llvm_assembly,assembly \
 		-f $@ target=$(TARGET)
-	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib; HL_EXPR_DEPTH=$(EXPR_DEPTH) HL_ENABLE_HYDRIDE=0 HL_DEBUG_CODEGEN=1  HL_SYNTH_BW=$(SYNTH_BITWIDTH) MISAAL_DISABLE_FRONTEND_PATTERNS=1 ./$@/$(BIN)/$@_generator \
+	export LD_LIBRARY_PATH=$(HALIDE_SRC)/lib; HL_EXPR_DEPTH=$(EXPR_DEPTH) HL_ENABLE_HYDRIDE=0 HL_DEBUG_CODEGEN=1  HL_SYNTH_BW=$(SYNTH_BITWIDTH) MISAAL_DISABLE_FRONTEND_PATTERNS=1 ./$@/$(BIN)/$@_generator \
 		-r halide_runtime_x86 \
 		-o $@/$(BIN) \
 		-e object,c_header \
@@ -111,15 +115,15 @@ ifeq ($(BENCHMARK),1)
 endif
 
 fully_connected: 
-	g++ --std=c++17 -fno-rtti -O3 -DLOG2VLEN=7 \
+	g++ --std=c++17 -fno-rtti -O3 -DLOG2VLEN=7    \
 		-I $(HALIDE_DISTRIB)/include -I $(HALIDE_DISTRIB)/tools \
 		-g $@/src/$@_generator.cpp $(HALIDE_DISTRIB)/tools/GenGen.cpp \
 		$(hannk) \
 		-o $@/$(BIN)/$@_generator \
 		-L $(HALIDE_DISTRIB)/lib -lHalide $(shell $(LLVM_CONFIG) --system-libs --link-static) $(ADDITIONAL)
 
-	export LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/lib; export HYDRIDE_BENCHMARK=$@_arm_depth$(EXPR_DEPTH)_misaal; time HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) MISAAL_DISABLE_FRONTEND_PATTERNS=1 HYDRIDE_TARGET=arm HYDRIDE_DISTRIBUTE_LOOK_AHEAD=1 HL_SYNTH_BW=$(SYNTH_BW) $(STARTING_HASH) ./$@/$(BIN)/$@_generator \
-	    -t 0 \
+	export LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/lib; HYDRIDE_BENCHMARK=$@_arm_depth$(EXPR_DEPTH)_misaal HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) MISAAL_DISABLE_FRONTEND_PATTERNS=1 HYDRIDE_TARGET=arm HYDRIDE_DISTRIBUTE_LOOK_AHEAD=1   HL_SYNTH_BW=$(SYNTH_BITWIDTH) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) ./$@/$(BIN)/$@_generator \
+		-t 0 \
 		-o $@/$(BIN) \
 		-g $@ output.type=uint8 \
 		-e static_library,stmt,h,llvm_assembly,assembly \
