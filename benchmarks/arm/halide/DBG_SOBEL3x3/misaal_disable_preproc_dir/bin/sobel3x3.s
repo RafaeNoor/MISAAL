@@ -19167,6 +19167,742 @@ Lloh1006:
 	ret
 	.loh AdrpAdd	Lloh1005, Lloh1006
                                         ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.0 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.0
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.0: ; @hydride.node.sobel3x3_arm_depth2_misaal.0
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.1 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.1
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.1: ; @hydride.node.sobel3x3_arm_depth2_misaal.1
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.2 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.2
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.2: ; @hydride.node.sobel3x3_arm_depth2_misaal.2
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.3 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.3
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.3: ; @hydride.node.sobel3x3_arm_depth2_misaal.3
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.4 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.4
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.4: ; @hydride.node.sobel3x3_arm_depth2_misaal.4
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.5 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.5
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.5: ; @hydride.node.sobel3x3_arm_depth2_misaal.5
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.6 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.6
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.6: ; @hydride.node.sobel3x3_arm_depth2_misaal.6
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.7 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.7
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.7: ; @hydride.node.sobel3x3_arm_depth2_misaal.7
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.8 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.8
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.8: ; @hydride.node.sobel3x3_arm_depth2_misaal.8
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.9 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.9
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.9: ; @hydride.node.sobel3x3_arm_depth2_misaal.9
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.10 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.10
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.10: ; @hydride.node.sobel3x3_arm_depth2_misaal.10
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.11 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.11
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.11: ; @hydride.node.sobel3x3_arm_depth2_misaal.11
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.12 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.12
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.12: ; @hydride.node.sobel3x3_arm_depth2_misaal.12
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.13 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.13
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.13: ; @hydride.node.sobel3x3_arm_depth2_misaal.13
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.14 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.14
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.14: ; @hydride.node.sobel3x3_arm_depth2_misaal.14
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.15 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.15
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.15: ; @hydride.node.sobel3x3_arm_depth2_misaal.15
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.16 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.16
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.16: ; @hydride.node.sobel3x3_arm_depth2_misaal.16
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.17 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.17
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.17: ; @hydride.node.sobel3x3_arm_depth2_misaal.17
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.18 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.18
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.18: ; @hydride.node.sobel3x3_arm_depth2_misaal.18
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.19 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.19
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.19: ; @hydride.node.sobel3x3_arm_depth2_misaal.19
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.20 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.20
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.20: ; @hydride.node.sobel3x3_arm_depth2_misaal.20
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.21 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.21
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.21: ; @hydride.node.sobel3x3_arm_depth2_misaal.21
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.22 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.22
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.22: ; @hydride.node.sobel3x3_arm_depth2_misaal.22
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.23 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.23
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.23: ; @hydride.node.sobel3x3_arm_depth2_misaal.23
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.24 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.24
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.24: ; @hydride.node.sobel3x3_arm_depth2_misaal.24
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.25 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.25
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.25: ; @hydride.node.sobel3x3_arm_depth2_misaal.25
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.26 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.26
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.26: ; @hydride.node.sobel3x3_arm_depth2_misaal.26
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.27 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.27
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.27: ; @hydride.node.sobel3x3_arm_depth2_misaal.27
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.28 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.28
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.28: ; @hydride.node.sobel3x3_arm_depth2_misaal.28
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.29 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.29
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.29: ; @hydride.node.sobel3x3_arm_depth2_misaal.29
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.30 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.30
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.30: ; @hydride.node.sobel3x3_arm_depth2_misaal.30
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
+	.globl	_hydride.node.sobel3x3_arm_depth2_misaal.31 ; -- Begin function hydride.node.sobel3x3_arm_depth2_misaal.31
+	.p2align	2
+_hydride.node.sobel3x3_arm_depth2_misaal.31: ; @hydride.node.sobel3x3_arm_depth2_misaal.31
+; %bb.0:                                ; %entry
+	ldp	d17, d16, [sp, #16]
+	ldp	d19, d18, [sp]
+	ushll.8h	v0, v0, #1
+	uaddw.8h	v0, v0, v1
+	uaddw.8h	v0, v0, v2
+	ushll.8h	v1, v3, #1
+	uaddw.8h	v1, v1, v4
+	uaddw.8h	v1, v1, v5
+	ushll.8h	v2, v6, #1
+	uaddw.8h	v2, v2, v7
+	uaddw.8h	v2, v2, v19
+	ushll.8h	v3, v18, #1
+	uaddw.8h	v3, v3, v17
+	uaddw.8h	v3, v3, v16
+	uabd.8h	v2, v2, v3
+	uaba.8h	v2, v0, v1
+	sqxtun.8b	v0, v2
+	ret
+                                        ; -- End function
 	.section	__DATA,__data
 	.globl	__ZN6Halide7Runtime8Internal13custom_mallocE ; @_ZN6Halide7Runtime8Internal13custom_mallocE
 	.weak_definition	__ZN6Halide7Runtime8Internal13custom_mallocE
