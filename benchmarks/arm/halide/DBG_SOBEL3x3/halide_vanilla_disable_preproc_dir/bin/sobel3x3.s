@@ -1,0 +1,20280 @@
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_halide_default_malloc          ; -- Begin function halide_default_malloc
+	.weak_definition	_halide_default_malloc
+	.p2align	2
+_halide_default_malloc:                 ; @halide_default_malloc
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	add	x0, x1, #32                     ; =32
+	bl	_malloc
+	cbz	x0, LBB0_2
+; %bb.1:                                ; %if.end
+	mov	x8, x0
+	add	x9, x0, #39                     ; =39
+	and	x0, x9, #0xffffffffffffffe0
+	stur	x8, [x0, #-8]
+LBB0_2:                                 ; %cleanup
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_free            ; -- Begin function halide_default_free
+	.weak_definition	_halide_default_free
+	.p2align	2
+_halide_default_free:                   ; @halide_default_free
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldur	x0, [x1, #-8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_free
+                                        ; -- End function
+	.globl	_halide_set_custom_malloc       ; -- Begin function halide_set_custom_malloc
+	.weak_definition	_halide_set_custom_malloc
+	.p2align	2
+_halide_set_custom_malloc:              ; @halide_set_custom_malloc
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh0:
+	adrp	x9, __ZN6Halide7Runtime8Internal13custom_mallocE@GOTPAGE
+Lloh1:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal13custom_mallocE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh0, Lloh1
+                                        ; -- End function
+	.globl	_halide_set_custom_free         ; -- Begin function halide_set_custom_free
+	.weak_definition	_halide_set_custom_free
+	.p2align	2
+_halide_set_custom_free:                ; @halide_set_custom_free
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh2:
+	adrp	x9, __ZN6Halide7Runtime8Internal11custom_freeE@GOTPAGE
+Lloh3:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal11custom_freeE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh2, Lloh3
+                                        ; -- End function
+	.globl	_halide_malloc                  ; -- Begin function halide_malloc
+	.weak_definition	_halide_malloc
+	.p2align	2
+_halide_malloc:                         ; @halide_malloc
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh4:
+	adrp	x8, __ZN6Halide7Runtime8Internal13custom_mallocE@GOTPAGE
+Lloh5:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal13custom_mallocE@GOTPAGEOFF]
+Lloh6:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh4, Lloh5, Lloh6
+                                        ; -- End function
+	.globl	_halide_free                    ; -- Begin function halide_free
+	.weak_definition	_halide_free
+	.p2align	2
+_halide_free:                           ; @halide_free
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh7:
+	adrp	x8, __ZN6Halide7Runtime8Internal11custom_freeE@GOTPAGE
+Lloh8:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal11custom_freeE@GOTPAGEOFF]
+Lloh9:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh7, Lloh8, Lloh9
+                                        ; -- End function
+	.globl	_halide_default_error           ; -- Begin function halide_default_error
+	.weak_definition	_halide_default_error
+	.p2align	2
+_halide_default_error:                  ; @halide_default_error
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	sub	sp, sp, #1, lsl #12             ; =4096
+	mov	x20, x1
+	mov	x19, x0
+	mov	x21, sp
+	add	x1, x21, #4094                  ; =4094
+Lloh10:
+	adrp	x2, l_.str@PAGE
+Lloh11:
+	add	x2, x2, l_.str@PAGEOFF
+	mov	x0, sp
+	bl	_halide_string_to_string
+	add	x1, x0, #4094                   ; =4094
+	mov	x2, x20
+	bl	_halide_string_to_string
+	ldurb	w8, [x0, #-1]
+	cmp	w8, #10                         ; =10
+	b.eq	LBB6_2
+; %bb.1:                                ; %if.then
+	mov	w8, #10
+	strh	w8, [x0], #1
+LBB6_2:                                 ; %if.end
+	sub	x8, x0, x21
+	add	x2, x8, #1                      ; =1
+	mov	x1, sp
+	mov	x0, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x1, sp
+	mov	x0, x19
+	bl	_halide_print
+	bl	_abort
+	add	sp, sp, #1, lsl #12             ; =4096
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh10, Lloh11
+                                        ; -- End function
+	.globl	_halide_error                   ; -- Begin function halide_error
+	.weak_definition	_halide_error
+	.p2align	2
+_halide_error:                          ; @halide_error
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh12:
+	adrp	x8, __ZN6Halide7Runtime8Internal13error_handlerE@GOTPAGE
+Lloh13:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal13error_handlerE@GOTPAGEOFF]
+Lloh14:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh12, Lloh13, Lloh14
+                                        ; -- End function
+	.globl	_halide_set_error_handler       ; -- Begin function halide_set_error_handler
+	.weak_definition	_halide_set_error_handler
+	.p2align	2
+_halide_set_error_handler:              ; @halide_set_error_handler
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh15:
+	adrp	x9, __ZN6Halide7Runtime8Internal13error_handlerE@GOTPAGE
+Lloh16:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal13error_handlerE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh15, Lloh16
+                                        ; -- End function
+	.globl	_halide_print                   ; -- Begin function halide_print
+	.weak_definition	_halide_print
+	.p2align	2
+_halide_print:                          ; @halide_print
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh17:
+	adrp	x8, __ZN6Halide7Runtime8Internal12custom_printE@GOTPAGE
+Lloh18:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal12custom_printE@GOTPAGEOFF]
+Lloh19:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh17, Lloh18, Lloh19
+                                        ; -- End function
+	.globl	_halide_set_custom_print        ; -- Begin function halide_set_custom_print
+	.weak_definition	_halide_set_custom_print
+	.p2align	2
+_halide_set_custom_print:               ; @halide_set_custom_print
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh20:
+	adrp	x9, __ZN6Halide7Runtime8Internal12custom_printE@GOTPAGE
+Lloh21:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal12custom_printE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh20, Lloh21
+                                        ; -- End function
+	.globl	_halide_start_clock             ; -- Begin function halide_start_clock
+	.weak_definition	_halide_start_clock
+	.p2align	2
+_halide_start_clock:                    ; @halide_start_clock
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+Lloh22:
+	adrp	x19, __ZN6Halide7Runtime8Internal29halide_reference_clock_initedE@GOTPAGE
+Lloh23:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal29halide_reference_clock_initedE@GOTPAGEOFF]
+	ldrb	w8, [x19]
+	cbz	w8, LBB11_2
+; %bb.1:                                ; %if.end
+	mov	w0, #0
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB11_2:                                ; %if.then
+Lloh24:
+	adrp	x0, __ZN6Halide7Runtime8Internal20halide_timebase_infoE@GOTPAGE
+Lloh25:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal20halide_timebase_infoE@GOTPAGEOFF]
+	bl	_mach_timebase_info
+	bl	_mach_absolute_time
+Lloh26:
+	adrp	x8, __ZN6Halide7Runtime8Internal22halide_reference_clockE@GOTPAGE
+Lloh27:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal22halide_reference_clockE@GOTPAGEOFF]
+Lloh28:
+	str	x0, [x8]
+	mov	w8, #1
+	strb	w8, [x19]
+	mov	w0, #0
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh22, Lloh23
+	.loh AdrpLdrGotStr	Lloh26, Lloh27, Lloh28
+	.loh AdrpLdrGot	Lloh24, Lloh25
+                                        ; -- End function
+	.globl	_halide_current_time_ns         ; -- Begin function halide_current_time_ns
+	.weak_definition	_halide_current_time_ns
+	.p2align	2
+_halide_current_time_ns:                ; @halide_current_time_ns
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	bl	_mach_absolute_time
+Lloh29:
+	adrp	x8, __ZN6Halide7Runtime8Internal22halide_reference_clockE@GOTPAGE
+Lloh30:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal22halide_reference_clockE@GOTPAGEOFF]
+Lloh31:
+	ldr	x8, [x8]
+Lloh32:
+	adrp	x9, __ZN6Halide7Runtime8Internal20halide_timebase_infoE@GOTPAGE
+Lloh33:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal20halide_timebase_infoE@GOTPAGEOFF]
+	sub	x8, x0, x8
+	ldp	w10, w9, [x9]
+	mul	x8, x8, x10
+	udiv	x0, x8, x9
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh32, Lloh33
+	.loh AdrpLdrGotLdr	Lloh29, Lloh30, Lloh31
+                                        ; -- End function
+	.globl	_halide_sleep_ms                ; -- Begin function halide_sleep_ms
+	.weak_definition	_halide_sleep_ms
+	.p2align	2
+_halide_sleep_ms:                       ; @halide_sleep_ms
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w8, #1000
+	mul	w0, w1, w8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_usleep
+                                        ; -- End function
+	.globl	_halide_default_print           ; -- Begin function halide_default_print
+	.weak_definition	_halide_default_print
+	.p2align	2
+_halide_default_print:                  ; @halide_default_print
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x1
+	mov	x0, x1
+	bl	_strlen
+	mov	x2, x0
+	mov	w0, #1
+	mov	x1, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_write
+                                        ; -- End function
+	.globl	_halide_host_cpu_count          ; -- Begin function halide_host_cpu_count
+	.weak_definition	_halide_host_cpu_count
+	.p2align	2
+_halide_host_cpu_count:                 ; @halide_host_cpu_count
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #58
+	bl	_sysconf
+                                        ; kill: def $w0 killed $w0 killed $x0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_thread_yield            ; -- Begin function halide_thread_yield
+	.weak_definition	_halide_thread_yield
+	.p2align	2
+_halide_thread_yield:                   ; @halide_thread_yield
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_swtch_pri
+                                        ; -- End function
+	.globl	_halide_default_do_task         ; -- Begin function halide_default_do_task
+	.weak_definition	_halide_default_do_task
+	.p2align	2
+_halide_default_do_task:                ; @halide_default_do_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	x4, x1
+	mov	x1, x2
+	mov	x2, x3
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x4
+                                        ; -- End function
+	.globl	_halide_default_do_loop_task    ; -- Begin function halide_default_do_loop_task
+	.weak_definition	_halide_default_do_loop_task
+	.p2align	2
+_halide_default_do_loop_task:           ; @halide_default_do_loop_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	x6, x1
+	mov	x1, x2
+	mov	x2, x3
+	mov	x3, x4
+	mov	x4, x5
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x6
+                                        ; -- End function
+	.globl	_halide_default_do_par_for      ; -- Begin function halide_default_do_par_for
+	.weak_definition	_halide_default_do_par_for
+	.p2align	2
+_halide_default_do_par_for:             ; @halide_default_do_par_for
+; %bb.0:                                ; %entry
+	cmp	w3, #1                          ; =1
+	b.lt	LBB19_2
+; %bb.1:                                ; %if.end
+	sub	sp, sp, #160                    ; =160
+	stp	x20, x19, [sp, #128]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #144]            ; 16-byte Folded Spill
+	add	x29, sp, #144                   ; =144
+	strb	wzr, [sp, #48]
+	stp	wzr, w2, [sp, #32]
+	stp	xzr, x4, [sp]
+	stp	w3, wzr, [sp, #40]
+	stp	xzr, xzr, [sp, #16]
+	stp	x0, xzr, [sp, #104]
+	str	wzr, [sp, #120]
+	strb	wzr, [sp, #124]
+	mov	x8, sp
+	str	x1, [sp, #56]
+	str	x8, [sp, #72]
+	str	wzr, [sp, #80]
+	str	xzr, [sp, #88]
+Lloh34:
+	adrp	x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh35:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	mov	x0, x19
+	bl	_halide_mutex_lock
+	mov	x1, sp
+	mov	w0, #1
+	mov	x2, #0
+	bl	__ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_
+	mov	x0, sp
+	bl	__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	ldr	w0, [sp, #116]
+	ldp	x29, x30, [sp, #144]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #128]            ; 16-byte Folded Reload
+	add	sp, sp, #160                    ; =160
+	ret
+LBB19_2:
+	mov	w0, #0
+	ret
+	.loh AdrpLdrGot	Lloh34, Lloh35
+                                        ; -- End function
+	.globl	_halide_mutex_lock              ; -- Begin function halide_mutex_lock
+	.weak_definition	_halide_mutex_lock
+	.p2align	2
+_halide_mutex_lock:                     ; @halide_mutex_lock
+; %bb.0:                                ; %entry
+	sub	sp, sp, #64                     ; =64
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x8, #0
+	mov	w9, #1
+	casa	x8, x9, [x0]
+	cmp	x8, #0                          ; =0
+	b.ne	LBB20_2
+LBB20_1:                                ; %_ZN6Halide7Runtime8Internal15Synchronization10fast_mutex4lockEv.exit
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #64                     ; =64
+	ret
+LBB20_2:                                ; %if.then.i
+	mov	x19, x0
+	ldr	x9, [x0]
+	mov	w8, #40
+Lloh36:
+	adrp	x10, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGE
+Lloh37:
+	ldr	x10, [x10, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGEOFF]
+	add	x20, x10, #16                   ; =16
+LBB20_3:                                ; %while.cond.outer.i.i
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB20_5 Depth 2
+	tbnz	w9, #0, LBB20_8
+; %bb.4:                                ; %if.then.i.i.preheader
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	mov	x10, x9
+LBB20_5:                                ; %if.then.i.i
+                                        ;   Parent Loop BB20_3 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	orr	x11, x9, #0x1
+	casa	x10, x11, [x19]
+	cmp	x10, x9
+	b.eq	LBB20_1
+; %bb.6:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_acquire_relaxedEPyS4_S4_.exit.i.i
+                                        ;   in Loop: Header=BB20_5 Depth=2
+	mov	x9, x10
+	tbz	w10, #0, LBB20_5
+; %bb.7:                                ; %if.end4.i.i.loopexit
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	mov	x9, x10
+LBB20_8:                                ; %if.end4.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	subs	w21, w8, #1                     ; =1
+	b.ge	LBB20_12
+; %bb.9:                                ; %if.end8.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	tbnz	w9, #1, LBB20_14
+LBB20_10:                               ; %if.then10.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	orr	x11, x9, #0x2
+	mov	x10, x9
+	cas	x10, x11, [x19]
+	cmp	x10, x9
+	b.eq	LBB20_14
+; %bb.11:                               ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_relaxed_relaxedEPyS4_S4_.exit.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	mov	x9, x10
+	b	LBB20_3
+LBB20_12:                               ; %_ZN6Halide7Runtime8Internal15Synchronization12spin_control11should_spinEv.exit.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	b.ne	LBB20_16
+; %bb.13:                               ;   in Loop: Header=BB20_3 Depth=1
+	mov	w8, #0
+	tbz	w9, #1, LBB20_10
+LBB20_14:                               ; %if.end19.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	stp	x20, x19, [sp]
+	mov	x0, sp
+	mov	x1, x19
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+	cmp	x0, x19
+	b.eq	LBB20_1
+; %bb.15:                               ; %if.end24.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	ldr	x9, [x19]
+	mov	w8, #40
+	b	LBB20_3
+LBB20_16:                               ; %if.then6.i.i
+                                        ;   in Loop: Header=BB20_3 Depth=1
+	bl	_halide_thread_yield
+	ldr	x9, [x19]
+	mov	x8, x21
+	b	LBB20_3
+	.loh AdrpLdrGot	Lloh36, Lloh37
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_ ; -- Begin function _ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_
+	.weak_definition	__ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_
+	.p2align	2
+__ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_: ; @_ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_
+; %bb.0:                                ; %entry
+	sub	sp, sp, #112                    ; =112
+	stp	x28, x27, [sp, #16]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #32]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #48]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #64]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #80]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #96]             ; 16-byte Folded Spill
+	add	x29, sp, #96                    ; =96
+	mov	x19, x2
+	mov	x20, x1
+	mov	x21, x0
+Lloh38:
+	adrp	x23, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh39:
+	ldr	x23, [x23, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	ldrb	w8, [x23, #2121]
+	cbz	w8, LBB21_12
+; %bb.1:                                ; %if.end4
+	cmp	w21, #1                         ; =1
+	b.lt	LBB21_21
+LBB21_2:                                ; %for.body.preheader
+	mov	w8, #0
+	mov	w25, #0
+	mov	w24, #0
+	mov	w9, #0
+	add	x10, x20, #48                   ; =48
+	mov	w26, #-1
+	mov	w11, w21
+	b	LBB21_5
+LBB21_3:                                ; %if.then23
+                                        ;   in Loop: Header=BB21_5 Depth=1
+	add	w26, w26, #1                    ; =1
+LBB21_4:                                ; %for.inc
+                                        ;   in Loop: Header=BB21_5 Depth=1
+	add	w8, w12, w8
+	add	x10, x10, #128                  ; =128
+	subs	x11, x11, #1                    ; =1
+	b.eq	LBB21_7
+LBB21_5:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w12, [x10, #-4]
+	cmp	w12, #0                         ; =0
+	csinc	w9, w9, wzr, ne
+	csinc	w25, w25, wzr, eq
+	ldur	w13, [x10, #-16]
+	cmp	w13, #0                         ; =0
+	csinc	w24, w24, wzr, eq
+	ldrb	w13, [x10]
+	cbnz	w13, LBB21_3
+; %bb.6:                                ; %if.else24
+                                        ;   in Loop: Header=BB21_5 Depth=1
+	ldur	w13, [x10, #-8]
+	add	w26, w13, w26
+	b	LBB21_4
+LBB21_7:                                ; %for.cond.cleanup.loopexit
+	and	w22, w9, #0x1
+	cbz	x19, LBB21_22
+LBB21_8:                                ; %do.body61
+	ldr	w9, [x19, #44]
+	ldr	w10, [x19, #112]
+	ldr	w11, [x19, #96]
+	neg	w11, w11
+	madd	w9, w10, w9, w11
+	cmp	w8, w9
+	b.le	LBB21_10
+; %bb.9:                                ; %if.then66
+Lloh40:
+	adrp	x1, l_.str.3@PAGE
+Lloh41:
+	add	x1, x1, l_.str.3@PAGEOFF
+	mov	x0, #0
+	bl	_halide_print
+	bl	_abort
+LBB21_10:                               ; %do.end69
+	orr	w8, w25, w24
+	tbz	w8, #0, LBB21_29
+; %bb.11:                               ; %if.then73
+	ldr	w8, [x19, #96]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x19, #96]
+	b	LBB21_29
+LBB21_12:                               ; %land.rhs.i.preheader
+	add	x8, x23, #12                    ; =12
+LBB21_13:                               ; %land.rhs.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrb	w9, [x8]
+	cbnz	w9, LBB21_16
+; %bb.14:                               ; %while.body.i
+                                        ;   in Loop: Header=BB21_13 Depth=1
+	add	x8, x8, #1                      ; =1
+	add	x9, x23, #13                    ; =13
+	add	x10, x23, #2128                 ; =2128
+	cmp	x10, x9
+	csel	x9, x10, x9, hi
+	cmp	x9, x8
+	b.ne	LBB21_13
+; %bb.15:
+	mov	x8, x9
+LBB21_16:                               ; %do.body.i
+	add	x9, x23, #2128                  ; =2128
+	cmp	x8, x9
+	b.eq	LBB21_18
+; %bb.17:                               ; %if.then.i
+Lloh42:
+	adrp	x1, l_.str.6@PAGE
+Lloh43:
+	add	x1, x1, l_.str.6@PAGEOFF
+	mov	x0, #0
+	bl	_halide_print
+	bl	_abort
+LBB21_18:                               ; %_ZNK6Halide7Runtime8Internal12work_queue_t13assert_zeroedEv.exit
+	ldr	w0, [x23, #8]
+	cbnz	w0, LBB21_20
+; %bb.19:                               ; %if.then2
+	bl	__ZN6Halide7Runtime8Internal27default_desired_num_threadsEv
+LBB21_20:                               ; %if.end
+	cmp	w0, #1                          ; =1
+	csinc	w8, w0, wzr, gt
+	cmp	w8, #256                        ; =256
+	mov	w9, #256
+	csel	w8, w8, w9, lt
+	str	w8, [x23, #8]
+	mov	w8, #1
+	strb	w8, [x23, #2121]
+	cmp	w21, #1                         ; =1
+	b.ge	LBB21_2
+LBB21_21:
+	mov	w22, #0
+	mov	w24, #0
+	mov	w25, #0
+	mov	w8, #0
+	mov	w26, #-1
+	cbnz	x19, LBB21_8
+LBB21_22:                               ; %if.then32
+	str	w22, [sp, #12]                  ; 4-byte Folded Spill
+	orr	w28, w25, w24
+	ldr	w9, [x23, #24]
+	cmp	w9, #255                        ; =255
+	b.gt	LBB21_27
+; %bb.23:                               ; %land.rhs.preheader
+	and	w10, w28, #0x1
+	add	w27, w8, w10
+Lloh44:
+	adrp	x22, __ZN6Halide7Runtime8Internal13worker_threadEPv@GOTPAGE
+Lloh45:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal13worker_threadEPv@GOTPAGEOFF]
+	b	LBB21_25
+LBB21_24:                               ; %while.body
+                                        ;   in Loop: Header=BB21_25 Depth=1
+	ldr	w8, [x23, #28]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x23, #28]
+	mov	x0, x22
+	mov	x1, #0
+	bl	_halide_spawn_thread
+	ldrsw	x8, [x23, #24]
+	add	w9, w8, #1                      ; =1
+	str	w9, [x23, #24]
+	add	x10, x23, x8, lsl #3
+	str	x0, [x10, #72]
+	cmp	w8, #255                        ; =255
+	b.ge	LBB21_27
+LBB21_25:                               ; %land.rhs
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w8, [x23, #8]
+	sub	w8, w8, #1                      ; =1
+	cmp	w9, w8
+	b.lt	LBB21_24
+; %bb.26:                               ; %lor.rhs
+                                        ;   in Loop: Header=BB21_25 Depth=1
+	ldr	w8, [x23, #2124]
+	sub	w8, w9, w8
+	add	w8, w8, #1                      ; =1
+	cmp	w8, w27
+	b.lt	LBB21_24
+LBB21_27:                               ; %do.end50
+	ldr	w22, [sp, #12]                  ; 4-byte Folded Reload
+	tbz	w28, #0, LBB21_29
+; %bb.28:                               ; %if.then54
+	ldr	w8, [x23, #2124]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x23, #2124]
+LBB21_29:                               ; %if.end77
+	cmp	w21, #1                         ; =1
+	b.lt	LBB21_39
+; %bb.30:                               ; %for.body83.lr.ph
+	ldr	x8, [x23, #16]
+	mov	w10, w21
+	cmp	w21, #1                         ; =1
+	b.ne	LBB21_32
+; %bb.31:
+	mov	x9, x10
+	b	LBB21_36
+LBB21_32:                               ; %vector.ph
+	and	x11, x10, #0xfffffffe
+	and	x9, x10, #0x1
+	lsl	x12, x10, #7
+	mov	x13, x11
+LBB21_33:                               ; %vector.body
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x14, x20, x12
+	sub	x15, x14, #128                  ; =128
+	sub	x16, x14, #256                  ; =256
+	stp	x8, x20, [x14, #-64]
+	stp	x15, x20, [x14, #-192]
+	stur	w21, [x14, #-48]
+	stur	w21, [x14, #-176]
+	stur	wzr, [x14, #-32]
+	sub	x12, x12, #256                  ; =256
+	mov	x8, x16
+	stur	wzr, [x14, #-160]
+	sub	x13, x13, #2                    ; =2
+	cbnz	x13, LBB21_33
+; %bb.34:                               ; %middle.block
+	cmp	x11, x10
+	b.eq	LBB21_38
+; %bb.35:
+	add	x8, x20, x12
+LBB21_36:                               ; %for.body83.preheader
+	add	x10, x9, #1                     ; =1
+	add	x9, x20, x9, lsl #7
+	sub	x9, x9, #128                    ; =128
+LBB21_37:                               ; %for.body83
+                                        ; =>This Inner Loop Header: Depth=1
+	stp	x8, x20, [x9, #64]
+	str	w21, [x9, #80]
+	str	wzr, [x9, #96]
+	sub	x10, x10, #1                    ; =1
+	mov	x8, x9
+	sub	x9, x9, #128                    ; =128
+	cmp	x10, #1                         ; =1
+	b.gt	LBB21_37
+LBB21_38:                               ; %for.cond80.for.cond.cleanup82_crit_edge
+	str	x20, [x23, #16]
+LBB21_39:                               ; %for.cond.cleanup82
+	ldp	w9, w8, [x23, #64]
+	ldr	w10, [x23, #24]
+	cmp	w9, w10
+	ccmp	w8, #0, #0, ge
+	ccmp	w26, w9, #0, eq
+	csel	w8, w10, w26, gt
+	str	w8, [x23, #32]
+	add	x0, x23, #40                    ; =40
+	bl	_halide_cond_broadcast
+	ldp	w9, w8, [x23, #28]
+	cmp	w8, w9
+	b.le	LBB21_42
+; %bb.40:                               ; %if.then107
+	add	x0, x23, #48                    ; =48
+	bl	_halide_cond_broadcast
+	cbz	w22, LBB21_42
+; %bb.41:                               ; %if.then109
+	add	x0, x23, #56                    ; =56
+	bl	_halide_cond_broadcast
+LBB21_42:                               ; %if.end111
+	orr	w8, w25, w24
+	tbz	w8, #0, LBB21_46
+; %bb.43:                               ; %if.then115
+	cbz	x19, LBB21_45
+; %bb.44:                               ; %if.then117
+	ldr	w8, [x19, #96]
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x19, #96]
+	b	LBB21_46
+LBB21_45:                               ; %if.else120
+	ldr	w8, [x23, #2124]
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x23, #2124]
+LBB21_46:                               ; %if.end123
+	ldp	x29, x30, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #112                    ; =112
+	ret
+	.loh AdrpLdrGot	Lloh38, Lloh39
+	.loh AdrpAdd	Lloh40, Lloh41
+	.loh AdrpAdd	Lloh42, Lloh43
+	.loh AdrpLdrGot	Lloh44, Lloh45
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE ; -- Begin function _ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+	.weak_definition	__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+	.p2align	2
+__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE: ; @_ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x19, x0
+	mov	w22, #0
+Lloh46:
+	adrp	x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh47:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	mov	w27, #1
+	b	LBB22_2
+LBB22_1:                                ; %if.then310
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	x0, x20, #56                    ; =56
+	bl	_halide_cond_broadcast
+	mov	w22, #0
+LBB22_2:                                ; %while.cond
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB22_8 Depth 2
+                                        ;     Child Loop BB22_30 Depth 2
+                                        ;       Child Loop BB22_40 Depth 3
+                                        ;     Child Loop BB22_14 Depth 2
+                                        ;       Child Loop BB22_21 Depth 3
+                                        ;     Child Loop BB22_46 Depth 2
+                                        ;       Child Loop BB22_49 Depth 3
+                                        ;         Child Loop BB22_50 Depth 4
+                                        ;     Child Loop BB22_69 Depth 2
+	cbz	x19, LBB22_10
+; %bb.3:                                ; %cond.true
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x19, #40]
+	cbnz	w8, LBB22_5
+; %bb.4:                                ; %cond.end
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x19, #112]
+	cbz	w8, LBB22_97
+LBB22_5:                                ; %if.then
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x21, [x20, #16]
+	ldr	w8, [x19, #116]
+	cbz	w8, LBB22_24
+; %bb.6:                                ; %if.then3
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x19, #112]
+	cbnz	w8, LBB22_27
+; %bb.7:                                ; %while.cond6.preheader
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	cmp	x21, x19
+	b.eq	LBB22_84
+LBB22_8:                                ; %while.body8
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	mov	x8, x21
+	ldr	x21, [x21, #64]
+	cmp	x21, x19
+	b.ne	LBB22_8
+; %bb.9:                                ; %while.end.loopexit
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	x8, x8, #64                     ; =64
+	b	LBB22_85
+LBB22_10:                               ; %cond.false
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldrb	w8, [x20, #2120]
+	cbnz	w8, LBB22_97
+; %bb.11:                               ; %do.end.thread
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x21, [x20, #16]
+	cbz	x21, LBB22_89
+; %bb.12:                               ; %do.end27.us.preheader
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	x28, x20, #16                   ; =16
+	b	LBB22_14
+LBB22_13:                               ; %cleanup.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	x8, [x21, #64]!
+	mov	x28, x21
+	mov	x21, x8
+	cbz	x8, LBB22_86
+LBB22_14:                               ; %do.end27.us
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB22_21 Depth 3
+	ldr	x8, [x21, #88]
+	cbz	x8, LBB22_18
+; %bb.15:                               ; %if.else32.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w10, [x8, #112]
+	ldr	w9, [x8, #44]
+	cbz	w10, LBB22_23
+; %bb.16:                               ; %if.else38.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w8, [x8, #96]
+	neg	w8, w8
+	madd	w8, w9, w10, w8
+	ldrb	w9, [x21, #48]
+	cbz	w9, LBB22_19
+LBB22_17:                               ; %lor.rhs70.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w9, [x21, #112]
+	cmp	w9, #0                          ; =0
+	cset	w9, eq
+	ldr	w10, [x21, #44]
+	cmp	w8, w10
+	ccmp	w9, #0, #4, ge
+	b.eq	LBB22_13
+	b	LBB22_20
+LBB22_18:                               ; %if.then31.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w8, [x20, #24]
+	ldr	w9, [x20, #2124]
+	sub	w8, w8, w9
+	add	w8, w8, #1                      ; =1
+	ldrb	w9, [x21, #48]
+	cbnz	w9, LBB22_17
+LBB22_19:                               ;   in Loop: Header=BB22_14 Depth=2
+	mov	w9, #1
+	ldr	w10, [x21, #44]
+	cmp	w8, w10
+	ccmp	w9, #0, #4, ge
+	b.eq	LBB22_13
+LBB22_20:                               ; %if.then86.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w8, [x21, #120]
+	ldr	w9, [x21, #32]
+	cmp	w8, w9
+	b.ge	LBB22_43
+LBB22_21:                               ; %for.body.i.us
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ;     Parent Loop BB22_14 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldr	x9, [x21, #24]
+	add	x8, x9, w8, sxtw #4
+	ldr	x0, [x8]
+	ldr	w1, [x8, #8]
+	bl	_halide_default_semaphore_try_acquire
+	cbz	w0, LBB22_13
+; %bb.22:                               ; %for.inc.i.us
+                                        ;   in Loop: Header=BB22_21 Depth=3
+	ldr	w8, [x21, #120]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x21, #120]
+	ldr	w9, [x21, #32]
+	cmp	w8, w9
+	b.lt	LBB22_21
+	b	LBB22_43
+LBB22_23:                               ; %if.then35.us
+                                        ;   in Loop: Header=BB22_14 Depth=2
+	ldr	w8, [x8, #96]
+	sub	w8, w9, w8
+	ldrb	w9, [x21, #48]
+	cbnz	w9, LBB22_17
+	b	LBB22_19
+LBB22_24:                               ; %if.else
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x8, [x19, #88]
+	cbz	x8, LBB22_27
+; %bb.25:                               ; %land.lhs.true
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x8, #116]
+	cbz	w8, LBB22_27
+; %bb.26:                               ; %if.then15
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	str	w8, [x19, #116]
+	add	x0, x20, #56                    ; =56
+	bl	_halide_cond_broadcast
+	b	LBB22_2
+LBB22_27:                               ; %do.end
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	cbz	x21, LBB22_87
+; %bb.28:                               ; %do.end27.preheader
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	x28, x20, #16                   ; =16
+	b	LBB22_30
+LBB22_29:                               ; %cleanup
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	x8, [x21, #64]!
+	mov	x28, x21
+	mov	x21, x8
+	cbz	x8, LBB22_86
+LBB22_30:                               ; %do.end27
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB22_40 Depth 3
+	ldr	x8, [x21, #88]
+	cbz	x8, LBB22_34
+; %bb.31:                               ; %if.else32
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w10, [x8, #112]
+	ldr	w9, [x8, #44]
+	cbz	w10, LBB22_42
+; %bb.32:                               ; %if.else38
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w8, [x8, #96]
+	neg	w8, w8
+	madd	w8, w9, w10, w8
+	ldrb	w9, [x21, #48]
+	cbz	w9, LBB22_35
+LBB22_33:                               ; %lor.rhs70
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w9, [x21, #112]
+	cmp	w9, #0                          ; =0
+	cset	w9, eq
+	b	LBB22_36
+LBB22_34:                               ; %if.then31
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w8, [x20, #24]
+	ldr	w9, [x20, #2124]
+	sub	w8, w8, w9
+	add	w8, w8, #1                      ; =1
+	ldrb	w9, [x21, #48]
+	cbnz	w9, LBB22_33
+LBB22_35:                               ;   in Loop: Header=BB22_30 Depth=2
+	mov	w9, #1
+LBB22_36:                               ; %lor.end73
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w12, [x21, #44]
+	ldr	x11, [x21, #72]
+	ldr	x13, [x19, #72]
+	cmp	w12, #0                         ; =0
+	cset	w10, ne
+	cmp	x11, x13
+	cset	w11, ne
+	cmp	w8, w12
+	b.lt	LBB22_29
+; %bb.37:                               ; %lor.end73
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	and	w8, w10, w11
+	tbnz	w8, #0, LBB22_29
+; %bb.38:                               ; %lor.end73
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	cbz	w9, LBB22_29
+; %bb.39:                               ; %if.then86
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w8, [x21, #120]
+	ldr	w9, [x21, #32]
+	cmp	w8, w9
+	b.ge	LBB22_43
+LBB22_40:                               ; %for.body.i
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ;     Parent Loop BB22_30 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldr	x9, [x21, #24]
+	add	x8, x9, w8, sxtw #4
+	ldr	x0, [x8]
+	ldr	w1, [x8, #8]
+	bl	_halide_default_semaphore_try_acquire
+	cbz	w0, LBB22_29
+; %bb.41:                               ; %for.inc.i
+                                        ;   in Loop: Header=BB22_40 Depth=3
+	ldr	w8, [x21, #120]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x21, #120]
+	ldr	w9, [x21, #32]
+	cmp	w8, w9
+	b.lt	LBB22_40
+	b	LBB22_43
+LBB22_42:                               ; %if.then35
+                                        ;   in Loop: Header=BB22_30 Depth=2
+	ldr	w8, [x8, #96]
+	sub	w8, w9, w8
+	ldrb	w9, [x21, #48]
+	cbnz	w9, LBB22_33
+	b	LBB22_35
+LBB22_43:                               ; %if.else127
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	str	wzr, [x21, #120]
+	ldr	w8, [x21, #112]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x21, #112]
+	ldr	x9, [x21, #88]
+	ldr	w8, [x21, #44]
+	cbz	x9, LBB22_60
+; %bb.44:                               ; %if.else143
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w10, [x9, #96]
+	add	w8, w10, w8
+	str	w8, [x9, #96]
+	ldrb	w8, [x21, #48]
+	cbz	w8, LBB22_61
+LBB22_45:                               ; %if.then156
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x8, [x21, #64]
+	str	x8, [x28]
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+	mov	w24, #0
+	mov	w23, #1
+LBB22_46:                               ; %while.cond161.preheader
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB22_49 Depth 3
+                                        ;         Child Loop BB22_50 Depth 4
+	ldr	w9, [x21, #40]
+	sub	w8, w9, w24
+	cmp	w8, w23
+	b.le	LBB22_53
+; %bb.47:                               ; %land.rhs.preheader
+                                        ;   in Loop: Header=BB22_46 Depth=2
+	ldr	w8, [x21, #120]
+	ldr	w10, [x21, #32]
+	b	LBB22_49
+LBB22_48:                               ; %while.body167
+                                        ;   in Loop: Header=BB22_49 Depth=3
+	mov	w8, #0
+	str	wzr, [x21, #120]
+	add	w23, w23, #1                    ; =1
+	sub	w11, w9, w24
+	cmp	w11, w23
+	b.le	LBB22_54
+LBB22_49:                               ; %land.rhs
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ;     Parent Loop BB22_46 Depth=2
+                                        ; =>    This Loop Header: Depth=3
+                                        ;         Child Loop BB22_50 Depth 4
+	cmp	w8, w10
+	b.ge	LBB22_48
+LBB22_50:                               ; %for.body.i483
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ;     Parent Loop BB22_46 Depth=2
+                                        ;       Parent Loop BB22_49 Depth=3
+                                        ; =>      This Inner Loop Header: Depth=4
+	ldr	x9, [x21, #24]
+	add	x8, x9, w8, sxtw #4
+	ldr	x0, [x8]
+	ldr	w1, [x8, #8]
+	bl	_halide_default_semaphore_try_acquire
+	cbz	w0, LBB22_53
+; %bb.51:                               ; %for.inc.i486
+                                        ;   in Loop: Header=BB22_50 Depth=4
+	ldr	w8, [x21, #120]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x21, #120]
+	ldr	w10, [x21, #32]
+	cmp	w8, w10
+	b.lt	LBB22_50
+; %bb.52:                               ; %while.body167.loopexit
+                                        ;   in Loop: Header=BB22_49 Depth=3
+	ldr	w9, [x21, #40]
+	b	LBB22_48
+LBB22_53:                               ; %while.end169
+                                        ;   in Loop: Header=BB22_46 Depth=2
+	cbz	w23, LBB22_56
+LBB22_54:                               ; %if.end172
+                                        ;   in Loop: Header=BB22_46 Depth=2
+	ldr	x0, [x21, #104]
+	ldr	w8, [x21, #36]
+	add	w2, w8, w24
+	ldp	x1, x4, [x21]
+	mov	x3, x23
+	mov	x5, x21
+	bl	_halide_do_loop_task
+	add	w24, w23, w24
+	mov	w23, #0
+	cbz	w0, LBB22_46
+; %bb.55:                               ;   in Loop: Header=BB22_2 Depth=1
+	mov	x22, x0
+	mov	w23, #0
+	b	LBB22_57
+LBB22_56:                               ;   in Loop: Header=BB22_2 Depth=1
+	mov	w22, #0
+	mov	w23, #1
+LBB22_57:                               ; %while.end179
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	ldp	w8, w9, [x21, #36]
+	add	w10, w8, w24
+	sub	w8, w9, w24
+	stp	w10, w8, [x21, #36]
+	tbz	w23, #0, LBB22_72
+; %bb.58:                               ; %if.else190
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	cmp	w8, #1                          ; =1
+	b.lt	LBB22_73
+; %bb.59:                               ; %if.then194
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	w8, #0
+	ldr	x9, [x20, #16]
+	str	x9, [x21, #64]
+	str	x21, [x20, #16]
+	ldr	x10, [x21, #88]
+	ldr	w9, [x21, #44]
+	cbnz	x10, LBB22_79
+	b	LBB22_74
+LBB22_60:                               ; %if.then136
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w9, [x20, #2124]
+	add	w8, w9, w8
+	str	w8, [x20, #2124]
+	ldrb	w8, [x21, #48]
+	cbnz	w8, LBB22_45
+LBB22_61:                               ; %if.else198
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldp	x24, x22, [x21]
+	ldr	x26, [x21, #56]
+	ldr	x25, [x21, #104]
+	ldp	w23, w8, [x21, #36]
+	add	w9, w23, #1                     ; =1
+	subs	w8, w8, #1                      ; =1
+	stp	w9, w8, [x21, #36]
+	b.eq	LBB22_75
+; %bb.62:                               ; %if.end210
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+	mov	x0, x25
+	cbz	x26, LBB22_76
+LBB22_63:                               ; %if.then212
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x1, x26
+	mov	x2, x23
+	mov	x3, x22
+	bl	_halide_do_task
+	mov	x22, x0
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	cbz	w22, LBB22_77
+LBB22_64:                               ; %if.then238
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	str	w22, [x21, #116]
+	ldr	w9, [x21, #80]
+	cmp	w9, #1                          ; =1
+	b.lt	LBB22_73
+LBB22_65:                               ; %do.end243.lr.ph
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	w8, #0
+	ldr	x10, [x21, #72]
+	add	x10, x10, #116                  ; =116
+	b	LBB22_69
+LBB22_66:                               ; %land.rhs254
+                                        ;   in Loop: Header=BB22_69 Depth=2
+	ldrb	w11, [x10, #8]
+LBB22_67:                               ; %land.end260
+                                        ;   in Loop: Header=BB22_69 Depth=2
+	and	w8, w8, #0x1
+	orr	w8, w11, w8
+LBB22_68:                               ; %for.inc
+                                        ;   in Loop: Header=BB22_69 Depth=2
+	add	x10, x10, #128                  ; =128
+	subs	x9, x9, #1                      ; =1
+	b.eq	LBB22_78
+LBB22_69:                               ; %do.end243
+                                        ;   Parent Loop BB22_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	w11, [x10]
+	cbnz	w11, LBB22_68
+; %bb.70:                               ; %if.then247
+                                        ;   in Loop: Header=BB22_69 Depth=2
+	str	w22, [x10]
+	ldr	w11, [x21, #112]
+	cbz	w11, LBB22_66
+; %bb.71:                               ;   in Loop: Header=BB22_69 Depth=2
+	mov	w11, #0
+	b	LBB22_67
+LBB22_72:                               ; %if.end230.thread505
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	str	wzr, [x21, #40]
+	str	w22, [x21, #116]
+	ldr	w9, [x21, #80]
+	cmp	w9, #1                          ; =1
+	b.ge	LBB22_65
+LBB22_73:                               ;   in Loop: Header=BB22_2 Depth=1
+	mov	w8, #0
+	ldr	x10, [x21, #88]
+	ldr	w9, [x21, #44]
+	cbnz	x10, LBB22_79
+LBB22_74:                               ; %if.then274
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w10, [x20, #2124]
+	sub	w9, w10, w9
+	str	w9, [x20, #2124]
+	ldr	w9, [x21, #112]
+	sub	w9, w9, #1                      ; =1
+	str	w9, [x21, #112]
+	tbnz	w8, #0, LBB22_1
+	b	LBB22_80
+LBB22_75:                               ; %if.then208
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x8, [x21, #64]
+	str	x8, [x28]
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+	mov	x0, x25
+	cbnz	x26, LBB22_63
+LBB22_76:                               ; %if.else220
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x1, x24
+	mov	x2, x23
+	mov	w3, #1
+	mov	x4, x22
+	mov	x5, x21
+	bl	_halide_do_loop_task
+	mov	x22, x0
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	cbnz	w22, LBB22_64
+LBB22_77:                               ;   in Loop: Header=BB22_2 Depth=1
+	mov	w8, #0
+LBB22_78:                               ; %if.end271
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x10, [x21, #88]
+	ldr	w9, [x21, #44]
+	cbz	x10, LBB22_74
+LBB22_79:                               ; %if.else281
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w11, [x10, #96]
+	sub	w9, w11, w9
+	str	w9, [x10, #96]
+	ldr	w9, [x21, #112]
+	sub	w9, w9, #1                      ; =1
+	str	w9, [x21, #112]
+	tbnz	w8, #0, LBB22_1
+LBB22_80:                               ; %lor.lhs.false297
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	w22, #0
+	cbnz	w9, LBB22_2
+; %bb.81:                               ; %land.lhs.true300
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x21, #40]
+	cbz	w8, LBB22_83
+; %bb.82:                               ; %lor.lhs.false304
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	w22, #0
+	ldr	w8, [x21, #116]
+	cbz	w8, LBB22_2
+LBB22_83:                               ; %land.lhs.true307
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	w22, #0
+	ldrb	w8, [x21, #124]
+	cbnz	w8, LBB22_1
+	b	LBB22_2
+LBB22_84:                               ;   in Loop: Header=BB22_2 Depth=1
+	add	x8, x20, #16                    ; =16
+LBB22_85:                               ; %while.end
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	x9, [x19, #64]
+	str	x9, [x8]
+	str	wzr, [x19, #40]
+	b	LBB22_2
+LBB22_86:                               ; %if.then103
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	cbz	x19, LBB22_89
+LBB22_87:                               ; %if.then105
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	w21, w22, #1                    ; =1
+	cmp	w22, #39                        ; =39
+	b.gt	LBB22_91
+; %bb.88:                               ; %if.then107
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+	bl	_halide_thread_yield
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	mov	x22, x21
+	b	LBB22_2
+LBB22_89:                               ; %if.else112
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x20, #64]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x20, #64]
+	ldp	w8, w9, [x20, #28]
+	cmp	w8, w9
+	b.le	LBB22_92
+; %bb.90:                               ; %if.then115
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x20, #28]
+	add	x0, x20, #48                    ; =48
+	mov	x1, x20
+	bl	_halide_cond_wait
+	ldr	w8, [x20, #28]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x20, #28]
+	b	LBB22_96
+LBB22_91:                               ; %if.else108
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x20, #68]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x20, #68]
+	strb	w27, [x19, #124]
+	add	x0, x20, #56                    ; =56
+	mov	x1, x20
+	bl	_halide_cond_wait
+	strb	wzr, [x19, #124]
+	ldr	w8, [x20, #68]
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x20, #68]
+	mov	x22, x21
+	b	LBB22_2
+LBB22_92:                               ; %if.else118
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	w21, w22, #1                    ; =1
+	cmp	w22, #39                        ; =39
+	b.gt	LBB22_94
+; %bb.93:                               ; %if.then121
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+	bl	_halide_thread_yield
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	b	LBB22_95
+LBB22_94:                               ; %if.else122
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	add	x0, x20, #40                    ; =40
+	mov	x1, x20
+	bl	_halide_cond_wait
+LBB22_95:                               ; %if.end124
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	mov	x22, x21
+LBB22_96:                               ; %if.end124
+                                        ;   in Loop: Header=BB22_2 Depth=1
+	ldr	w8, [x20, #64]
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x20, #64]
+	b	LBB22_2
+LBB22_97:                               ; %while.end316
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh46, Lloh47
+                                        ; -- End function
+	.globl	_halide_mutex_unlock            ; -- Begin function halide_mutex_unlock
+	.weak_definition	_halide_mutex_unlock
+	.p2align	2
+_halide_mutex_unlock:                   ; @halide_mutex_unlock
+; %bb.0:                                ; %entry
+	sub	sp, sp, #32                     ; =32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	w8, #1
+	casl	x8, xzr, [x0]
+	cmp	x8, #1                          ; =1
+	b.eq	LBB23_3
+; %bb.1:                                ; %if.then.i
+	mov	x1, x0
+	mov	w8, #1
+	casl	x8, xzr, [x0]
+	cmp	x8, #1                          ; =1
+	b.eq	LBB23_3
+; %bb.2:                                ; %if.end.i.i
+Lloh48:
+	adrp	x8, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGE
+Lloh49:
+	ldr	x8, [x8, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGEOFF]
+	add	x8, x8, #16                     ; =16
+	stp	x8, x1, [sp]
+	mov	x0, sp
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+LBB23_3:                                ; %_ZN6Halide7Runtime8Internal15Synchronization10fast_mutex6unlockEv.exit
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32                     ; =32
+	ret
+	.loh AdrpLdrGot	Lloh48, Lloh49
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x21, x1
+	mov	x20, x0
+	mov	x0, x1
+	bl	__ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy
+	mov	x19, x0
+	mov	x24, #0
+	mov	x25, x0
+	ldr	x22, [x25, #8]!
+	mov	w26, #1
+                                        ; implicit-def: $x0
+	b	LBB24_2
+LBB24_1:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock6unlockEv.exit66
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	strb	wzr, [x22, #128]
+	add	x0, x22, #64                    ; =64
+	bl	_pthread_cond_signal
+	mov	x0, x22
+	bl	_pthread_mutex_unlock
+	mov	w0, w23
+	cmp	x27, x21
+	b.eq	LBB24_16
+LBB24_2:                                ; %while.cond
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB24_6 Depth 2
+	cbz	x22, LBB24_13
+; %bb.3:                                ; %while.body
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	ldr	x27, [x22, #136]
+	mov	x9, x22
+	ldr	x8, [x9, #144]!
+	cmp	x27, x21
+	b.ne	LBB24_8
+; %bb.4:                                ; %if.then
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	str	x8, [x25]
+	ldr	x9, [x19, #16]
+	cmp	x9, x22
+	b.eq	LBB24_9
+; %bb.5:                                ; %while.cond7.preheader
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	cbz	x8, LBB24_10
+LBB24_6:                                ; %while.body9
+                                        ;   Parent Loop BB24_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x9, [x8, #136]
+	ldr	x8, [x8, #144]
+	cmp	x9, x21
+	ccmp	x8, #0, #4, ne
+	b.ne	LBB24_6
+; %bb.7:                                ; %if.end.loopexit
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	cmp	x9, x21
+	cset	w23, eq
+	b	LBB24_11
+LBB24_8:                                ;   in Loop: Header=BB24_2 Depth=1
+	mov	x25, x9
+	mov	x24, x22
+	mov	x22, x8
+	cmp	x27, x21
+	b.ne	LBB24_2
+	b	LBB24_16
+LBB24_9:                                ; %if.then5
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	mov	w23, #0
+	str	x24, [x19, #16]
+	b	LBB24_11
+LBB24_10:                               ;   in Loop: Header=BB24_2 Depth=1
+	mov	w23, #0
+LBB24_11:                               ; %if.end
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	ldr	x8, [x20]
+	ldr	x8, [x8, #16]
+	mov	x0, x20
+	mov	w1, #1
+	mov	x2, x23
+	blr	x8
+	str	x0, [x22, #152]
+	mov	x0, x22
+	bl	_pthread_mutex_lock
+	ldclrl	x26, x8, [x19]
+	and	x9, x8, #0x2
+	cmp	x8, #4                          ; =4
+	ccmp	x9, #0, #0, hs
+	b.ne	LBB24_1
+; %bb.12:                               ; %if.then.i65
+                                        ;   in Loop: Header=BB24_2 Depth=1
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+	b	LBB24_1
+LBB24_13:                               ; %while.end22
+	ldr	x8, [x20]
+	ldr	x8, [x8, #16]
+	mov	x0, x20
+	mov	w1, #0
+	mov	w2, #0
+	blr	x8
+	mov	w8, #1
+	ldclrl	x8, x8, [x19]
+	and	x9, x8, #0x2
+	cmp	x8, #4                          ; =4
+	ccmp	x9, #0, #0, hs
+	b.ne	LBB24_15
+; %bb.14:                               ; %if.then.i
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+LBB24_15:                               ; %cleanup27
+	mov	x0, #0
+LBB24_16:                               ; %cleanup27
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy: ; @_ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x8, #0
+	mov	x9, #31765
+	movk	x9, #32586, lsl #16
+	movk	x9, #31161, lsl #32
+	movk	x9, #40503, lsl #48
+	mul	x9, x0, x9
+	lsr	x9, x9, #54
+	mov	w10, #24
+Lloh50:
+	adrp	x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGE
+Lloh51:
+	ldr	x11, [x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGEOFF]
+	madd	x19, x9, x10, x11
+	mov	w9, #1
+	casa	x8, x9, [x19]
+	cmp	x8, #0                          ; =0
+	b.eq	LBB25_2
+; %bb.1:                                ; %if.then.i
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+LBB25_2:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock4lockEv.exit
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh50, Lloh51
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv: ; @_ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x19, x0
+	ldr	x8, [x0]
+LBB26_1:                                ; %while.cond
+                                        ; =>This Inner Loop Header: Depth=1
+	cmp	x8, #4                          ; =4
+	b.lo	LBB26_16
+; %bb.2:                                ; %while.cond
+                                        ;   in Loop: Header=BB26_1 Depth=1
+	tbnz	w8, #1, LBB26_16
+; %bb.3:                                ; %if.end
+                                        ;   in Loop: Header=BB26_1 Depth=1
+	orr	x9, x8, #0x2
+	mov	x22, x8
+	casa	x22, x9, [x19]
+	cmp	x22, x8
+	cset	w9, eq
+	mov	x8, x22
+	cmp	w9, #1                          ; =1
+	b.ne	LBB26_1
+; %bb.4:                                ; %while.cond11.preheader
+Lloh52:
+	adrp	x20, l_.str.5@PAGE
+Lloh53:
+	add	x20, x20, l_.str.5@PAGEOFF
+	and	x23, x22, #0xfffffffffffffffc
+	ldr	x21, [x23, #152]
+	cbz	x21, LBB26_12
+LBB26_5:                                ; %while.end23
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB26_8 Depth 2
+	str	x21, [x23, #152]
+	tbnz	w22, #0, LBB26_10
+; %bb.6:                                ; %if.end35
+                                        ;   in Loop: Header=BB26_5 Depth=1
+	ldr	x8, [x21, #144]
+	cbnz	x8, LBB26_17
+; %bb.7:                                ; %while.body41.preheader
+                                        ;   in Loop: Header=BB26_5 Depth=1
+	mov	x8, x22
+LBB26_8:                                ; %while.body41
+                                        ;   Parent Loop BB26_5 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	and	x9, x22, #0x1
+	casal	x8, x9, [x19]
+	cmp	x8, x22
+	b.eq	LBB26_18
+; %bb.9:                                ; %if.end47
+                                        ;   in Loop: Header=BB26_8 Depth=2
+	mov	x22, x8
+	cmp	x8, #4                          ; =4
+	b.lo	LBB26_8
+	b	LBB26_11
+LBB26_10:                               ; %if.then27
+                                        ;   in Loop: Header=BB26_5 Depth=1
+	and	x9, x22, #0xfffffffffffffffd
+	mov	x8, x22
+	casal	x8, x9, [x19]
+	cmp	x8, x22
+	b.eq	LBB26_16
+LBB26_11:                               ; %cleanup70
+                                        ;   in Loop: Header=BB26_5 Depth=1
+	dmb	ishld
+	mov	x22, x8
+	and	x23, x22, #0xfffffffffffffffc
+	ldr	x21, [x23, #152]
+	cbnz	x21, LBB26_5
+LBB26_12:                               ; %while.body17.preheader
+	mov	x24, x23
+	b	LBB26_14
+LBB26_13:                               ; %do.end
+                                        ;   in Loop: Header=BB26_14 Depth=1
+	str	x24, [x25, #144]
+	ldr	x21, [x25, #152]
+	mov	x24, x25
+	cbnz	x21, LBB26_5
+LBB26_14:                               ; %while.body17
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x25, [x24, #136]
+	cbnz	x25, LBB26_13
+; %bb.15:                               ; %if.then20
+                                        ;   in Loop: Header=BB26_14 Depth=1
+	mov	x0, #0
+	mov	x1, x20
+	bl	_halide_print
+	bl	_abort
+	b	LBB26_13
+LBB26_16:                               ; %cleanup75
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+LBB26_17:                               ; %if.else62
+	str	x8, [x23, #152]
+	mov	w8, #2
+	ldclrl	x8, x8, [x19]
+LBB26_18:                               ; %if.end66
+	mov	x0, x21
+	bl	_pthread_mutex_lock
+	strb	wzr, [x21, #128]
+	add	x0, x21, #64                    ; =64
+	bl	_pthread_cond_signal
+	mov	x0, x21
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	b	_pthread_mutex_unlock
+	.loh AdrpAdd	Lloh52, Lloh53
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv: ; @_ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+; %bb.0:                                ; %entry
+	sub	sp, sp, #240                    ; =240
+	stp	x26, x25, [sp, #160]            ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #176]            ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #192]            ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #208]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #224]            ; 16-byte Folded Spill
+	add	x29, sp, #224                   ; =224
+	mov	x19, x0
+	ldr	x24, [x0]
+	mov	x21, sp
+	add	x20, x21, #64                   ; =64
+	mov	w23, #40
+	mov	w22, #1
+	tbnz	w24, #0, LBB27_3
+	b	LBB27_4
+LBB27_1:                                ; %_ZN6Halide7Runtime8Internal15Synchronization13thread_parker4parkEv.exit
+	mov	x0, sp
+	bl	_pthread_mutex_unlock
+	ldr	x24, [x19]
+	mov	w23, #40
+LBB27_2:                                ; %if.end22
+	mov	x0, x20
+	bl	_pthread_cond_destroy
+	mov	x0, sp
+	bl	_pthread_mutex_destroy
+	tbz	w24, #0, LBB27_4
+LBB27_3:                                ; %if.end4
+	subs	w25, w23, #1                    ; =1
+	b.ge	LBB27_8
+	b	LBB27_12
+LBB27_4:                                ; %if.then.preheader
+	mov	x8, x24
+LBB27_5:                                ; %if.then
+                                        ; =>This Inner Loop Header: Depth=1
+	orr	x9, x24, #0x1
+	casa	x8, x9, [x19]
+	cmp	x8, x24
+	b.eq	LBB27_19
+; %bb.6:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_acquire_relaxedEPyS4_S4_.exit
+                                        ;   in Loop: Header=BB27_5 Depth=1
+	mov	x24, x8
+	tbz	w8, #0, LBB27_5
+; %bb.7:                                ; %if.end4.loopexit
+	mov	x24, x8
+	subs	w25, w23, #1                    ; =1
+	b.lt	LBB27_12
+LBB27_8:                                ; %if.end4
+	cmp	x24, #4                         ; =4
+	b.lo	LBB27_12
+; %bb.9:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12spin_control11should_spinEv.exit
+	cmp	w23, #2                         ; =2
+	b.lt	LBB27_11
+; %bb.10:                               ; %if.then7
+	bl	_halide_thread_yield
+	ldr	x24, [x19]
+	mov	x23, x25
+	tbz	w24, #0, LBB27_4
+	b	LBB27_3
+LBB27_11:
+	mov	w23, #0
+LBB27_12:                               ; %if.end9
+	strb	wzr, [sp, #128]
+	mov	x0, sp
+	mov	x1, #0
+	bl	_pthread_mutex_init
+	mov	x0, x20
+	mov	x1, #0
+	bl	_pthread_cond_init
+	stp	xzr, xzr, [sp, #136]
+	str	xzr, [sp, #152]
+	strb	w22, [sp, #128]
+	ands	x8, x24, #0xfffffffffffffffc
+	b.eq	LBB27_14
+; %bb.13:                               ; %if.else
+	str	x8, [sp, #136]
+	b	LBB27_15
+LBB27_14:                               ; %if.then12
+	str	x21, [sp, #152]
+LBB27_15:                               ; %if.end13
+	mov	x9, sp
+	bfxil	x9, x24, #0, #2
+	mov	x8, x24
+	casl	x8, x9, [x19]
+	cmp	x8, x24
+	b.ne	LBB27_18
+; %bb.16:                               ; %if.then19
+	mov	x0, sp
+	bl	_pthread_mutex_lock
+	ldrb	w8, [sp, #128]
+	cbz	w8, LBB27_1
+LBB27_17:                               ; %while.body.i
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x1, sp
+	mov	x0, x20
+	bl	_pthread_cond_wait
+	ldrb	w8, [sp, #128]
+	cbnz	w8, LBB27_17
+	b	LBB27_1
+LBB27_18:                               ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_release_relaxedEPyS4_S4_.exit
+	mov	x24, x8
+	b	LBB27_2
+LBB27_19:                               ; %cleanup23
+	ldp	x29, x30, [sp, #224]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #208]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #192]            ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #176]            ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #160]            ; 16-byte Folded Reload
+	add	sp, sp, #240                    ; =240
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE: ; @_ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x0, #8]
+	ldr	x8, [x8]
+	cmp	x8, #3                          ; =3
+	cset	w0, eq
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib: ; @_ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	cmp	w2, #0                          ; =0
+	mov	w8, #2
+	csel	x8, x8, xzr, ne
+	ldr	x9, [x0, #8]
+	stlr	x8, [x9]
+	mov	x0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_cond_broadcast          ; -- Begin function halide_cond_broadcast
+	.weak_definition	_halide_cond_broadcast
+	.p2align	2
+_halide_cond_broadcast:                 ; @halide_cond_broadcast
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	ldr	x2, [x0]
+	cbz	x2, LBB32_2
+; %bb.1:                                ; %if.end.i
+	mov	x1, x0
+Lloh54:
+	adrp	x8, __ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE@GOTPAGE
+Lloh55:
+	ldr	x8, [x8, __ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE@GOTPAGEOFF]
+	add	x8, x8, #16                     ; =16
+	stp	x8, x0, [sp, #8]
+	str	x2, [sp, #24]
+	add	x0, sp, #8                      ; =8
+	mov	x3, #0
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy
+LBB32_2:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9fast_cond9broadcastEv.exit
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+	.loh AdrpLdrGot	Lloh54, Lloh55
+                                        ; -- End function
+	.globl	_halide_default_semaphore_try_acquire ; -- Begin function halide_default_semaphore_try_acquire
+	.weak_definition	_halide_default_semaphore_try_acquire
+	.p2align	2
+_halide_default_semaphore_try_acquire:  ; @halide_default_semaphore_try_acquire
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	cbz	w1, LBB33_6
+; %bb.1:                                ; %if.end
+	ldar	w10, [x0]
+	subs	w11, w10, w1
+	b.mi	LBB33_7
+; %bb.2:                                ; %land.rhs.preheader
+	mov	x9, x10
+LBB33_3:                                ; %land.rhs
+                                        ; =>This Inner Loop Header: Depth=1
+	casal	w9, w11, [x0]
+	cmp	w9, w10
+	cset	w8, eq
+	b.eq	LBB33_5
+; %bb.4:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_130atomic_cas_weak_relacq_relaxedIiEEbPT_S6_S6_.exit
+                                        ;   in Loop: Header=BB33_3 Depth=1
+	mov	x10, x9
+	subs	w11, w9, w1
+	b.pl	LBB33_3
+LBB33_5:                                ; %return
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB33_6:
+	mov	w8, #1
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB33_7:
+	mov	w8, #0
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_cond_wait               ; -- Begin function halide_cond_wait
+	.weak_definition	_halide_cond_wait
+	.p2align	2
+_halide_cond_wait:                      ; @halide_cond_wait
+; %bb.0:                                ; %entry
+	sub	sp, sp, #96                     ; =96
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x19, x1
+	mov	x1, x0
+Lloh56:
+	adrp	x8, __ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE@GOTPAGE
+Lloh57:
+	ldr	x8, [x8, __ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE@GOTPAGEOFF]
+	add	x8, x8, #16                     ; =16
+	stp	x8, x0, [sp, #8]
+	str	x19, [sp, #24]
+	add	x0, sp, #8                      ; =8
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+	cmp	x0, x19
+	b.ne	LBB34_3
+; %bb.1:                                ; %if.else.i
+	ldr	x8, [x19]
+	tbnz	w8, #0, LBB34_4
+; %bb.2:                                ; %if.then2.i
+Lloh58:
+	adrp	x1, l_.str.5.6@PAGE
+Lloh59:
+	add	x1, x1, l_.str.5.6@PAGEOFF
+	mov	x0, #0
+	bl	_halide_print
+	bl	_abort
+	b	LBB34_4
+LBB34_3:                                ; %if.then.i
+	mov	x8, #0
+	mov	w9, #1
+	casa	x8, x9, [x19]
+	cmp	x8, #0                          ; =0
+	b.ne	LBB34_5
+LBB34_4:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9fast_cond4waitEPNS2_10fast_mutexE.exit
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #96                     ; =96
+	ret
+LBB34_5:                                ; %if.then.i.i
+	ldr	x9, [x19]
+	mov	w8, #40
+Lloh60:
+	adrp	x10, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGE
+Lloh61:
+	ldr	x10, [x10, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGEOFF]
+	add	x20, x10, #16                   ; =16
+LBB34_6:                                ; %while.cond.outer.i.i.i
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB34_8 Depth 2
+	tbnz	w9, #0, LBB34_11
+; %bb.7:                                ; %if.then.i.i.i.preheader
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	mov	x10, x9
+LBB34_8:                                ; %if.then.i.i.i
+                                        ;   Parent Loop BB34_6 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	orr	x11, x9, #0x1
+	casa	x10, x11, [x19]
+	cmp	x10, x9
+	b.eq	LBB34_4
+; %bb.9:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_acquire_relaxedEPyS4_S4_.exit.i.i.i
+                                        ;   in Loop: Header=BB34_8 Depth=2
+	mov	x9, x10
+	tbz	w10, #0, LBB34_8
+; %bb.10:                               ; %if.end4.i.i.i.loopexit
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	mov	x9, x10
+LBB34_11:                               ; %if.end4.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	subs	w21, w8, #1                     ; =1
+	b.ge	LBB34_15
+; %bb.12:                               ; %if.end8.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	tbnz	w9, #1, LBB34_17
+LBB34_13:                               ; %if.then10.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	orr	x11, x9, #0x2
+	mov	x10, x9
+	cas	x10, x11, [x19]
+	cmp	x10, x9
+	b.eq	LBB34_17
+; %bb.14:                               ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_relaxed_relaxedEPyS4_S4_.exit.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	mov	x9, x10
+	b	LBB34_6
+LBB34_15:                               ; %_ZN6Halide7Runtime8Internal15Synchronization12spin_control11should_spinEv.exit.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	b.ne	LBB34_19
+; %bb.16:                               ;   in Loop: Header=BB34_6 Depth=1
+	mov	w8, #0
+	tbz	w9, #1, LBB34_13
+LBB34_17:                               ; %if.end19.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	stp	x20, x19, [sp, #32]
+	add	x0, sp, #32                     ; =32
+	mov	x1, x19
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+	cmp	x0, x19
+	b.eq	LBB34_4
+; %bb.18:                               ; %if.end24.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	ldr	x9, [x19]
+	mov	w8, #40
+	b	LBB34_6
+LBB34_19:                               ; %if.then6.i.i.i
+                                        ;   in Loop: Header=BB34_6 Depth=1
+	bl	_halide_thread_yield
+	ldr	x9, [x19]
+	mov	x8, x21
+	b	LBB34_6
+	.loh AdrpLdrGot	Lloh56, Lloh57
+	.loh AdrpAdd	Lloh58, Lloh59
+	.loh AdrpLdrGot	Lloh60, Lloh61
+                                        ; -- End function
+	.globl	_halide_do_loop_task            ; -- Begin function halide_do_loop_task
+	.weak_definition	_halide_do_loop_task
+	.p2align	2
+_halide_do_loop_task:                   ; @halide_do_loop_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh62:
+	adrp	x8, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGE
+Lloh63:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGEOFF]
+Lloh64:
+	ldr	x6, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x6
+	.loh AdrpLdrGotLdr	Lloh62, Lloh63, Lloh64
+                                        ; -- End function
+	.globl	_halide_do_task                 ; -- Begin function halide_do_task
+	.weak_definition	_halide_do_task
+	.p2align	2
+_halide_do_task:                        ; @halide_do_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh65:
+	adrp	x8, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGE
+Lloh66:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGEOFF]
+Lloh67:
+	ldr	x4, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x4
+	.loh AdrpLdrGotLdr	Lloh65, Lloh66, Lloh67
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control4parkEy
+; %bb.0:                                ; %entry
+	sub	sp, sp, #240                    ; =240
+	stp	x24, x23, [sp, #176]            ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #192]            ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #208]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #224]            ; 16-byte Folded Spill
+	add	x29, sp, #224                   ; =224
+	mov	x22, x1
+	mov	x20, x0
+	strb	wzr, [sp, #144]
+	add	x23, sp, #16                    ; =16
+	add	x0, sp, #16                     ; =16
+	mov	x1, #0
+	bl	_pthread_mutex_init
+	add	x19, x23, #64                   ; =64
+	mov	x0, x19
+	mov	x1, #0
+	bl	_pthread_cond_init
+	stp	xzr, xzr, [sp, #152]
+	str	xzr, [sp, #168]
+	mov	x0, x22
+	bl	__ZN6Halide7Runtime8Internal15Synchronization11lock_bucketEy
+	mov	x21, x0
+	strb	wzr, [sp]
+	mov	x24, sp
+	str	xzr, [sp, #8]
+	ldr	x8, [x20]
+	ldr	x8, [x8]
+	mov	x1, sp
+	mov	x0, x20
+	blr	x8
+	tbz	w0, #0, LBB37_7
+; %bb.1:                                ; %if.end
+	stp	x22, xzr, [sp, #152]
+	mov	w8, #1
+	strb	w8, [sp, #144]
+	mov	x9, x21
+	ldr	x10, [x9, #8]!
+	ldr	x11, [x21, #16]
+	add	x11, x11, #144                  ; =144
+	cmp	x10, #0                         ; =0
+	csel	x9, x9, x11, eq
+	str	x23, [x9]
+	str	x23, [x21, #16]
+	ldclrl	x8, x8, [x21]
+	cmp	x8, #4                          ; =4
+	b.lo	LBB37_4
+; %bb.2:                                ; %if.end
+	tbnz	w8, #1, LBB37_4
+; %bb.3:                                ; %if.then.i28
+	mov	x0, x21
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+LBB37_4:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock6unlockEv.exit29
+	add	x22, x23, #152                  ; =152
+	ldr	x8, [x20]
+	ldr	x8, [x8, #8]
+	mov	x0, x20
+	blr	x8
+	add	x0, sp, #16                     ; =16
+	bl	_pthread_mutex_lock
+	ldrb	w8, [sp, #144]
+	cbz	w8, LBB37_6
+LBB37_5:                                ; %while.body.i
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x1, sp, #16                     ; =16
+	mov	x0, x19
+	bl	_pthread_cond_wait
+	ldrb	w8, [sp, #144]
+	cbnz	w8, LBB37_5
+LBB37_6:                                ; %_ZN6Halide7Runtime8Internal15Synchronization13thread_parker4parkEv.exit
+	add	x0, sp, #16                     ; =16
+	bl	_pthread_mutex_unlock
+	b	LBB37_9
+LBB37_7:                                ; %if.then
+	add	x22, x24, #8                    ; =8
+	mov	w8, #1
+	ldclrl	x8, x8, [x21]
+	and	x9, x8, #0x2
+	cmp	x8, #4                          ; =4
+	ccmp	x9, #0, #0, hs
+	b.ne	LBB37_9
+; %bb.8:                                ; %if.then.i
+	mov	x0, x21
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+LBB37_9:                                ; %cleanup
+	ldr	x20, [x22]
+	mov	x0, x19
+	bl	_pthread_cond_destroy
+	add	x0, sp, #16                     ; =16
+	bl	_pthread_mutex_destroy
+	mov	x0, x20
+	ldp	x29, x30, [sp, #224]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #208]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #192]            ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #176]            ; 16-byte Folded Reload
+	add	sp, sp, #240                    ; =240
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE: ; @_ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x9, x8, [x0, #8]
+	ldr	x10, [x9]
+	cbz	x10, LBB38_3
+; %bb.1:                                ; %if.else
+	cmp	x10, x8
+	b.ne	LBB38_4
+; %bb.2:
+	mov	w0, #1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB38_3:                                ; %if.then
+	str	x8, [x9]
+	mov	w0, #1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB38_4:                                ; %if.then5
+	mov	w0, #0
+	str	x8, [x1, #8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv: ; @_ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv
+; %bb.0:                                ; %entry
+	sub	sp, sp, #32                     ; =32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	ldr	x1, [x0, #16]
+	mov	w8, #1
+	casl	x8, xzr, [x1]
+	cmp	x8, #1                          ; =1
+	b.eq	LBB39_3
+; %bb.1:                                ; %if.then.i
+	mov	w8, #1
+	casl	x8, xzr, [x1]
+	cmp	x8, #1                          ; =1
+	b.eq	LBB39_3
+; %bb.2:                                ; %if.end.i.i
+Lloh68:
+	adrp	x8, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGE
+Lloh69:
+	ldr	x8, [x8, __ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE@GOTPAGEOFF]
+	add	x8, x8, #16                     ; =16
+	stp	x8, x1, [sp]
+	mov	x0, sp
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+LBB39_3:                                ; %_ZN6Halide7Runtime8Internal15Synchronization10fast_mutex6unlockEv.exit
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32                     ; =32
+	ret
+	.loh AdrpLdrGot	Lloh68, Lloh69
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib: ; @_ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib
+; %bb.0:                                ; %entry
+	tbnz	w2, #0, LBB40_2
+; %bb.1:                                ; %if.then
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x0, #8]
+	str	xzr, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+LBB40_2:                                ; %if.end
+	mov	x0, #0
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control14unpark_requeueEyyy
+; %bb.0:                                ; %entry
+	sub	sp, sp, #96                     ; =96
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x19, x3
+	mov	x22, x2
+	mov	x23, x1
+	mov	x20, x0
+	add	x8, sp, #16                     ; =16
+	mov	x0, x1
+	mov	x1, x2
+	bl	__ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy
+	strb	wzr, [sp]
+	str	xzr, [sp, #8]
+	ldr	x8, [x20]
+	ldr	x8, [x8]
+	mov	x1, sp
+	mov	x0, x20
+	blr	x8
+	tbz	w0, #0, LBB41_14
+; %bb.1:                                ; %if.end
+	ldr	x10, [sp, #16]
+	ldr	x11, [x10, #8]!
+	cbz	x11, LBB41_19
+; %bb.2:                                ; %while.body.preheader
+	mov	x21, #0
+	mov	x9, #0
+	mov	x8, #0
+	mov	x12, #0
+	b	LBB41_5
+LBB41_3:                                ;   in Loop: Header=BB41_5 Depth=1
+	mov	x10, x14
+	mov	x12, x13
+LBB41_4:                                ; %if.end22
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	cbz	x11, LBB41_15
+LBB41_5:                                ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x13, x11
+	ldr	x15, [x11, #136]
+	mov	x14, x11
+	ldr	x11, [x14, #144]!
+	cmp	x15, x23
+	b.ne	LBB41_3
+; %bb.6:                                ; %if.then4
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	str	x11, [x10]
+	ldr	x14, [sp, #16]
+	ldr	x15, [x14, #16]
+	cmp	x15, x13
+	b.eq	LBB41_8
+; %bb.7:                                ; %if.end10
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	cbz	x21, LBB41_9
+	b	LBB41_11
+LBB41_8:                                ; %if.then7
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	str	x12, [x14, #16]
+	cbnz	x21, LBB41_11
+LBB41_9:                                ; %if.end10
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	ldrb	w14, [sp]
+	cbz	w14, LBB41_11
+; %bb.10:                               ;   in Loop: Header=BB41_5 Depth=1
+	mov	x21, x13
+	b	LBB41_4
+LBB41_11:                               ; %if.else
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	mov	x0, x13
+	cbz	x8, LBB41_13
+; %bb.12:                               ; %if.else15
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	str	x13, [x9, #144]
+	mov	x0, x8
+LBB41_13:                               ; %if.end17
+                                        ;   in Loop: Header=BB41_5 Depth=1
+	str	x22, [x13, #136]
+	mov	x8, x0
+	mov	x9, x13
+	b	LBB41_4
+LBB41_14:                               ; %if.then
+	add	x0, sp, #16                     ; =16
+	bl	__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+	mov	w0, #0
+	b	LBB41_25
+LBB41_15:                               ; %while.end
+	cbz	x8, LBB41_20
+; %bb.16:                               ; %if.then24
+	str	xzr, [x9, #144]
+	ldr	x10, [sp, #24]
+	mov	x11, x10
+	ldr	x12, [x11, #8]!
+	cbz	x12, LBB41_18
+; %bb.17:                               ; %if.else31
+	ldr	x11, [x10, #16]
+	add	x11, x11, #144                  ; =144
+LBB41_18:                               ; %if.end35
+	str	x8, [x11]
+	str	x9, [x10, #16]
+	mov	w3, #1
+	b	LBB41_21
+LBB41_19:
+	mov	w3, #0
+	mov	x21, #0
+	b	LBB41_21
+LBB41_20:
+	mov	w3, #0
+LBB41_21:                               ; %if.end38
+	cmp	x21, #0                         ; =0
+	cset	w2, ne
+	ldr	x8, [x20]
+	ldr	x8, [x8, #24]
+	mov	x1, sp
+	mov	x0, x20
+	blr	x8
+	cbz	x21, LBB41_23
+; %bb.22:                               ; %if.then44
+	str	x19, [x21, #152]
+	mov	x0, x21
+	bl	_pthread_mutex_lock
+	add	x0, sp, #16                     ; =16
+	bl	__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+	strb	wzr, [x21, #128]
+	add	x0, x21, #64                    ; =64
+	bl	_pthread_cond_signal
+	mov	x0, x21
+	bl	_pthread_mutex_unlock
+	b	LBB41_24
+LBB41_23:                               ; %if.else48
+	add	x0, sp, #16                     ; =16
+	bl	__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+LBB41_24:                               ; %if.end49
+	cmp	x21, #0                         ; =0
+	cset	w8, ne
+	ldrb	w9, [sp]
+	and	w0, w9, w8
+LBB41_25:                               ; %cleanup
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #96                     ; =96
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy: ; @_ZN6Halide7Runtime8Internal15Synchronization16lock_bucket_pairEyy
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x8
+	mov	x9, #31765
+	movk	x9, #32586, lsl #16
+	movk	x9, #31161, lsl #32
+	movk	x9, #40503, lsl #48
+	mul	x8, x0, x9
+	lsr	x8, x8, #54
+	mul	x9, x1, x9
+	lsr	x9, x9, #54
+	cmp	x8, x9
+	b.ne	LBB42_3
+; %bb.1:                                ; %if.then
+	mov	x9, #0
+	mov	w10, #24
+Lloh70:
+	adrp	x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGE
+Lloh71:
+	ldr	x11, [x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGEOFF]
+	madd	x20, x8, x10, x11
+	mov	w8, #1
+	casa	x9, x8, [x20]
+	cmp	x9, #0                          ; =0
+	b.ne	LBB42_8
+; %bb.2:
+	mov	x21, x20
+	b	LBB42_14
+LBB42_3:                                ; %if.else
+	mov	x10, #0
+Lloh72:
+	adrp	x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGE
+Lloh73:
+	ldr	x11, [x11, __ZN6Halide7Runtime8Internal15Synchronization5tableE@GOTPAGEOFF]
+	mov	w12, #24
+	b.hs	LBB42_9
+; %bb.4:                                ; %if.then3
+	madd	x20, x8, x12, x11
+	madd	x21, x9, x12, x11
+	mov	w8, #1
+	casa	x10, x8, [x20]
+	cmp	x10, #0                         ; =0
+	b.eq	LBB42_6
+; %bb.5:                                ; %if.then.i53
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+LBB42_6:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock4lockEv.exit54
+	mov	x8, #0
+	mov	w9, #1
+	casa	x8, x9, [x21]
+	cmp	x8, #0                          ; =0
+	b.eq	LBB42_14
+; %bb.7:                                ; %if.then.i50
+	mov	x0, x21
+	b	LBB42_13
+LBB42_8:                                ; %if.then.i43
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+	mov	x21, x20
+	b	LBB42_14
+LBB42_9:                                ; %if.else9
+	madd	x21, x9, x12, x11
+	madd	x20, x8, x12, x11
+	mov	w8, #1
+	casa	x10, x8, [x21]
+	cmp	x10, #0                         ; =0
+	b.eq	LBB42_11
+; %bb.10:                               ; %if.then.i40
+	mov	x0, x21
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+LBB42_11:                               ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock4lockEv.exit41
+	mov	x8, #0
+	mov	w9, #1
+	casa	x8, x9, [x20]
+	cmp	x8, #0                          ; =0
+	b.eq	LBB42_14
+; %bb.12:                               ; %if.then.i
+	mov	x0, x20
+LBB42_13:                               ; %cleanup
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock9lock_fullEv
+LBB42_14:                               ; %cleanup
+	stp	x20, x21, [x19]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh70, Lloh71
+	.loh AdrpLdrGot	Lloh72, Lloh73
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE: ; @_ZN6Halide7Runtime8Internal15Synchronization18unlock_bucket_pairERNS2_11bucket_pairE
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+	ldr	x0, [x0]
+	ldr	x8, [x19, #8]
+	cmp	x0, x8
+	b.eq	LBB43_8
+; %bb.1:                                ; %if.else
+	b.ls	LBB43_5
+; %bb.2:                                ; %if.then5
+	mov	w8, #1
+	ldclrl	x8, x8, [x0]
+	and	x9, x8, #0x2
+	cmp	x8, #4                          ; =4
+	ccmp	x9, #0, #0, hs
+	b.ne	LBB43_4
+; %bb.3:                                ; %if.then.i30
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+LBB43_4:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock6unlockEv.exit31
+	ldr	x0, [x19, #8]
+	b	LBB43_8
+LBB43_5:                                ; %if.else10
+	mov	w9, #1
+	ldclrl	x9, x9, [x8]
+	and	x10, x9, #0x2
+	cmp	x9, #4                          ; =4
+	ccmp	x10, #0, #0, hs
+	b.ne	LBB43_7
+; %bb.6:                                ; %if.then.i44
+	mov	x0, x8
+	bl	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+LBB43_7:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9word_lock6unlockEv.exit45
+	ldr	x0, [x19]
+LBB43_8:                                ; %if.then
+	mov	w8, #1
+	ldclrl	x8, x8, [x0]
+	and	x9, x8, #0x2
+	cmp	x8, #4                          ; =4
+	ccmp	x9, #0, #0, hs
+	b.eq	LBB43_10
+; %bb.9:                                ; %if.end15
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB43_10:                               ; %if.then.i
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	__ZN6Halide7Runtime8Internal15Synchronization9word_lock11unlock_fullEv
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE: ; @_ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x10, x9, [x0, #8]
+	ldr	x8, [x10]
+	cmp	x8, x9
+	b.ne	LBB44_8
+; %bb.1:                                ; %if.end
+	str	xzr, [x10]
+	ldr	x10, [x0, #16]
+	ldr	x12, [x10]
+	tbz	w12, #0, LBB44_5
+; %bb.2:                                ; %if.end.i.preheader
+	mov	x11, x12
+LBB44_3:                                ; %if.end.i
+                                        ; =>This Inner Loop Header: Depth=1
+	orr	x13, x12, #0x2
+	cas	x11, x13, [x10]
+	cmp	x11, x12
+	b.eq	LBB44_6
+; %bb.4:                                ; %_ZN6Halide7Runtime8Internal15Synchronization12_GLOBAL__N_131atomic_cas_weak_relaxed_relaxedEPyS4_S4_.exit.i
+                                        ;   in Loop: Header=BB44_3 Depth=1
+	mov	x12, x11
+	tbnz	w11, #0, LBB44_3
+LBB44_5:
+	mov	w10, #1
+	b	LBB44_7
+LBB44_6:
+	mov	w10, #0
+LBB44_7:                                ; %_ZN6Halide7Runtime8Internal15Synchronization10fast_mutex21make_parked_if_lockedEv.exit
+	strb	w10, [x1]
+LBB44_8:                                ; %cleanup
+	cmp	x8, x9
+	cset	w0, eq
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	x0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb: ; @_ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldrb	w8, [x1]
+	cmp	w8, #0                          ; =0
+	ccmp	w3, #0, #4, ne
+	b.eq	LBB46_2
+; %bb.1:                                ; %if.then
+	ldr	x8, [x0, #16]
+	mov	w9, #2
+	ldset	x9, x8, [x8]
+LBB46_2:                                ; %if.end
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal27default_desired_num_threadsEv ; -- Begin function _ZN6Halide7Runtime8Internal27default_desired_num_threadsEv
+	.weak_definition	__ZN6Halide7Runtime8Internal27default_desired_num_threadsEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal27default_desired_num_threadsEv: ; @_ZN6Halide7Runtime8Internal27default_desired_num_threadsEv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh74:
+	adrp	x0, l_.str.1@PAGE
+Lloh75:
+	add	x0, x0, l_.str.1@PAGEOFF
+	bl	_getenv
+	cbnz	x0, LBB47_2
+; %bb.1:                                ; %if.end
+Lloh76:
+	adrp	x0, l_.str.2@PAGE
+Lloh77:
+	add	x0, x0, l_.str.2@PAGEOFF
+	bl	_getenv
+	cbz	x0, LBB47_3
+LBB47_2:                                ; %cond.true
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_atoi
+LBB47_3:                                ; %cond.false
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_host_cpu_count
+	.loh AdrpAdd	Lloh74, Lloh75
+	.loh AdrpAdd	Lloh76, Lloh77
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal13worker_threadEPv ; -- Begin function _ZN6Halide7Runtime8Internal13worker_threadEPv
+	.weak_definition	__ZN6Halide7Runtime8Internal13worker_threadEPv
+	.p2align	2
+__ZN6Halide7Runtime8Internal13worker_threadEPv: ; @_ZN6Halide7Runtime8Internal13worker_threadEPv
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+Lloh78:
+	adrp	x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh79:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+	mov	x0, x20
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+	.loh AdrpLdrGot	Lloh78, Lloh79
+                                        ; -- End function
+	.globl	_halide_spawn_thread            ; -- Begin function halide_spawn_thread
+	.weak_definition	_halide_spawn_thread
+	.p2align	2
+_halide_spawn_thread:                   ; @halide_spawn_thread
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x1
+	mov	x20, x0
+	mov	w0, #24
+	bl	_malloc
+	mov	x21, x0
+	stp	x20, x19, [x0]
+	str	xzr, [x0, #16]!
+Lloh80:
+	adrp	x2, __ZN6Halide7Runtime8Internal19spawn_thread_helperEPv@GOTPAGE
+Lloh81:
+	ldr	x2, [x2, __ZN6Halide7Runtime8Internal19spawn_thread_helperEPv@GOTPAGEOFF]
+	mov	x1, #0
+	mov	x3, x21
+	bl	_pthread_create
+	mov	x0, x21
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh80, Lloh81
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal19spawn_thread_helperEPv ; -- Begin function _ZN6Halide7Runtime8Internal19spawn_thread_helperEPv
+	.weak_definition	__ZN6Halide7Runtime8Internal19spawn_thread_helperEPv
+	.p2align	2
+__ZN6Halide7Runtime8Internal19spawn_thread_helperEPv: ; @_ZN6Halide7Runtime8Internal19spawn_thread_helperEPv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x8, x0, [x0]
+	blr	x8
+	mov	x0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_do_parallel_tasks ; -- Begin function halide_default_do_parallel_tasks
+	.weak_definition	_halide_default_do_parallel_tasks
+	.p2align	2
+_halide_default_do_parallel_tasks:      ; @halide_default_do_parallel_tasks
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x3
+	mov	x20, x1
+	sxtw	x8, w20
+	mov	x9, sp
+	sub	x19, x9, x8, lsl #7
+	mov	sp, x19
+	cmp	w1, #1                          ; =1
+	b.lt	LBB51_6
+; %bb.1:                                ; %for.body.preheader
+	mov	x8, #0
+	add	x9, x19, #124                   ; =124
+	b	LBB51_4
+LBB51_2:                                ; %if.end
+                                        ;   in Loop: Header=BB51_4 Depth=1
+	ldp	q0, q1, [x2]
+	ldr	q2, [x2, #32]
+	ldr	x10, [x2, #48]
+	add	x2, x2, #56                     ; =56
+	stur	x10, [x9, #-76]
+	stur	q2, [x9, #-92]
+	stur	q1, [x9, #-108]
+	stur	q0, [x9, #-124]
+	stur	xzr, [x9, #-68]
+	stur	x0, [x9, #-20]
+	stur	xzr, [x9, #-12]
+	stur	wzr, [x9, #-4]
+	strb	wzr, [x9]
+	stur	x21, [x9, #-36]
+LBB51_3:                                ; %for.inc
+                                        ;   in Loop: Header=BB51_4 Depth=1
+	add	x8, x8, #1                      ; =1
+	add	x9, x9, #128                    ; =128
+	cmp	x8, w20, sxtw
+	b.ge	LBB51_6
+LBB51_4:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w10, [x2, #40]
+	cmp	w10, #0                         ; =0
+	b.gt	LBB51_2
+; %bb.5:                                ; %if.then
+                                        ;   in Loop: Header=BB51_4 Depth=1
+	sub	w20, w20, #1                    ; =1
+	b	LBB51_3
+LBB51_6:                                ; %for.cond.cleanup
+	cbz	w20, LBB51_10
+; %bb.7:                                ; %if.end19
+Lloh82:
+	adrp	x0, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh83:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	mov	x0, x20
+	mov	x1, x19
+	mov	x2, x21
+	bl	__ZN6Halide7Runtime8Internal27enqueue_work_already_lockedEiPNS1_4workES3_
+	cmp	w20, #1                         ; =1
+	b.lt	LBB51_11
+; %bb.8:                                ; %for.body25.preheader
+	mov	w21, #0
+	mov	w20, w20
+LBB51_9:                                ; %for.body25
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal28worker_thread_already_lockedEPNS1_4workE
+	ldr	w8, [x19, #116]
+	cmp	w8, #0                          ; =0
+	csel	w21, w21, w8, eq
+	add	x19, x19, #128                  ; =128
+	subs	x20, x20, #1                    ; =1
+	b.ne	LBB51_9
+	b	LBB51_12
+LBB51_10:
+	mov	w21, #0
+	b	LBB51_13
+LBB51_11:
+	mov	w21, #0
+LBB51_12:                               ; %for.cond.cleanup24
+Lloh84:
+	adrp	x0, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh85:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+LBB51_13:                               ; %cleanup
+	mov	x0, x21
+	sub	sp, x29, #32                    ; =32
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh82, Lloh83
+	.loh AdrpLdrGot	Lloh84, Lloh85
+                                        ; -- End function
+	.globl	_halide_default_semaphore_init  ; -- Begin function halide_default_semaphore_init
+	.weak_definition	_halide_default_semaphore_init
+	.p2align	2
+_halide_default_semaphore_init:         ; @halide_default_semaphore_init
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	stlr	w1, [x0]
+	mov	x0, x1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_semaphore_release ; -- Begin function halide_default_semaphore_release
+	.weak_definition	_halide_default_semaphore_release
+	.p2align	2
+_halide_default_semaphore_release:      ; @halide_default_semaphore_release
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x1
+	ldaddal	w1, w21, [x0]
+	cbz	w1, LBB53_3
+; %bb.1:                                ; %entry
+	cbnz	w21, LBB53_3
+; %bb.2:                                ; %if.then
+Lloh86:
+	adrp	x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh87:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	mov	x0, x20
+	bl	_halide_mutex_lock
+	add	x0, x20, #40                    ; =40
+	bl	_halide_cond_broadcast
+	add	x0, x20, #56                    ; =56
+	bl	_halide_cond_broadcast
+	mov	x0, x20
+	bl	_halide_mutex_unlock
+LBB53_3:                                ; %if.end
+	add	w0, w21, w19
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh86, Lloh87
+                                        ; -- End function
+	.globl	_halide_thread_pool_cleanup     ; -- Begin function halide_thread_pool_cleanup
+	.weak_definition	_halide_thread_pool_cleanup
+	.p2align	2
+_halide_thread_pool_cleanup:            ; @halide_thread_pool_cleanup
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_shutdown_thread_pool
+                                        ; -- End function
+	.globl	_halide_shutdown_thread_pool    ; -- Begin function halide_shutdown_thread_pool
+	.weak_definition	_halide_shutdown_thread_pool
+	.p2align	2
+_halide_shutdown_thread_pool:           ; @halide_shutdown_thread_pool
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+Lloh88:
+	adrp	x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh89:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	ldrb	w8, [x19, #2121]
+	cbz	w8, LBB55_5
+; %bb.1:                                ; %if.then
+	mov	x0, x19
+	bl	_halide_mutex_lock
+	mov	w8, #1
+	strb	w8, [x19, #2120]
+	add	x0, x19, #56                    ; =56
+	bl	_halide_cond_broadcast
+	add	x0, x19, #40                    ; =40
+	bl	_halide_cond_broadcast
+	add	x0, x19, #48                    ; =48
+	bl	_halide_cond_broadcast
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	ldr	w8, [x19, #24]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB55_4
+; %bb.2:                                ; %for.body.preheader
+	mov	x20, #0
+LBB55_3:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x8, x19, x20, lsl #3
+	ldr	x0, [x8, #72]
+	bl	_halide_join_thread
+	add	x20, x20, #1                    ; =1
+	ldrsw	x8, [x19, #24]
+	cmp	x20, x8
+	b.lt	LBB55_3
+LBB55_4:                                ; %for.cond.cleanup
+	add	x0, x19, #12                    ; =12
+	mov	w1, #0
+	mov	w2, #2116
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_memset
+LBB55_5:                                ; %if.end
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh88, Lloh89
+                                        ; -- End function
+	.globl	_halide_join_thread             ; -- Begin function halide_join_thread
+	.weak_definition	_halide_join_thread
+	.p2align	2
+_halide_join_thread:                    ; @halide_join_thread
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x0
+	str	xzr, [sp, #8]
+	ldr	x0, [x0, #16]
+	add	x1, sp, #8                      ; =8
+	bl	_pthread_join
+	mov	x0, x19
+	bl	_free
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+                                        ; -- End function
+	.globl	_halide_cond_signal             ; -- Begin function halide_cond_signal
+	.weak_definition	_halide_cond_signal
+	.p2align	2
+_halide_cond_signal:                    ; @halide_cond_signal
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	ldr	x8, [x0]
+	cbz	x8, LBB57_2
+; %bb.1:                                ; %if.end.i
+	mov	x1, x0
+Lloh90:
+	adrp	x9, __ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE@GOTPAGE
+Lloh91:
+	ldr	x9, [x9, __ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE@GOTPAGEOFF]
+	add	x9, x9, #16                     ; =16
+	stp	x9, x0, [sp, #8]
+	str	x8, [sp, #24]
+	add	x0, sp, #8                      ; =8
+	bl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control10unpark_oneEy
+LBB57_2:                                ; %_ZN6Halide7Runtime8Internal15Synchronization9fast_cond6signalEv.exit
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+	.loh AdrpLdrGot	Lloh90, Lloh91
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE: ; @_ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib ; -- Begin function _ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib
+	.weak_def_can_be_hidden	__ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib
+	.p2align	2
+__ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib: ; @_ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib
+; %bb.0:                                ; %entry
+	tbnz	w2, #0, LBB59_2
+; %bb.1:                                ; %if.then
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x0, #8]
+	str	xzr, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+LBB59_2:                                ; %if.end
+	mov	x0, #0
+	ret
+                                        ; -- End function
+	.globl	_halide_mutex_array_create      ; -- Begin function halide_mutex_array_create
+	.weak_definition	_halide_mutex_array_create
+	.p2align	2
+_halide_mutex_array_create:             ; @halide_mutex_array_create
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x0
+	mov	x0, #0
+	mov	w1, #8
+	bl	_halide_malloc
+	mov	x19, x0
+	cbz	x0, LBB60_3
+; %bb.1:                                ; %if.end
+	sbfiz	x20, x20, #3, #32
+	mov	x0, #0
+	mov	x1, x20
+	bl	_halide_malloc
+	str	x0, [x19]
+	cbz	x0, LBB60_4
+; %bb.2:                                ; %if.end6
+	mov	w1, #0
+	mov	x2, x20
+	bl	_memset
+LBB60_3:                                ; %cleanup
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB60_4:                                ; %if.then5
+	mov	x1, x19
+	bl	_halide_free
+	mov	x19, #0
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_mutex_array_destroy     ; -- Begin function halide_mutex_array_destroy
+	.weak_definition	_halide_mutex_array_destroy
+	.p2align	2
+_halide_mutex_array_destroy:            ; @halide_mutex_array_destroy
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x1
+	mov	x20, x0
+	ldr	x1, [x1]
+	bl	_halide_free
+	mov	x0, x20
+	mov	x1, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_free
+                                        ; -- End function
+	.globl	_halide_mutex_array_lock        ; -- Begin function halide_mutex_array_lock
+	.weak_definition	_halide_mutex_array_lock
+	.p2align	2
+_halide_mutex_array_lock:               ; @halide_mutex_array_lock
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x0]
+	add	x0, x8, w1, sxtw #3
+	bl	_halide_mutex_lock
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_mutex_array_unlock      ; -- Begin function halide_mutex_array_unlock
+	.weak_definition	_halide_mutex_array_unlock
+	.p2align	2
+_halide_mutex_array_unlock:             ; @halide_mutex_array_unlock
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x0]
+	add	x0, x8, w1, sxtw #3
+	bl	_halide_mutex_unlock
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_set_num_threads         ; -- Begin function halide_set_num_threads
+	.weak_definition	_halide_set_num_threads
+	.p2align	2
+_halide_set_num_threads:                ; @halide_set_num_threads
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x0
+Lloh92:
+	adrp	x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh93:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	tbnz	w0, #31, LBB64_3
+; %bb.1:                                ; %if.end
+Lloh94:
+	adrp	x21, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGE
+Lloh95:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal10work_queueE@GOTPAGEOFF]
+	mov	x0, x21
+	bl	_halide_mutex_lock
+	cbz	w20, LBB64_4
+; %bb.2:                                ; %if.end3
+	ldr	w21, [x21, #8]
+	cmp	w20, #256                       ; =256
+	b.gt	LBB64_5
+	b	LBB64_6
+LBB64_3:                                ; %if.end3.thread
+Lloh96:
+	adrp	x1, l_.str.4@PAGE
+Lloh97:
+	add	x1, x1, l_.str.4@PAGEOFF
+	mov	x0, #0
+	bl	_halide_error
+	mov	x0, x19
+	bl	_halide_mutex_lock
+	ldr	w21, [x19, #8]
+	b	LBB64_6
+LBB64_4:                                ; %if.then2
+	bl	__ZN6Halide7Runtime8Internal27default_desired_num_threadsEv
+	mov	x20, x0
+	ldr	w21, [x21, #8]
+	cmp	w20, #256                       ; =256
+	b.le	LBB64_6
+LBB64_5:
+	mov	w8, #256
+	b	LBB64_7
+LBB64_6:                                ; %if.else.i
+	cmp	w20, #1                         ; =1
+	csinc	w8, w20, wzr, gt
+LBB64_7:                                ; %_ZN6Halide7Runtime8Internal17clamp_num_threadsEi.exit
+	str	w8, [x19, #8]
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	mov	x0, x21
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh92, Lloh93
+	.loh AdrpLdrGot	Lloh94, Lloh95
+	.loh AdrpAdd	Lloh96, Lloh97
+                                        ; -- End function
+	.globl	_halide_set_custom_do_task      ; -- Begin function halide_set_custom_do_task
+	.weak_definition	_halide_set_custom_do_task
+	.p2align	2
+_halide_set_custom_do_task:             ; @halide_set_custom_do_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh98:
+	adrp	x9, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGE
+Lloh99:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh98, Lloh99
+                                        ; -- End function
+	.globl	_halide_set_custom_do_loop_task ; -- Begin function halide_set_custom_do_loop_task
+	.weak_definition	_halide_set_custom_do_loop_task
+	.p2align	2
+_halide_set_custom_do_loop_task:        ; @halide_set_custom_do_loop_task
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh100:
+	adrp	x9, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGE
+Lloh101:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh100, Lloh101
+                                        ; -- End function
+	.globl	_halide_set_custom_do_par_for   ; -- Begin function halide_set_custom_do_par_for
+	.weak_definition	_halide_set_custom_do_par_for
+	.p2align	2
+_halide_set_custom_do_par_for:          ; @halide_set_custom_do_par_for
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh102:
+	adrp	x9, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGE
+Lloh103:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh102, Lloh103
+                                        ; -- End function
+	.globl	_halide_set_custom_parallel_runtime ; -- Begin function halide_set_custom_parallel_runtime
+	.weak_definition	_halide_set_custom_parallel_runtime
+	.p2align	2
+_halide_set_custom_parallel_runtime:    ; @halide_set_custom_parallel_runtime
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh104:
+	adrp	x8, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGE
+Lloh105:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGEOFF]
+Lloh106:
+	str	x0, [x8]
+Lloh107:
+	adrp	x8, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGE
+Lloh108:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal14custom_do_taskE@GOTPAGEOFF]
+Lloh109:
+	str	x1, [x8]
+Lloh110:
+	adrp	x8, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGE
+Lloh111:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19custom_do_loop_taskE@GOTPAGEOFF]
+Lloh112:
+	str	x2, [x8]
+Lloh113:
+	adrp	x8, __ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE@GOTPAGE
+Lloh114:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE@GOTPAGEOFF]
+Lloh115:
+	str	x3, [x8]
+Lloh116:
+	adrp	x8, __ZN6Halide7Runtime8Internal21custom_semaphore_initE@GOTPAGE
+Lloh117:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal21custom_semaphore_initE@GOTPAGEOFF]
+Lloh118:
+	str	x4, [x8]
+Lloh119:
+	adrp	x8, __ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE@GOTPAGE
+Lloh120:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE@GOTPAGEOFF]
+Lloh121:
+	str	x5, [x8]
+Lloh122:
+	adrp	x8, __ZN6Halide7Runtime8Internal24custom_semaphore_releaseE@GOTPAGE
+Lloh123:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal24custom_semaphore_releaseE@GOTPAGEOFF]
+Lloh124:
+	str	x6, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGotStr	Lloh122, Lloh123, Lloh124
+	.loh AdrpLdrGotStr	Lloh119, Lloh120, Lloh121
+	.loh AdrpLdrGotStr	Lloh116, Lloh117, Lloh118
+	.loh AdrpLdrGotStr	Lloh113, Lloh114, Lloh115
+	.loh AdrpLdrGotStr	Lloh110, Lloh111, Lloh112
+	.loh AdrpLdrGotStr	Lloh107, Lloh108, Lloh109
+	.loh AdrpLdrGotStr	Lloh104, Lloh105, Lloh106
+                                        ; -- End function
+	.globl	_halide_do_par_for              ; -- Begin function halide_do_par_for
+	.weak_definition	_halide_do_par_for
+	.p2align	2
+_halide_do_par_for:                     ; @halide_do_par_for
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh125:
+	adrp	x8, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGE
+Lloh126:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17custom_do_par_forE@GOTPAGEOFF]
+Lloh127:
+	ldr	x5, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x5
+	.loh AdrpLdrGotLdr	Lloh125, Lloh126, Lloh127
+                                        ; -- End function
+	.globl	_halide_do_parallel_tasks       ; -- Begin function halide_do_parallel_tasks
+	.weak_definition	_halide_do_parallel_tasks
+	.p2align	2
+_halide_do_parallel_tasks:              ; @halide_do_parallel_tasks
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh128:
+	adrp	x8, __ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE@GOTPAGE
+Lloh129:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE@GOTPAGEOFF]
+Lloh130:
+	ldr	x4, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x4
+	.loh AdrpLdrGotLdr	Lloh128, Lloh129, Lloh130
+                                        ; -- End function
+	.globl	_halide_semaphore_init          ; -- Begin function halide_semaphore_init
+	.weak_definition	_halide_semaphore_init
+	.p2align	2
+_halide_semaphore_init:                 ; @halide_semaphore_init
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh131:
+	adrp	x8, __ZN6Halide7Runtime8Internal21custom_semaphore_initE@GOTPAGE
+Lloh132:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal21custom_semaphore_initE@GOTPAGEOFF]
+Lloh133:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh131, Lloh132, Lloh133
+                                        ; -- End function
+	.globl	_halide_semaphore_release       ; -- Begin function halide_semaphore_release
+	.weak_definition	_halide_semaphore_release
+	.p2align	2
+_halide_semaphore_release:              ; @halide_semaphore_release
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh134:
+	adrp	x8, __ZN6Halide7Runtime8Internal24custom_semaphore_releaseE@GOTPAGE
+Lloh135:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal24custom_semaphore_releaseE@GOTPAGEOFF]
+Lloh136:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh134, Lloh135, Lloh136
+                                        ; -- End function
+	.globl	_halide_semaphore_try_acquire   ; -- Begin function halide_semaphore_try_acquire
+	.weak_definition	_halide_semaphore_try_acquire
+	.p2align	2
+_halide_semaphore_try_acquire:          ; @halide_semaphore_try_acquire
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh137:
+	adrp	x8, __ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE@GOTPAGE
+Lloh138:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE@GOTPAGEOFF]
+Lloh139:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh137, Lloh138, Lloh139
+                                        ; -- End function
+	.globl	_halide_default_get_symbol      ; -- Begin function halide_default_get_symbol
+	.weak_definition	_halide_default_get_symbol
+	.p2align	2
+_halide_default_get_symbol:             ; @halide_default_get_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	x1, x0
+	mov	x0, #-2
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_dlsym
+                                        ; -- End function
+	.globl	_halide_default_load_library    ; -- Begin function halide_default_load_library
+	.weak_definition	_halide_default_load_library
+	.p2align	2
+_halide_default_load_library:           ; @halide_default_load_library
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w1, #5
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_dlopen
+                                        ; -- End function
+	.globl	_halide_default_get_library_symbol ; -- Begin function halide_default_get_library_symbol
+	.weak_definition	_halide_default_get_library_symbol
+	.p2align	2
+_halide_default_get_library_symbol:     ; @halide_default_get_library_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	cmp	x0, #0                          ; =0
+	mov	x8, #-2
+	csel	x0, x8, x0, eq
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_dlsym
+                                        ; -- End function
+	.globl	_halide_set_custom_get_symbol   ; -- Begin function halide_set_custom_get_symbol
+	.weak_definition	_halide_set_custom_get_symbol
+	.p2align	2
+_halide_set_custom_get_symbol:          ; @halide_set_custom_get_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh140:
+	adrp	x9, __ZN6Halide7Runtime8Internal17custom_get_symbolE@GOTPAGE
+Lloh141:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal17custom_get_symbolE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh140, Lloh141
+                                        ; -- End function
+	.globl	_halide_set_custom_load_library ; -- Begin function halide_set_custom_load_library
+	.weak_definition	_halide_set_custom_load_library
+	.p2align	2
+_halide_set_custom_load_library:        ; @halide_set_custom_load_library
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh142:
+	adrp	x9, __ZN6Halide7Runtime8Internal19custom_load_libraryE@GOTPAGE
+Lloh143:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal19custom_load_libraryE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh142, Lloh143
+                                        ; -- End function
+	.globl	_halide_set_custom_get_library_symbol ; -- Begin function halide_set_custom_get_library_symbol
+	.weak_definition	_halide_set_custom_get_library_symbol
+	.p2align	2
+_halide_set_custom_get_library_symbol:  ; @halide_set_custom_get_library_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh144:
+	adrp	x9, __ZN6Halide7Runtime8Internal25custom_get_library_symbolE@GOTPAGE
+Lloh145:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal25custom_get_library_symbolE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh144, Lloh145
+                                        ; -- End function
+	.globl	_halide_get_symbol              ; -- Begin function halide_get_symbol
+	.weak_definition	_halide_get_symbol
+	.p2align	2
+_halide_get_symbol:                     ; @halide_get_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh146:
+	adrp	x8, __ZN6Halide7Runtime8Internal17custom_get_symbolE@GOTPAGE
+Lloh147:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17custom_get_symbolE@GOTPAGEOFF]
+Lloh148:
+	ldr	x1, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x1
+	.loh AdrpLdrGotLdr	Lloh146, Lloh147, Lloh148
+                                        ; -- End function
+	.globl	_halide_load_library            ; -- Begin function halide_load_library
+	.weak_definition	_halide_load_library
+	.p2align	2
+_halide_load_library:                   ; @halide_load_library
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh149:
+	adrp	x8, __ZN6Halide7Runtime8Internal19custom_load_libraryE@GOTPAGE
+Lloh150:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19custom_load_libraryE@GOTPAGEOFF]
+Lloh151:
+	ldr	x1, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x1
+	.loh AdrpLdrGotLdr	Lloh149, Lloh150, Lloh151
+                                        ; -- End function
+	.globl	_halide_get_library_symbol      ; -- Begin function halide_get_library_symbol
+	.weak_definition	_halide_get_library_symbol
+	.p2align	2
+_halide_get_library_symbol:             ; @halide_get_library_symbol
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh152:
+	adrp	x8, __ZN6Halide7Runtime8Internal25custom_get_library_symbolE@GOTPAGE
+Lloh153:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal25custom_get_library_symbolE@GOTPAGEOFF]
+Lloh154:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh152, Lloh153, Lloh154
+                                        ; -- End function
+	.globl	_halide_set_gpu_device          ; -- Begin function halide_set_gpu_device
+	.weak_definition	_halide_set_gpu_device
+	.p2align	2
+_halide_set_gpu_device:                 ; @halide_set_gpu_device
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh155:
+	adrp	x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGE
+Lloh156:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGEOFF]
+Lloh157:
+	str	w0, [x8]
+Lloh158:
+	adrp	x8, __ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE@GOTPAGE
+Lloh159:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE@GOTPAGEOFF]
+	mov	w9, #1
+Lloh160:
+	strb	w9, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGotStr	Lloh158, Lloh159, Lloh160
+	.loh AdrpLdrGotStr	Lloh155, Lloh156, Lloh157
+                                        ; -- End function
+	.globl	_halide_get_gpu_device          ; -- Begin function halide_get_gpu_device
+	.weak_definition	_halide_get_gpu_device
+	.p2align	2
+_halide_get_gpu_device:                 ; @halide_get_gpu_device
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+Lloh161:
+	adrp	x19, __ZN6Halide7Runtime8Internal22halide_gpu_device_lockE@GOTPAGE
+Lloh162:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal22halide_gpu_device_lockE@GOTPAGEOFF]
+	mov	w8, #1
+LBB84_1:                                ; %while.cond.i
+                                        ; =>This Inner Loop Header: Depth=1
+	swpab	w8, w9, [x19]
+	tst	w9, #0xff
+	b.ne	LBB84_1
+; %bb.2:                                ; %_ZN6Halide7Runtime8Internal14ScopedSpinLockC2EPVc.exit
+Lloh163:
+	adrp	x20, __ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE@GOTPAGE
+Lloh164:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE@GOTPAGEOFF]
+	ldrb	w8, [x20]
+	cbz	w8, LBB84_4
+; %bb.3:                                ; %_ZN6Halide7Runtime8Internal14ScopedSpinLockC2EPVc.exit.if.end4_crit_edge
+Lloh165:
+	adrp	x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGE
+Lloh166:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGEOFF]
+Lloh167:
+	ldr	w0, [x8]
+	stlrb	wzr, [x19]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB84_4:                                ; %if.then
+Lloh168:
+	adrp	x0, l_.str.8@PAGE
+Lloh169:
+	add	x0, x0, l_.str.8@PAGEOFF
+	bl	_getenv
+	cbz	x0, LBB84_6
+; %bb.5:                                ; %if.then2
+	bl	_atoi
+	b	LBB84_7
+LBB84_6:
+	mov	w0, #-1
+LBB84_7:                                ; %if.end
+Lloh170:
+	adrp	x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGE
+Lloh171:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17halide_gpu_deviceE@GOTPAGEOFF]
+Lloh172:
+	str	w0, [x8]
+	mov	w8, #1
+	strb	w8, [x20]
+	stlrb	wzr, [x19]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh161, Lloh162
+	.loh AdrpLdrGot	Lloh163, Lloh164
+	.loh AdrpLdrGotLdr	Lloh165, Lloh166, Lloh167
+	.loh AdrpAdd	Lloh168, Lloh169
+	.loh AdrpLdrGotStr	Lloh170, Lloh171, Lloh172
+                                        ; -- End function
+	.globl	_halide_default_trace           ; -- Begin function halide_default_trace
+	.weak_definition	_halide_default_trace
+	.p2align	2
+_halide_default_trace:                  ; @halide_default_trace
+; %bb.0:                                ; %entry
+	sub	sp, sp, #144                    ; =144
+	stp	x28, x27, [sp, #48]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #64]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #80]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #96]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #112]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #128]            ; 16-byte Folded Spill
+	add	x29, sp, #128                   ; =128
+	mov	x21, x1
+Lloh173:
+	adrp	x8, __ZZ20halide_default_traceE3ids@PAGE
+Lloh174:
+	add	x8, x8, __ZZ20halide_default_traceE3ids@PAGEOFF
+	mov	w9, #1
+	ldaddal	w9, w26, [x8]
+	str	x0, [sp, #40]                   ; 8-byte Folded Spill
+	bl	_halide_get_trace_file
+	cmp	w0, #1                          ; =1
+	b.lt	LBB85_3
+; %bb.1:                                ; %if.then
+	mov	x22, x0
+	ldrh	w8, [x21, #34]
+	ldrb	w9, [x21, #33]
+	add	x9, x9, #7                      ; =7
+	lsr	x9, x9, #3
+	mul	x25, x9, x8
+	ldr	w8, [x21, #48]
+	lsl	w27, w8, #2
+	ldr	x0, [x21]
+	bl	_strlen
+	add	w20, w0, #1                     ; =1
+	ldr	x0, [x21, #24]
+	cbz	x0, LBB85_5
+; %bb.2:                                ; %cond.true
+	bl	_strlen
+	add	w9, w0, #1                      ; =1
+	b	LBB85_6
+LBB85_3:                                ; %if.else
+	mov	w0, #4096
+	bl	_malloc
+	mov	x22, x0
+	cbz	x0, LBB85_28
+; %bb.4:                                ; %if.then6.i451
+	add	x23, x22, #4095                 ; =4095
+	strb	wzr, [x22, #4095]
+	b	LBB85_29
+LBB85_5:
+	mov	w9, #1
+LBB85_6:                                ; %cond.end
+	add	w8, w27, w25
+	add	w8, w8, w20
+	add	w8, w8, w9
+	add	w8, w8, #31                     ; =31
+	and	w19, w8, #0xfffffffc
+Lloh175:
+	adrp	x8, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGE
+Lloh176:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGEOFF]
+Lloh177:
+	ldr	x23, [x8]
+	add	x24, x23, #12                   ; =12
+	cmp	w19, #256, lsl #12              ; =1048576
+	stp	w9, w26, [sp, #32]              ; 8-byte Folded Spill
+	str	w20, [sp, #28]                  ; 4-byte Folded Spill
+	str	x25, [sp, #16]                  ; 8-byte Folded Spill
+	str	w27, [sp, #12]                  ; 4-byte Folded Spill
+	b.hi	LBB85_16
+; %bb.7:                                ; %while.body.i.i.us.i.preheader
+	mov	w20, #-1
+	mov	w27, #1073741824
+	mov	w28, #-2147483648
+Lloh178:
+	adrp	x25, l_.str.32@PAGE
+Lloh179:
+	add	x25, x25, l_.str.32@PAGEOFF
+	b	LBB85_9
+LBB85_8:                                ; %do.end.critedge.i.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	ldclral	w28, w8, [x23]
+LBB85_9:                                ; %while.body.i.i.us.i
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB85_12 Depth 2
+	ldr	w8, [x23]
+	and	w8, w8, #0x3fffffff
+	add	w9, w8, #1                      ; =1
+	mov	x10, x8
+	casal	w10, w9, [x23]
+	cmp	w10, w8
+	cset	w8, eq
+	cmp	w8, #1                          ; =1
+	b.ne	LBB85_9
+; %bb.10:                               ; %do.end.i.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	add	x8, x23, #4                     ; =4
+	ldaddal	w19, w8, [x8]
+	add	w9, w8, w19
+	cmp	w9, #256, lsl #12               ; =1048576
+	b.ls	LBB85_25
+; %bb.11:                               ; %while.body.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	add	x8, x23, #8                     ; =8
+	ldaddal	w19, w8, [x8]
+	ldaddal	w20, w8, [x23]
+LBB85_12:                               ; %while.body.i.i5.us.i
+                                        ;   Parent Loop BB85_9 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldsetal	w27, w8, [x23]
+	mov	w8, #1073741824
+	casal	w8, w28, [x23]
+	cmp	w8, w27
+	cset	w8, eq
+	cmp	w8, #1                          ; =1
+	b.ne	LBB85_12
+; %bb.13:                               ; %_ZN6Halide7Runtime8Internal23SharedExclusiveSpinLock17acquire_exclusiveEv.exit.i.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	ldr	w8, [x23, #4]
+	cbz	w8, LBB85_8
+; %bb.14:                               ; %if.then.i9.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	ldr	w9, [x23, #8]
+	sub	w26, w8, w9
+	str	w26, [x23, #4]
+	mov	x0, x22
+	mov	x1, x24
+	mov	x2, x26
+	bl	_write
+	stp	wzr, wzr, [x23, #4]
+	ldclral	w28, w8, [x23]
+	cmp	w26, w0
+	b.eq	LBB85_9
+; %bb.15:                               ; %if.then10.i.us.i
+                                        ;   in Loop: Header=BB85_9 Depth=1
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+	mov	x1, x25
+	bl	_halide_print
+	bl	_abort
+	b	LBB85_9
+LBB85_16:
+Lloh180:
+	adrp	x25, l_.str.31@PAGE
+Lloh181:
+	add	x25, x25, l_.str.31@PAGEOFF
+	mov	w28, #-1
+	mov	w20, #1073741824
+	mov	w26, #-2147483648
+	b	LBB85_18
+LBB85_17:                               ; %do.end.critedge.i.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	ldclral	w26, w8, [x23]
+LBB85_18:                               ; %while.body.i.i.i
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB85_21 Depth 2
+	ldr	w8, [x23]
+	and	w8, w8, #0x3fffffff
+	add	w9, w8, #1                      ; =1
+	mov	x10, x8
+	casal	w10, w9, [x23]
+	cmp	w10, w8
+	cset	w8, eq
+	cmp	w8, #1                          ; =1
+	b.ne	LBB85_18
+; %bb.19:                               ; %if.then.i.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+	mov	x1, x25
+	bl	_halide_print
+	bl	_abort
+	add	x8, x23, #4                     ; =4
+	ldaddal	w19, w8, [x8]
+	add	w9, w8, w19
+	cmp	w9, #256, lsl #12               ; =1048576
+	b.ls	LBB85_25
+; %bb.20:                               ; %while.body.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	add	x8, x23, #8                     ; =8
+	ldaddal	w19, w8, [x8]
+	ldaddal	w28, w8, [x23]
+LBB85_21:                               ; %while.body.i.i5.i
+                                        ;   Parent Loop BB85_18 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldsetal	w20, w8, [x23]
+	mov	w8, #1073741824
+	casal	w8, w26, [x23]
+	cmp	w8, w20
+	cset	w8, eq
+	cmp	w8, #1                          ; =1
+	b.ne	LBB85_21
+; %bb.22:                               ; %_ZN6Halide7Runtime8Internal23SharedExclusiveSpinLock17acquire_exclusiveEv.exit.i.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	ldr	w8, [x23, #4]
+	cbz	w8, LBB85_17
+; %bb.23:                               ; %if.then.i9.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	ldr	w9, [x23, #8]
+	sub	w27, w8, w9
+	str	w27, [x23, #4]
+	mov	x0, x22
+	mov	x1, x24
+	mov	x2, x27
+	bl	_write
+	stp	wzr, wzr, [x23, #4]
+	ldclral	w26, w8, [x23]
+	cmp	w27, w0
+	b.eq	LBB85_18
+; %bb.24:                               ; %if.then10.i.i
+                                        ;   in Loop: Header=BB85_18 Depth=1
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+Lloh182:
+	adrp	x1, l_.str.32@PAGE
+Lloh183:
+	add	x1, x1, l_.str.32@PAGEOFF
+	bl	_halide_print
+	bl	_abort
+	b	LBB85_18
+LBB85_25:
+	ldp	w27, w26, [sp, #32]             ; 8-byte Folded Reload
+Lloh184:
+	adrp	x20, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGE
+Lloh185:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGEOFF]
+	ldr	w28, [sp, #28]                  ; 4-byte Folded Reload
+	add	x8, x23, w8, uxtw
+	add	x23, x8, #12                    ; =12
+	cmp	w19, #1, lsl #12                ; =4096
+	b.ls	LBB85_53
+; %bb.26:                               ; %if.then17
+	mov	w0, #1024
+	bl	_malloc
+	mov	x24, x0
+	cbz	x0, LBB85_51
+; %bb.27:                               ; %if.else.i421
+	add	x25, x24, #1023                 ; =1023
+	strb	wzr, [x24, #1023]
+	mov	w2, w19
+	mov	x0, x24
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh186:
+	adrp	x2, l_.str.7.164@PAGE
+Lloh187:
+	add	x2, x2, l_.str.7.164@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+	sub	x8, x0, x24
+	add	x2, x8, #1                      ; =1
+	mov	x0, #0
+	mov	x1, x24
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, #0
+	mov	x1, x24
+	bl	_halide_print
+	b	LBB85_52
+LBB85_28:
+	mov	x23, #0
+LBB85_29:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy4096EEC2EPvPc.exit
+	ldrb	w8, [x21, #33]
+	mov	w9, #8
+LBB85_30:                               ; %while.cond
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x27, x9
+	lsl	w9, w9, #1
+	cmp	w27, w8
+	b.lt	LBB85_30
+; %bb.31:                               ; %do.body
+	cmp	w27, #65                        ; =65
+	b.lt	LBB85_33
+; %bb.32:                               ; %if.then63
+Lloh188:
+	adrp	x1, l_.str.2.11@PAGE
+Lloh189:
+	add	x1, x1, l_.str.2.11@PAGEOFF
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+	bl	_halide_print
+	bl	_abort
+LBB85_33:                               ; %do.end
+	ldr	w19, [x21, #36]
+Lloh190:
+	adrp	x8, l___const.halide_default_trace.event_types@PAGE
+Lloh191:
+	add	x8, x8, l___const.halide_default_trace.event_types@PAGEOFF
+	ldr	x2, [x8, x19, lsl #3]
+	mov	x0, x22
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh192:
+	adrp	x2, l_.str.20.177@PAGE
+Lloh193:
+	add	x2, x2, l_.str.20.177@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	ldr	x2, [x21]
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh194:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh195:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	ldrsw	x2, [x21, #44]
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh196:
+	adrp	x2, l_.str.22.179@PAGE
+Lloh197:
+	add	x2, x2, l_.str.22.179@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	ldrh	w8, [x21, #34]
+	cmp	w8, #2                          ; =2
+	b.lo	LBB85_35
+; %bb.34:                               ; %if.then80
+Lloh198:
+	adrp	x2, l_.str.17@PAGE
+Lloh199:
+	add	x2, x2, l_.str.17@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+LBB85_35:                               ; %if.end82
+	ldr	w8, [x21, #48]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB85_43
+; %bb.36:                               ; %if.end100.peel
+	ldr	x8, [x21, #16]
+	ldrsw	x2, [x8]
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	ldr	w8, [x21, #48]
+	cmp	w8, #2                          ; =2
+	b.lt	LBB85_43
+; %bb.37:                               ; %if.then86.preheader
+	mov	w20, #1
+Lloh200:
+	adrp	x24, l_.str.18@PAGE
+Lloh201:
+	add	x24, x24, l_.str.18@PAGEOFF
+Lloh202:
+	adrp	x25, l_.str.55@PAGE
+Lloh203:
+	add	x25, x25, l_.str.55@PAGEOFF
+	b	LBB85_40
+LBB85_38:                               ; %if.else97.split
+                                        ;   in Loop: Header=BB85_40 Depth=1
+	mov	x2, x25
+LBB85_39:                               ; %if.end100
+                                        ;   in Loop: Header=BB85_40 Depth=1
+	mov	x1, x23
+	bl	_halide_string_to_string
+	ldr	x8, [x21, #16]
+	ldrsw	x2, [x8, x20, lsl #2]
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	add	x20, x20, #1                    ; =1
+	ldrsw	x8, [x21, #48]
+	cmp	x20, x8
+	b.ge	LBB85_43
+LBB85_40:                               ; %if.then86
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrh	w8, [x21, #34]
+	cmp	w8, #2                          ; =2
+	b.lo	LBB85_38
+; %bb.41:                               ; %land.lhs.true
+                                        ;   in Loop: Header=BB85_40 Depth=1
+	udiv	w9, w20, w8
+	msub	w8, w9, w8, w20
+	cbnz	w8, LBB85_38
+; %bb.42:                               ;   in Loop: Header=BB85_40 Depth=1
+	mov	x2, x24
+	b	LBB85_39
+LBB85_43:                               ; %for.cond.cleanup
+	ldrh	w8, [x21, #34]
+Lloh204:
+	adrp	x9, l_.str.8.119@PAGE
+Lloh205:
+	add	x9, x9, l_.str.8.119@PAGEOFF
+Lloh206:
+	adrp	x10, l_.str.20@PAGE
+Lloh207:
+	add	x10, x10, l_.str.20@PAGEOFF
+	cmp	w8, #1                          ; =1
+	csel	x2, x10, x9, hi
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x24, x0
+	cmp	w19, #1                         ; =1
+	b.gt	LBB85_122
+; %bb.44:                               ; %if.then115
+	ldrh	w8, [x21, #34]
+Lloh208:
+	adrp	x9, l_.str.23@PAGE
+Lloh209:
+	add	x9, x9, l_.str.23@PAGEOFF
+Lloh210:
+	adrp	x10, l_.str.22@PAGE
+Lloh211:
+	add	x10, x10, l_.str.22@PAGEOFF
+	cmp	w8, #1                          ; =1
+	csel	x2, x10, x9, hi
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x24, x0
+	ldrh	w8, [x21, #34]
+	cbz	w8, LBB85_122
+; %bb.45:                               ; %if.end136.peel
+	mov	x20, x26
+	add	x28, x21, #8                    ; =8
+	ldrb	w8, [x21, #32]
+	cmp	w8, #3                          ; =3
+	b.hi	LBB85_88
+; %bb.46:                               ; %if.end136.peel
+Lloh212:
+	adrp	x9, LJTI85_0@PAGE
+Lloh213:
+	add	x9, x9, LJTI85_0@PAGEOFF
+	adr	x10, LBB85_47
+	ldrb	w11, [x9, x8]
+	add	x10, x10, x11, lsl #2
+	br	x10
+LBB85_47:                               ; %if.then140.peel
+	cmp	w27, #8                         ; =8
+	b.eq	LBB85_79
+; %bb.48:                               ; %if.then140.peel
+	cmp	w27, #16                        ; =16
+	b.eq	LBB85_80
+; %bb.49:                               ; %if.then140.peel
+	cmp	w27, #32                        ; =32
+	b.ne	LBB85_81
+; %bb.50:                               ; %if.then158.peel
+	ldr	x8, [x28]
+	ldrsw	x2, [x8]
+	b	LBB85_84
+LBB85_51:                               ; %if.then.i415
+	mov	w2, w19
+	mov	x1, #0
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh214:
+	adrp	x2, l_.str.7.164@PAGE
+Lloh215:
+	add	x2, x2, l_.str.7.164@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+Lloh216:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh217:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, #0
+	bl	_halide_error
+LBB85_52:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE0ELy1024EED2Ev.exit
+	mov	x0, x24
+	bl	_free
+LBB85_53:                               ; %if.end
+	stp	w19, w26, [x23]
+	ldr	w8, [x21, #32]
+	str	w8, [x23, #8]
+	ldur	q0, [x21, #36]
+	stur	q0, [x23, #12]
+	ldr	x1, [x21, #16]
+	cbz	x1, LBB85_55
+; %bb.54:                               ; %if.then28
+	add	x0, x23, #28                    ; =28
+	ldr	w8, [sp, #12]                   ; 4-byte Folded Reload
+	mov	w2, w8
+	bl	_memcpy
+LBB85_55:                               ; %if.end33
+	ldr	x1, [x21, #8]
+	cbz	x1, LBB85_57
+; %bb.56:                               ; %if.then35
+	ldrsw	x8, [x23, #24]
+	add	x8, x23, x8, lsl #2
+	add	x0, x8, #28                     ; =28
+	ldr	x2, [sp, #16]                   ; 8-byte Folded Reload
+	bl	_memcpy
+LBB85_57:                               ; %if.end40
+	add	x19, x23, #28                   ; =28
+	ldrsw	x8, [x23, #24]
+	add	x8, x19, x8, lsl #2
+	ldrh	w9, [x23, #10]
+	ldrb	w10, [x23, #9]
+	add	x10, x10, #7                    ; =7
+	lsr	x10, x10, #3
+	madd	x0, x10, x9, x8
+	ldr	x1, [x21]
+	mov	w2, w28
+	bl	_memcpy
+	ldrsw	x8, [x23, #24]
+	add	x8, x19, x8, lsl #2
+	ldrh	w9, [x23, #10]
+	ldrb	w10, [x23, #9]
+	add	x10, x10, #7                    ; =7
+	lsr	x10, x10, #3
+	madd	x0, x10, x9, x8
+LBB85_58:                               ; %while.cond.i437
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrb	w8, [x0], #1
+	cbnz	w8, LBB85_58
+; %bb.59:                               ; %_ZN21halide_trace_packet_t9trace_tagEv.exit
+	ldr	x8, [x21, #24]
+Lloh218:
+	adrp	x9, l_.str.1.10@PAGE
+Lloh219:
+	add	x9, x9, l_.str.1.10@PAGEOFF
+	cmp	x8, #0                          ; =0
+	csel	x1, x9, x8, eq
+	mov	w2, w27
+	bl	_memcpy
+	ldr	x8, [x20]
+	dmb	ish
+	mov	w9, #-1
+	ldaddal	w9, w8, [x8]
+	ldr	w8, [x21, #36]
+	cmp	w8, #9                          ; =9
+	b.ne	LBB85_131
+; %bb.60:                               ; %if.then57
+	ldr	x19, [x20]
+	mov	w8, #1073741824
+	mov	w9, #-2147483648
+LBB85_61:                               ; %while.body.i.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldsetal	w8, w10, [x19]
+	mov	w10, #1073741824
+	casal	w10, w9, [x19]
+	cmp	w10, w8
+	cset	w10, eq
+	cmp	w10, #1                         ; =1
+	b.ne	LBB85_61
+; %bb.62:                               ; %_ZN6Halide7Runtime8Internal23SharedExclusiveSpinLock17acquire_exclusiveEv.exit.i
+	ldr	w8, [x19, #4]
+	cbz	w8, LBB85_65
+; %bb.63:                               ; %if.then.i442
+	ldr	w9, [x19, #8]
+	sub	w21, w8, w9
+	str	w21, [x19, #4]
+	add	x1, x19, #12                    ; =12
+	mov	x0, x22
+	mov	x2, x21
+	bl	_write
+	stp	wzr, wzr, [x19, #4]
+	mov	w8, #-2147483648
+	ldclral	w8, w8, [x19]
+	cmp	w21, w0
+	b.eq	LBB85_131
+; %bb.64:                               ; %if.then10.i
+Lloh220:
+	adrp	x1, l_.str.32@PAGE
+Lloh221:
+	add	x1, x1, l_.str.32@PAGEOFF
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+	bl	_halide_print
+	bl	_abort
+	b	LBB85_131
+LBB85_65:                               ; %do.end.critedge.i
+	mov	w8, #-2147483648
+	ldclral	w8, w8, [x19]
+	b	LBB85_131
+LBB85_66:                               ; %if.then176.peel
+	cmp	w27, #8                         ; =8
+	b.eq	LBB85_82
+; %bb.67:                               ; %if.then176.peel
+	cmp	w27, #16                        ; =16
+	b.eq	LBB85_83
+; %bb.68:                               ; %if.then176.peel
+	cmp	w27, #32                        ; =32
+	b.ne	LBB85_85
+; %bb.69:                               ; %if.then194.peel
+	ldr	x8, [x28]
+	ldr	w2, [x8]
+	b	LBB85_86
+LBB85_70:                               ; %do.body213.peel
+	cmp	w27, #15                        ; =15
+	b.gt	LBB85_72
+; %bb.71:                               ; %if.then215.peel
+Lloh222:
+	adrp	x1, l_.str.24@PAGE
+Lloh223:
+	add	x1, x1, l_.str.24@PAGEOFF
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+	bl	_halide_print
+	bl	_abort
+LBB85_72:                               ; %do.end218.peel
+	cmp	w27, #32                        ; =32
+	b.eq	LBB85_76
+; %bb.73:                               ; %do.end218.peel
+	cmp	w27, #16                        ; =16
+	b.ne	LBB85_77
+; %bb.74:                               ; %if.then227.peel
+	ldr	x8, [x28]
+	ldrh	w0, [x8]
+	bl	_halide_float16_bits_to_double
+	b	LBB85_78
+LBB85_75:                               ; %if.then244.peel
+	ldr	x8, [x28]
+	ldr	x2, [x8]
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_pointer_to_string
+	b	LBB85_87
+LBB85_76:                               ; %if.then220.peel
+	ldr	x8, [x28]
+	ldr	s0, [x8]
+	fcvt	d0, s0
+	mov	x0, x24
+	mov	x1, x23
+	mov	w2, #0
+	bl	_halide_double_to_string
+	b	LBB85_87
+LBB85_77:                               ; %if.else232.peel
+	ldr	x8, [x28]
+	ldr	d0, [x8]
+LBB85_78:                               ; %for.inc253.peel
+	mov	x0, x24
+	mov	x1, x23
+	mov	w2, #1
+	bl	_halide_double_to_string
+	b	LBB85_87
+LBB85_79:                               ; %if.then142.peel
+	ldr	x8, [x28]
+	ldrsb	x2, [x8]
+	b	LBB85_84
+LBB85_80:                               ; %if.then150.peel
+	ldr	x8, [x28]
+	ldrsh	x2, [x8]
+	b	LBB85_84
+LBB85_81:                               ; %if.else163.peel
+	ldr	x8, [x28]
+	ldr	x2, [x8]
+	b	LBB85_84
+LBB85_82:                               ; %if.then178.peel
+	ldr	x8, [x28]
+	ldrb	w2, [x8]
+	b	LBB85_84
+LBB85_83:                               ; %if.then186.peel
+	ldr	x8, [x28]
+	ldrh	w2, [x8]
+LBB85_84:                               ; %for.inc253.peel
+	mov	x0, x24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	b	LBB85_87
+LBB85_85:                               ; %if.else199.peel
+	ldr	x8, [x28]
+	ldr	x2, [x8]
+LBB85_86:                               ; %for.inc253.peel
+	mov	x0, x24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+LBB85_87:                               ; %for.inc253.peel
+	mov	x24, x0
+LBB85_88:                               ; %for.inc253.peel
+	ldrh	w8, [x21, #34]
+	cmp	w8, #2                          ; =2
+	b.lo	LBB85_119
+; %bb.89:                               ; %if.end136.preheader
+	mov	w19, #1
+Lloh224:
+	adrp	x25, l_.str.55@PAGE
+Lloh225:
+	add	x25, x25, l_.str.55@PAGEOFF
+Lloh226:
+	adrp	x26, LJTI85_1@PAGE
+Lloh227:
+	add	x26, x26, LJTI85_1@PAGEOFF
+	b	LBB85_94
+LBB85_90:                               ; %if.then186
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrh	w2, [x8, x19, lsl #1]
+LBB85_91:                               ; %for.inc253
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	mov	x0, x24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+LBB85_92:                               ; %for.inc253
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	mov	x24, x0
+LBB85_93:                               ; %for.inc253
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	add	x19, x19, #1                    ; =1
+	ldrh	w8, [x21, #34]
+	cmp	x19, x8
+	b.hs	LBB85_120
+LBB85_94:                               ; %if.end136
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x0, x24
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+	mov	x24, x0
+	ldrb	w8, [x21, #32]
+	cmp	w8, #3                          ; =3
+	b.hi	LBB85_93
+; %bb.95:                               ; %if.end136
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	adr	x9, LBB85_96
+	ldrb	w10, [x26, x8]
+	add	x9, x9, x10, lsl #2
+	br	x9
+LBB85_96:                               ; %if.then140
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #32                        ; =32
+	b.eq	LBB85_113
+; %bb.97:                               ; %if.then140
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #16                        ; =16
+	b.eq	LBB85_114
+; %bb.98:                               ; %if.then140
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #8                         ; =8
+	b.ne	LBB85_116
+; %bb.99:                               ; %if.then142
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrsb	x2, [x8, x19]
+	b	LBB85_91
+LBB85_100:                              ; %if.then176
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #32                        ; =32
+	b.eq	LBB85_115
+; %bb.101:                              ; %if.then176
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #16                        ; =16
+	b.eq	LBB85_90
+; %bb.102:                              ; %if.then176
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #8                         ; =8
+	b.ne	LBB85_117
+; %bb.103:                              ; %if.then178
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrb	w2, [x8, x19]
+	b	LBB85_91
+LBB85_104:                              ; %do.body213
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #15                        ; =15
+	b.gt	LBB85_106
+; %bb.105:                              ; %if.then215
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x0, [sp, #40]                   ; 8-byte Folded Reload
+Lloh228:
+	adrp	x1, l_.str.24@PAGE
+Lloh229:
+	add	x1, x1, l_.str.24@PAGEOFF
+	bl	_halide_print
+	bl	_abort
+LBB85_106:                              ; %do.end218
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #16                        ; =16
+	b.eq	LBB85_110
+; %bb.107:                              ; %do.end218
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	cmp	w27, #32                        ; =32
+	b.ne	LBB85_111
+; %bb.108:                              ; %if.then220
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	s0, [x8, x19, lsl #2]
+	fcvt	d0, s0
+	mov	x0, x24
+	mov	x1, x23
+	mov	w2, #0
+	bl	_halide_double_to_string
+	b	LBB85_92
+LBB85_109:                              ; %if.then244
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	x2, [x8, x19, lsl #3]
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_pointer_to_string
+	b	LBB85_92
+LBB85_110:                              ; %if.then227
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrh	w0, [x8, x19, lsl #1]
+	bl	_halide_float16_bits_to_double
+	b	LBB85_112
+LBB85_111:                              ; %if.else232
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	d0, [x8, x19, lsl #3]
+LBB85_112:                              ; %for.inc253
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	mov	x0, x24
+	mov	x1, x23
+	mov	w2, #1
+	bl	_halide_double_to_string
+	b	LBB85_92
+LBB85_113:                              ; %if.then158
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrsw	x2, [x8, x19, lsl #2]
+	b	LBB85_91
+LBB85_114:                              ; %if.then150
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldrsh	x2, [x8, x19, lsl #1]
+	b	LBB85_91
+LBB85_115:                              ; %if.then194
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	w2, [x8, x19, lsl #2]
+	b	LBB85_118
+LBB85_116:                              ; %if.else163
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	x2, [x8, x19, lsl #3]
+	b	LBB85_91
+LBB85_117:                              ; %if.else199
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	ldr	x8, [x28]
+	ldr	x2, [x8, x19, lsl #3]
+LBB85_118:                              ; %for.inc253
+                                        ;   in Loop: Header=BB85_94 Depth=1
+	mov	x0, x24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	b	LBB85_92
+LBB85_119:
+	mov	x26, x20
+	b	LBB85_122
+LBB85_120:                              ; %for.cond.cleanup131
+	cmp	w8, #1                          ; =1
+	mov	x26, x20
+	b.ls	LBB85_122
+; %bb.121:                              ; %if.then260
+Lloh230:
+	adrp	x2, l_.str.25@PAGE
+Lloh231:
+	add	x2, x2, l_.str.25@PAGEOFF
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x24, x0
+LBB85_122:                              ; %if.end263
+	ldr	x8, [x21, #24]
+	cbz	x8, LBB85_125
+; %bb.123:                              ; %land.lhs.true266
+	ldrb	w8, [x8]
+	cbz	w8, LBB85_125
+; %bb.124:                              ; %if.then269
+Lloh232:
+	adrp	x2, l_.str.26@PAGE
+Lloh233:
+	add	x2, x2, l_.str.26@PAGEOFF
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_string_to_string
+	ldr	x2, [x21, #24]
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh234:
+	adrp	x2, l_.str.27@PAGE
+Lloh235:
+	add	x2, x2, l_.str.27@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x24, x0
+LBB85_125:                              ; %if.end274
+Lloh236:
+	adrp	x2, l_.str.7.164@PAGE
+Lloh237:
+	add	x2, x2, l_.str.7.164@PAGEOFF
+	mov	x0, x24
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh238:
+	adrp	x19, __ZN6Halide7Runtime8Internal22halide_trace_file_lockE@GOTPAGE
+Lloh239:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal22halide_trace_file_lockE@GOTPAGEOFF]
+	mov	w8, #1
+LBB85_126:                              ; %while.cond.i560
+                                        ; =>This Inner Loop Header: Depth=1
+	swpab	w8, w9, [x19]
+	tst	w9, #0xff
+	b.ne	LBB85_126
+; %bb.127:                              ; %_ZN6Halide7Runtime8Internal14ScopedSpinLockC2EPVc.exit
+	cbz	x22, LBB85_129
+; %bb.128:                              ; %if.else.i
+	sub	x8, x0, x22
+	add	x21, x8, #1                     ; =1
+	ldr	x20, [sp, #40]                  ; 8-byte Folded Reload
+	mov	x0, x20
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x22
+	bl	_halide_print
+	stlrb	wzr, [x19]
+	mov	x0, x20
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_msan_annotate_memory_is_initialized
+	b	LBB85_130
+LBB85_129:                              ; %if.then.i
+Lloh240:
+	adrp	x21, l_.str.29.163@PAGE
+Lloh241:
+	add	x21, x21, l_.str.29.163@PAGEOFF
+	ldr	x20, [sp, #40]                  ; 8-byte Folded Reload
+	mov	x0, x20
+	mov	x1, x21
+	bl	_halide_print
+	stlrb	wzr, [x19]
+	mov	x0, x20
+	mov	x1, x21
+	bl	_halide_error
+LBB85_130:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy4096EED2Ev.exit
+	mov	x0, x22
+	bl	_free
+LBB85_131:                              ; %if.end277
+	mov	x0, x26
+	ldp	x29, x30, [sp, #128]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #144                    ; =144
+	ret
+	.loh AdrpAdd	Lloh173, Lloh174
+	.loh AdrpLdrGotLdr	Lloh175, Lloh176, Lloh177
+	.loh AdrpAdd	Lloh178, Lloh179
+	.loh AdrpAdd	Lloh180, Lloh181
+	.loh AdrpAdd	Lloh182, Lloh183
+	.loh AdrpLdrGot	Lloh184, Lloh185
+	.loh AdrpAdd	Lloh186, Lloh187
+	.loh AdrpAdd	Lloh188, Lloh189
+	.loh AdrpAdd	Lloh196, Lloh197
+	.loh AdrpAdd	Lloh194, Lloh195
+	.loh AdrpAdd	Lloh192, Lloh193
+	.loh AdrpAdd	Lloh190, Lloh191
+	.loh AdrpAdd	Lloh198, Lloh199
+	.loh AdrpAdd	Lloh202, Lloh203
+	.loh AdrpAdd	Lloh200, Lloh201
+	.loh AdrpAdd	Lloh206, Lloh207
+	.loh AdrpAdd	Lloh204, Lloh205
+	.loh AdrpAdd	Lloh210, Lloh211
+	.loh AdrpAdd	Lloh208, Lloh209
+	.loh AdrpAdd	Lloh212, Lloh213
+	.loh AdrpAdd	Lloh216, Lloh217
+	.loh AdrpAdd	Lloh214, Lloh215
+	.loh AdrpAdd	Lloh218, Lloh219
+	.loh AdrpAdd	Lloh220, Lloh221
+	.loh AdrpAdd	Lloh222, Lloh223
+	.loh AdrpAdd	Lloh226, Lloh227
+	.loh AdrpAdd	Lloh224, Lloh225
+	.loh AdrpAdd	Lloh228, Lloh229
+	.loh AdrpAdd	Lloh230, Lloh231
+	.loh AdrpAdd	Lloh234, Lloh235
+	.loh AdrpAdd	Lloh232, Lloh233
+	.loh AdrpLdrGot	Lloh238, Lloh239
+	.loh AdrpAdd	Lloh236, Lloh237
+	.loh AdrpAdd	Lloh240, Lloh241
+	.section	__TEXT,__const
+LJTI85_0:
+	.byte	(LBB85_47-LBB85_47)>>2
+	.byte	(LBB85_66-LBB85_47)>>2
+	.byte	(LBB85_70-LBB85_47)>>2
+	.byte	(LBB85_75-LBB85_47)>>2
+LJTI85_1:
+	.byte	(LBB85_96-LBB85_96)>>2
+	.byte	(LBB85_100-LBB85_96)>>2
+	.byte	(LBB85_104-LBB85_96)>>2
+	.byte	(LBB85_109-LBB85_96)>>2
+                                        ; -- End function
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_halide_get_trace_file          ; -- Begin function halide_get_trace_file
+	.weak_definition	_halide_get_trace_file
+	.p2align	2
+_halide_get_trace_file:                 ; @halide_get_trace_file
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x0
+Lloh242:
+	adrp	x21, __ZN6Halide7Runtime8Internal22halide_trace_file_lockE@GOTPAGE
+Lloh243:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal22halide_trace_file_lockE@GOTPAGEOFF]
+	mov	w8, #1
+LBB86_1:                                ; %while.cond.i
+                                        ; =>This Inner Loop Header: Depth=1
+	swpab	w8, w9, [x21]
+	tst	w9, #0xff
+	b.ne	LBB86_1
+; %bb.2:                                ; %_ZN6Halide7Runtime8Internal14ScopedSpinLockC2EPVc.exit
+Lloh244:
+	adrp	x22, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGE
+Lloh245:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGEOFF]
+	ldr	w8, [x22]
+	tbnz	w8, #31, LBB86_4
+LBB86_3:                                ; %if.end11
+	ldr	w0, [x22]
+	stlrb	wzr, [x21]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB86_4:                                ; %if.then
+Lloh246:
+	adrp	x0, l_.str.28@PAGE
+Lloh247:
+	add	x0, x0, l_.str.28@PAGEOFF
+	bl	_getenv
+	cbz	x0, LBB86_9
+; %bb.5:                                ; %if.then1
+Lloh248:
+	adrp	x1, l_.str.29@PAGE
+Lloh249:
+	add	x1, x1, l_.str.29@PAGEOFF
+	bl	_fopen
+	mov	x20, x0
+	cbnz	x0, LBB86_7
+; %bb.6:                                ; %if.then4
+Lloh250:
+	adrp	x1, l_.str.30@PAGE
+Lloh251:
+	add	x1, x1, l_.str.30@PAGEOFF
+	mov	x0, x19
+	bl	_halide_print
+	bl	_abort
+LBB86_7:                                ; %do.end
+	mov	x0, x20
+	bl	_fileno
+	bl	_halide_set_trace_file
+Lloh252:
+	adrp	x8, __ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE@GOTPAGE
+Lloh253:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE@GOTPAGEOFF]
+Lloh254:
+	str	x20, [x8]
+Lloh255:
+	adrp	x19, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGE
+Lloh256:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGEOFF]
+	ldr	x8, [x19]
+	cbnz	x8, LBB86_3
+; %bb.8:                                ; %if.then7
+	mov	w0, #12
+	movk	w0, #16, lsl #16
+	bl	_malloc
+	str	x0, [x19]
+	stp	wzr, wzr, [x0, #4]
+	str	wzr, [x0]
+	b	LBB86_3
+LBB86_9:                                ; %if.else
+	bl	_halide_set_trace_file
+	b	LBB86_3
+	.loh AdrpLdrGot	Lloh242, Lloh243
+	.loh AdrpLdrGot	Lloh244, Lloh245
+	.loh AdrpAdd	Lloh246, Lloh247
+	.loh AdrpAdd	Lloh248, Lloh249
+	.loh AdrpAdd	Lloh250, Lloh251
+	.loh AdrpLdrGot	Lloh255, Lloh256
+	.loh AdrpLdrGotStr	Lloh252, Lloh253, Lloh254
+                                        ; -- End function
+	.globl	_halide_set_trace_file          ; -- Begin function halide_set_trace_file
+	.weak_definition	_halide_set_trace_file
+	.p2align	2
+_halide_set_trace_file:                 ; @halide_set_trace_file
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh257:
+	adrp	x8, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGE
+Lloh258:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGEOFF]
+Lloh259:
+	str	w0, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGotStr	Lloh257, Lloh258, Lloh259
+                                        ; -- End function
+	.globl	_halide_trace_cleanup           ; -- Begin function halide_trace_cleanup
+	.weak_definition	_halide_trace_cleanup
+	.p2align	2
+_halide_trace_cleanup:                  ; @halide_trace_cleanup
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_shutdown_trace
+                                        ; -- End function
+	.globl	_halide_shutdown_trace          ; -- Begin function halide_shutdown_trace
+	.weak_definition	_halide_shutdown_trace
+	.p2align	2
+_halide_shutdown_trace:                 ; @halide_shutdown_trace
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+Lloh260:
+	adrp	x20, __ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE@GOTPAGE
+Lloh261:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE@GOTPAGEOFF]
+	ldr	x0, [x20]
+	cbz	x0, LBB89_4
+; %bb.1:                                ; %if.then
+	bl	_fclose
+	mov	x19, x0
+Lloh262:
+	adrp	x8, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGE
+Lloh263:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal17halide_trace_fileE@GOTPAGEOFF]
+Lloh264:
+	adrp	x9, __ZN6Halide7Runtime8Internal29halide_trace_file_initializedE@GOTPAGE
+Lloh265:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal29halide_trace_file_initializedE@GOTPAGEOFF]
+Lloh266:
+	str	wzr, [x8]
+Lloh267:
+	strb	wzr, [x9]
+	str	xzr, [x20]
+Lloh268:
+	adrp	x8, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGE
+Lloh269:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19halide_trace_bufferE@GOTPAGEOFF]
+Lloh270:
+	ldr	x0, [x8]
+	cbz	x0, LBB89_3
+; %bb.2:                                ; %if.then2
+	bl	_free
+LBB89_3:                                ; %return
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB89_4:
+	mov	w19, #0
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh260, Lloh261
+	.loh AdrpLdrGotLdr	Lloh268, Lloh269, Lloh270
+	.loh AdrpLdrGotStr	Lloh264, Lloh265, Lloh267
+	.loh AdrpLdrGotStr	Lloh262, Lloh263, Lloh266
+                                        ; -- End function
+	.globl	_halide_set_custom_trace        ; -- Begin function halide_set_custom_trace
+	.weak_definition	_halide_set_custom_trace
+	.p2align	2
+_halide_set_custom_trace:               ; @halide_set_custom_trace
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh271:
+	adrp	x9, __ZN6Halide7Runtime8Internal19halide_custom_traceE@GOTPAGE
+Lloh272:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal19halide_custom_traceE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh271, Lloh272
+                                        ; -- End function
+	.globl	_halide_trace                   ; -- Begin function halide_trace
+	.weak_definition	_halide_trace
+	.p2align	2
+_halide_trace:                          ; @halide_trace
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh273:
+	adrp	x8, __ZN6Halide7Runtime8Internal19halide_custom_traceE@GOTPAGE
+Lloh274:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19halide_custom_traceE@GOTPAGEOFF]
+Lloh275:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh273, Lloh274, Lloh275
+                                        ; -- End function
+	.globl	_halide_trace_helper            ; -- Begin function halide_trace_helper
+	.weak_definition	_halide_trace_helper
+	.p2align	2
+_halide_trace_helper:                   ; @halide_trace_helper
+; %bb.0:                                ; %entry
+	sub	sp, sp, #128                    ; =128
+	stp	x24, x23, [sp, #64]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #80]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #96]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #112]            ; 16-byte Folded Spill
+	add	x29, sp, #112                   ; =112
+	mov	x19, x6
+	mov	x20, x5
+	mov	x21, x3
+	mov	x22, x2
+	mov	x23, x0
+	ldp	w8, w24, [x29, #20]
+                                        ; kill: def $w24 killed $w24 def $x24
+	sxtw	x24, w24
+	ldr	w9, [x29, #16]
+	ldr	x10, [x29, #32]
+	stp	x1, x2, [sp, #8]
+	stp	x3, x10, [sp, #24]
+	strb	w4, [sp, #40]
+	strb	w5, [sp, #41]
+	strh	w6, [sp, #42]
+	stp	w7, w9, [sp, #44]
+	stp	w8, w24, [sp, #52]
+	add	x1, sp, #8                      ; =8
+	mov	w2, #56
+	bl	_halide_msan_annotate_memory_is_initialized
+	add	w8, w20, #7                     ; =7
+	add	w9, w20, #14                    ; =14
+	cmp	w8, #0                          ; =0
+	csel	w8, w9, w8, lt
+	asr	w8, w8, #3
+	mul	w8, w8, w19
+	sxtw	x2, w8
+	mov	x0, x23
+	mov	x1, x22
+	bl	_halide_msan_annotate_memory_is_initialized
+	lsl	x2, x24, #2
+	mov	x0, x23
+	mov	x1, x21
+	bl	_halide_msan_annotate_memory_is_initialized
+	add	x1, sp, #8                      ; =8
+	mov	x0, x23
+	bl	_halide_trace
+	ldp	x29, x30, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #128                    ; =128
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal9ends_withEPKcS3_ ; -- Begin function _ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+	.weak_definition	__ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+	.p2align	2
+__ZN6Halide7Runtime8Internal9ends_withEPKcS3_: ; @_ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w10, #1
+	mov	x8, x0
+LBB93_1:                                ; %while.cond
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x12, x8
+	mov	x9, x10
+	ldrb	w11, [x8], #1
+	sub	x10, x10, #1                    ; =1
+	cbnz	w11, LBB93_1
+; %bb.2:                                ; %while.cond1.preheader
+	mov	w14, #1
+	mov	x10, x1
+LBB93_3:                                ; %while.cond1
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x13, x10
+	mov	x11, x14
+	ldrb	w15, [x10], #1
+	sub	x14, x14, #1                    ; =1
+	cbnz	w15, LBB93_3
+; %bb.4:                                ; %while.cond6.preheader
+	cmp	x12, x0
+	b.eq	LBB93_10
+; %bb.5:                                ; %while.cond6.preheader
+	cmp	x13, x1
+	b.eq	LBB93_10
+; %bb.6:                                ; %if.end.preheader
+	mov	x12, #-2
+LBB93_7:                                ; %if.end
+                                        ; =>This Inner Loop Header: Depth=1
+	cmp	x11, #0                         ; =0
+	cset	w15, eq
+	cmp	x9, #0                          ; =0
+	cset	w16, eq
+	ldrb	w13, [x8, x12]
+	ldrb	w14, [x10, x12]
+	cmp	w13, w14
+	cset	w17, eq
+	orr	w15, w16, w15
+	and	w0, w15, w17
+	tbnz	w15, #0, LBB93_9
+; %bb.8:                                ; %if.end
+                                        ;   in Loop: Header=BB93_7 Depth=1
+	sub	x12, x12, #1                    ; =1
+	add	x9, x9, #1                      ; =1
+	add	x11, x11, #1                    ; =1
+	cmp	w13, w14
+	b.eq	LBB93_7
+LBB93_9:                                ; %cleanup
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB93_10:                               ; %while.cond6.preheader.while.end13_crit_edge
+	mov	w0, #1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.section	__TEXT,__literal8,8byte_literals
+	.p2align	3                               ; -- Begin function halide_debug_to_file
+lCPI94_0:
+	.long	0                               ; 0x0
+	.long	1                               ; 0x1
+lCPI94_1:
+	.long	6                               ; 0x6
+	.long	8                               ; 0x8
+lCPI94_2:
+	.long	1                               ; 0x1
+	.long	5                               ; 0x5
+lCPI94_3:
+	.long	1                               ; 0x1
+	.long	194                             ; 0xc2
+lCPI94_4:
+	.long	1                               ; 0x1
+	.long	202                             ; 0xca
+	.section	__TEXT,__literal16,16byte_literals
+	.p2align	4
+lCPI94_5:
+	.long	0                               ; 0x0
+	.long	1                               ; 0x1
+	.long	1                               ; 0x1
+	.long	1                               ; 0x1
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_halide_debug_to_file
+	.weak_definition	_halide_debug_to_file
+	.p2align	2
+_halide_debug_to_file:                  ; @halide_debug_to_file
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	sub	sp, sp, #1, lsl #12             ; =4096
+	sub	sp, sp, #368                    ; =368
+	mov	x20, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x23, x0
+	ldr	x8, [x3, #16]
+	cbnz	x8, LBB94_2
+; %bb.1:                                ; %_ZNK15halide_buffer_t15is_bounds_queryEv.exit
+	ldr	x8, [x20]
+	cbz	x8, LBB94_11
+LBB94_2:                                ; %if.end
+	ldr	w8, [x20, #36]
+	cmp	w8, #5                          ; =5
+	b.lt	LBB94_4
+; %bb.3:                                ; %if.then1
+Lloh276:
+	adrp	x1, l_.str.1.35@PAGE
+Lloh277:
+	add	x1, x1, l_.str.1.35@PAGEOFF
+	b	LBB94_12
+LBB94_4:                                ; %if.end2
+	mov	x0, x23
+	mov	x1, x20
+	bl	_halide_copy_to_host
+	mov	x25, x0
+	cbnz	w0, LBB94_13
+; %bb.5:                                ; %if.end6
+Lloh278:
+	adrp	x1, l_.str.2.36@PAGE
+Lloh279:
+	add	x1, x1, l_.str.2.36@PAGEOFF
+	mov	x0, x24
+	bl	_fopen
+	cbz	x0, LBB94_14
+; %bb.6:                                ; %if.end9
+	mov	x28, x0
+	movi.2d	v0, #0000000000000000
+	stp	q0, q0, [x29, #-160]
+	stp	q0, q0, [x29, #-128]
+	ldr	w9, [x20, #36]
+	sxtw	x8, w9
+	cmp	w9, #1                          ; =1
+	b.lt	LBB94_15
+; %bb.7:                                ; %for.body.lr.ph
+	ldr	x10, [x20, #40]
+	sub	x11, x9, #1                     ; =1
+	cmp	x11, #3                         ; =3
+	mov	w11, #4
+	csel	x11, x9, x11, lo
+	sub	x12, x29, #160                  ; =160
+	orr	x12, x12, #0x4
+	mov	w19, #1
+LBB94_8:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	q0, [x10], #16
+	stur	q0, [x12, #-4]
+	ldr	w13, [x12], #16
+	mul	x19, x19, x13
+	subs	x11, x11, #1                    ; =1
+	b.ne	LBB94_8
+; %bb.9:                                ; %for.cond19.preheader
+	cmp	w8, #3                          ; =3
+	b.gt	LBB94_21
+; %bb.10:                               ; %for.body22.preheader
+	mov	w11, #3
+	adrp	x10, lCPI94_0@PAGE
+	subs	w9, w11, w9
+	b.ne	LBB94_16
+	b	LBB94_19
+LBB94_11:                               ; %if.then
+Lloh280:
+	adrp	x1, l_.str.34@PAGE
+Lloh281:
+	add	x1, x1, l_.str.34@PAGEOFF
+LBB94_12:                               ; %return
+	mov	x0, x23
+	bl	_halide_error
+	mov	w25, #-1
+LBB94_13:                               ; %return
+	mov	x0, x25
+	add	sp, sp, #1, lsl #12             ; =4096
+	add	sp, sp, #368                    ; =368
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+LBB94_14:
+	mov	w25, #-2
+	b	LBB94_13
+LBB94_15:
+	mov	w19, #1
+	mov	w11, #3
+	adrp	x10, lCPI94_0@PAGE
+	subs	w9, w11, w9
+	b.eq	LBB94_19
+LBB94_16:                               ; %vector.ph
+	add	x9, x9, #1                      ; =1
+	and	x11, x9, #0x1fffffffe
+	add	x12, x11, x8
+	sub	x13, x29, #160                  ; =160
+	add	x8, x13, x8, lsl #4
+	add	x8, x8, #16                     ; =16
+	ldr	d0, [x10, lCPI94_0@PAGEOFF]
+	mov	x13, x11
+LBB94_17:                               ; %vector.body
+                                        ; =>This Inner Loop Header: Depth=1
+	stur	d0, [x8, #-16]
+	str	d0, [x8]
+	stur	wzr, [x8, #-8]
+	str	wzr, [x8, #8]
+	add	x8, x8, #32                     ; =32
+	subs	x13, x13, #2                    ; =2
+	b.ne	LBB94_17
+; %bb.18:                               ; %middle.block
+	mov	x8, x12
+	cmp	x9, x11
+	b.eq	LBB94_21
+LBB94_19:                               ; %for.body22.preheader3
+	sub	w9, w8, #4                      ; =4
+	sub	x11, x29, #160                  ; =160
+	add	x8, x11, x8, lsl #4
+	orr	x8, x8, #0x8
+	ldr	d0, [x10, lCPI94_0@PAGEOFF]
+LBB94_20:                               ; %for.body22
+                                        ; =>This Inner Loop Header: Depth=1
+	stur	d0, [x8, #-8]
+	str	wzr, [x8], #16
+	adds	w9, w9, #1                      ; =1
+	b.lo	LBB94_20
+LBB94_21:                               ; %for.cond.cleanup21
+	ldrb	w8, [x20, #33]
+	add	x25, x8, #7                     ; =7
+	lsr	x8, x25, #3
+	str	x8, [sp, #72]                   ; 8-byte Folded Spill
+Lloh282:
+	adrp	x1, l_.str.3.37@PAGE
+Lloh283:
+	add	x1, x1, l_.str.3.37@PAGEOFF
+	mov	x0, x24
+	bl	__ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+	tbnz	w0, #0, LBB94_23
+; %bb.22:                               ; %lor.lhs.false
+Lloh284:
+	adrp	x1, l_.str.4.38@PAGE
+Lloh285:
+	add	x1, x1, l_.str.4.38@PAGEOFF
+	mov	x0, x24
+	bl	__ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+	cbz	w0, LBB94_32
+LBB94_23:                               ; %if.then36
+	add	x8, sp, #80                     ; =80
+	ldur	w10, [x29, #-156]
+	ldur	w11, [x29, #-140]
+	ldur	w9, [x29, #-108]
+	ldur	w12, [x29, #-124]
+	cmp	w9, #2                          ; =2
+	cset	w13, lo
+	cmp	w12, #5                         ; =5
+	cset	w14, lt
+	tst	w13, w14
+	csinc	w24, w12, wzr, eq
+	csel	w23, w12, w9, ne
+	mov	x9, #18761
+	movk	x9, #42, lsl #16
+	movk	x9, #8, lsl #32
+	str	x9, [sp, #80]
+	mov	w9, #15
+	movk	w9, #256, lsl #16
+	str	w9, [sp, #88]
+	mov	w9, #4
+	strh	w9, [sp, #92]
+	mov	w9, #1
+	stur	w9, [sp, #94]
+	stur	w10, [sp, #98]
+	mov	x10, #257
+	movk	x10, #4, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [sp, #102]
+	stur	w11, [sp, #110]
+	and	w10, w25, #0x1f8
+	mov	x12, #258
+	movk	x12, #3, lsl #16
+	movk	x12, #1, lsl #32
+	stur	x12, [sp, #114]
+	strh	w10, [sp, #122]
+	mov	x10, #259
+	movk	x10, #3, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [sp, #126]
+	strh	w9, [sp, #134]
+	cmp	w23, #2                         ; =2
+	cinc	w10, w9, gt
+	mov	x12, #262
+	movk	x12, #3, lsl #16
+	movk	x12, #1, lsl #32
+	stur	x12, [sp, #138]
+	strh	w10, [sp, #146]
+	mov	w10, #273
+	movk	w10, #4, lsl #16
+	stur	w10, [sp, #150]
+	stur	w23, [sp, #154]
+	mov	x10, #210
+	movk	x10, #277, lsl #32
+	movk	x10, #3, lsl #48
+	stur	x10, [sp, #158]
+	stur	w9, [sp, #166]
+	strh	w23, [sp, #170]
+	mov	x10, #278
+	movk	x10, #4, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [sp, #174]
+	stur	w11, [sp, #182]
+	ldr	x10, [sp, #72]                  ; 8-byte Folded Reload
+	mul	w10, w10, w19
+	lsl	w11, w23, #2
+	add	w11, w11, #210                  ; =210
+	cmp	w23, #1                         ; =1
+	csel	w10, w10, w11, eq
+	mov	w11, #279
+	movk	w11, #4, lsl #16
+	stur	w11, [sp, #186]
+	stur	w23, [sp, #190]
+	stur	w10, [sp, #194]
+	mov	w10, #282
+	movk	w10, #5, lsl #16
+	stur	w10, [sp, #198]
+Lloh286:
+	adrp	x10, lCPI94_3@PAGE
+Lloh287:
+	ldr	d0, [x10, lCPI94_3@PAGEOFF]
+	stur	d0, [sp, #202]
+	mov	w10, #283
+	movk	w10, #5, lsl #16
+	stur	w10, [x8, #130]
+Lloh288:
+	adrp	x10, lCPI94_4@PAGE
+Lloh289:
+	ldr	d0, [x10, lCPI94_4@PAGEOFF]
+	stur	d0, [x8, #134]
+	mov	x10, #284
+	movk	x10, #3, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [x8, #142]
+	mov	w10, #2
+	strh	w10, [sp, #230]
+	mov	x10, #296
+	movk	x10, #3, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [x8, #154]
+	strh	w9, [sp, #242]
+Lloh290:
+	adrp	x10, __ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE@GOTPAGE
+Lloh291:
+	ldr	x10, [x10, __ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE@GOTPAGEOFF]
+	ldrh	w10, [x10, w22, sxtw #1]
+	mov	x11, #339
+	movk	x11, #3, lsl #16
+	movk	x11, #1, lsl #32
+	stur	x11, [x8, #166]
+	strh	w10, [sp, #254]
+	mov	x10, #32997
+	movk	x10, #4, lsl #16
+	movk	x10, #1, lsl #32
+	stur	x10, [x8, #178]
+	stur	w24, [x8, #186]
+Lloh292:
+	adrp	x10, lCPI94_5@PAGE
+Lloh293:
+	ldr	q0, [x10, lCPI94_5@PAGEOFF]
+	stur	q0, [x8, #190]
+	stur	w9, [x8, #206]
+	add	x0, sp, #80                     ; =80
+	mov	w1, #210
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_31
+; %bb.24:                               ; %if.end103
+	cmp	w23, #2                         ; =2
+	b.lt	LBB94_40
+; %bb.25:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit731.lr.ph
+	lsl	w8, w23, #3
+	add	w8, w8, #210                    ; =210
+	str	w8, [sp, #4240]
+	ldr	x8, [sp, #72]                   ; 8-byte Folded Reload
+	mul	w8, w24, w8
+	ldur	w9, [x29, #-156]
+	ldur	w10, [x29, #-140]
+	mul	w8, w8, w9
+	mul	w19, w8, w10
+	mov	x22, x23
+LBB94_26:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit731
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #144                    ; =144
+	mov	w1, #4
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_75
+; %bb.27:                               ; %if.end118
+                                        ;   in Loop: Header=BB94_26 Depth=1
+	ldr	w8, [sp, #4240]
+	add	w8, w19, w8
+	str	w8, [sp, #4240]
+	subs	w22, w22, #1                    ; =1
+	b.ne	LBB94_26
+; %bb.28:                               ; %for.end129
+	str	w19, [sp, #4208]
+LBB94_29:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit720
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #112                    ; =112
+	mov	w1, #4
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_88
+; %bb.30:                               ; %for.cond138
+                                        ;   in Loop: Header=BB94_29 Depth=1
+	subs	w23, w23, #1                    ; =1
+	b.ne	LBB94_29
+	b	LBB94_40
+LBB94_31:
+	mov	w25, #-3
+	b	LBB94_135
+LBB94_32:                               ; %if.else164
+Lloh294:
+	adrp	x1, l_.str.5.39@PAGE
+Lloh295:
+	add	x1, x1, l_.str.5.39@PAGEOFF
+	mov	x0, x24
+	bl	__ZN6Halide7Runtime8Internal9ends_withEPKcS3_
+	cbz	w0, LBB94_39
+; %bb.33:                               ; %while.cond.preheader
+	mov	x8, #0
+	add	x26, sp, #1, lsl #12            ; =4096
+	add	x26, x26, #112                  ; =112
+LBB94_34:                               ; %while.cond
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrb	w9, [x24, x8]
+	add	x8, x8, #1                      ; =1
+	cbnz	w9, LBB94_34
+LBB94_35:                               ; %while.body171
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x9, x24, x8
+	ldurb	w9, [x9, #-2]
+	sub	x8, x8, #1                      ; =1
+	cmp	w9, #46                         ; =46
+	b.ne	LBB94_35
+; %bb.36:                               ; %while.cond174.preheader
+	mov	x25, #0
+	neg	x9, x8
+	mov	w10, #1
+	sub	x10, x10, x8
+LBB94_37:                               ; %while.cond174
+                                        ; =>This Inner Loop Header: Depth=1
+	cbz	x10, LBB94_76
+; %bb.38:                               ; %land.rhs176
+                                        ;   in Loop: Header=BB94_37 Depth=1
+	add	x11, x24, x25
+	add	x11, x11, x8
+	ldurb	w11, [x11, #-2]
+	sub	x25, x25, #1                    ; =1
+	add	x10, x10, #1                    ; =1
+	cmp	w11, #47                        ; =47
+	b.ne	LBB94_37
+	b	LBB94_77
+LBB94_39:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit631
+	ldur	w8, [x29, #-156]
+	ldur	w9, [x29, #-140]
+	stp	w8, w9, [sp, #80]
+	ldur	w8, [x29, #-124]
+	ldur	w9, [x29, #-108]
+	stp	w8, w9, [sp, #88]
+	str	w22, [sp, #96]
+	add	x0, sp, #80                     ; =80
+	mov	w1, #20
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_89
+LBB94_40:                               ; %cleanup154.thread
+	mov	w21, #0
+LBB94_41:                               ; %if.end311
+	ldur	w8, [x29, #-108]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB94_71
+; %bb.42:                               ; %for.body322.lr.ph
+	mov	w22, #0
+	mov	w9, #4096
+	ldr	x10, [sp, #72]                  ; 8-byte Folded Reload
+	udiv	w23, w9, w10
+	mul	w9, w23, w10
+	str	x9, [sp, #64]                   ; 8-byte Folded Spill
+	ldp	w10, w11, [x29, #-128]
+	ldp	w13, w9, [x29, #-144]
+	str	w9, [sp, #60]                   ; 4-byte Folded Spill
+	ldp	w12, w9, [x29, #-160]
+	stp	w9, w13, [sp, #40]              ; 8-byte Folded Spill
+	stp	w10, w12, [sp, #32]             ; 8-byte Folded Spill
+	add	w26, w12, w9
+	add	x9, sp, #1, lsl #12             ; =4096
+	add	x9, x9, #144                    ; =144
+	ldp	w27, w12, [x29, #-112]
+	str	w12, [sp, #12]                  ; 4-byte Folded Spill
+	add	x9, x9, #16                     ; =16
+	str	x9, [sp, #48]                   ; 8-byte Folded Spill
+	add	x25, sp, #80                    ; =80
+	stp	w27, w11, [sp, #24]             ; 8-byte Folded Spill
+	str	x21, [sp, #16]                  ; 8-byte Folded Spill
+LBB94_43:                               ; %for.body322
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB94_45 Depth 2
+                                        ;       Child Loop BB94_49 Depth 3
+                                        ;         Child Loop BB94_53 Depth 4
+                                        ;           Child Loop BB94_60 Depth 5
+                                        ;           Child Loop BB94_63 Depth 5
+	cmp	w11, #1                         ; =1
+	b.lt	LBB94_68
+; %bb.44:                               ; %for.body333.preheader
+                                        ;   in Loop: Header=BB94_43 Depth=1
+	mov	x21, x28
+	mov	x28, x10
+LBB94_45:                               ; %for.body333
+                                        ;   Parent Loop BB94_43 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB94_49 Depth 3
+                                        ;         Child Loop BB94_53 Depth 4
+                                        ;           Child Loop BB94_60 Depth 5
+                                        ;           Child Loop BB94_63 Depth 5
+	ldr	w8, [sp, #60]                   ; 4-byte Folded Reload
+	cmp	w8, #1                          ; =1
+	b.lt	LBB94_66
+; %bb.46:                               ; %for.body344.preheader
+                                        ;   in Loop: Header=BB94_45 Depth=2
+	ldr	w24, [sp, #44]                  ; 4-byte Folded Reload
+	mov	x8, x22
+	b	LBB94_49
+LBB94_47:                               ;   in Loop: Header=BB94_49 Depth=3
+	mov	x22, x8
+LBB94_48:                               ; %for.inc389
+                                        ;   in Loop: Header=BB94_49 Depth=3
+	add	w24, w24, #1                    ; =1
+	ldr	w8, [sp, #44]                   ; 4-byte Folded Reload
+	ldr	w9, [sp, #60]                   ; 4-byte Folded Reload
+	add	w9, w8, w9
+	mov	x8, x22
+	cmp	w24, w9
+	b.ge	LBB94_66
+LBB94_49:                               ; %for.body344
+                                        ;   Parent Loop BB94_43 Depth=1
+                                        ;     Parent Loop BB94_45 Depth=2
+                                        ; =>    This Loop Header: Depth=3
+                                        ;         Child Loop BB94_53 Depth 4
+                                        ;           Child Loop BB94_60 Depth 5
+                                        ;           Child Loop BB94_63 Depth 5
+	ldr	w9, [sp, #40]                   ; 4-byte Folded Reload
+	cmp	w9, #1                          ; =1
+	b.lt	LBB94_47
+; %bb.50:                               ; %for.body355.preheader
+                                        ;   in Loop: Header=BB94_49 Depth=3
+	ldr	w19, [sp, #36]                  ; 4-byte Folded Reload
+	b	LBB94_53
+LBB94_51:                               ;   in Loop: Header=BB94_53 Depth=4
+	mov	w22, #0
+LBB94_52:                               ; %for.inc384
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	add	w19, w19, #1                    ; =1
+	mov	x8, x22
+	cmp	w19, w26
+	b.ge	LBB94_48
+LBB94_53:                               ; %for.body355
+                                        ;   Parent Loop BB94_43 Depth=1
+                                        ;     Parent Loop BB94_45 Depth=2
+                                        ;       Parent Loop BB94_49 Depth=3
+                                        ; =>      This Loop Header: Depth=4
+                                        ;           Child Loop BB94_60 Depth 5
+                                        ;           Child Loop BB94_63 Depth 5
+	str	w19, [sp, #4240]
+	str	w24, [sp, #4244]
+	str	w28, [sp, #4248]
+	str	w27, [sp, #4252]
+	ldr	w9, [x20, #36]
+	cmp	w9, #1                          ; =1
+	b.lt	LBB94_58
+; %bb.54:                               ; %for.body.lr.ph.i
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	ldr	x10, [x20, #40]
+	ldrsw	x11, [x10, #8]
+	ldrsw	x12, [x10]
+	sxtw	x13, w19
+	sub	x12, x13, x12
+	mul	x11, x12, x11
+	cmp	w9, #1                          ; =1
+	b.eq	LBB94_64
+; %bb.55:                               ; %for.body.i.for.body.i_crit_edge.preheader
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	ldrsw	x12, [x10, #24]
+	ldrsw	x13, [x10, #16]
+	sxtw	x14, w24
+	sub	x13, x14, x13
+	madd	x11, x13, x12, x11
+	cmp	w9, #2                          ; =2
+	b.eq	LBB94_64
+; %bb.56:                               ; %for.body.i.for.body.i_crit_edge.for.body.i.for.body.i_crit_edge_crit_edge.lr.ph
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	sub	x12, x9, #2                     ; =2
+	cmp	x12, #5                         ; =5
+	b.hs	LBB94_59
+; %bb.57:                               ;   in Loop: Header=BB94_53 Depth=4
+	mov	w12, #2
+	b	LBB94_62
+LBB94_58:                               ;   in Loop: Header=BB94_53 Depth=4
+	mov	x11, #0
+	b	LBB94_64
+LBB94_59:                               ; %vector.ph132
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	and	x13, x12, #0x3
+	tst	x12, #0x3
+	mov	w14, #4
+	csel	x13, x14, x13, eq
+	sub	x12, x12, x13
+	add	x12, x12, #2                    ; =2
+	movi.2d	v0, #0000000000000000
+	movi.2d	v1, #0000000000000000
+	mov.d	v1[0], x11
+	sub	x11, x9, x13
+	sub	x11, x11, #2                    ; =2
+	add	x13, x10, #64                   ; =64
+	ldr	x14, [sp, #48]                  ; 8-byte Folded Reload
+LBB94_60:                               ; %vector.body130
+                                        ;   Parent Loop BB94_43 Depth=1
+                                        ;     Parent Loop BB94_45 Depth=2
+                                        ;       Parent Loop BB94_49 Depth=3
+                                        ;         Parent Loop BB94_53 Depth=4
+                                        ; =>        This Inner Loop Header: Depth=5
+	sub	x15, x13, #32                   ; =32
+	ld4.2s	{ v2, v3, v4, v5 }, [x15]
+	ld4.2s	{ v16, v17, v18, v19 }, [x13]
+	ldp	d6, d7, [x14, #-8]
+	sub.2s	v6, v6, v2
+	sub.2s	v7, v7, v16
+	smlal.2d	v1, v6, v4
+	smlal.2d	v0, v7, v18
+	add	x13, x13, #64                   ; =64
+	add	x14, x14, #16                   ; =16
+	subs	x11, x11, #4                    ; =4
+	b.ne	LBB94_60
+; %bb.61:                               ; %middle.block128
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	add.2d	v0, v0, v1
+	addp.2d	d0, v0
+	fmov	x11, d0
+LBB94_62:                               ; %for.body.i.for.body.i_crit_edge.for.body.i.for.body.i_crit_edge_crit_edge.preheader
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	sub	x9, x9, x12
+	add	x10, x10, x12, lsl #4
+	add	x10, x10, #8                    ; =8
+	add	x13, sp, #1, lsl #12            ; =4096
+	add	x13, x13, #144                  ; =144
+	add	x12, x13, x12, lsl #2
+LBB94_63:                               ; %for.body.i.for.body.i_crit_edge.for.body.i.for.body.i_crit_edge_crit_edge
+                                        ;   Parent Loop BB94_43 Depth=1
+                                        ;     Parent Loop BB94_45 Depth=2
+                                        ;       Parent Loop BB94_49 Depth=3
+                                        ;         Parent Loop BB94_53 Depth=4
+                                        ; =>        This Inner Loop Header: Depth=5
+	ldrsw	x13, [x12], #4
+	ldrsw	x14, [x10]
+	ldursw	x15, [x10, #-8]
+	sub	x13, x13, x15
+	madd	x11, x13, x14, x11
+	add	x10, x10, #16                   ; =16
+	subs	x9, x9, #1                      ; =1
+	b.ne	LBB94_63
+LBB94_64:                               ; %_ZNK15halide_buffer_t10address_ofEPKi.exit
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	add	w22, w8, #1                     ; =1
+	ldr	x9, [x20, #16]
+	ldrb	w10, [x20, #33]
+	add	x10, x10, #7                    ; =7
+	lsr	x10, x10, #3
+	madd	x1, x10, x11, x9
+	ldr	x2, [sp, #72]                   ; 8-byte Folded Reload
+	mul	w8, w8, w2
+	add	x0, x25, w8, sxtw
+	bl	_memcpy
+	cmp	w22, w23
+	b.ne	LBB94_52
+; %bb.65:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit619
+                                        ;   in Loop: Header=BB94_53 Depth=4
+	add	x0, sp, #80                     ; =80
+	ldr	x1, [sp, #64]                   ; 8-byte Folded Reload
+	mov	w2, #1
+	mov	x3, x21
+	bl	_fwrite
+	cbnz	x0, LBB94_51
+	b	LBB94_74
+LBB94_66:                               ; %for.inc394
+                                        ;   in Loop: Header=BB94_45 Depth=2
+	add	w28, w28, #1                    ; =1
+	ldp	w11, w10, [sp, #28]             ; 8-byte Folded Reload
+	add	w8, w11, w10
+	cmp	w28, w8
+	b.lt	LBB94_45
+; %bb.67:                               ;   in Loop: Header=BB94_43 Depth=1
+	ldr	w8, [sp, #12]                   ; 4-byte Folded Reload
+	mov	x28, x21
+	ldr	x21, [sp, #16]                  ; 8-byte Folded Reload
+LBB94_68:                               ; %for.inc399
+                                        ;   in Loop: Header=BB94_43 Depth=1
+	add	w27, w27, #1                    ; =1
+	ldr	w9, [sp, #24]                   ; 4-byte Folded Reload
+	add	w9, w8, w9
+	cmp	w27, w9
+	b.lt	LBB94_43
+; %bb.69:                               ; %for.end403
+	cmp	w22, #1                         ; =1
+	b.lt	LBB94_71
+; %bb.70:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit612
+	ldr	x8, [sp, #72]                   ; 8-byte Folded Reload
+	mul	w8, w22, w8
+	sxtw	x1, w8
+	add	x0, sp, #80                     ; =80
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_144
+LBB94_71:                               ; %if.end412
+	str	xzr, [sp, #4240]
+	cbz	w21, LBB94_73
+; %bb.72:                               ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit
+	mov	w1, w21
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #144                    ; =144
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_92
+LBB94_73:                               ; %if.end423
+	mov	w25, #0
+	b	LBB94_135
+LBB94_74:                               ; %cleanup425.loopexit
+	mov	w25, #-13
+	mov	x28, x21
+	b	LBB94_135
+LBB94_75:
+	mov	w25, #-4
+	b	LBB94_135
+LBB94_76:
+	mov	x25, x9
+LBB94_77:                               ; %while.end183
+	add	x10, sp, #80                    ; =80
+	add	x9, sp, #80                     ; =80
+	cmn	x25, #1                         ; =1
+	b.eq	LBB94_86
+; %bb.78:                               ; %while.body187.preheader
+	mov	x11, x25
+	cmn	x25, #32                        ; =32
+	b.hs	LBB94_84
+; %bb.79:                               ; %vector.memcheck
+	mvn	x12, x25
+	add	x11, x24, x25
+	add	x14, x11, x8
+	add	x11, x24, x8
+	sub	x11, x11, #1                    ; =1
+	cmp	x9, x11
+	b.hs	LBB94_81
+; %bb.80:                               ; %vector.memcheck
+	add	x13, x9, x12
+	mov	x11, x25
+	cmp	x14, x13
+	b.lo	LBB94_84
+LBB94_81:                               ; %vector.ph42
+	and	x13, x12, #0xffffffffffffffe0
+	add	x15, sp, #80                    ; =80
+	add	x9, x15, x13
+	add	x11, x25, x13
+	add	x14, x14, #16                   ; =16
+	add	x15, x15, #16                   ; =16
+	mov	x16, x13
+LBB94_82:                               ; %vector.body39
+                                        ; =>This Inner Loop Header: Depth=1
+	ldp	q0, q1, [x14, #-16]
+	stp	q0, q1, [x15, #-16]
+	add	x14, x14, #32                   ; =32
+	add	x15, x15, #32                   ; =32
+	subs	x16, x16, #32                   ; =32
+	b.ne	LBB94_82
+; %bb.83:                               ; %middle.block37
+	cmp	x13, x12
+	b.eq	LBB94_85
+LBB94_84:                               ; %while.body187
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x12, x24, x11
+	add	x11, x11, #1                    ; =1
+	ldrb	w12, [x12, x8]
+	strb	w12, [x9], #1
+	cmn	x11, #1                         ; =1
+	b.ne	LBB94_84
+LBB94_85:                               ; %while.cond191.preheader
+	add	x8, sp, #80                     ; =80
+	add	x8, x8, #256                    ; =256
+	cmp	x9, x8
+	b.hs	LBB94_103
+LBB94_86:                               ; %iter.check
+	sub	x8, x10, x9
+	add	x8, x8, #256                    ; =256
+	cmp	x8, #3                          ; =3
+	b.hi	LBB94_90
+; %bb.87:
+	mov	x8, x9
+	b	LBB94_101
+LBB94_88:                               ; %select.unfold
+	mov	w25, #-5
+	b	LBB94_135
+LBB94_89:
+	mov	w25, #-12
+	b	LBB94_135
+LBB94_90:                               ; %vector.main.loop.iter.check
+	cmp	x8, #32                         ; =32
+	b.hs	LBB94_93
+; %bb.91:
+	mov	x10, #0
+	b	LBB94_97
+LBB94_92:
+	mov	w25, #-16
+	b	LBB94_135
+LBB94_93:                               ; %vector.ph68
+	and	x10, x8, #0xffffffffffffffe0
+	add	x11, x9, #16                    ; =16
+	movi.2d	v0, #0000000000000000
+	mov	x12, x10
+LBB94_94:                               ; %vector.body61
+                                        ; =>This Inner Loop Header: Depth=1
+	stp	q0, q0, [x11, #-16]
+	add	x11, x11, #32                   ; =32
+	subs	x12, x12, #32                   ; =32
+	b.ne	LBB94_94
+; %bb.95:                               ; %middle.block59
+	cmp	x10, x8
+	b.eq	LBB94_103
+; %bb.96:                               ; %vec.epilog.iter.check
+	tst	x8, #0x1c
+	b.eq	LBB94_100
+LBB94_97:                               ; %vec.epilog.ph
+	add	x8, sp, #80                     ; =80
+	sub	x8, x8, x9
+	add	x11, x8, #256                   ; =256
+	and	x12, x11, #0xfffffffffffffffc
+	add	x8, x9, x12
+	sub	x13, x10, x12
+	add	x9, x9, x10
+LBB94_98:                               ; %vec.epilog.vector.body
+                                        ; =>This Inner Loop Header: Depth=1
+	str	wzr, [x9], #4
+	adds	x13, x13, #4                    ; =4
+	b.ne	LBB94_98
+; %bb.99:                               ; %vec.epilog.middle.block
+	cmp	x12, x11
+	b.ne	LBB94_101
+	b	LBB94_103
+LBB94_100:
+	add	x8, x9, x10
+LBB94_101:                              ; %while.body194.preheader
+	add	x9, sp, #80                     ; =80
+	add	x9, x9, #256                    ; =256
+LBB94_102:                              ; %while.body194
+                                        ; =>This Inner Loop Header: Depth=1
+	strb	wzr, [x8], #1
+	cmp	x9, x8
+	b.ne	LBB94_102
+LBB94_103:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit705
+	strb	wzr, [x26, #160]
+Lloh296:
+	adrp	x8, l___const.halide_debug_to_file.header@PAGE
+Lloh297:
+	add	x8, x8, l___const.halide_debug_to_file.header@PAGEOFF
+	ldp	q0, q1, [x8, #64]
+	str	q0, [sp, #4304]
+	str	q1, [sp, #4320]
+	ldp	q0, q1, [x8, #96]
+	str	q0, [sp, #4336]
+	str	q1, [sp, #4352]
+	ldp	q0, q1, [x8]
+	str	q0, [sp, #4240]
+	str	q1, [sp, #4256]
+	ldp	q0, q1, [x8, #32]
+	str	q0, [sp, #4272]
+	str	q1, [sp, #4288]
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #144                    ; =144
+	mov	w1, #128
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	ldr	w8, [x20, #36]
+	cmp	w8, #0                          ; =0
+	b.le	LBB94_106
+; %bb.104:                              ; %for.body.lr.ph.i.i
+	ldr	x9, [x20, #40]
+	cmp	w8, #3                          ; =3
+	b.hs	LBB94_107
+; %bb.105:
+	mov	x11, #0
+	mov	x10, #0
+	b	LBB94_116
+LBB94_106:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit705._ZNK15halide_buffer_t13size_in_bytesEv.exit_crit_edge
+	mov	w9, #1
+	b	LBB94_128
+LBB94_107:                              ; %vector.ph92
+	mov	x10, #0
+	mov	x12, #0
+	and	x11, x8, #0xfffffffe
+	add	x13, x9, #24                    ; =24
+	mov	x14, x11
+	b	LBB94_109
+LBB94_108:                              ; %pred.load.continue103
+                                        ;   in Loop: Header=BB94_109 Depth=1
+	sub	w17, w17, #1                    ; =1
+	sub	w0, w0, #1                      ; =1
+	sxtw	x17, w17
+	sxtw	x0, w0
+	mul	x17, x17, x15
+	mul	x0, x0, x16
+	cmp	w15, #0                         ; =0
+	csel	x15, x17, xzr, gt
+	add	x10, x10, x15
+	cmp	w16, #0                         ; =0
+	csel	x15, x0, xzr, gt
+	add	x12, x12, x15
+	add	x13, x13, #32                   ; =32
+	subs	x14, x14, #2                    ; =2
+	b.eq	LBB94_113
+LBB94_109:                              ; %vector.body90
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w15, [x13, #-16]
+                                        ; implicit-def: $w17
+	cmp	w15, #1                         ; =1
+	b.lt	LBB94_111
+; %bb.110:                              ; %pred.load.if
+                                        ;   in Loop: Header=BB94_109 Depth=1
+	ldur	w17, [x13, #-20]
+LBB94_111:                              ; %pred.load.continue
+                                        ;   in Loop: Header=BB94_109 Depth=1
+	ldr	w16, [x13]
+                                        ; implicit-def: $w0
+	cmp	w16, #1                         ; =1
+	b.lt	LBB94_108
+; %bb.112:                              ; %pred.load.if102
+                                        ;   in Loop: Header=BB94_109 Depth=1
+	ldur	w0, [x13, #-4]
+	b	LBB94_108
+LBB94_113:                              ; %middle.block88
+	add	x10, x12, x10
+	cmp	x11, x8
+	b.ne	LBB94_116
+LBB94_114:                              ; %for.body.i13.i.preheader
+	cmp	w8, #3                          ; =3
+	b.hs	LBB94_120
+; %bb.115:
+	mov	x11, #0
+	mov	x12, #0
+	b	LBB94_136
+LBB94_116:                              ; %for.body.i.i.preheader
+	sub	x12, x8, x11
+	add	x11, x9, x11, lsl #4
+	add	x11, x11, #8                    ; =8
+	b	LBB94_118
+LBB94_117:                              ; %if.end.i.i
+                                        ;   in Loop: Header=BB94_118 Depth=1
+	add	x11, x11, #16                   ; =16
+	subs	x12, x12, #1                    ; =1
+	b.eq	LBB94_114
+LBB94_118:                              ; %for.body.i.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w13, [x11]
+	cmp	w13, #1                         ; =1
+	b.lt	LBB94_117
+; %bb.119:                              ; %if.then.i.i
+                                        ;   in Loop: Header=BB94_118 Depth=1
+	ldursw	x14, [x11, #-4]
+	sub	x14, x14, #1                    ; =1
+	madd	x10, x14, x13, x10
+	b	LBB94_117
+LBB94_120:                              ; %vector.ph109
+	mov	x12, #0
+	mov	x13, #0
+	and	x11, x8, #0xfffffffe
+	add	x14, x9, #24                    ; =24
+	mov	x15, x11
+	b	LBB94_122
+LBB94_121:                              ; %pred.load.continue123
+                                        ;   in Loop: Header=BB94_122 Depth=1
+	sub	w0, w0, #1                      ; =1
+	sub	w1, w1, #1                      ; =1
+	sxtw	x0, w0
+	sxtw	x1, w1
+	mul	x0, x0, x16
+	mul	x1, x1, x17
+	cmp	w16, #0                         ; =0
+	csel	x16, x0, xzr, lt
+	add	x12, x12, x16
+	cmp	w17, #0                         ; =0
+	csel	x16, x1, xzr, lt
+	add	x13, x13, x16
+	add	x14, x14, #32                   ; =32
+	subs	x15, x15, #2                    ; =2
+	b.eq	LBB94_126
+LBB94_122:                              ; %vector.body107
+                                        ; =>This Inner Loop Header: Depth=1
+	ldursw	x16, [x14, #-16]
+                                        ; implicit-def: $w0
+	tbz	w16, #31, LBB94_124
+; %bb.123:                              ; %pred.load.if120
+                                        ;   in Loop: Header=BB94_122 Depth=1
+	ldur	w0, [x14, #-20]
+LBB94_124:                              ; %pred.load.continue121
+                                        ;   in Loop: Header=BB94_122 Depth=1
+	ldrsw	x17, [x14]
+                                        ; implicit-def: $w1
+	tbz	w17, #31, LBB94_121
+; %bb.125:                              ; %pred.load.if122
+                                        ;   in Loop: Header=BB94_122 Depth=1
+	ldur	w1, [x14, #-4]
+	b	LBB94_121
+LBB94_126:                              ; %middle.block105
+	add	x12, x13, x12
+	cmp	x11, x8
+	b.ne	LBB94_136
+LBB94_127:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit.loopexit
+	add	x9, x10, #1                     ; =1
+	sub	x9, x9, x12
+LBB94_128:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit
+	ldrb	w10, [x20, #33]
+	add	x10, x10, #7                    ; =7
+	lsr	x10, x10, #3
+	mul	x19, x10, x9
+	neg	w9, w19
+	and	w21, w9, #0x7
+	add	x9, x19, x21
+	lsr	x9, x9, #32
+	cbnz	x9, LBB94_134
+; %bb.129:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit687
+	mov	w9, #6
+	sub	w9, w9, w25
+	and	w23, w9, #0xfffffff8
+	cmp	w8, #2                          ; =2
+	mov	w9, #2
+	csel	w8, w8, w9, gt
+	mov	w9, #14
+	lsl	w8, w8, #2
+	add	w10, w8, #4                     ; =4
+	and	w27, w10, #0xfffffff8
+	add	w10, w23, w27
+	add	w10, w10, w19
+	add	w10, w10, w21
+	add	w10, w10, #40                   ; =40
+	str	w9, [sp, #4208]
+	str	w10, [sp, #4212]
+Lloh298:
+	adrp	x9, lCPI94_1@PAGE
+Lloh299:
+	ldr	d0, [x9, lCPI94_1@PAGEOFF]
+	sxtw	x22, w22
+Lloh300:
+	adrp	x9, __ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE@GOTPAGE
+Lloh301:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE@GOTPAGEOFF]
+	ldrb	w9, [x9, x22]
+	str	d0, [sp, #4216]
+	str	w9, [sp, #4224]
+Lloh302:
+	adrp	x9, lCPI94_2@PAGE
+Lloh303:
+	ldr	d0, [x9, lCPI94_2@PAGEOFF]
+	stur	d0, [x26, #20]
+	str	w8, [sp, #4236]
+	mov	w24, #1
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #112                    ; =112
+	mov	w1, #32
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_140
+; %bb.130:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit676
+	ldur	w8, [x29, #-156]
+	ldur	w9, [x29, #-140]
+	str	w8, [sp, #4192]
+	str	w9, [sp, #4196]
+	ldur	w8, [x29, #-124]
+	ldur	w9, [x29, #-108]
+	str	w8, [sp, #4200]
+	str	w9, [sp, #4204]
+	sxtw	x1, w27
+	mov	w24, #1
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #96                     ; =96
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_141
+; %bb.131:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit664
+	mvn	w8, w25
+	str	w24, [sp, #4184]
+	str	w8, [sp, #4188]
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #88                     ; =88
+	mov	w1, #8
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_142
+; %bb.132:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit652
+	mov	w1, w23
+	mov	w24, #1
+	add	x0, sp, #80                     ; =80
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cbz	x0, LBB94_143
+; %bb.133:                              ; %_ZN6Halide7Runtime8Internal10ScopedFile5writeEPKvm.exit642
+Lloh304:
+	adrp	x8, __ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE@GOTPAGE
+Lloh305:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE@GOTPAGEOFF]
+	ldrb	w8, [x8, x22]
+	str	w8, [sp, #4176]
+	str	w19, [sp, #4180]
+	add	x0, sp, #1, lsl #12             ; =4096
+	add	x0, x0, #80                     ; =80
+	mov	w1, #8
+	mov	w2, #1
+	mov	x3, x28
+	bl	_fwrite
+	cmp	x0, #0                          ; =0
+	cset	w24, eq
+	mov	w25, #-11
+	cbnz	w24, LBB94_135
+	b	LBB94_41
+LBB94_134:                              ; %cleanup278.thread
+Lloh306:
+	adrp	x1, l_.str.6.40@PAGE
+Lloh307:
+	add	x1, x1, l_.str.6.40@PAGEOFF
+	mov	x0, x23
+	bl	_halide_error
+	mov	w25, #-6
+LBB94_135:                              ; %cleanup433
+	mov	x0, x28
+	bl	_fclose
+	b	LBB94_13
+LBB94_136:                              ; %for.body.i13.i.preheader1
+	sub	x13, x8, x11
+	add	x9, x9, x11, lsl #4
+	add	x9, x9, #8                      ; =8
+	b	LBB94_138
+LBB94_137:                              ; %if.end.i24.i
+                                        ;   in Loop: Header=BB94_138 Depth=1
+	add	x9, x9, #16                     ; =16
+	subs	x13, x13, #1                    ; =1
+	b.eq	LBB94_127
+LBB94_138:                              ; %for.body.i13.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrsw	x11, [x9]
+	tbz	w11, #31, LBB94_137
+; %bb.139:                              ; %if.then.i20.i
+                                        ;   in Loop: Header=BB94_138 Depth=1
+	ldursw	x14, [x9, #-4]
+	sub	x14, x14, #1                    ; =1
+	madd	x12, x14, x11, x12
+	b	LBB94_137
+LBB94_140:
+	mov	w25, #-7
+	cbnz	w24, LBB94_135
+	b	LBB94_41
+LBB94_141:
+	mov	w25, #-8
+                                        ; kill: def $w24 killed $w24 killed $x24 def $x24
+	cbnz	w24, LBB94_135
+	b	LBB94_41
+LBB94_142:
+	mov	w25, #-9
+                                        ; kill: def $w24 killed $w24 killed $x24 def $x24
+	cbnz	w24, LBB94_135
+	b	LBB94_41
+LBB94_143:
+	mov	w25, #-10
+                                        ; kill: def $w24 killed $w24 killed $x24 def $x24
+	cbnz	w24, LBB94_135
+	b	LBB94_41
+LBB94_144:
+	mov	w25, #-14
+	b	LBB94_135
+	.loh AdrpAdd	Lloh276, Lloh277
+	.loh AdrpAdd	Lloh278, Lloh279
+	.loh AdrpAdd	Lloh280, Lloh281
+	.loh AdrpAdd	Lloh282, Lloh283
+	.loh AdrpAdd	Lloh284, Lloh285
+	.loh AdrpLdr	Lloh292, Lloh293
+	.loh AdrpLdrGot	Lloh290, Lloh291
+	.loh AdrpLdr	Lloh288, Lloh289
+	.loh AdrpLdr	Lloh286, Lloh287
+	.loh AdrpAdd	Lloh294, Lloh295
+	.loh AdrpAdd	Lloh296, Lloh297
+	.loh AdrpLdr	Lloh302, Lloh303
+	.loh AdrpLdrGot	Lloh300, Lloh301
+	.loh AdrpAdrp	Lloh298, Lloh300
+	.loh AdrpLdr	Lloh298, Lloh299
+	.loh AdrpLdrGot	Lloh304, Lloh305
+	.loh AdrpAdd	Lloh306, Lloh307
+                                        ; -- End function
+	.globl	_halide_cache_cleanup           ; -- Begin function halide_cache_cleanup
+	.weak_definition	_halide_cache_cleanup
+	.p2align	2
+_halide_cache_cleanup:                  ; @halide_cache_cleanup
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_memoization_cache_cleanup
+                                        ; -- End function
+	.globl	_halide_memoization_cache_cleanup ; -- Begin function halide_memoization_cache_cleanup
+	.weak_definition	_halide_memoization_cache_cleanup
+	.p2align	2
+_halide_memoization_cache_cleanup:      ; @halide_memoization_cache_cleanup
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+Lloh308:
+	adrp	x20, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh309:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+	mov	x21, x20
+	b	LBB96_2
+LBB96_1:                                ; %while.end
+                                        ;   in Loop: Header=BB96_2 Depth=1
+	add	x21, x21, #8                    ; =8
+	add	x8, x20, #2048                  ; =2048
+	cmp	x21, x8
+	b.eq	LBB96_4
+LBB96_2:                                ; %for.body
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB96_3 Depth 2
+	ldr	x19, [x21]
+	str	xzr, [x21]
+	cbz	x19, LBB96_1
+LBB96_3:                                ; %while.body
+                                        ;   Parent Loop BB96_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x22, [x19]
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+	mov	x0, #0
+	mov	x1, x19
+	bl	_halide_free
+	mov	x19, x22
+	cbnz	x22, LBB96_3
+	b	LBB96_1
+LBB96_4:                                ; %for.cond.cleanup
+Lloh310:
+	adrp	x8, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGE
+Lloh311:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGEOFF]
+Lloh312:
+	str	xzr, [x8]
+Lloh313:
+	adrp	x8, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGE
+Lloh314:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGEOFF]
+Lloh315:
+	str	xzr, [x8]
+Lloh316:
+	adrp	x8, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGE
+Lloh317:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGEOFF]
+Lloh318:
+	str	xzr, [x8]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh308, Lloh309
+	.loh AdrpLdrGotStr	Lloh316, Lloh317, Lloh318
+	.loh AdrpLdrGotStr	Lloh313, Lloh314, Lloh315
+	.loh AdrpLdrGotStr	Lloh310, Lloh311, Lloh312
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv ; -- Begin function _ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+	.weak_definition	__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv: ; @_ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x0
+	ldr	w8, [x0, #56]
+	cbz	w8, LBB97_3
+; %bb.1:                                ; %for.body.lr.ph
+	mov	x20, #0
+	mov	w21, #16
+LBB97_2:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x19, #72]
+	add	x8, x8, x21
+	sub	x1, x8, #16                     ; =16
+	mov	x0, #0
+	bl	_halide_device_free
+	ldr	x8, [x19, #72]
+	ldr	x0, [x8, x21]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	mov	x1, x0
+	mov	x0, #0
+	bl	_halide_free
+	add	x20, x20, #1                    ; =1
+	ldr	w8, [x19, #56]
+	add	x21, x21, #56                   ; =56
+	cmp	x20, x8
+	b.lo	LBB97_2
+LBB97_3:                                ; %for.cond.cleanup
+	ldr	x1, [x19, #24]
+	mov	x0, #0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	b	_halide_free
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh ; -- Begin function _ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	.weak_definition	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	.p2align	2
+__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh: ; @_ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	sub	x0, x0, #32                     ; =32
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx ; -- Begin function _ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx
+	.weak_definition	__ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx
+	.p2align	2
+__ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx: ; @_ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x19, x3
+	mov	x20, x2
+                                        ; kill: def $w1 killed $w1 def $x1
+	mov	x21, x0
+	tbnz	w1, #31, LBB99_3
+LBB99_1:                                ; %land.rhs
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x8, x21, w1, uxtw #3
+	ldr	x8, [x8, #24]
+	cmp	x8, #1                          ; =1
+	b.ne	LBB99_3
+; %bb.2:                                ; %while.body
+                                        ;   in Loop: Header=BB99_1 Depth=1
+	sub	w8, w1, #1                      ; =1
+	cmp	w1, #0                          ; =0
+	mov	x1, x8
+	b.gt	LBB99_1
+	b	LBB99_8
+LBB99_3:                                ; %while.end
+	cmn	w1, #1                          ; =1
+	b.eq	LBB99_8
+; %bb.4:                                ; %for.cond.preheader
+	add	x23, x21, w1, sxtw #3
+	ldr	x8, [x23, #24]!
+	cbz	x8, LBB99_7
+; %bb.5:                                ; %for.body.lr.ph
+	mov	x24, #0
+	sxtw	x8, w1
+	sub	w22, w1, #1                     ; =1
+	add	x8, x21, x8, lsl #3
+	add	x25, x8, #152                   ; =152
+	add	x26, x8, #280                   ; =280
+LBB99_6:                                ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	add	x24, x24, #1                    ; =1
+	mov	x0, x21
+	mov	x1, x22
+	mov	x2, x20
+	mov	x3, x19
+	bl	__ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx
+	ldr	x8, [x25]
+	add	x20, x8, x20
+	ldr	x8, [x26]
+	add	x19, x8, x19
+	ldr	x8, [x23]
+	cmp	x24, x8
+	b.lo	LBB99_6
+LBB99_7:                                ; %if.end
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+LBB99_8:                                ; %if.then
+	ldp	x8, x9, [x21]
+	add	x1, x8, x20
+	add	x0, x9, x19
+	ldr	x2, [x21, #408]
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	b	_memcpy
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv ; -- Begin function _ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv
+	.weak_definition	__ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv
+	.p2align	2
+__ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv: ; @_ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x8, x9, [x0]
+	cmp	x8, x9
+	b.ne	LBB100_2
+; %bb.1:                                ; %if.end
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB100_2:                               ; %if.then
+	ldr	x2, [x0, #16]
+	mov	w1, #15
+	mov	x3, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	__ZN6Halide7Runtime8Internal18copy_memory_helperERKNS1_11device_copyEixx
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b ; -- Begin function _ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b
+	.weak_definition	__ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b
+	.p2align	2
+__ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b: ; @_ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b
+; %bb.0:                                ; %entry
+	sub	sp, sp, #448                    ; =448
+	stp	x28, x27, [sp, #416]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #432]            ; 16-byte Folded Spill
+	add	x29, sp, #432                   ; =432
+	mov	x9, sp
+	cbz	w1, LBB101_3
+; %bb.1:                                ; %cond.true
+	ldr	x11, [x0, #16]
+	add	x10, x9, #264                   ; =264
+	str	x11, [sp]
+	cbnz	w3, LBB101_4
+LBB101_2:                               ; %cond.false6
+	ldr	x11, [x2]
+	b	LBB101_5
+LBB101_3:                               ; %cond.false
+	ldr	x11, [x0]
+	add	x10, x9, #264                   ; =264
+	str	x11, [sp]
+	cbz	w3, LBB101_2
+LBB101_4:                               ; %cond.true4
+	ldr	x11, [x2, #16]
+LBB101_5:                               ; %cond.end8
+	str	x11, [sp, #8]
+	ldrb	w11, [x0, #33]
+	add	x11, x11, #7                    ; =7
+	lsr	x11, x11, #3
+	str	x11, [sp, #408]
+	mov	w12, #1
+	dup.2d	v0, x12
+	stur	q0, [sp, #24]
+	movi.2d	v1, #0000000000000000
+	stur	q1, [x9, #152]
+	stp	q1, q1, [x10, #16]
+	stur	q0, [sp, #40]
+	stur	q1, [x9, #168]
+	stur	q0, [sp, #56]
+	stur	q1, [x9, #184]
+	stp	q1, q1, [x10, #48]
+	stur	q0, [sp, #72]
+	stur	q1, [x9, #200]
+	stur	q0, [sp, #88]
+	stur	q1, [x9, #216]
+	stp	q1, q1, [x10, #80]
+	stur	q0, [sp, #104]
+	stur	q1, [x9, #232]
+	stur	q0, [sp, #120]
+	stur	q1, [x9, #248]
+	stp	q1, q1, [x10, #112]
+	stur	q0, [x9, #136]
+	str	q1, [x10]
+	ldr	w12, [x0, #36]
+	cmp	w12, #0                         ; =0
+	b.le	LBB101_8
+; %bb.6:                                ; %for.body19.lr.ph
+	ldr	x14, [x0, #40]
+	ldr	x13, [x2, #40]
+	cmp	w12, #4                         ; =4
+	b.hi	LBB101_9
+; %bb.7:
+	mov	x15, #0
+	mov	x16, #0
+	b	LBB101_12
+LBB101_8:                               ; %cond.end8.for.cond.cleanup18_crit_edge
+	mov	x13, #0
+	str	x13, [sp, #16]
+	ldr	w13, [x2, #36]
+	cmp	w12, w13
+	b.eq	LBB101_15
+	b	LBB101_32
+LBB101_9:                               ; %vector.ph
+	and	x15, x12, #0x3
+	tst	x12, #0x3
+	mov	w16, #4
+	csel	x15, x16, x15, eq
+	sub	x15, x12, x15
+	add	x16, x13, #32                   ; =32
+	add	x17, x14, #32                   ; =32
+	movi.2d	v0, #0000000000000000
+	mov	x1, x15
+	movi.2d	v1, #0000000000000000
+LBB101_10:                              ; %vector.body
+                                        ; =>This Inner Loop Header: Depth=1
+	sub	x3, x17, #32                    ; =32
+	ld4.2s	{ v2, v3, v4, v5 }, [x3]
+	ld4.2s	{ v16, v17, v18, v19 }, [x17]
+	sub	x3, x16, #32                    ; =32
+	ld4.2s	{ v20, v21, v22, v23 }, [x3]
+	ld4.2s	{ v24, v25, v26, v27 }, [x16]
+	sub.2s	v6, v20, v2
+	sub.2s	v7, v24, v16
+	smlal.2d	v0, v6, v4
+	smlal.2d	v1, v7, v18
+	add	x16, x16, #64                   ; =64
+	add	x17, x17, #64                   ; =64
+	subs	x1, x1, #4                      ; =4
+	b.ne	LBB101_10
+; %bb.11:                               ; %middle.block
+	add.2d	v0, v1, v0
+	addp.2d	d0, v0
+	fmov	x16, d0
+LBB101_12:                              ; %for.body19.preheader
+	sub	x17, x12, x15
+	lsl	x15, x15, #4
+	add	x14, x14, x15
+	add	x14, x14, #8                    ; =8
+	add	x13, x13, x15
+LBB101_13:                              ; %for.body19
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrsw	x15, [x14]
+	ldrsw	x1, [x13], #16
+	ldursw	x3, [x14, #-8]
+	sub	x1, x1, x3
+	madd	x16, x1, x15, x16
+	add	x14, x14, #16                   ; =16
+	subs	x17, x17, #1                    ; =1
+	b.ne	LBB101_13
+; %bb.14:                               ; %for.body19.for.cond.cleanup18_crit_edge
+	mul	x13, x16, x11
+	str	x13, [sp, #16]
+	ldr	w13, [x2, #36]
+	cmp	w12, w13
+	b.ne	LBB101_32
+LBB101_15:                              ; %lor.lhs.false
+	cmp	w12, #16                        ; =16
+	b.gt	LBB101_32
+; %bb.16:                               ; %lor.lhs.false
+	ldrb	w13, [x2, #33]
+	add	w13, w13, #7                    ; =7
+	lsr	w13, w13, #3
+	cmp	w11, w13
+	b.ne	LBB101_32
+; %bb.17:                               ; %if.end
+	cbz	w11, LBB101_32
+; %bb.18:                               ; %for.cond54.preheader
+	cmp	w12, #1                         ; =1
+	b.lt	LBB101_37
+; %bb.19:                               ; %for.body58.lr.ph
+	mov	x13, #0
+	ldr	x14, [x2, #40]
+	ldr	x15, [x0, #40]
+	mov	x16, sp
+	add	x17, x16, #280                  ; =280
+	add	x0, x16, #144                   ; =144
+	b	LBB101_21
+LBB101_20:                              ; %for.cond.cleanup94
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	add	x4, x14, x13, lsl #4
+	ldrsw	x4, [x4, #4]
+	add	x3, x16, x3, lsl #3
+	str	x4, [x3, #24]
+	str	x1, [x3, #280]
+	str	x2, [x3, #152]
+	add	x13, x13, #1                    ; =1
+	add	x0, x0, #8                      ; =8
+	cmp	x13, x12
+	b.eq	LBB101_33
+LBB101_21:                              ; %for.body58
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB101_24 Depth 2
+                                        ;     Child Loop BB101_31 Depth 2
+	lsl	x2, x13, #4
+	add	x1, x14, x2
+	ldrsw	x1, [x1, #8]
+	mul	x1, x1, x11
+	cbz	x13, LBB101_27
+; %bb.22:                               ; %for.body81.lr.ph
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	cbz	x1, LBB101_28
+; %bb.23:                               ; %for.body81.us.preheader
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	mov	x3, #0
+LBB101_24:                              ; %for.body81.us
+                                        ;   Parent Loop BB101_21 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x4, [x17, x3, lsl #3]
+	cmp	x1, x4
+	b.lo	LBB101_29
+; %bb.25:                               ; %for.inc89.us
+                                        ;   in Loop: Header=BB101_24 Depth=2
+	add	x3, x3, #1                      ; =1
+	cmp	x13, x3
+	b.ne	LBB101_24
+; %bb.26:                               ;   in Loop: Header=BB101_21 Depth=1
+	mov	x3, x13
+	b	LBB101_29
+LBB101_27:                              ;   in Loop: Header=BB101_21 Depth=1
+	mov	w3, #0
+	b	LBB101_29
+LBB101_28:                              ; %for.body81.preheader
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	mov	x3, x13
+LBB101_29:                              ; %for.end91
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	add	x2, x15, x2
+	ldrsw	x2, [x2, #8]
+	mul	x2, x2, x11
+	mov	w3, w3
+	cmp	x13, x3
+	b.ls	LBB101_20
+; %bb.30:                               ; %for.body95.preheader
+                                        ;   in Loop: Header=BB101_21 Depth=1
+	sxtw	x4, w3
+	mov	x5, x0
+	mov	x6, x13
+LBB101_31:                              ; %for.body95
+                                        ;   Parent Loop BB101_21 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	sub	x6, x6, #1                      ; =1
+	ldur	x7, [x5, #-128]
+	stur	x7, [x5, #-120]
+	ldr	x7, [x5, #128]
+	str	x7, [x5, #136]
+	ldr	x7, [x5]
+	str	x7, [x5, #8]
+	sub	x5, x5, #8                      ; =8
+	cmp	x6, x4
+	b.gt	LBB101_31
+	b	LBB101_20
+LBB101_32:                              ; %if.then
+	movi.2d	v0, #0000000000000000
+	stp	q0, q0, [x8, #384]
+	stp	q0, q0, [x8, #352]
+	stp	q0, q0, [x8, #320]
+	stp	q0, q0, [x8, #288]
+	stp	q0, q0, [x8, #256]
+	stp	q0, q0, [x8, #224]
+	stp	q0, q0, [x8, #192]
+	stp	q0, q0, [x8, #160]
+	stp	q0, q0, [x8, #128]
+	stp	q0, q0, [x8, #96]
+	stp	q0, q0, [x8, #64]
+	stp	q0, q0, [x8, #32]
+	stp	q0, q0, [x8]
+	ldp	x29, x30, [sp, #432]            ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #416]            ; 16-byte Folded Reload
+	add	sp, sp, #448                    ; =448
+	ret
+LBB101_33:                              ; %while.cond.preheader
+	ldr	x11, [sp, #408]
+	ldr	x12, [sp, #152]
+	cmp	x11, x12
+	b.ne	LBB101_37
+; %bb.34:                               ; %land.rhs.lr.ph
+	ldr	x13, [sp, #280]
+	mov	w12, #1
+LBB101_35:                              ; %land.rhs
+                                        ; =>This Inner Loop Header: Depth=1
+	cmp	x11, x13
+	b.ne	LBB101_37
+; %bb.36:                               ; %while.body
+                                        ;   in Loop: Header=BB101_35 Depth=1
+	ldr	x11, [sp, #24]
+	mul	x11, x11, x13
+	str	x11, [sp, #408]
+	ldp	q0, q2, [sp, #32]
+	ldp	q1, q3, [sp, #160]
+	stur	q0, [sp, #24]
+	stur	q1, [x9, #152]
+	stur	q2, [sp, #40]
+	stur	q3, [x9, #168]
+	ldp	q0, q2, [sp, #288]
+	stp	q0, q2, [x10, #16]
+	ldr	q2, [sp, #64]
+	ldr	q3, [sp, #192]
+	stur	q2, [sp, #56]
+	stur	q3, [x9, #184]
+	ldr	q2, [sp, #80]
+	ldr	q3, [sp, #208]
+	stur	q2, [sp, #72]
+	stur	q3, [x9, #200]
+	ldp	q4, q2, [sp, #320]
+	stp	q4, q2, [x10, #48]
+	ldr	q2, [sp, #96]
+	ldr	q3, [sp, #224]
+	stur	q2, [sp, #88]
+	stur	q3, [x9, #216]
+	ldr	q2, [sp, #112]
+	ldr	q3, [sp, #240]
+	stur	q2, [sp, #104]
+	stur	q3, [x9, #232]
+	ldp	q4, q2, [sp, #352]
+	stp	q4, q2, [x10, #80]
+	ldr	q2, [sp, #128]
+	ldr	q3, [sp, #256]
+	stur	q2, [sp, #120]
+	stur	q3, [x9, #248]
+	ldr	q2, [sp, #384]
+	str	q2, [x10, #112]
+	ldr	x13, [sp, #144]
+	ldr	x14, [sp, #272]
+	ldr	x15, [sp, #400]
+	stp	x13, x12, [sp, #136]
+	stp	x14, xzr, [sp, #264]
+	stp	x15, xzr, [sp, #392]
+	fmov	x14, d1
+	fmov	x13, d0
+	cmp	x11, x14
+	b.eq	LBB101_35
+LBB101_37:                              ; %while.end
+	mov	x1, sp
+	mov	x0, x8
+	mov	w2, #416
+	bl	_memcpy
+	ldp	x29, x30, [sp, #432]            ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #416]            ; 16-byte Folded Reload
+	add	sp, sp, #448                    ; =448
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m ; -- Begin function _ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	.weak_definition	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	.p2align	2
+__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m: ; @_ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	bl	_memcmp
+	cmp	w0, #0                          ; =0
+	cset	w0, eq
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t ; -- Begin function _ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	.weak_definition	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	.p2align	2
+__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t: ; @_ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	w8, [x0, #36]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB103_7
+; %bb.1:                                ; %for.body.lr.ph
+	ldr	x10, [x0, #40]
+	add	x9, x1, #8                      ; =8
+	add	x10, x10, #8                    ; =8
+LBB103_2:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w11, [x10, #-8]
+	ldur	w12, [x9, #-8]
+	cmp	w11, w12
+	b.ne	LBB103_8
+; %bb.3:                                ; %land.lhs.true.i.i
+                                        ;   in Loop: Header=BB103_2 Depth=1
+	ldur	w11, [x10, #-4]
+	ldur	w12, [x9, #-4]
+	cmp	w11, w12
+	b.ne	LBB103_8
+; %bb.4:                                ; %land.lhs.true5.i.i
+                                        ;   in Loop: Header=BB103_2 Depth=1
+	ldr	w11, [x10]
+	ldr	w12, [x9]
+	cmp	w11, w12
+	b.ne	LBB103_8
+; %bb.5:                                ; %_ZNK18halide_dimension_tneERKS_.exit
+                                        ;   in Loop: Header=BB103_2 Depth=1
+	ldr	w11, [x10, #4]
+	ldr	w12, [x9, #4]
+	cmp	w11, w12
+	b.ne	LBB103_8
+; %bb.6:                                ; %for.cond
+                                        ;   in Loop: Header=BB103_2 Depth=1
+	add	x9, x9, #16                     ; =16
+	add	x10, x10, #16                   ; =16
+	subs	x8, x8, #1                      ; =1
+	b.ne	LBB103_2
+LBB103_7:
+	mov	w0, #1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB103_8:
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by ; -- Begin function _ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by
+	.weak_definition	__ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by
+	.p2align	2
+__ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by: ; @_ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x19, x7
+	mov	x20, x6
+	mov	x24, x5
+	mov	x22, x4
+	mov	x23, x1
+	mov	x21, x0
+	stp	xzr, xzr, [x0]
+	str	xzr, [x0, #16]
+	str	x2, [x0, #32]
+	stp	w3, wzr, [x0, #48]
+	str	w5, [x0, #56]
+	ldrsw	x8, [x4, #36]
+	str	w8, [x0, #60]
+	mov	w25, #56
+	add	w9, w5, #1                      ; =1
+	mul	x8, x9, x8
+	lsl	x8, x8, #4
+	umaddl	x26, w5, w25, x8
+	add	x1, x26, x2
+	mov	x0, #0
+	bl	_halide_malloc
+	str	x0, [x21, #24]
+	cbz	x0, LBB104_17
+; %bb.1:                                ; %if.end
+	umull	x8, w24, w25
+	add	x8, x0, x8
+	stp	x8, x0, [x21, #64]
+	add	x8, x0, x26
+	str	x8, [x21, #40]
+	ldr	x9, [x21, #32]
+	cbz	x9, LBB104_6
+; %bb.2:                                ; %for.body.preheader
+	ldrb	w10, [x23]
+	strb	w10, [x8]
+	cmp	x9, #1                          ; =1
+	b.eq	LBB104_6
+; %bb.3:                                ; %for.body.for.body_crit_edge.preheader
+	ldrb	w9, [x23, #1]
+	strb	w9, [x8, #1]
+	ldr	x8, [x21, #32]
+	cmp	x8, #3                          ; =3
+	b.lo	LBB104_6
+; %bb.4:                                ; %for.body.for.body_crit_edge.for.body.for.body_crit_edge_crit_edge.preheader
+	mov	w8, #2
+LBB104_5:                               ; %for.body.for.body_crit_edge.for.body.for.body_crit_edge_crit_edge
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrb	w9, [x23, x8]
+	ldr	x10, [x21, #40]
+	strb	w9, [x10, x8]
+	add	x8, x8, #1                      ; =1
+	ldr	x9, [x21, #32]
+	cmp	x8, x9
+	b.lo	LBB104_5
+LBB104_6:                               ; %for.cond23.preheader
+	ldr	w8, [x21, #60]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB104_9
+; %bb.7:                                ; %for.body27.lr.ph
+	mov	x8, #0
+	mov	x9, #0
+LBB104_8:                               ; %for.body27
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x10, [x22, #40]
+	ldr	x11, [x21, #64]
+	ldr	q0, [x10, x8]
+	str	q0, [x11, x8]
+	add	x9, x9, #1                      ; =1
+	ldrsw	x10, [x21, #60]
+	add	x8, x8, #16                     ; =16
+	cmp	x9, x10
+	b.lt	LBB104_8
+LBB104_9:                               ; %for.cond36.preheader
+	ldr	x8, [x29, #16]
+	ldr	w9, [x21, #56]
+	cbz	w9, LBB104_16
+; %bb.10:                               ; %for.body40.preheader
+	mov	x10, #0
+	mov	w9, #56
+	b	LBB104_12
+LBB104_11:                              ; %for.cond36.loopexit
+                                        ;   in Loop: Header=BB104_12 Depth=1
+	ldr	w12, [x21, #56]
+	mov	x10, x11
+	cmp	x11, x12
+	b.hs	LBB104_16
+LBB104_12:                              ; %for.body40
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB104_15 Depth 2
+	ldr	x11, [x20, x10, lsl #3]
+	ldr	x12, [x21, #72]
+	mul	x13, x10, x9
+	add	x12, x12, x13
+	ldp	q0, q1, [x11]
+	ldr	q2, [x11, #32]
+	ldr	x11, [x11, #48]
+	str	x11, [x12, #48]
+	stp	q1, q2, [x12, #16]
+	str	q0, [x12]
+	add	x11, x10, #1                    ; =1
+	ldr	w14, [x21, #60]
+	mul	w12, w14, w11
+	ldp	x15, x16, [x21, #64]
+	add	x12, x15, w12, uxtw #4
+	add	x13, x16, x13
+	str	x12, [x13, #40]
+	cmp	w14, #1                         ; =1
+	b.lt	LBB104_11
+; %bb.13:                               ; %for.body59.preheader
+                                        ;   in Loop: Header=BB104_12 Depth=1
+	ldr	x13, [x20, x10, lsl #3]
+	ldr	x13, [x13, #40]
+	ldr	q0, [x13]
+	str	q0, [x12]
+	ldr	w12, [x21, #60]
+	cmp	w12, #2                         ; =2
+	b.lt	LBB104_11
+; %bb.14:                               ; %for.body59.for.body59_crit_edge.preheader
+                                        ;   in Loop: Header=BB104_12 Depth=1
+	mov	w12, #16
+	mov	w13, #1
+LBB104_15:                              ; %for.body59.for.body59_crit_edge
+                                        ;   Parent Loop BB104_12 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x14, [x21, #72]
+	madd	x14, x10, x9, x14
+	ldr	x14, [x14, #40]
+	ldr	x15, [x20, x10, lsl #3]
+	ldr	x15, [x15, #40]
+	ldr	q0, [x15, x12]
+	str	q0, [x14, x12]
+	add	x13, x13, #1                    ; =1
+	ldrsw	x14, [x21, #60]
+	add	x12, x12, #16                   ; =16
+	cmp	x13, x14
+	b.lt	LBB104_15
+	b	LBB104_11
+LBB104_16:                              ; %for.cond.cleanup39
+	strb	w19, [x21, #88]
+	str	x8, [x21, #80]
+LBB104_17:                              ; %cleanup
+	cmp	x0, #0                          ; =0
+	cset	w0, ne
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal8djb_hashEPKhm ; -- Begin function _ZN6Halide7Runtime8Internal8djb_hashEPKhm
+	.weak_definition	__ZN6Halide7Runtime8Internal8djb_hashEPKhm
+	.p2align	2
+__ZN6Halide7Runtime8Internal8djb_hashEPKhm: ; @_ZN6Halide7Runtime8Internal8djb_hashEPKhm
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w8, #5381
+	cbz	x1, LBB105_2
+LBB105_1:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	add	w8, w8, w8, lsl #5
+	ldrb	w9, [x0], #1
+	add	w8, w8, w9
+	subs	x1, x1, #1                      ; =1
+	b.ne	LBB105_1
+LBB105_2:                               ; %for.cond.cleanup
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal11prune_cacheEv ; -- Begin function _ZN6Halide7Runtime8Internal11prune_cacheEv
+	.weak_definition	__ZN6Halide7Runtime8Internal11prune_cacheEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal11prune_cacheEv: ; @_ZN6Halide7Runtime8Internal11prune_cacheEv
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+Lloh319:
+	adrp	x21, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGE
+Lloh320:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGEOFF]
+	ldr	x20, [x21]
+Lloh321:
+	adrp	x22, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGE
+Lloh322:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGEOFF]
+	ldr	x8, [x22]
+Lloh323:
+	adrp	x23, __ZN6Halide7Runtime8Internal14max_cache_sizeE@GOTPAGE
+Lloh324:
+	ldr	x23, [x23, __ZN6Halide7Runtime8Internal14max_cache_sizeE@GOTPAGEOFF]
+	ldr	x9, [x23]
+	cmp	x20, #0                         ; =0
+	ccmp	x8, x9, #4, ne
+	b.gt	LBB106_2
+LBB106_1:                               ; %while.end42
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+LBB106_2:                               ; %while.body.preheader
+Lloh325:
+	adrp	x24, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh326:
+	ldr	x24, [x24, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+Lloh327:
+	adrp	x25, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGE
+Lloh328:
+	ldr	x25, [x25, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGEOFF]
+	mov	w26, #56
+Lloh329:
+	adrp	x19, l_.str.2.42@PAGE
+Lloh330:
+	add	x19, x19, l_.str.2.42@PAGEOFF
+	b	LBB106_6
+LBB106_3:                               ; %for.cond.for.cond.cleanup_crit_edge
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	str	x10, [x22]
+LBB106_4:                               ; %for.cond.cleanup
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+	mov	x0, #0
+	mov	x1, x20
+	bl	_halide_free
+	ldr	x8, [x22]
+	ldr	x9, [x23]
+LBB106_5:                               ; %if.end41
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	cmp	x27, #0                         ; =0
+	ccmp	x8, x9, #4, ne
+	mov	x20, x27
+	b.le	LBB106_1
+LBB106_6:                               ; %while.body
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB106_8 Depth 2
+                                        ;     Child Loop BB106_23 Depth 2
+                                        ;       Child Loop BB106_29 Depth 3
+                                        ;       Child Loop BB106_38 Depth 3
+                                        ;       Child Loop BB106_42 Depth 3
+                                        ;       Child Loop BB106_49 Depth 3
+	ldr	x27, [x20, #8]
+	ldr	w10, [x20, #52]
+	cbnz	w10, LBB106_5
+; %bb.7:                                ; %if.then
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldrb	w9, [x20, #48]
+	ldr	x8, [x24, x9, lsl #3]
+	cmp	x8, x20
+	b.eq	LBB106_10
+LBB106_8:                               ; %while.cond9
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	mov	x28, x8
+	cbz	x8, LBB106_11
+; %bb.9:                                ; %land.rhs11
+                                        ;   in Loop: Header=BB106_8 Depth=2
+	ldr	x8, [x28]
+	cmp	x8, x20
+	b.ne	LBB106_8
+	b	LBB106_12
+LBB106_10:                              ; %if.then6
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldr	x8, [x20]
+	str	x8, [x24, x9, lsl #3]
+	ldr	x8, [x21]
+	cmp	x8, x20
+	b.ne	LBB106_14
+	b	LBB106_13
+LBB106_11:                              ; %if.then18
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	mov	x0, #0
+	mov	x1, x19
+	bl	_halide_print
+	bl	_abort
+LBB106_12:                              ; %do.end
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldr	x8, [x20]
+	str	x8, [x28]
+	ldr	x8, [x21]
+	cmp	x8, x20
+	b.ne	LBB106_14
+LBB106_13:                              ; %if.then23
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	str	x27, [x21]
+LBB106_14:                              ; %if.end24
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	cbz	x27, LBB106_16
+; %bb.15:                               ; %if.then26
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldr	x8, [x20, #16]
+	str	x8, [x27, #16]
+LBB106_16:                              ; %if.end28
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldr	x9, [x25]
+	ldr	x8, [x20, #16]
+	cmp	x9, x20
+	b.eq	LBB106_51
+; %bb.17:                               ; %if.end32
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	cbz	x8, LBB106_19
+LBB106_18:                              ; %if.then35
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	str	x27, [x20, #16]
+LBB106_19:                              ; %if.end37
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	ldr	w8, [x20, #56]
+	cbz	w8, LBB106_4
+; %bb.20:                               ; %for.body.lr.ph
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	mov	x9, #0
+	ldr	x11, [x20, #72]
+	ldr	x10, [x22]
+	b	LBB106_23
+LBB106_21:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit.loopexit
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	mvn	x12, x14
+	add	x12, x16, x12
+LBB106_22:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	madd	x13, x9, x26, x11
+	ldrb	w13, [x13, #33]
+	add	x13, x13, #7                    ; =7
+	lsr	x13, x13, #3
+	madd	x10, x13, x12, x10
+	add	x9, x9, #1                      ; =1
+	cmp	x9, x8
+	b.eq	LBB106_3
+LBB106_23:                              ; %for.body
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB106_29 Depth 3
+                                        ;       Child Loop BB106_38 Depth 3
+                                        ;       Child Loop BB106_42 Depth 3
+                                        ;       Child Loop BB106_49 Depth 3
+	madd	x12, x9, x26, x11
+	ldr	w12, [x12, #36]
+	cmp	w12, #0                         ; =0
+	b.le	LBB106_26
+; %bb.24:                               ; %for.body.lr.ph.i.i
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	madd	x13, x9, x26, x11
+	ldr	x13, [x13, #40]
+	cmp	w12, #3                         ; =3
+	b.hs	LBB106_27
+; %bb.25:                               ;   in Loop: Header=BB106_23 Depth=2
+	mov	x15, #0
+	mov	x14, #0
+	b	LBB106_36
+LBB106_26:                              ; %for.body._ZNK15halide_buffer_t13size_in_bytesEv.exit_crit_edge
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	mov	x12, #-1
+	b	LBB106_22
+LBB106_27:                              ; %vector.ph29
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	mov	x14, #0
+	mov	x16, #0
+	and	x15, x12, #0xfffffffe
+	add	x17, x13, #24                   ; =24
+	mov	x0, x15
+	b	LBB106_29
+LBB106_28:                              ; %pred.load.continue43
+                                        ;   in Loop: Header=BB106_29 Depth=3
+	sub	w3, w3, #1                      ; =1
+	sub	w4, w4, #1                      ; =1
+	sxtw	x3, w3
+	sxtw	x4, w4
+	mul	x3, x3, x1
+	mul	x4, x4, x2
+	cmp	w1, #0                          ; =0
+	csel	x1, x3, xzr, gt
+	add	x14, x14, x1
+	cmp	w2, #0                          ; =0
+	csel	x1, x4, xzr, gt
+	add	x16, x16, x1
+	add	x17, x17, #32                   ; =32
+	subs	x0, x0, #2                      ; =2
+	b.eq	LBB106_33
+LBB106_29:                              ; %vector.body27
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ;     Parent Loop BB106_23 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldur	w1, [x17, #-16]
+                                        ; implicit-def: $w3
+	cmp	w1, #1                          ; =1
+	b.lt	LBB106_31
+; %bb.30:                               ; %pred.load.if40
+                                        ;   in Loop: Header=BB106_29 Depth=3
+	ldur	w3, [x17, #-20]
+LBB106_31:                              ; %pred.load.continue41
+                                        ;   in Loop: Header=BB106_29 Depth=3
+	ldr	w2, [x17]
+                                        ; implicit-def: $w4
+	cmp	w2, #1                          ; =1
+	b.lt	LBB106_28
+; %bb.32:                               ; %pred.load.if42
+                                        ;   in Loop: Header=BB106_29 Depth=3
+	ldur	w4, [x17, #-4]
+	b	LBB106_28
+LBB106_33:                              ; %middle.block25
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	add	x14, x16, x14
+	cmp	x15, x12
+	b.ne	LBB106_36
+LBB106_34:                              ; %for.body.i13.i.preheader
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	cmp	w12, #3                         ; =3
+	b.hs	LBB106_40
+; %bb.35:                               ;   in Loop: Header=BB106_23 Depth=2
+	mov	x15, #0
+	mov	x16, #0
+	b	LBB106_47
+LBB106_36:                              ; %for.body.i.i.preheader
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	sub	x16, x12, x15
+	add	x15, x13, x15, lsl #4
+	add	x15, x15, #8                    ; =8
+	b	LBB106_38
+LBB106_37:                              ; %if.end.i.i
+                                        ;   in Loop: Header=BB106_38 Depth=3
+	add	x15, x15, #16                   ; =16
+	subs	x16, x16, #1                    ; =1
+	b.eq	LBB106_34
+LBB106_38:                              ; %for.body.i.i
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ;     Parent Loop BB106_23 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldr	w17, [x15]
+	cmp	w17, #1                         ; =1
+	b.lt	LBB106_37
+; %bb.39:                               ; %if.then.i.i
+                                        ;   in Loop: Header=BB106_38 Depth=3
+	ldursw	x0, [x15, #-4]
+	sub	x0, x0, #1                      ; =1
+	madd	x14, x0, x17, x14
+	b	LBB106_37
+LBB106_40:                              ; %vector.ph
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	mov	x16, #0
+	mov	x17, #0
+	and	x15, x12, #0xfffffffe
+	add	x0, x13, #24                    ; =24
+	mov	x1, x15
+	b	LBB106_42
+LBB106_41:                              ; %pred.load.continue23
+                                        ;   in Loop: Header=BB106_42 Depth=3
+	sub	w4, w4, #1                      ; =1
+	sub	w5, w5, #1                      ; =1
+	sxtw	x4, w4
+	sxtw	x5, w5
+	mul	x4, x4, x2
+	mul	x5, x5, x3
+	cmp	w2, #0                          ; =0
+	csel	x2, x4, xzr, lt
+	add	x16, x16, x2
+	cmp	w3, #0                          ; =0
+	csel	x2, x5, xzr, lt
+	add	x17, x17, x2
+	add	x0, x0, #32                     ; =32
+	subs	x1, x1, #2                      ; =2
+	b.eq	LBB106_46
+LBB106_42:                              ; %vector.body
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ;     Parent Loop BB106_23 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldursw	x2, [x0, #-16]
+                                        ; implicit-def: $w4
+	tbnz	w2, #31, LBB106_44
+; %bb.43:                               ; %pred.load.continue
+                                        ;   in Loop: Header=BB106_42 Depth=3
+	ldrsw	x3, [x0]
+                                        ; implicit-def: $w5
+	tbz	w3, #31, LBB106_41
+	b	LBB106_45
+LBB106_44:                              ; %pred.load.if
+                                        ;   in Loop: Header=BB106_42 Depth=3
+	ldur	w4, [x0, #-20]
+	ldrsw	x3, [x0]
+                                        ; implicit-def: $w5
+	tbz	w3, #31, LBB106_41
+LBB106_45:                              ; %pred.load.if22
+                                        ;   in Loop: Header=BB106_42 Depth=3
+	ldur	w5, [x0, #-4]
+	b	LBB106_41
+LBB106_46:                              ; %middle.block
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	add	x16, x17, x16
+	cmp	x15, x12
+	b.eq	LBB106_21
+LBB106_47:                              ; %for.body.i13.i.preheader1
+                                        ;   in Loop: Header=BB106_23 Depth=2
+	sub	x12, x12, x15
+	add	x13, x13, x15, lsl #4
+	add	x13, x13, #8                    ; =8
+	b	LBB106_49
+LBB106_48:                              ; %if.end.i24.i
+                                        ;   in Loop: Header=BB106_49 Depth=3
+	add	x13, x13, #16                   ; =16
+	subs	x12, x12, #1                    ; =1
+	b.eq	LBB106_21
+LBB106_49:                              ; %for.body.i13.i
+                                        ;   Parent Loop BB106_6 Depth=1
+                                        ;     Parent Loop BB106_23 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldrsw	x15, [x13]
+	tbz	w15, #31, LBB106_48
+; %bb.50:                               ; %if.then.i20.i
+                                        ;   in Loop: Header=BB106_49 Depth=3
+	ldursw	x17, [x13, #-4]
+	sub	x17, x17, #1                    ; =1
+	madd	x16, x17, x15, x16
+	b	LBB106_48
+LBB106_51:                              ; %if.then30
+                                        ;   in Loop: Header=BB106_6 Depth=1
+	str	x8, [x25]
+	cbnz	x8, LBB106_18
+	b	LBB106_19
+	.loh AdrpLdrGot	Lloh323, Lloh324
+	.loh AdrpLdrGot	Lloh321, Lloh322
+	.loh AdrpLdrGot	Lloh319, Lloh320
+	.loh AdrpAdd	Lloh329, Lloh330
+	.loh AdrpLdrGot	Lloh327, Lloh328
+	.loh AdrpLdrGot	Lloh325, Lloh326
+                                        ; -- End function
+	.globl	_halide_memoization_cache_set_size ; -- Begin function halide_memoization_cache_set_size
+	.weak_definition	_halide_memoization_cache_set_size
+	.p2align	2
+_halide_memoization_cache_set_size:     ; @halide_memoization_cache_set_size
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	cmp	x0, #0                          ; =0
+	mov	w8, #1048576
+	csel	x20, x8, x0, eq
+Lloh331:
+	adrp	x19, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh332:
+	ldr	x19, [x19, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	mov	x0, x19
+	bl	_halide_mutex_lock
+Lloh333:
+	adrp	x8, __ZN6Halide7Runtime8Internal14max_cache_sizeE@GOTPAGE
+Lloh334:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal14max_cache_sizeE@GOTPAGEOFF]
+Lloh335:
+	str	x20, [x8]
+	bl	__ZN6Halide7Runtime8Internal11prune_cacheEv
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+	.loh AdrpLdrGotStr	Lloh333, Lloh334, Lloh335
+	.loh AdrpLdrGot	Lloh331, Lloh332
+                                        ; -- End function
+	.globl	_halide_memoization_cache_lookup ; -- Begin function halide_memoization_cache_lookup
+	.weak_definition	_halide_memoization_cache_lookup
+	.p2align	2
+_halide_memoization_cache_lookup:       ; @halide_memoization_cache_lookup
+; %bb.0:                                ; %entry
+	sub	sp, sp, #112                    ; =112
+	stp	x28, x27, [sp, #16]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #32]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #48]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #64]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #80]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #96]             ; 16-byte Folded Spill
+	add	x29, sp, #96                    ; =96
+	mov	x19, x5
+	mov	x28, x4
+	mov	x23, x3
+                                        ; kill: def $w2 killed $w2 def $x2
+	mov	x24, x1
+	mov	x20, x0
+	sxtw	x25, w2
+	mov	x0, x1
+	mov	x1, x25
+	bl	__ZN6Halide7Runtime8Internal8djb_hashEPKhm
+	mov	x21, x0
+	and	w22, w0, #0xff
+Lloh336:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh337:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+Lloh338:
+	adrp	x8, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh339:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+	ldr	x26, [x8, w22, uxtw #3]
+	cbz	x26, LBB108_24
+; %bb.1:                                ; %while.body.lr.ph
+	cmp	w28, #0                         ; =0
+	b.le	LBB108_4
+; %bb.2:                                ; %while.body.us.preheader
+	sxtw	x27, w28
+	b	LBB108_16
+LBB108_3:                               ; %if.end73
+                                        ;   in Loop: Header=BB108_4 Depth=1
+	ldr	x26, [x26]
+	cbz	x26, LBB108_24
+LBB108_4:                               ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w8, [x26, #48]
+	cmp	w8, w21
+	b.ne	LBB108_3
+; %bb.5:                                ; %land.lhs.true
+                                        ;   in Loop: Header=BB108_4 Depth=1
+	ldr	x8, [x26, #32]
+	cmp	x8, x25
+	b.ne	LBB108_3
+; %bb.6:                                ; %land.lhs.true7
+                                        ;   in Loop: Header=BB108_4 Depth=1
+	ldr	x0, [x26, #40]
+	mov	x1, x24
+	mov	x2, x25
+	bl	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	cbz	w0, LBB108_3
+; %bb.7:                                ; %land.lhs.true10
+                                        ;   in Loop: Header=BB108_4 Depth=1
+	ldr	x1, [x26, #64]
+	mov	x0, x23
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	cbz	w0, LBB108_3
+; %bb.8:                                ; %land.lhs.true13
+                                        ;   in Loop: Header=BB108_4 Depth=1
+	ldr	w8, [x26, #56]
+	cmp	w8, w28
+	b.ne	LBB108_3
+LBB108_9:                               ; %if.then23
+Lloh340:
+	adrp	x21, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGE
+Lloh341:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGEOFF]
+	ldr	x8, [x21]
+	cmp	x26, x8
+	b.eq	LBB108_70
+; %bb.10:                               ; %do.body
+	ldr	x8, [x26, #8]
+	cbnz	x8, LBB108_12
+; %bb.11:                               ; %if.then27
+Lloh342:
+	adrp	x1, l_.str.3.43@PAGE
+Lloh343:
+	add	x1, x1, l_.str.3.43@PAGEOFF
+	mov	x0, x20
+	bl	_halide_print
+	bl	_abort
+LBB108_12:                              ; %do.end
+	ldr	x8, [x26, #16]
+	cbz	x8, LBB108_62
+; %bb.13:                               ; %if.then29
+	ldr	x9, [x26, #8]
+	str	x9, [x8, #8]
+	ldr	x8, [x26, #8]
+	b	LBB108_65
+LBB108_14:                              ; %for.cond.cleanup.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	x28, [sp, #8]                   ; 8-byte Folded Reload
+	tbnz	w0, #0, LBB108_9
+LBB108_15:                              ; %if.end73.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	x26, [x26]
+	cbz	x26, LBB108_24
+LBB108_16:                              ; %while.body.us
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB108_22 Depth 2
+	ldr	w8, [x26, #48]
+	cmp	w8, w21
+	b.ne	LBB108_15
+; %bb.17:                               ; %land.lhs.true.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	x8, [x26, #32]
+	cmp	x8, x25
+	b.ne	LBB108_15
+; %bb.18:                               ; %land.lhs.true7.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	x0, [x26, #40]
+	mov	x1, x24
+	mov	x2, x25
+	bl	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	cbz	w0, LBB108_15
+; %bb.19:                               ; %land.lhs.true10.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	x1, [x26, #64]
+	mov	x0, x23
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	cbz	w0, LBB108_15
+; %bb.20:                               ; %land.lhs.true13.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	ldr	w8, [x26, #56]
+	cmp	w8, w28
+	b.ne	LBB108_15
+; %bb.21:                               ; %for.cond.preheader.us
+                                        ;   in Loop: Header=BB108_16 Depth=1
+	str	x28, [sp, #8]                   ; 8-byte Folded Spill
+	mov	x28, #0
+	mov	w22, #40
+LBB108_22:                              ; %for.body.us
+                                        ;   Parent Loop BB108_16 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x0, [x19, x28, lsl #3]
+	ldr	x8, [x26, #72]
+	ldr	x1, [x8, x22]
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	add	x28, x28, #1                    ; =1
+	cmp	x28, x27
+	b.ge	LBB108_14
+; %bb.23:                               ; %for.body.us
+                                        ;   in Loop: Header=BB108_22 Depth=2
+	add	x22, x22, #56                   ; =56
+	tbnz	w0, #0, LBB108_22
+	b	LBB108_14
+LBB108_24:                              ; %for.cond75.preheader
+	cmp	w28, #1                         ; =1
+	b.lt	LBB108_57
+; %bb.25:                               ; %for.body78.preheader
+	mov	x23, #0
+	mov	w22, w28
+	orr	x24, xzr, #0x20
+LBB108_26:                              ; %for.body78
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB108_32 Depth 2
+                                        ;     Child Loop BB108_41 Depth 2
+                                        ;     Child Loop BB108_46 Depth 2
+                                        ;     Child Loop BB108_55 Depth 2
+	ldr	x25, [x19, x23, lsl #3]
+	ldr	w8, [x25, #36]
+	cmp	w8, #0                          ; =0
+	b.le	LBB108_29
+; %bb.27:                               ; %for.body.lr.ph.i.i
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	ldr	x9, [x25, #40]
+	cmp	w8, #3                          ; =3
+	b.hs	LBB108_30
+; %bb.28:                               ;   in Loop: Header=BB108_26 Depth=1
+	mov	x11, #0
+	mov	x10, #0
+	b	LBB108_39
+LBB108_29:                              ; %for.body78._ZNK15halide_buffer_t13size_in_bytesEv.exit_crit_edge
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	mov	w8, #1
+	b	LBB108_51
+LBB108_30:                              ; %vector.ph39
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	mov	x10, #0
+	mov	x12, #0
+	and	x11, x8, #0xfffffffe
+	add	x13, x9, #24                    ; =24
+	mov	x14, x11
+	b	LBB108_32
+LBB108_31:                              ; %pred.load.continue53
+                                        ;   in Loop: Header=BB108_32 Depth=2
+	sub	w17, w17, #1                    ; =1
+	sub	w0, w0, #1                      ; =1
+	sxtw	x17, w17
+	sxtw	x0, w0
+	mul	x17, x17, x15
+	mul	x0, x0, x16
+	cmp	w15, #0                         ; =0
+	csel	x15, x17, xzr, gt
+	add	x10, x10, x15
+	cmp	w16, #0                         ; =0
+	csel	x15, x0, xzr, gt
+	add	x12, x12, x15
+	add	x13, x13, #32                   ; =32
+	subs	x14, x14, #2                    ; =2
+	b.eq	LBB108_36
+LBB108_32:                              ; %vector.body37
+                                        ;   Parent Loop BB108_26 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldur	w15, [x13, #-16]
+                                        ; implicit-def: $w17
+	cmp	w15, #1                         ; =1
+	b.lt	LBB108_34
+; %bb.33:                               ; %pred.load.if50
+                                        ;   in Loop: Header=BB108_32 Depth=2
+	ldur	w17, [x13, #-20]
+LBB108_34:                              ; %pred.load.continue51
+                                        ;   in Loop: Header=BB108_32 Depth=2
+	ldr	w16, [x13]
+                                        ; implicit-def: $w0
+	cmp	w16, #1                         ; =1
+	b.lt	LBB108_31
+; %bb.35:                               ; %pred.load.if52
+                                        ;   in Loop: Header=BB108_32 Depth=2
+	ldur	w0, [x13, #-4]
+	b	LBB108_31
+LBB108_36:                              ; %middle.block35
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	add	x10, x12, x10
+	cmp	x11, x8
+	b.ne	LBB108_39
+LBB108_37:                              ; %for.body.i13.i.preheader
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	cmp	w8, #3                          ; =3
+	b.hs	LBB108_43
+; %bb.38:                               ;   in Loop: Header=BB108_26 Depth=1
+	mov	x11, #0
+	mov	x12, #0
+	b	LBB108_53
+LBB108_39:                              ; %for.body.i.i.preheader
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	sub	x12, x8, x11
+	add	x11, x9, x11, lsl #4
+	add	x11, x11, #8                    ; =8
+	b	LBB108_41
+LBB108_40:                              ; %if.end.i.i
+                                        ;   in Loop: Header=BB108_41 Depth=2
+	add	x11, x11, #16                   ; =16
+	subs	x12, x12, #1                    ; =1
+	b.eq	LBB108_37
+LBB108_41:                              ; %for.body.i.i
+                                        ;   Parent Loop BB108_26 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	w13, [x11]
+	cmp	w13, #1                         ; =1
+	b.lt	LBB108_40
+; %bb.42:                               ; %if.then.i.i
+                                        ;   in Loop: Header=BB108_41 Depth=2
+	ldursw	x14, [x11, #-4]
+	sub	x14, x14, #1                    ; =1
+	madd	x10, x14, x13, x10
+	b	LBB108_40
+LBB108_43:                              ; %vector.ph
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	mov	x12, #0
+	mov	x13, #0
+	and	x11, x8, #0xfffffffe
+	add	x14, x9, #24                    ; =24
+	mov	x15, x11
+	b	LBB108_46
+LBB108_44:                              ; %pred.load.if
+                                        ;   in Loop: Header=BB108_46 Depth=2
+	ldur	w0, [x14, #-20]
+	ldrsw	x17, [x14]
+                                        ; implicit-def: $w1
+	tbnz	w17, #31, LBB108_48
+LBB108_45:                              ; %pred.load.continue33
+                                        ;   in Loop: Header=BB108_46 Depth=2
+	sub	w0, w0, #1                      ; =1
+	sub	w1, w1, #1                      ; =1
+	sxtw	x0, w0
+	sxtw	x1, w1
+	mul	x0, x0, x16
+	mul	x1, x1, x17
+	cmp	w16, #0                         ; =0
+	csel	x16, x0, xzr, lt
+	add	x12, x12, x16
+	cmp	w17, #0                         ; =0
+	csel	x16, x1, xzr, lt
+	add	x13, x13, x16
+	add	x14, x14, #32                   ; =32
+	subs	x15, x15, #2                    ; =2
+	b.eq	LBB108_49
+LBB108_46:                              ; %vector.body
+                                        ;   Parent Loop BB108_26 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldursw	x16, [x14, #-16]
+                                        ; implicit-def: $w0
+	tbnz	w16, #31, LBB108_44
+; %bb.47:                               ; %pred.load.continue
+                                        ;   in Loop: Header=BB108_46 Depth=2
+	ldrsw	x17, [x14]
+                                        ; implicit-def: $w1
+	tbz	w17, #31, LBB108_45
+LBB108_48:                              ; %pred.load.if32
+                                        ;   in Loop: Header=BB108_46 Depth=2
+	ldur	w1, [x14, #-4]
+	b	LBB108_45
+LBB108_49:                              ; %middle.block
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	add	x12, x13, x12
+	cmp	x11, x8
+	b.ne	LBB108_53
+LBB108_50:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit.loopexit
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	add	x8, x10, #1                     ; =1
+	sub	x8, x8, x12
+LBB108_51:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	ldrb	w9, [x25, #33]
+	add	x9, x9, #7                      ; =7
+	lsr	x9, x9, #3
+	madd	x1, x9, x8, x24
+	mov	x0, x20
+	bl	_halide_malloc
+	str	x0, [x25, #16]
+	cbz	x0, LBB108_58
+; %bb.52:                               ; %for.inc114
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	add	x0, x0, #32                     ; =32
+	str	x0, [x25, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	str	w21, [x0, #8]
+	str	xzr, [x0]
+	add	x23, x23, #1                    ; =1
+	cmp	x23, x22
+	b.ne	LBB108_26
+	b	LBB108_57
+LBB108_53:                              ; %for.body.i13.i.preheader1
+                                        ;   in Loop: Header=BB108_26 Depth=1
+	sub	x8, x8, x11
+	add	x9, x9, x11, lsl #4
+	add	x9, x9, #8                      ; =8
+	b	LBB108_55
+LBB108_54:                              ; %if.end.i24.i
+                                        ;   in Loop: Header=BB108_55 Depth=2
+	add	x9, x9, #16                     ; =16
+	subs	x8, x8, #1                      ; =1
+	b.eq	LBB108_50
+LBB108_55:                              ; %for.body.i13.i
+                                        ;   Parent Loop BB108_26 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldrsw	x11, [x9]
+	tbz	w11, #31, LBB108_54
+; %bb.56:                               ; %if.then.i20.i
+                                        ;   in Loop: Header=BB108_55 Depth=2
+	ldursw	x13, [x9, #-4]
+	sub	x13, x13, #1                    ; =1
+	madd	x12, x13, x11, x12
+	b	LBB108_54
+LBB108_57:
+	mov	w19, #1
+	b	LBB108_61
+LBB108_58:                              ; %for.cond89.preheader
+	cbz	x23, LBB108_60
+LBB108_59:                              ; %for.body92
+                                        ; =>This Inner Loop Header: Depth=1
+	sub	w8, w23, #1                     ; =1
+	lsl	x21, x8, #3
+	ldr	x8, [x19, x21]
+	ldr	x0, [x8, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	mov	x1, x0
+	mov	x0, x20
+	bl	_halide_free
+	ldr	x8, [x19, x21]
+	str	xzr, [x8, #16]
+	subs	x23, x23, #1                    ; =1
+	b.gt	LBB108_59
+LBB108_60:
+	mov	w19, #-1
+LBB108_61:                              ; %cleanup119
+Lloh344:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh345:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	x0, x19
+	ldp	x29, x30, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #112                    ; =112
+	ret
+LBB108_62:                              ; %do.body33
+Lloh346:
+	adrp	x22, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGE
+Lloh347:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGEOFF]
+	ldr	x8, [x22]
+	cmp	x8, x26
+	b.eq	LBB108_64
+; %bb.63:                               ; %if.then35
+Lloh348:
+	adrp	x1, l_.str.4.44@PAGE
+Lloh349:
+	add	x1, x1, l_.str.4.44@PAGEOFF
+	mov	x0, x20
+	bl	_halide_print
+	bl	_abort
+LBB108_64:                              ; %do.end38
+	ldr	x8, [x26, #8]
+	str	x8, [x22]
+LBB108_65:                              ; %do.body41
+	cbnz	x8, LBB108_67
+; %bb.66:                               ; %if.then44
+Lloh350:
+	adrp	x1, l_.str.5.45@PAGE
+Lloh351:
+	add	x1, x1, l_.str.5.45@PAGEOFF
+	mov	x0, x20
+	bl	_halide_print
+	bl	_abort
+	ldr	x8, [x26, #8]
+LBB108_67:                              ; %do.end47
+	ldr	x9, [x26, #16]
+	str	x9, [x8, #16]
+	ldr	x8, [x21]
+	stp	xzr, x8, [x26, #8]
+	cbz	x8, LBB108_69
+; %bb.68:                               ; %if.then54
+	str	x26, [x8, #8]
+LBB108_69:                              ; %if.end56
+	str	x26, [x21]
+LBB108_70:                              ; %if.end57
+	cmp	w28, #1                         ; =1
+	b.lt	LBB108_73
+; %bb.71:                               ; %for.body62.lr.ph
+	mov	x8, #0
+	mov	w9, #56
+	umull	x9, w28, w9
+LBB108_72:                              ; %for.body62
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x10, [x19], #8
+	ldr	x11, [x26, #72]
+	add	x11, x11, x8
+	ldp	q0, q1, [x11]
+	ldr	q2, [x11, #32]
+	ldr	x11, [x11, #48]
+	str	x11, [x10, #48]
+	stp	q1, q2, [x10, #16]
+	str	q0, [x10]
+	add	x8, x8, #56                     ; =56
+	cmp	x9, x8
+	b.ne	LBB108_72
+LBB108_73:                              ; %cleanup119.loopexit223
+	mov	w19, #0
+	ldr	w8, [x26, #52]
+	add	w8, w8, w28
+	str	w8, [x26, #52]
+	b	LBB108_61
+	.loh AdrpLdrGot	Lloh338, Lloh339
+	.loh AdrpLdrGot	Lloh336, Lloh337
+	.loh AdrpLdrGot	Lloh340, Lloh341
+	.loh AdrpAdd	Lloh342, Lloh343
+	.loh AdrpLdrGot	Lloh344, Lloh345
+	.loh AdrpLdrGot	Lloh346, Lloh347
+	.loh AdrpAdd	Lloh348, Lloh349
+	.loh AdrpAdd	Lloh350, Lloh351
+                                        ; -- End function
+	.globl	_halide_memoization_cache_store ; -- Begin function halide_memoization_cache_store
+	.weak_definition	_halide_memoization_cache_store
+	.p2align	2
+_halide_memoization_cache_store:        ; @halide_memoization_cache_store
+; %bb.0:                                ; %entry
+	sub	sp, sp, #160                    ; =160
+	stp	x28, x27, [sp, #64]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #80]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #96]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #112]            ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #128]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #144]            ; 16-byte Folded Spill
+	add	x29, sp, #144                   ; =144
+	str	x7, [sp, #32]                   ; 8-byte Folded Spill
+	str	w6, [sp, #44]                   ; 4-byte Folded Spill
+	mov	x19, x5
+	mov	x21, x4
+	mov	x20, x3
+	stp	x2, x1, [sp, #48]               ; 16-byte Folded Spill
+	mov	x23, x0
+	ldr	x8, [x5]
+	ldr	x0, [x8, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	ldr	w27, [x0, #8]
+	and	x25, x27, #0xff
+Lloh352:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh353:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+Lloh354:
+	adrp	x8, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh355:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+	ldr	x24, [x8, x25, lsl #3]
+	cbz	x24, LBB109_19
+; %bb.1:                                ; %while.body.lr.ph
+	ldr	x8, [sp, #48]                   ; 8-byte Folded Reload
+	sxtw	x28, w8
+	cmp	w21, #0                         ; =0
+	b.le	LBB109_4
+; %bb.2:                                ; %while.body.us.preheader
+	mov	w26, w21
+	b	LBB109_11
+LBB109_3:                               ; %if.end59
+                                        ;   in Loop: Header=BB109_4 Depth=1
+	ldr	x24, [x24]
+	cbz	x24, LBB109_19
+LBB109_4:                               ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w8, [x24, #48]
+	cmp	w8, w27
+	b.ne	LBB109_3
+; %bb.5:                                ; %land.lhs.true
+                                        ;   in Loop: Header=BB109_4 Depth=1
+	ldr	x8, [x24, #32]
+	cmp	x8, x28
+	b.ne	LBB109_3
+; %bb.6:                                ; %land.lhs.true12
+                                        ;   in Loop: Header=BB109_4 Depth=1
+	ldr	x0, [x24, #40]
+	ldr	x1, [sp, #56]                   ; 8-byte Folded Reload
+	mov	x2, x28
+	bl	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	cbz	w0, LBB109_3
+; %bb.7:                                ; %land.lhs.true15
+                                        ;   in Loop: Header=BB109_4 Depth=1
+	ldr	x1, [x24, #64]
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	cbz	w0, LBB109_3
+; %bb.8:                                ; %land.lhs.true18
+                                        ;   in Loop: Header=BB109_4 Depth=1
+	ldr	w8, [x24, #56]
+	cmp	w8, w21
+	b.ne	LBB109_3
+	b	LBB109_66
+LBB109_9:                               ; %for.cond.cleanup.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldp	x25, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldr	x20, [sp, #8]                   ; 8-byte Folded Reload
+	cbnz	w0, LBB109_67
+LBB109_10:                              ; %if.end59.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldr	x24, [x24]
+	cbz	x24, LBB109_19
+LBB109_11:                              ; %while.body.us
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB109_17 Depth 2
+	ldr	w8, [x24, #48]
+	cmp	w8, w27
+	b.ne	LBB109_10
+; %bb.12:                               ; %land.lhs.true.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldr	x8, [x24, #32]
+	cmp	x8, x28
+	b.ne	LBB109_10
+; %bb.13:                               ; %land.lhs.true12.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldr	x0, [x24, #40]
+	ldr	x1, [sp, #56]                   ; 8-byte Folded Reload
+	mov	x2, x28
+	bl	__ZN6Halide7Runtime8Internal10keys_equalEPKhS3_m
+	cbz	w0, LBB109_10
+; %bb.14:                               ; %land.lhs.true15.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldr	x1, [x24, #64]
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	cbz	w0, LBB109_10
+; %bb.15:                               ; %land.lhs.true18.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	ldr	w8, [x24, #56]
+	cmp	w8, w21
+	b.ne	LBB109_10
+; %bb.16:                               ; %for.body.lr.ph.us
+                                        ;   in Loop: Header=BB109_11 Depth=1
+	stp	x20, x25, [sp, #8]              ; 16-byte Folded Spill
+	str	x23, [sp, #24]                  ; 8-byte Folded Spill
+	mov	x23, #0
+	mov	x25, #0
+	ldr	x8, [x24, #72]
+	mov	w22, #1
+LBB109_17:                              ; %for.body.us
+                                        ;   Parent Loop BB109_11 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x20, [x19, x25, lsl #3]
+	add	x8, x8, x23
+	ldr	x1, [x8, #40]
+	mov	x0, x20
+	bl	__ZN6Halide7Runtime8Internal16buffer_has_shapeEPK15halide_buffer_tPK18halide_dimension_t
+	ldr	x8, [x24, #72]
+	add	x9, x8, x23
+	ldr	x9, [x9, #16]
+	ldr	x10, [x20, #16]
+	cmp	x9, x10
+	csel	w22, wzr, w22, eq
+	add	x25, x25, #1                    ; =1
+	cmp	x25, x26
+	b.hs	LBB109_9
+; %bb.18:                               ; %for.body.us
+                                        ;   in Loop: Header=BB109_17 Depth=2
+	add	x23, x23, #56                   ; =56
+	tbnz	w0, #0, LBB109_17
+	b	LBB109_9
+LBB109_19:                              ; %for.cond61.preheader
+	mov	x24, x20
+	cmp	w21, #1                         ; =1
+	b.lt	LBB109_51
+; %bb.20:                               ; %for.body64.preheader
+	mov	x8, #0
+	mov	x20, #0
+	mov	w9, w21
+	b	LBB109_23
+LBB109_21:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit.loopexit
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	add	x11, x13, #1                    ; =1
+	sub	x11, x11, x15
+LBB109_22:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	ldrb	w10, [x10, #33]
+	add	x10, x10, #7                    ; =7
+	lsr	x10, x10, #3
+	madd	x20, x10, x11, x20
+	add	x8, x8, #1                      ; =1
+	cmp	x8, x9
+	b.eq	LBB109_52
+LBB109_23:                              ; %for.body64
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB109_29 Depth 2
+                                        ;     Child Loop BB109_38 Depth 2
+                                        ;     Child Loop BB109_42 Depth 2
+                                        ;     Child Loop BB109_49 Depth 2
+	ldr	x10, [x19, x8, lsl #3]
+	ldr	w11, [x10, #36]
+	cmp	w11, #0                         ; =0
+	b.le	LBB109_26
+; %bb.24:                               ; %for.body.lr.ph.i.i
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	ldr	x12, [x10, #40]
+	cmp	w11, #3                         ; =3
+	b.hs	LBB109_27
+; %bb.25:                               ;   in Loop: Header=BB109_23 Depth=1
+	mov	x14, #0
+	mov	x13, #0
+	b	LBB109_36
+LBB109_26:                              ; %for.body64._ZNK15halide_buffer_t13size_in_bytesEv.exit_crit_edge
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	mov	w11, #1
+	b	LBB109_22
+LBB109_27:                              ; %vector.ph25
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	mov	x13, #0
+	mov	x15, #0
+	and	x14, x11, #0xfffffffe
+	add	x16, x12, #24                   ; =24
+	mov	x17, x14
+	b	LBB109_29
+LBB109_28:                              ; %pred.load.continue39
+                                        ;   in Loop: Header=BB109_29 Depth=2
+	sub	w2, w2, #1                      ; =1
+	sub	w3, w3, #1                      ; =1
+	sxtw	x2, w2
+	sxtw	x3, w3
+	mul	x2, x2, x0
+	mul	x3, x3, x1
+	cmp	w0, #0                          ; =0
+	csel	x0, x2, xzr, gt
+	add	x13, x13, x0
+	cmp	w1, #0                          ; =0
+	csel	x0, x3, xzr, gt
+	add	x15, x15, x0
+	add	x16, x16, #32                   ; =32
+	subs	x17, x17, #2                    ; =2
+	b.eq	LBB109_33
+LBB109_29:                              ; %vector.body23
+                                        ;   Parent Loop BB109_23 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldur	w0, [x16, #-16]
+                                        ; implicit-def: $w2
+	cmp	w0, #1                          ; =1
+	b.lt	LBB109_31
+; %bb.30:                               ; %pred.load.if36
+                                        ;   in Loop: Header=BB109_29 Depth=2
+	ldur	w2, [x16, #-20]
+LBB109_31:                              ; %pred.load.continue37
+                                        ;   in Loop: Header=BB109_29 Depth=2
+	ldr	w1, [x16]
+                                        ; implicit-def: $w3
+	cmp	w1, #1                          ; =1
+	b.lt	LBB109_28
+; %bb.32:                               ; %pred.load.if38
+                                        ;   in Loop: Header=BB109_29 Depth=2
+	ldur	w3, [x16, #-4]
+	b	LBB109_28
+LBB109_33:                              ; %middle.block21
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	add	x13, x15, x13
+	cmp	x14, x11
+	b.ne	LBB109_36
+LBB109_34:                              ; %for.body.i13.i.preheader
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	cmp	w11, #3                         ; =3
+	b.hs	LBB109_40
+; %bb.35:                               ;   in Loop: Header=BB109_23 Depth=1
+	mov	x14, #0
+	mov	x15, #0
+	b	LBB109_47
+LBB109_36:                              ; %for.body.i.i.preheader
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	sub	x15, x11, x14
+	add	x14, x12, x14, lsl #4
+	add	x14, x14, #8                    ; =8
+	b	LBB109_38
+LBB109_37:                              ; %if.end.i.i
+                                        ;   in Loop: Header=BB109_38 Depth=2
+	add	x14, x14, #16                   ; =16
+	subs	x15, x15, #1                    ; =1
+	b.eq	LBB109_34
+LBB109_38:                              ; %for.body.i.i
+                                        ;   Parent Loop BB109_23 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	w16, [x14]
+	cmp	w16, #1                         ; =1
+	b.lt	LBB109_37
+; %bb.39:                               ; %if.then.i.i
+                                        ;   in Loop: Header=BB109_38 Depth=2
+	ldursw	x17, [x14, #-4]
+	sub	x17, x17, #1                    ; =1
+	madd	x13, x17, x16, x13
+	b	LBB109_37
+LBB109_40:                              ; %vector.ph
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	mov	x15, #0
+	mov	x16, #0
+	and	x14, x11, #0xfffffffe
+	add	x17, x12, #24                   ; =24
+	mov	x0, x14
+	b	LBB109_42
+LBB109_41:                              ; %pred.load.continue19
+                                        ;   in Loop: Header=BB109_42 Depth=2
+	sub	w3, w3, #1                      ; =1
+	sub	w4, w4, #1                      ; =1
+	sxtw	x3, w3
+	sxtw	x4, w4
+	mul	x3, x3, x1
+	mul	x4, x4, x2
+	cmp	w1, #0                          ; =0
+	csel	x1, x3, xzr, lt
+	add	x15, x15, x1
+	cmp	w2, #0                          ; =0
+	csel	x1, x4, xzr, lt
+	add	x16, x16, x1
+	add	x17, x17, #32                   ; =32
+	subs	x0, x0, #2                      ; =2
+	b.eq	LBB109_46
+LBB109_42:                              ; %vector.body
+                                        ;   Parent Loop BB109_23 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldursw	x1, [x17, #-16]
+                                        ; implicit-def: $w3
+	tbnz	w1, #31, LBB109_44
+; %bb.43:                               ; %pred.load.continue
+                                        ;   in Loop: Header=BB109_42 Depth=2
+	ldrsw	x2, [x17]
+                                        ; implicit-def: $w4
+	tbz	w2, #31, LBB109_41
+	b	LBB109_45
+LBB109_44:                              ; %pred.load.if
+                                        ;   in Loop: Header=BB109_42 Depth=2
+	ldur	w3, [x17, #-20]
+	ldrsw	x2, [x17]
+                                        ; implicit-def: $w4
+	tbz	w2, #31, LBB109_41
+LBB109_45:                              ; %pred.load.if18
+                                        ;   in Loop: Header=BB109_42 Depth=2
+	ldur	w4, [x17, #-4]
+	b	LBB109_41
+LBB109_46:                              ; %middle.block
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	add	x15, x16, x15
+	cmp	x14, x11
+	b.eq	LBB109_21
+LBB109_47:                              ; %for.body.i13.i.preheader4
+                                        ;   in Loop: Header=BB109_23 Depth=1
+	sub	x11, x11, x14
+	add	x12, x12, x14, lsl #4
+	add	x12, x12, #8                    ; =8
+	b	LBB109_49
+LBB109_48:                              ; %if.end.i24.i
+                                        ;   in Loop: Header=BB109_49 Depth=2
+	add	x12, x12, #16                   ; =16
+	subs	x11, x11, #1                    ; =1
+	b.eq	LBB109_21
+LBB109_49:                              ; %for.body.i13.i
+                                        ;   Parent Loop BB109_23 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldrsw	x14, [x12]
+	tbz	w14, #31, LBB109_48
+; %bb.50:                               ; %if.then.i20.i
+                                        ;   in Loop: Header=BB109_49 Depth=2
+	ldursw	x16, [x12, #-4]
+	sub	x16, x16, #1                    ; =1
+	madd	x15, x16, x14, x15
+	b	LBB109_48
+LBB109_51:
+	mov	x20, #0
+LBB109_52:                              ; %for.cond.cleanup63
+Lloh356:
+	adrp	x22, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGE
+Lloh357:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal18current_cache_sizeE@GOTPAGEOFF]
+	ldr	x8, [x22]
+	add	x8, x8, x20
+	str	x8, [x22]
+	bl	__ZN6Halide7Runtime8Internal11prune_cacheEv
+	mov	x0, #0
+	mov	w1, #96
+	bl	_halide_malloc
+	mov	x28, x0
+	cbz	x0, LBB109_61
+; %bb.53:                               ; %if.then76
+	ldp	x8, x1, [sp, #48]               ; 16-byte Folded Reload
+                                        ; kill: def $w8 killed $w8 killed $x8 def $x8
+	sxtw	x2, w8
+	ldr	x8, [sp, #32]                   ; 8-byte Folded Reload
+	str	x8, [sp]
+	mov	x0, x28
+	mov	x3, x27
+	mov	x4, x24
+	mov	x5, x21
+	mov	x6, x19
+	ldr	w7, [sp, #44]                   ; 4-byte Folded Reload
+	bl	__ZN6Halide7Runtime8Internal10CacheEntry4initEPKhmjPK15halide_buffer_tiPPS5_by
+	tbz	w0, #0, LBB109_61
+; %bb.54:                               ; %if.end101
+Lloh358:
+	adrp	x10, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh359:
+	ldr	x10, [x10, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+	ldr	x8, [x10, x25, lsl #3]
+	str	x8, [x28]
+Lloh360:
+	adrp	x8, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGE
+Lloh361:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGEOFF]
+	ldr	x9, [x8]
+	str	x9, [x28, #16]
+	cbz	x9, LBB109_56
+; %bb.55:                               ; %if.then106
+	str	x28, [x9, #8]
+LBB109_56:                              ; %if.end107
+	str	x28, [x8]
+Lloh362:
+	adrp	x8, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGE
+Lloh363:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGEOFF]
+	ldr	x9, [x8]
+	cbnz	x9, LBB109_58
+; %bb.57:                               ; %if.then109
+	str	x28, [x8]
+LBB109_58:                              ; %if.end110
+	str	x28, [x10, x25, lsl #3]
+	str	w21, [x28, #52]
+	cmp	w21, #1                         ; =1
+	b.lt	LBB109_66
+; %bb.59:                               ; %for.body117.preheader
+	mov	w20, w21
+LBB109_60:                              ; %for.body117
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x19], #8
+	ldr	x0, [x8, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	str	x28, [x0]
+	subs	x20, x20, #1                    ; =1
+	b.ne	LBB109_60
+	b	LBB109_66
+LBB109_61:                              ; %if.then83
+	ldr	x8, [x22]
+	sub	x8, x8, x20
+	str	x8, [x22]
+	cmp	w21, #1                         ; =1
+	b.lt	LBB109_64
+; %bb.62:                               ; %for.body88.preheader
+	mov	w20, w21
+LBB109_63:                              ; %for.body88
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x19], #8
+	ldr	x0, [x8, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	str	xzr, [x0]
+	subs	x20, x20, #1                    ; =1
+	b.ne	LBB109_63
+LBB109_64:                              ; %for.cond.cleanup87
+	cbz	x28, LBB109_66
+; %bb.65:                               ; %if.then99
+	mov	x0, x23
+	mov	x1, x28
+	bl	_halide_free
+LBB109_66:                              ; %cleanup132
+Lloh364:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh365:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	w0, #0
+	ldp	x29, x30, [sp, #144]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #128]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #160                    ; =160
+	ret
+LBB109_67:                              ; %do.body.us
+	tbnz	w22, #0, LBB109_69
+; %bb.68:                               ; %if.then42.us
+Lloh366:
+	adrp	x1, l_.str.9.46@PAGE
+Lloh367:
+	add	x1, x1, l_.str.9.46@PAGEOFF
+	mov	x0, x23
+	bl	_halide_print
+	bl	_abort
+LBB109_69:                              ; %for.body48.us
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x19], #8
+	ldr	x0, [x8, #16]
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	str	xzr, [x0]
+	subs	x26, x26, #1                    ; =1
+	b.ne	LBB109_69
+	b	LBB109_66
+	.loh AdrpLdrGot	Lloh354, Lloh355
+	.loh AdrpLdrGot	Lloh352, Lloh353
+	.loh AdrpLdrGot	Lloh356, Lloh357
+	.loh AdrpLdrGot	Lloh360, Lloh361
+	.loh AdrpLdrGot	Lloh358, Lloh359
+	.loh AdrpLdrGot	Lloh362, Lloh363
+	.loh AdrpLdrGot	Lloh364, Lloh365
+	.loh AdrpAdd	Lloh366, Lloh367
+                                        ; -- End function
+	.globl	_halide_memoization_cache_release ; -- Begin function halide_memoization_cache_release
+	.weak_definition	_halide_memoization_cache_release
+	.p2align	2
+_halide_memoization_cache_release:      ; @halide_memoization_cache_release
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+	mov	x0, x1
+	bl	__ZN6Halide7Runtime8Internal21get_pointer_to_headerEPh
+	ldr	x20, [x0]
+	cbz	x20, LBB110_4
+; %bb.1:                                ; %if.else
+Lloh368:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh369:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	ldr	w8, [x20, #52]
+	cbnz	w8, LBB110_3
+; %bb.2:                                ; %if.then4
+Lloh370:
+	adrp	x1, l_.str.12.47@PAGE
+Lloh371:
+	add	x1, x1, l_.str.12.47@PAGEOFF
+	mov	x0, x19
+	bl	_halide_print
+	bl	_abort
+	ldr	w8, [x20, #52]
+LBB110_3:                               ; %do.end
+	sub	w8, w8, #1                      ; =1
+	str	w8, [x20, #52]
+Lloh372:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh373:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+LBB110_4:                               ; %if.then
+	mov	x1, x0
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_free
+	.loh AdrpLdrGot	Lloh368, Lloh369
+	.loh AdrpAdd	Lloh370, Lloh371
+	.loh AdrpLdrGot	Lloh372, Lloh373
+                                        ; -- End function
+	.globl	_halide_memoization_cache_evict ; -- Begin function halide_memoization_cache_evict
+	.weak_definition	_halide_memoization_cache_evict
+	.p2align	2
+_halide_memoization_cache_evict:        ; @halide_memoization_cache_evict
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x19, x1
+	mov	x20, x0
+Lloh374:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh375:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+Lloh376:
+	adrp	x22, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGE
+Lloh377:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal13cache_entriesE@GOTPAGEOFF]
+Lloh378:
+	adrp	x23, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGE
+Lloh379:
+	ldr	x23, [x23, __ZN6Halide7Runtime8Internal18most_recently_usedE@GOTPAGEOFF]
+Lloh380:
+	adrp	x24, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGE
+Lloh381:
+	ldr	x24, [x24, __ZN6Halide7Runtime8Internal19least_recently_usedE@GOTPAGEOFF]
+	mov	x25, x22
+	b	LBB111_2
+LBB111_1:                               ; %if.end25
+                                        ;   in Loop: Header=BB111_2 Depth=1
+	add	x25, x25, #8                    ; =8
+	add	x8, x22, #2048                  ; =2048
+	cmp	x25, x8
+	b.eq	LBB111_11
+LBB111_2:                               ; %for.body
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB111_7 Depth 2
+	ldr	x26, [x25]
+	cbz	x26, LBB111_1
+; %bb.3:                                ; %while.body.preheader
+                                        ;   in Loop: Header=BB111_2 Depth=1
+	mov	x27, x25
+	b	LBB111_7
+LBB111_4:                               ; %if.else
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	str	x9, [x23]
+LBB111_5:                               ; %if.end
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	add	x10, x9, #8                     ; =8
+	cmp	x9, #0                          ; =0
+	csel	x9, x24, x10, eq
+	str	x8, [x9]
+	mov	x0, x21
+	bl	__ZN6Halide7Runtime8Internal10CacheEntry7destroyEv
+	mov	x0, x20
+	mov	x1, x21
+	bl	_halide_free
+	mov	x21, x27
+LBB111_6:                               ; %if.end24
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	mov	x27, x21
+	cbz	x26, LBB111_1
+LBB111_7:                               ; %while.body
+                                        ;   Parent Loop BB111_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	mov	x21, x26
+	ldr	x26, [x26]
+	ldrb	w8, [x21, #88]
+	cbz	w8, LBB111_6
+; %bb.8:                                ; %land.lhs.true
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	ldr	x8, [x21, #80]
+	cmp	x8, x19
+	b.ne	LBB111_6
+; %bb.9:                                ; %if.then7
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	str	x26, [x27]
+	ldp	x8, x9, [x21, #8]
+	cbz	x8, LBB111_4
+; %bb.10:                               ; %if.then9
+                                        ;   in Loop: Header=BB111_7 Depth=2
+	str	x9, [x8, #16]
+	ldr	x9, [x21, #16]
+	b	LBB111_5
+LBB111_11:                              ; %for.cond.cleanup
+Lloh382:
+	adrp	x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGE
+Lloh383:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal16memoization_lockE@GOTPAGEOFF]
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+	.loh AdrpLdrGot	Lloh380, Lloh381
+	.loh AdrpLdrGot	Lloh378, Lloh379
+	.loh AdrpLdrGot	Lloh376, Lloh377
+	.loh AdrpLdrGot	Lloh374, Lloh375
+	.loh AdrpLdrGot	Lloh382, Lloh383
+                                        ; -- End function
+	.globl	_halide_string_to_string        ; -- Begin function halide_string_to_string
+	.weak_definition	_halide_string_to_string
+	.p2align	2
+_halide_string_to_string:               ; @halide_string_to_string
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	cmp	x0, x1
+	b.hs	LBB112_5
+; %bb.1:                                ; %if.end
+Lloh384:
+	adrp	x8, l_.str.50@PAGE
+Lloh385:
+	add	x8, x8, l_.str.50@PAGEOFF
+	cmp	x2, #0                          ; =0
+	csel	x8, x8, x2, eq
+LBB112_2:                               ; %if.end5
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrb	w9, [x8]
+	strb	w9, [x0]
+	cbz	w9, LBB112_5
+; %bb.3:                                ; %if.end8
+                                        ;   in Loop: Header=BB112_2 Depth=1
+	add	x0, x0, #1                      ; =1
+	add	x8, x8, #1                      ; =1
+	cmp	x1, x0
+	b.ne	LBB112_2
+; %bb.4:                                ; %if.then4
+	sturb	wzr, [x0, #-1]
+	mov	x0, x1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB112_5:
+	mov	x1, x0
+	mov	x0, x1
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh384, Lloh385
+                                        ; -- End function
+	.globl	_halide_uint64_to_string        ; -- Begin function halide_uint64_to_string
+	.weak_definition	_halide_uint64_to_string
+	.p2align	2
+_halide_uint64_to_string:               ; @halide_uint64_to_string
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	strb	wzr, [sp, #31]
+	mov	x8, sp
+	add	x8, x8, #30                     ; =30
+	cbnz	x2, LBB113_2
+; %bb.1:                                ; %entry
+	cmp	w3, #1                          ; =1
+	b.lt	LBB113_5
+LBB113_2:                               ; %for.body.preheader
+	mov	w11, #1
+	mov	x9, #-3689348814741910324
+	movk	x9, #52429
+	mov	w10, #-10
+LBB113_3:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x13, x2
+	mov	x12, x11
+	umulh	x11, x2, x9
+	lsr	x2, x11, #3
+	madd	w11, w2, w10, w13
+	add	w11, w11, #48                   ; =48
+	strb	w11, [x8], #-1
+	add	w11, w12, #1                    ; =1
+	cmp	x13, #9                         ; =9
+	b.hi	LBB113_3
+; %bb.4:                                ; %for.body
+                                        ;   in Loop: Header=BB113_3 Depth=1
+	cmp	w12, w3
+	b.lt	LBB113_3
+LBB113_5:                               ; %for.cond.cleanup
+	add	x2, x8, #1                      ; =1
+	bl	_halide_string_to_string
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+                                        ; -- End function
+	.globl	_halide_int64_to_string         ; -- Begin function halide_int64_to_string
+	.weak_definition	_halide_int64_to_string
+	.p2align	2
+_halide_int64_to_string:                ; @halide_int64_to_string
+; %bb.0:                                ; %entry
+	cmp	x0, x1
+	b.hs	LBB114_3
+; %bb.1:                                ; %entry
+	tbz	x2, #63, LBB114_3
+; %bb.2:                                ; %if.then
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w8, #45
+	strb	w8, [x0], #1
+	neg	x2, x2
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+LBB114_3:                               ; %if.end
+	b	_halide_uint64_to_string
+                                        ; -- End function
+	.globl	_halide_double_to_string        ; -- Begin function halide_double_to_string
+	.weak_definition	_halide_double_to_string
+	.p2align	2
+_halide_double_to_string:               ; @halide_double_to_string
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	sub	sp, sp, #528                    ; =528
+	mov	x21, x2
+	mov	x19, x1
+	mov	x20, x0
+	stur	d0, [x29, #-56]
+	stur	xzr, [x29, #-64]
+	sub	x0, x29, #64                    ; =64
+	sub	x1, x29, #56                    ; =56
+	mov	w2, #8
+	bl	_memcpy
+	ldur	x8, [x29, #-64]
+	and	x23, x8, #0xfffffffffffff
+	ubfx	x22, x8, #52, #11
+	cmp	w22, #2047                      ; =2047
+	b.ne	LBB115_4
+; %bb.1:                                ; %if.then
+	cbz	x23, LBB115_19
+; %bb.2:                                ; %if.then4
+	tbnz	x8, #63, LBB115_21
+; %bb.3:                                ; %if.else
+Lloh386:
+	adrp	x2, l_.str.2.58@PAGE
+Lloh387:
+	add	x2, x2, l_.str.2.58@PAGEOFF
+	b	LBB115_34
+LBB115_4:                               ; %if.else15
+	cmp	x23, #0                         ; =0
+	ccmp	w22, #0, #0, eq
+	b.eq	LBB115_16
+; %bb.5:                                ; %if.end32
+	tbnz	x8, #63, LBB115_22
+; %bb.6:                                ; %if.end36
+	cbz	w21, LBB115_23
+LBB115_7:                               ; %while.condthread-pre-split
+	ldur	d0, [x29, #-56]
+	fmov	d1, #1.00000000
+	mov	w22, #0
+	fcmp	d0, d1
+	b.pl	LBB115_11
+; %bb.8:                                ; %while.body.preheader
+	fmov	d2, #10.00000000
+LBB115_9:                               ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	sub	w22, w22, #1                    ; =1
+	fmul	d0, d0, d2
+	fcmp	d0, d1
+	b.mi	LBB115_9
+; %bb.10:                               ; %while.cond.while.cond40thread-pre-split_crit_edge
+	stur	d0, [x29, #-56]
+LBB115_11:                              ; %while.cond40thread-pre-split
+	fmov	d1, #10.00000000
+	fcmp	d0, d1
+	b.lt	LBB115_14
+LBB115_12:                              ; %while.body42
+                                        ; =>This Inner Loop Header: Depth=1
+	fdiv	d0, d0, d1
+	add	w22, w22, #1                    ; =1
+	fcmp	d0, d1
+	b.ge	LBB115_12
+; %bb.13:                               ; %while.cond40.while.end43_crit_edge
+	stur	d0, [x29, #-56]
+LBB115_14:                              ; %while.end43
+	mov	x8, #145685290680320
+	movk	x8, #16686, lsl #48
+	fmov	d1, x8
+	fmov	d2, #0.50000000
+	fmadd	d0, d0, d1, d2
+	fcvtzu	x8, d0
+	mov	x9, #13531
+	movk	x9, #55222, lsl #16
+	movk	x9, #56962, lsl #32
+	movk	x9, #17179, lsl #48
+	umulh	x9, x8, x9
+	lsr	x2, x9, #18
+	mov	x9, #-16960
+	movk	x9, #65520, lsl #16
+	madd	x21, x2, x9, x8
+	mov	x0, x20
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh388:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh389:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	mov	x1, x19
+	mov	x2, x21
+	mov	w3, #6
+	bl	_halide_int64_to_string
+	tbnz	w22, #31, LBB115_29
+; %bb.15:                               ; %if.then53
+Lloh390:
+	adrp	x2, l_.str.11.67@PAGE
+Lloh391:
+	add	x2, x2, l_.str.11.67@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	b	LBB115_30
+LBB115_16:                              ; %if.then18
+	cbz	w21, LBB115_26
+; %bb.17:                               ; %if.then20
+	tbnz	x8, #63, LBB115_31
+; %bb.18:                               ; %if.else24
+Lloh392:
+	adrp	x2, l_.str.6.62@PAGE
+Lloh393:
+	add	x2, x2, l_.str.6.62@PAGEOFF
+	b	LBB115_34
+LBB115_19:                              ; %if.else9
+	tbnz	x8, #63, LBB115_28
+; %bb.20:                               ; %if.else13
+Lloh394:
+	adrp	x2, l_.str.4.60@PAGE
+Lloh395:
+	add	x2, x2, l_.str.4.60@PAGEOFF
+	b	LBB115_34
+LBB115_21:                              ; %if.then6
+Lloh396:
+	adrp	x2, l_.str.1.57@PAGE
+Lloh397:
+	add	x2, x2, l_.str.1.57@PAGEOFF
+	b	LBB115_34
+LBB115_22:                              ; %if.then34
+Lloh398:
+	adrp	x2, l_.str.9.65@PAGE
+Lloh399:
+	add	x2, x2, l_.str.9.65@PAGEOFF
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_string_to_string
+	mov	x20, x0
+	ldur	d0, [x29, #-56]
+	fneg	d0, d0
+	stur	d0, [x29, #-56]
+	cbnz	w21, LBB115_7
+LBB115_23:                              ; %if.else61
+	cbz	w22, LBB115_32
+; %bb.24:                               ; %if.end65
+	orr	x2, x23, #0x10000000000000
+	sub	w23, w22, #1075                 ; =1075
+	cmp	w22, #1074                      ; =1074
+	b.hi	LBB115_35
+; %bb.25:                               ; %if.then71
+	mov	w8, #1075
+	sub	w8, w8, w22
+	lsr	x9, x2, x8
+	lsl	x8, x9, x8
+	cmp	w22, #1023                      ; =1023
+	csel	x8, xzr, x8, lo
+	sub	x8, x2, x8
+	ucvtf	d0, x8
+	mov	x8, #145685290680320
+	movk	x8, #16686, lsl #48
+	add	x8, x8, x23, lsl #52
+	fmov	d1, x8
+	fmov	d2, #0.50000000
+	fmadd	d0, d1, d0, d2
+	fcvtzu	x8, d0
+	csel	x9, xzr, x9, lo
+	ucvtf	d1, x8
+	fcmp	d0, d1
+	cset	w10, eq
+	and	w10, w8, w10
+	sub	x8, x8, x10
+	mov	w10, #16960
+	movk	w10, #15, lsl #16
+	cmp	x8, x10
+	cinc	x2, x9, eq
+	csel	x21, xzr, x8, eq
+	mov	w23, #0
+	b	LBB115_36
+LBB115_26:                              ; %if.else26
+	tbnz	x8, #63, LBB115_33
+; %bb.27:                               ; %if.else30
+Lloh400:
+	adrp	x2, l_.str.8.64@PAGE
+Lloh401:
+	add	x2, x2, l_.str.8.64@PAGEOFF
+	b	LBB115_34
+LBB115_28:                              ; %if.then11
+Lloh402:
+	adrp	x2, l_.str.3.59@PAGE
+Lloh403:
+	add	x2, x2, l_.str.3.59@PAGEOFF
+	b	LBB115_34
+LBB115_29:                              ; %if.else55
+Lloh404:
+	adrp	x2, l_.str.12.68@PAGE
+Lloh405:
+	add	x2, x2, l_.str.12.68@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	neg	w22, w22
+LBB115_30:                              ; %if.end58
+	mov	w2, w22
+	mov	x1, x19
+	mov	w3, #2
+	b	LBB115_47
+LBB115_31:                              ; %if.then22
+Lloh406:
+	adrp	x2, l_.str.5.61@PAGE
+Lloh407:
+	add	x2, x2, l_.str.5.61@PAGEOFF
+	b	LBB115_34
+LBB115_32:                              ; %if.then63
+	movi.2d	v0, #0000000000000000
+	mov	x0, x20
+	mov	x1, x19
+	mov	w2, #0
+	bl	_halide_double_to_string
+	b	LBB115_48
+LBB115_33:                              ; %if.then28
+Lloh408:
+	adrp	x2, l_.str.7.63@PAGE
+Lloh409:
+	add	x2, x2, l_.str.7.63@PAGEOFF
+LBB115_34:                              ; %cleanup147
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_string_to_string
+	b	LBB115_48
+LBB115_35:
+	mov	x21, #0
+LBB115_36:                              ; %if.end104
+	mov	x8, sp
+	add	x1, x8, #512                    ; =512
+	add	x22, x8, #480                   ; =480
+	mov	x0, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cmp	w23, #1                         ; =1
+	b.lt	LBB115_45
+; %bb.37:                               ; %for.cond111.preheader.preheader
+	mov	w8, #0
+	mov	w9, #49
+	b	LBB115_40
+LBB115_38:                              ; %if.end137
+                                        ;   in Loop: Header=BB115_40 Depth=1
+	mov	x2, x22
+LBB115_39:                              ; %if.end137
+                                        ;   in Loop: Header=BB115_40 Depth=1
+	add	w8, w8, #1                      ; =1
+	mov	x22, x2
+	cmp	w8, w23
+	b.eq	LBB115_46
+LBB115_40:                              ; %for.cond111.preheader
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB115_42 Depth 2
+	mov	x2, x0
+	cmp	x0, x22
+	b.eq	LBB115_39
+; %bb.41:                               ; %for.body115.preheader
+                                        ;   in Loop: Header=BB115_40 Depth=1
+	mov	w11, #0
+	mov	x10, x0
+LBB115_42:                              ; %for.body115
+                                        ;   Parent Loop BB115_40 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldrb	w12, [x10, #-1]!
+	sub	w12, w12, #48                   ; =48
+	sxtb	w12, w12
+	orr	w13, w11, w12, lsl #1
+	sxtb	w12, w13
+	sub	w14, w13, #10                   ; =10
+	cmp	w12, #9                         ; =9
+	cset	w11, gt
+	csel	w13, w14, w13, gt
+	add	w13, w13, #48                   ; =48
+	strb	w13, [x10]
+	cmp	x22, x10
+	b.ne	LBB115_42
+; %bb.43:                               ; %for.cond.cleanup114
+                                        ;   in Loop: Header=BB115_40 Depth=1
+	cmp	w12, #9                         ; =9
+	b.le	LBB115_38
+; %bb.44:                               ; %if.then135
+                                        ;   in Loop: Header=BB115_40 Depth=1
+	strb	w9, [x22, #-1]!
+	b	LBB115_38
+LBB115_45:
+	mov	x2, x22
+LBB115_46:                              ; %for.cond.cleanup
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_string_to_string
+Lloh410:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh411:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	mov	x1, x19
+	mov	x2, x21
+	mov	w3, #6
+LBB115_47:                              ; %cleanup147
+	bl	_halide_int64_to_string
+LBB115_48:                              ; %cleanup147
+	add	sp, sp, #528                    ; =528
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh386, Lloh387
+	.loh AdrpAdd	Lloh388, Lloh389
+	.loh AdrpAdd	Lloh390, Lloh391
+	.loh AdrpAdd	Lloh392, Lloh393
+	.loh AdrpAdd	Lloh394, Lloh395
+	.loh AdrpAdd	Lloh396, Lloh397
+	.loh AdrpAdd	Lloh398, Lloh399
+	.loh AdrpAdd	Lloh400, Lloh401
+	.loh AdrpAdd	Lloh402, Lloh403
+	.loh AdrpAdd	Lloh404, Lloh405
+	.loh AdrpAdd	Lloh406, Lloh407
+	.loh AdrpAdd	Lloh408, Lloh409
+	.loh AdrpAdd	Lloh410, Lloh411
+                                        ; -- End function
+	.globl	_halide_pointer_to_string       ; -- Begin function halide_pointer_to_string
+	.weak_definition	_halide_pointer_to_string
+	.p2align	2
+_halide_pointer_to_string:              ; @halide_pointer_to_string
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	str	wzr, [sp, #24]
+	stp	xzr, xzr, [sp, #8]
+	add	x10, sp, #8                     ; =8
+Lloh412:
+	adrp	x9, l_.str.13.71@PAGE
+Lloh413:
+	add	x9, x9, l_.str.13.71@PAGEOFF
+	and	x8, x2, #0xf
+	ldrb	w11, [x9, x8]
+	add	x8, x10, #17                    ; =17
+	strb	w11, [sp, #26]
+	lsr	x11, x2, #4
+	cbz	x11, LBB116_17
+; %bb.1:                                ; %for.cond
+	ubfx	x11, x2, #4, #4
+	ldrb	w11, [x9, x11]
+	add	x10, x10, #16                   ; =16
+	strb	w11, [sp, #25]
+	lsr	x11, x2, #8
+	cbz	x11, LBB116_16
+; %bb.2:                                ; %for.cond.1
+	ubfx	x8, x2, #8, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	add	x8, x11, #15                    ; =15
+	strb	w12, [sp, #24]
+	lsr	x12, x2, #12
+	cbz	x12, LBB116_18
+; %bb.3:                                ; %for.cond.2
+	ubfx	x10, x2, #12, #4
+	ldrb	w12, [x9, x10]
+	add	x10, x11, #14                   ; =14
+	strb	w12, [sp, #23]
+	lsr	x11, x2, #16
+	cbz	x11, LBB116_16
+; %bb.4:                                ; %for.cond.3
+	ubfx	x8, x2, #16, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	add	x8, x11, #13                    ; =13
+	strb	w12, [sp, #22]
+	lsr	x12, x2, #20
+	cbz	x12, LBB116_18
+; %bb.5:                                ; %for.cond.4
+	ubfx	x10, x2, #20, #4
+	ldrb	w12, [x9, x10]
+	add	x10, x11, #12                   ; =12
+	strb	w12, [sp, #21]
+	lsr	x11, x2, #24
+	cbz	x11, LBB116_16
+; %bb.6:                                ; %for.cond.5
+	ubfx	x8, x2, #24, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	add	x8, x11, #11                    ; =11
+	strb	w12, [sp, #20]
+	lsr	x12, x2, #28
+	cbz	x12, LBB116_18
+; %bb.7:                                ; %for.cond.6
+	ubfx	x10, x2, #28, #4
+	ldrb	w12, [x9, x10]
+	add	x10, x11, #10                   ; =10
+	strb	w12, [sp, #19]
+	lsr	x11, x2, #32
+	cbz	x11, LBB116_16
+; %bb.8:                                ; %for.cond.7
+	ubfx	x8, x2, #32, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	add	x8, x11, #9                     ; =9
+	strb	w12, [sp, #18]
+	lsr	x12, x2, #36
+	cbz	x12, LBB116_18
+; %bb.9:                                ; %for.cond.8
+	ubfx	x10, x2, #36, #4
+	ldrb	w12, [x9, x10]
+	add	x10, x11, #8                    ; =8
+	strb	w12, [sp, #17]
+	lsr	x11, x2, #40
+	cbz	x11, LBB116_16
+; %bb.10:                               ; %for.cond.9
+	ubfx	x8, x2, #40, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	orr	x8, x11, #0x7
+	strb	w12, [sp, #16]
+	lsr	x12, x2, #44
+	cbz	x12, LBB116_18
+; %bb.11:                               ; %for.cond.10
+	ubfx	x10, x2, #44, #4
+	ldrb	w12, [x9, x10]
+	orr	x10, x11, #0x6
+	strb	w12, [sp, #15]
+	lsr	x11, x2, #48
+	cbz	x11, LBB116_16
+; %bb.12:                               ; %for.cond.11
+	ubfx	x8, x2, #48, #4
+	ldrb	w12, [x9, x8]
+	mov	w8, #5
+	add	x11, sp, #8                     ; =8
+	orr	x8, x11, x8
+	strb	w12, [sp, #14]
+	lsr	x12, x2, #52
+	cbz	x12, LBB116_18
+; %bb.13:                               ; %for.cond.12
+	ubfx	x10, x2, #52, #4
+	ldrb	w12, [x9, x10]
+	orr	x10, x11, #0x4
+	strb	w12, [sp, #13]
+	lsr	x11, x2, #56
+	cbz	x11, LBB116_16
+; %bb.14:                               ; %for.cond.13
+	ubfx	x8, x2, #56, #4
+	ldrb	w12, [x9, x8]
+	add	x11, sp, #8                     ; =8
+	orr	x8, x11, #0x3
+	strb	w12, [sp, #12]
+	lsr	x12, x2, #60
+	cbz	x12, LBB116_18
+; %bb.15:                               ; %for.cond.14
+	ldrb	w9, [x9, x12]
+	mov	x2, x8
+	orr	x8, x11, #0x2
+	strb	w9, [sp, #11]
+	b	LBB116_19
+LBB116_16:
+	mov	x2, x8
+	mov	x8, x10
+	b	LBB116_19
+LBB116_17:
+	add	x2, x10, #18                    ; =18
+	b	LBB116_19
+LBB116_18:
+	mov	x2, x10
+LBB116_19:                              ; %cleanup
+	mov	w9, #120
+	strb	w9, [x8]
+	mov	w8, #48
+	strb	w8, [x2, #-2]!
+	bl	_halide_string_to_string
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+	.loh AdrpAdd	Lloh412, Lloh413
+                                        ; -- End function
+	.globl	_halide_type_to_string          ; -- Begin function halide_type_to_string
+	.weak_definition	_halide_type_to_string
+	.p2align	2
+_halide_type_to_string:                 ; @halide_type_to_string
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x2
+	mov	x19, x1
+	ldrsb	x8, [x2]
+	cmp	x8, #3                          ; =3
+	b.hi	LBB117_2
+; %bb.1:                                ; %switch.lookup
+Lloh414:
+	adrp	x9, l_switch.table.halide_type_to_string@PAGE
+Lloh415:
+	add	x9, x9, l_switch.table.halide_type_to_string@PAGEOFF
+	ldr	x2, [x9, x8, lsl #3]
+	b	LBB117_3
+LBB117_2:
+Lloh416:
+	adrp	x2, l_.str.18.72@PAGE
+Lloh417:
+	add	x2, x2, l_.str.18.72@PAGEOFF
+LBB117_3:                               ; %sw.epilog
+	mov	x1, x19
+	bl	_halide_string_to_string
+	ldrb	w2, [x20, #1]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	ldrh	w8, [x20, #2]
+	cmp	w8, #1                          ; =1
+	b.ne	LBB117_5
+; %bb.4:                                ; %if.end
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB117_5:                               ; %if.then
+Lloh418:
+	adrp	x2, l_.str.19.77@PAGE
+Lloh419:
+	add	x2, x2, l_.str.19.77@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	ldrh	w2, [x20, #2]
+	mov	x1, x19
+	mov	w3, #1
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_uint64_to_string
+	.loh AdrpAdd	Lloh414, Lloh415
+	.loh AdrpAdd	Lloh416, Lloh417
+	.loh AdrpAdd	Lloh418, Lloh419
+                                        ; -- End function
+	.globl	_halide_buffer_to_string        ; -- Begin function halide_buffer_to_string
+	.weak_definition	_halide_buffer_to_string
+	.p2align	2
+_halide_buffer_to_string:               ; @halide_buffer_to_string
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x19, x1
+	cbz	x2, LBB118_5
+; %bb.1:                                ; %if.end
+	mov	x20, x2
+Lloh420:
+	adrp	x2, l_.str.21.79@PAGE
+Lloh421:
+	add	x2, x2, l_.str.21.79@PAGEOFF
+	mov	x1, x19
+	bl	_halide_string_to_string
+	ldr	x2, [x20]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh422:
+	adrp	x21, l_.str.55@PAGE
+Lloh423:
+	add	x21, x21, l_.str.55@PAGEOFF
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_string_to_string
+	ldr	x2, [x20, #8]
+	mov	x1, x19
+	bl	_halide_pointer_to_string
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_string_to_string
+	ldr	x2, [x20, #16]
+	mov	x1, x19
+	bl	_halide_pointer_to_string
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_string_to_string
+	ldr	x2, [x20, #24]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_string_to_string
+	add	x2, x20, #32                    ; =32
+	mov	x1, x19
+	bl	_halide_type_to_string
+	ldr	w8, [x20, #36]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB118_4
+; %bb.2:                                ; %for.body.lr.ph
+	mov	x24, #0
+	mov	x25, #0
+Lloh424:
+	adrp	x21, l_.str.23.82@PAGE
+Lloh425:
+	add	x21, x21, l_.str.23.82@PAGEOFF
+Lloh426:
+	adrp	x22, l_.str.55@PAGE
+Lloh427:
+	add	x22, x22, l_.str.55@PAGEOFF
+Lloh428:
+	adrp	x23, l_.str.24.83@PAGE
+Lloh429:
+	add	x23, x23, l_.str.24.83@PAGEOFF
+LBB118_3:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_string_to_string
+	ldr	x8, [x20, #40]
+	ldrsw	x2, [x8, x24]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x19
+	mov	x2, x22
+	bl	_halide_string_to_string
+	ldr	x8, [x20, #40]
+	add	x8, x8, x24
+	ldrsw	x2, [x8, #4]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x19
+	mov	x2, x22
+	bl	_halide_string_to_string
+	ldr	x8, [x20, #40]
+	add	x8, x8, x24
+	ldrsw	x2, [x8, #8]
+	mov	x1, x19
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x19
+	mov	x2, x23
+	bl	_halide_string_to_string
+	add	x25, x25, #1                    ; =1
+	ldrsw	x8, [x20, #36]
+	add	x24, x24, #16                   ; =16
+	cmp	x25, x8
+	b.lt	LBB118_3
+LBB118_4:                               ; %for.cond.cleanup
+Lloh430:
+	adrp	x2, l_.str.8.119@PAGE
+Lloh431:
+	add	x2, x2, l_.str.8.119@PAGEOFF
+	b	LBB118_6
+LBB118_5:                               ; %if.then
+Lloh432:
+	adrp	x2, l_.str.20.78@PAGE
+Lloh433:
+	add	x2, x2, l_.str.20.78@PAGEOFF
+LBB118_6:                               ; %if.then
+	mov	x1, x19
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	b	_halide_string_to_string
+	.loh AdrpAdd	Lloh422, Lloh423
+	.loh AdrpAdd	Lloh420, Lloh421
+	.loh AdrpAdd	Lloh428, Lloh429
+	.loh AdrpAdd	Lloh426, Lloh427
+	.loh AdrpAdd	Lloh424, Lloh425
+	.loh AdrpAdd	Lloh430, Lloh431
+	.loh AdrpAdd	Lloh432, Lloh433
+                                        ; -- End function
+	.globl	_halide_malloc_alignment        ; -- Begin function halide_malloc_alignment
+	.weak_definition	_halide_malloc_alignment
+	.p2align	2
+_halide_malloc_alignment:               ; @halide_malloc_alignment
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #32
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_reuse_device_allocations ; -- Begin function halide_reuse_device_allocations
+	.weak_definition	_halide_reuse_device_allocations
+	.p2align	2
+_halide_reuse_device_allocations:       ; @halide_reuse_device_allocations
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+Lloh434:
+	adrp	x8, __ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE@GOTPAGE
+Lloh435:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE@GOTPAGEOFF]
+Lloh436:
+	strb	w1, [x8]
+	tbz	w1, #0, LBB120_2
+; %bb.1:
+	mov	w20, #0
+	b	LBB120_7
+LBB120_2:                               ; %if.then
+	mov	x19, x0
+Lloh437:
+	adrp	x0, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGE
+Lloh438:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+Lloh439:
+	adrp	x8, __ZN6Halide7Runtime8Internal23device_allocation_poolsE@GOTPAGE
+Lloh440:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal23device_allocation_poolsE@GOTPAGEOFF]
+Lloh441:
+	ldr	x21, [x8]
+	cbz	x21, LBB120_5
+; %bb.3:                                ; %for.body.preheader
+	mov	w20, #0
+LBB120_4:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x21]
+	mov	x0, x19
+	blr	x8
+	cmp	w0, #0                          ; =0
+	csel	w20, w20, w0, eq
+	ldr	x21, [x21, #8]
+	cbnz	x21, LBB120_4
+	b	LBB120_6
+LBB120_5:
+	mov	w20, #0
+LBB120_6:                               ; %for.cond.cleanup
+Lloh442:
+	adrp	x0, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGE
+Lloh443:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+LBB120_7:                               ; %if.end5
+	mov	x0, x20
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGotStr	Lloh434, Lloh435, Lloh436
+	.loh AdrpLdrGotLdr	Lloh439, Lloh440, Lloh441
+	.loh AdrpLdrGot	Lloh437, Lloh438
+	.loh AdrpLdrGot	Lloh442, Lloh443
+                                        ; -- End function
+	.globl	_halide_can_reuse_device_allocations ; -- Begin function halide_can_reuse_device_allocations
+	.weak_definition	_halide_can_reuse_device_allocations
+	.p2align	2
+_halide_can_reuse_device_allocations:   ; @halide_can_reuse_device_allocations
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh444:
+	adrp	x8, __ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE@GOTPAGE
+Lloh445:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE@GOTPAGEOFF]
+	ldrb	w0, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh444, Lloh445
+                                        ; -- End function
+	.globl	_halide_register_device_allocation_pool ; -- Begin function halide_register_device_allocation_pool
+	.weak_definition	_halide_register_device_allocation_pool
+	.p2align	2
+_halide_register_device_allocation_pool: ; @halide_register_device_allocation_pool
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+Lloh446:
+	adrp	x20, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGE
+Lloh447:
+	ldr	x20, [x20, __ZN6Halide7Runtime8Internal21allocation_pools_lockE@GOTPAGEOFF]
+	mov	x0, x20
+	bl	_halide_mutex_lock
+Lloh448:
+	adrp	x8, __ZN6Halide7Runtime8Internal23device_allocation_poolsE@GOTPAGE
+Lloh449:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal23device_allocation_poolsE@GOTPAGEOFF]
+	ldr	x9, [x8]
+	str	x9, [x19, #8]
+	str	x19, [x8]
+	mov	x0, x20
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+	.loh AdrpLdrGot	Lloh448, Lloh449
+	.loh AdrpLdrGot	Lloh446, Lloh447
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t ; -- Begin function _ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+	.weak_definition	__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+	.p2align	2
+__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t: ; @_ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	ldr	x8, [x1, #24]
+	tbnz	w8, #1, LBB123_2
+; %bb.1:                                ; %return
+	mov	w0, #0
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB123_2:                               ; %if.end
+	tbnz	w8, #0, LBB123_5
+; %bb.3:                                ; %if.end9
+	mov	x19, x1
+	ldr	x8, [x1, #8]
+	cbz	x8, LBB123_6
+; %bb.4:                                ; %if.end15
+	mov	x20, x0
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #48]
+	mov	x1, x19
+	blr	x8
+	cbz	w0, LBB123_7
+LBB123_5:
+	mov	w0, #-14
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB123_6:
+	mov	w0, #-19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB123_7:                               ; %if.end23
+	ldr	x8, [x19, #24]
+	and	x8, x8, #0xfffffffffffffffd
+	str	x8, [x19, #24]
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_buffer_is_initialized
+	mov	w0, #0
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_device_release          ; -- Begin function halide_device_release
+	.weak_definition	_halide_device_release
+	.p2align	2
+_halide_device_release:                 ; @halide_device_release
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x1, #120]
+	ldr	x1, [x8, #40]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x1
+                                        ; -- End function
+	.globl	_halide_copy_to_host            ; -- Begin function halide_copy_to_host
+	.weak_definition	_halide_copy_to_host
+	.p2align	2
+_halide_copy_to_host:                   ; @halide_copy_to_host
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x1
+	mov	x20, x0
+Lloh450:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh451:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	cbz	x19, LBB125_5
+; %bb.1:                                ; %if.end.i
+	ldp	x8, x9, [x19]
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB125_6
+; %bb.2:                                ; %if.end10.i
+	cbz	x9, LBB125_7
+; %bb.3:                                ; %if.end10.i
+	cbnz	x8, LBB125_7
+; %bb.4:                                ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	mov	x21, x0
+	cbnz	w0, LBB125_10
+	b	LBB125_9
+LBB125_5:                               ; %if.then.i
+Lloh452:
+	adrp	x1, l_.str.6.88@PAGE
+Lloh453:
+	add	x1, x1, l_.str.6.88@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	mov	x21, x0
+	cbnz	w0, LBB125_10
+	b	LBB125_9
+LBB125_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	mov	x21, x0
+	cbnz	w0, LBB125_10
+	b	LBB125_9
+LBB125_7:                               ; %if.end16.i
+	ldr	w8, [x19, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB125_9
+; %bb.8:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	mov	x21, x0
+	cbnz	w0, LBB125_10
+LBB125_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.split
+	mov	x0, x20
+	mov	x1, x19
+	bl	__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+	mov	x21, x0
+LBB125_10:                              ; %cleanup
+Lloh454:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh455:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	x0, x21
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh450, Lloh451
+	.loh AdrpAdd	Lloh452, Lloh453
+	.loh AdrpLdrGot	Lloh454, Lloh455
+                                        ; -- End function
+	.globl	_copy_to_device_already_locked  ; -- Begin function copy_to_device_already_locked
+	.weak_definition	_copy_to_device_already_locked
+	.p2align	2
+_copy_to_device_already_locked:         ; @copy_to_device_already_locked
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x2
+	mov	x19, x1
+	mov	x20, x0
+	cbz	x1, LBB126_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x19]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB126_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB126_7
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x19, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB126_8
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB126_14
+	b	LBB126_8
+LBB126_5:                               ; %if.then.i
+Lloh456:
+	adrp	x1, l_.str.7.89@PAGE
+Lloh457:
+	add	x1, x1, l_.str.7.89@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB126_14
+	b	LBB126_8
+LBB126_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	cbnz	w0, LBB126_14
+	b	LBB126_8
+LBB126_7:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB126_14
+LBB126_8:                               ; %if.end
+	cbnz	x21, LBB126_10
+; %bb.9:                                ; %if.then2
+	ldr	x21, [x19, #8]
+	cbz	x21, LBB126_20
+LBB126_10:                              ; %if.end11
+	ldr	x8, [x19]
+	cbz	x8, LBB126_13
+; %bb.11:                               ; %land.lhs.true
+	ldr	x8, [x19, #8]
+	cmp	x8, x21
+	b.eq	LBB126_15
+; %bb.12:                               ; %if.then14
+Lloh458:
+	adrp	x1, l_.str.9.90@PAGE
+Lloh459:
+	add	x1, x1, l_.str.9.90@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error
+	mov	w0, #-42
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB126_13:                              ; %if.then18
+	mov	x0, x20
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_device_malloc
+	cbz	w0, LBB126_15
+LBB126_14:                              ; %cleanup
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB126_15:                              ; %if.end27
+	ldr	x8, [x19, #24]
+	tbnz	w8, #0, LBB126_17
+; %bb.16:
+	mov	w0, #0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB126_17:                              ; %if.then29
+	tbnz	w8, #1, LBB126_19
+; %bb.18:                               ; %if.else
+	ldr	x8, [x21, #120]
+	ldr	x8, [x8, #56]
+	mov	x0, x20
+	mov	x1, x19
+	blr	x8
+	cbz	w0, LBB126_21
+LBB126_19:
+	mov	w0, #-15
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB126_20:                              ; %if.then7
+	mov	x0, x20
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	b	_halide_error_no_device_interface
+LBB126_21:                              ; %if.then46
+	ldr	x8, [x19, #24]
+	and	x8, x8, #0xfffffffffffffffe
+	str	x8, [x19, #24]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh456, Lloh457
+	.loh AdrpAdd	Lloh458, Lloh459
+                                        ; -- End function
+	.globl	_halide_device_malloc           ; -- Begin function halide_device_malloc
+	.weak_definition	_halide_device_malloc
+	.p2align	2
+_halide_device_malloc:                  ; @halide_device_malloc
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x2
+	mov	x21, x1
+	mov	x20, x0
+	cbz	x1, LBB127_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x21]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB127_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB127_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w9, [x21, #24]
+	mvn	w9, w9
+	tst	x9, #0x3
+	b.ne	LBB127_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB127_7
+	b	LBB127_9
+LBB127_5:                               ; %if.then.i
+Lloh460:
+	adrp	x1, l_.str.17.91@PAGE
+Lloh461:
+	add	x1, x1, l_.str.17.91@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB127_7
+	b	LBB127_9
+LBB127_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB127_9
+LBB127_7:                               ; %cleanup12
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB127_8:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB127_7
+LBB127_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x8, [x21, #8]
+LBB127_10:                              ; %if.end
+	cbz	x8, LBB127_13
+; %bb.11:                               ; %if.end
+	cmp	x8, x19
+	b.eq	LBB127_13
+; %bb.12:                               ; %if.then6
+Lloh462:
+	adrp	x1, l_.str.20.92@PAGE
+Lloh463:
+	add	x1, x1, l_.str.20.92@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error
+	mov	w0, #-42
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB127_13:                              ; %if.end7
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8, #16]
+	mov	x0, x20
+	mov	x1, x21
+	blr	x8
+	mov	x20, x0
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	cmp	w20, #0                         ; =0
+	mov	w8, #-16
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh460, Lloh461
+	.loh AdrpAdd	Lloh462, Lloh463
+                                        ; -- End function
+	.globl	_halide_copy_to_device          ; -- Begin function halide_copy_to_device
+	.weak_definition	_halide_copy_to_device
+	.p2align	2
+_halide_copy_to_device:                 ; @halide_copy_to_device
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x2
+	mov	x20, x1
+	mov	x21, x0
+Lloh464:
+	adrp	x22, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh465:
+	ldr	x22, [x22, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	mov	x0, x22
+	bl	_halide_mutex_lock
+	mov	x0, x21
+	mov	x1, x20
+	mov	x2, x19
+	bl	_copy_to_device_already_locked
+	mov	x19, x0
+	mov	x0, x22
+	bl	_halide_mutex_unlock
+	mov	x0, x19
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh464, Lloh465
+                                        ; -- End function
+	.globl	_halide_device_sync             ; -- Begin function halide_device_sync
+	.weak_definition	_halide_device_sync
+	.p2align	2
+_halide_device_sync:                    ; @halide_device_sync
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x1
+	mov	x20, x0
+	cbz	x1, LBB129_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x19]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB129_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB129_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w9, [x19, #24]
+	mvn	w9, w9
+	tst	x9, #0x3
+	b.ne	LBB129_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB129_7
+	b	LBB129_9
+LBB129_5:                               ; %if.then.i
+Lloh466:
+	adrp	x1, l_.str.16.93@PAGE
+Lloh467:
+	add	x1, x1, l_.str.16.93@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB129_7
+	b	LBB129_9
+LBB129_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB129_9
+LBB129_7:                               ; %cleanup8
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB129_8:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB129_7
+LBB129_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x8, [x19, #8]
+LBB129_10:                              ; %if.end
+	cbz	x8, LBB129_12
+; %bb.11:                               ; %if.end5
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #32]
+	mov	x0, x20
+	mov	x1, x19
+	blr	x8
+	cmp	w0, #0                          ; =0
+	mov	w8, #-17
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB129_12:                              ; %if.then3
+	mov	x0, x20
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_error_no_device_interface
+	.loh AdrpAdd	Lloh466, Lloh467
+                                        ; -- End function
+	.globl	_halide_device_free             ; -- Begin function halide_device_free
+	.weak_definition	_halide_device_free
+	.p2align	2
+_halide_device_free:                    ; @halide_device_free
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x1
+	mov	x19, x0
+	cbz	x1, LBB130_5
+; %bb.1:                                ; %if.end.i
+	ldp	x8, x22, [x20]
+	cmp	x8, #0                          ; =0
+	ccmp	x22, #0, #0, ne
+	b.eq	LBB130_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x22, #0                         ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB130_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x20, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB130_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x19
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB130_7
+	b	LBB130_9
+LBB130_5:                               ; %if.then.i
+Lloh468:
+	adrp	x1, l_.str.21.96@PAGE
+Lloh469:
+	add	x1, x1, l_.str.21.96@PAGEOFF
+	mov	x0, x19
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB130_7
+	b	LBB130_9
+LBB130_6:                               ; %if.then8.i
+	mov	x0, x19
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB130_9
+LBB130_7:                               ; %cleanup12
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB130_8:                               ; %if.then14.i
+	mov	x0, x19
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB130_7
+LBB130_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x22, [x20, #8]
+LBB130_10:                              ; %if.end
+	cbz	x22, LBB130_14
+; %bb.11:                               ; %if.then3
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #24]
+	mov	x0, x19
+	mov	x1, x20
+	blr	x8
+	mov	x21, x0
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	ldr	x8, [x20]
+	cbz	x8, LBB130_13
+; %bb.12:                               ; %if.then8
+Lloh470:
+	adrp	x1, l_.str.22.97@PAGE
+Lloh471:
+	add	x1, x1, l_.str.22.97@PAGEOFF
+	mov	x0, x19
+	bl	_halide_print
+	bl	_abort
+LBB130_13:                              ; %do.end
+	cmp	w21, #0                         ; =0
+	mov	w8, #-18
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB130_14:                              ; %if.end11
+	mov	w0, #0
+	ldr	x8, [x20, #24]
+	and	x8, x8, #0xfffffffffffffffd
+	str	x8, [x20, #24]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh468, Lloh469
+	.loh AdrpAdd	Lloh470, Lloh471
+                                        ; -- End function
+	.globl	_halide_device_free_as_destructor ; -- Begin function halide_device_free_as_destructor
+	.weak_definition	_halide_device_free_as_destructor
+	.p2align	2
+_halide_device_free_as_destructor:      ; @halide_device_free_as_destructor
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_device_free
+                                        ; -- End function
+	.globl	_halide_device_and_host_malloc  ; -- Begin function halide_device_and_host_malloc
+	.weak_definition	_halide_device_and_host_malloc
+	.p2align	2
+_halide_device_and_host_malloc:         ; @halide_device_and_host_malloc
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x2
+	mov	x21, x1
+	mov	x19, x0
+	cbz	x1, LBB132_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x21]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB132_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB132_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w9, [x21, #24]
+	mvn	w9, w9
+	tst	x9, #0x3
+	b.ne	LBB132_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x19
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB132_7
+	b	LBB132_9
+LBB132_5:                               ; %if.then.i
+Lloh472:
+	adrp	x1, l_.str.23.98@PAGE
+Lloh473:
+	add	x1, x1, l_.str.23.98@PAGEOFF
+	mov	x0, x19
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB132_7
+	b	LBB132_9
+LBB132_6:                               ; %if.then8.i
+	mov	x0, x19
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB132_9
+LBB132_7:                               ; %cleanup14
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB132_8:                               ; %if.then14.i
+	mov	x0, x19
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB132_7
+LBB132_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x8, [x21, #8]
+LBB132_10:                              ; %if.end
+	cbz	x8, LBB132_13
+; %bb.11:                               ; %if.end
+	cmp	x8, x20
+	b.eq	LBB132_13
+; %bb.12:                               ; %if.then6
+Lloh474:
+	adrp	x1, l_.str.25.99@PAGE
+Lloh475:
+	add	x1, x1, l_.str.25.99@PAGEOFF
+	mov	x0, x19
+	bl	_halide_error
+	mov	w0, #-42
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB132_13:                              ; %if.end7
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8, #64]
+	mov	x0, x19
+	mov	x1, x21
+	blr	x8
+	mov	x21, x0
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	cbz	w21, LBB132_15
+; %bb.14:                               ; %if.then12
+Lloh476:
+	adrp	x1, l_.str.26.100@PAGE
+Lloh477:
+	add	x1, x1, l_.str.26.100@PAGEOFF
+	mov	x0, x19
+	bl	_halide_error
+	mov	w0, #-16
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB132_15:
+	mov	w0, #0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh472, Lloh473
+	.loh AdrpAdd	Lloh474, Lloh475
+	.loh AdrpAdd	Lloh476, Lloh477
+                                        ; -- End function
+	.globl	_halide_device_and_host_free    ; -- Begin function halide_device_and_host_free
+	.weak_definition	_halide_device_and_host_free
+	.p2align	2
+_halide_device_and_host_free:           ; @halide_device_and_host_free
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x1
+	mov	x20, x0
+	cbz	x1, LBB133_5
+; %bb.1:                                ; %if.end.i
+	ldp	x8, x22, [x19]
+	cmp	x8, #0                          ; =0
+	ccmp	x22, #0, #0, ne
+	b.eq	LBB133_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x22, #0                         ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB133_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x19, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB133_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB133_7
+	b	LBB133_9
+LBB133_5:                               ; %if.then.i
+Lloh478:
+	adrp	x1, l_.str.27.101@PAGE
+Lloh479:
+	add	x1, x1, l_.str.27.101@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB133_7
+	b	LBB133_9
+LBB133_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB133_9
+LBB133_7:                               ; %cleanup18
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB133_8:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB133_7
+LBB133_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x22, [x19, #8]
+LBB133_10:                              ; %if.end
+	cbz	x22, LBB133_14
+; %bb.11:                               ; %if.then3
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #72]
+	mov	x0, x20
+	mov	x1, x19
+	blr	x8
+	mov	x21, x0
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	ldr	x8, [x19]
+	cbz	x8, LBB133_13
+; %bb.12:                               ; %if.then8
+Lloh480:
+	adrp	x1, l_.str.28.102@PAGE
+Lloh481:
+	add	x1, x1, l_.str.28.102@PAGEOFF
+	mov	x0, x20
+	bl	_halide_print
+	bl	_abort
+LBB133_13:                              ; %do.end
+	cmp	w21, #0                         ; =0
+	mov	w8, #-18
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB133_14:                              ; %if.else11
+	ldr	x1, [x19, #16]
+	cbz	x1, LBB133_16
+; %bb.15:                               ; %if.then13
+	mov	x0, x20
+	bl	_halide_free
+	str	xzr, [x19, #16]
+LBB133_16:                              ; %if.end17
+	mov	w0, #0
+	ldr	x8, [x19, #24]
+	and	x8, x8, #0xfffffffffffffffd
+	str	x8, [x19, #24]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh478, Lloh479
+	.loh AdrpAdd	Lloh480, Lloh481
+                                        ; -- End function
+	.globl	_halide_default_device_and_host_malloc ; -- Begin function halide_default_device_and_host_malloc
+	.weak_definition	_halide_default_device_and_host_malloc
+	.p2align	2
+_halide_default_device_and_host_malloc: ; @halide_default_device_and_host_malloc
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x2
+	mov	x19, x1
+	mov	x20, x0
+	cbz	x1, LBB134_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x19]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB134_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB134_7
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x19, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB134_8
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	mov	x22, x0
+	cbnz	w0, LBB134_41
+	b	LBB134_8
+LBB134_5:                               ; %if.then.i
+Lloh482:
+	adrp	x1, l_.str.29.103@PAGE
+Lloh483:
+	add	x1, x1, l_.str.29.103@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	mov	x22, x0
+	cbnz	w0, LBB134_41
+	b	LBB134_8
+LBB134_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	mov	x22, x0
+	cbnz	w0, LBB134_41
+	b	LBB134_8
+LBB134_7:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	mov	x22, x0
+	cbnz	w0, LBB134_41
+LBB134_8:                               ; %if.end
+	ldr	w8, [x19, #36]
+	cmp	w8, #0                          ; =0
+	b.le	LBB134_11
+; %bb.9:                                ; %for.body.lr.ph.i.i
+	ldr	x9, [x19, #40]
+	cmp	w8, #3                          ; =3
+	b.hs	LBB134_12
+; %bb.10:
+	mov	x11, #0
+	mov	x10, #0
+	b	LBB134_21
+LBB134_11:                              ; %if.end._ZNK15halide_buffer_t13size_in_bytesEv.exit_crit_edge
+	mov	w8, #1
+	b	LBB134_33
+LBB134_12:                              ; %vector.ph
+	mov	x10, #0
+	mov	x12, #0
+	and	x11, x8, #0xfffffffe
+	add	x13, x9, #24                    ; =24
+	mov	x14, x11
+	b	LBB134_14
+LBB134_13:                              ; %pred.load.continue6
+                                        ;   in Loop: Header=BB134_14 Depth=1
+	sub	w17, w17, #1                    ; =1
+	sub	w0, w0, #1                      ; =1
+	sxtw	x17, w17
+	sxtw	x0, w0
+	mul	x17, x17, x15
+	mul	x0, x0, x16
+	cmp	w15, #0                         ; =0
+	csel	x15, x17, xzr, gt
+	add	x10, x10, x15
+	cmp	w16, #0                         ; =0
+	csel	x15, x0, xzr, gt
+	add	x12, x12, x15
+	add	x13, x13, #32                   ; =32
+	subs	x14, x14, #2                    ; =2
+	b.eq	LBB134_18
+LBB134_14:                              ; %vector.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w15, [x13, #-16]
+                                        ; implicit-def: $w17
+	cmp	w15, #1                         ; =1
+	b.lt	LBB134_16
+; %bb.15:                               ; %pred.load.if
+                                        ;   in Loop: Header=BB134_14 Depth=1
+	ldur	w17, [x13, #-20]
+LBB134_16:                              ; %pred.load.continue
+                                        ;   in Loop: Header=BB134_14 Depth=1
+	ldr	w16, [x13]
+                                        ; implicit-def: $w0
+	cmp	w16, #1                         ; =1
+	b.lt	LBB134_13
+; %bb.17:                               ; %pred.load.if5
+                                        ;   in Loop: Header=BB134_14 Depth=1
+	ldur	w0, [x13, #-4]
+	b	LBB134_13
+LBB134_18:                              ; %middle.block
+	add	x10, x12, x10
+	cmp	x11, x8
+	b.ne	LBB134_21
+LBB134_19:                              ; %for.body.i13.i.preheader
+	cmp	w8, #3                          ; =3
+	b.hs	LBB134_25
+; %bb.20:
+	mov	x11, #0
+	mov	x12, #0
+	b	LBB134_36
+LBB134_21:                              ; %for.body.i.i.preheader
+	sub	x12, x8, x11
+	add	x11, x9, x11, lsl #4
+	add	x11, x11, #8                    ; =8
+	b	LBB134_23
+LBB134_22:                              ; %if.end.i.i
+                                        ;   in Loop: Header=BB134_23 Depth=1
+	add	x11, x11, #16                   ; =16
+	subs	x12, x12, #1                    ; =1
+	b.eq	LBB134_19
+LBB134_23:                              ; %for.body.i.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w13, [x11]
+	cmp	w13, #1                         ; =1
+	b.lt	LBB134_22
+; %bb.24:                               ; %if.then.i.i
+                                        ;   in Loop: Header=BB134_23 Depth=1
+	ldursw	x14, [x11, #-4]
+	sub	x14, x14, #1                    ; =1
+	madd	x10, x14, x13, x10
+	b	LBB134_22
+LBB134_25:                              ; %vector.ph12
+	mov	x12, #0
+	mov	x13, #0
+	and	x11, x8, #0xfffffffe
+	add	x14, x9, #24                    ; =24
+	mov	x15, x11
+	b	LBB134_27
+LBB134_26:                              ; %pred.load.continue26
+                                        ;   in Loop: Header=BB134_27 Depth=1
+	sub	w0, w0, #1                      ; =1
+	sub	w1, w1, #1                      ; =1
+	sxtw	x0, w0
+	sxtw	x1, w1
+	mul	x0, x0, x16
+	mul	x1, x1, x17
+	cmp	w16, #0                         ; =0
+	csel	x16, x0, xzr, lt
+	add	x12, x12, x16
+	cmp	w17, #0                         ; =0
+	csel	x16, x1, xzr, lt
+	add	x13, x13, x16
+	add	x14, x14, #32                   ; =32
+	subs	x15, x15, #2                    ; =2
+	b.eq	LBB134_31
+LBB134_27:                              ; %vector.body10
+                                        ; =>This Inner Loop Header: Depth=1
+	ldursw	x16, [x14, #-16]
+                                        ; implicit-def: $w0
+	tbnz	w16, #31, LBB134_29
+; %bb.28:                               ; %pred.load.continue24
+                                        ;   in Loop: Header=BB134_27 Depth=1
+	ldrsw	x17, [x14]
+                                        ; implicit-def: $w1
+	tbz	w17, #31, LBB134_26
+	b	LBB134_30
+LBB134_29:                              ; %pred.load.if23
+                                        ;   in Loop: Header=BB134_27 Depth=1
+	ldur	w0, [x14, #-20]
+	ldrsw	x17, [x14]
+                                        ; implicit-def: $w1
+	tbz	w17, #31, LBB134_26
+LBB134_30:                              ; %pred.load.if25
+                                        ;   in Loop: Header=BB134_27 Depth=1
+	ldur	w1, [x14, #-4]
+	b	LBB134_26
+LBB134_31:                              ; %middle.block8
+	add	x12, x13, x12
+	cmp	x11, x8
+	b.ne	LBB134_36
+LBB134_32:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit.loopexit
+	add	x8, x10, #1                     ; =1
+	sub	x8, x8, x12
+LBB134_33:                              ; %_ZNK15halide_buffer_t13size_in_bytesEv.exit
+	ldrb	w9, [x19, #33]
+	add	x9, x9, #7                      ; =7
+	lsr	x9, x9, #3
+	mul	x1, x9, x8
+	mov	x0, x20
+	bl	_halide_malloc
+	str	x0, [x19, #16]
+	cbz	x0, LBB134_40
+; %bb.34:                               ; %if.end6
+	mov	x0, x20
+	mov	x1, x19
+	mov	x2, x21
+	bl	_halide_device_malloc
+	mov	x22, x0
+	cbz	w0, LBB134_41
+; %bb.35:                               ; %if.then9
+	ldr	x1, [x19, #16]
+	mov	x0, x20
+	bl	_halide_free
+	str	xzr, [x19, #16]
+	b	LBB134_41
+LBB134_36:                              ; %for.body.i13.i.preheader1
+	sub	x8, x8, x11
+	add	x9, x9, x11, lsl #4
+	add	x9, x9, #8                      ; =8
+	b	LBB134_38
+LBB134_37:                              ; %if.end.i24.i
+                                        ;   in Loop: Header=BB134_38 Depth=1
+	add	x9, x9, #16                     ; =16
+	subs	x8, x8, #1                      ; =1
+	b.eq	LBB134_32
+LBB134_38:                              ; %for.body.i13.i
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrsw	x11, [x9]
+	tbz	w11, #31, LBB134_37
+; %bb.39:                               ; %if.then.i20.i
+                                        ;   in Loop: Header=BB134_38 Depth=1
+	ldursw	x13, [x9, #-4]
+	sub	x13, x13, #1                    ; =1
+	madd	x12, x13, x11, x12
+	b	LBB134_37
+LBB134_40:
+	mov	w22, #-1
+LBB134_41:                              ; %cleanup13
+	mov	x0, x22
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh482, Lloh483
+                                        ; -- End function
+	.globl	_halide_default_device_and_host_free ; -- Begin function halide_default_device_and_host_free
+	.weak_definition	_halide_default_device_and_host_free
+	.p2align	2
+_halide_default_device_and_host_free:   ; @halide_default_device_and_host_free
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x1
+	mov	x20, x0
+	cbz	x1, LBB135_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x19]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB135_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB135_7
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x19, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB135_8
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x20
+	bl	_halide_error_host_and_device_dirty
+	mov	x21, x0
+	cbnz	w0, LBB135_11
+	b	LBB135_8
+LBB135_5:                               ; %if.then.i
+Lloh484:
+	adrp	x1, l_.str.30.104@PAGE
+Lloh485:
+	add	x1, x1, l_.str.30.104@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error_buffer_is_null
+	mov	x21, x0
+	cbnz	w0, LBB135_11
+	b	LBB135_8
+LBB135_6:                               ; %if.then8.i
+	mov	x0, x20
+	bl	_halide_error_no_device_interface
+	mov	x21, x0
+	cbnz	w0, LBB135_11
+	b	LBB135_8
+LBB135_7:                               ; %if.then14.i
+	mov	x0, x20
+	bl	_halide_error_device_interface_no_device
+	mov	x21, x0
+	cbnz	w0, LBB135_11
+LBB135_8:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.split
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_device_free
+	mov	x21, x0
+	ldr	x1, [x19, #16]
+	cbz	x1, LBB135_10
+; %bb.9:                                ; %if.then2
+	mov	x0, x20
+	bl	_halide_free
+	str	xzr, [x19, #16]
+LBB135_10:                              ; %if.end5
+	ldr	x8, [x19, #24]
+	and	x8, x8, #0xfffffffffffffffc
+	str	x8, [x19, #24]
+LBB135_11:                              ; %cleanup
+	mov	x0, x21
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh484, Lloh485
+                                        ; -- End function
+	.globl	_halide_device_wrap_native      ; -- Begin function halide_device_wrap_native
+	.weak_definition	_halide_device_wrap_native
+	.p2align	2
+_halide_device_wrap_native:             ; @halide_device_wrap_native
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x19, x3
+	mov	x20, x2
+	mov	x22, x1
+	mov	x21, x0
+	cbz	x1, LBB136_5
+; %bb.1:                                ; %if.end.i
+	ldp	x9, x8, [x22]
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB136_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB136_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w9, [x22, #24]
+	mvn	w9, w9
+	tst	x9, #0x3
+	b.ne	LBB136_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x21
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB136_7
+	b	LBB136_9
+LBB136_5:                               ; %if.then.i
+Lloh486:
+	adrp	x1, l_.str.31.105@PAGE
+Lloh487:
+	add	x1, x1, l_.str.31.105@PAGEOFF
+	mov	x0, x21
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB136_7
+	b	LBB136_9
+LBB136_6:                               ; %if.then8.i
+	mov	x0, x21
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB136_9
+LBB136_7:                               ; %cleanup12
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB136_8:                               ; %if.then14.i
+	mov	x0, x21
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB136_7
+LBB136_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x8, [x22, #8]
+LBB136_10:                              ; %if.end
+	cbz	x8, LBB136_13
+; %bb.11:                               ; %if.end
+	cmp	x8, x19
+	b.eq	LBB136_13
+; %bb.12:                               ; %if.then4
+Lloh488:
+	adrp	x1, l_.str.32.106@PAGE
+Lloh489:
+	add	x1, x1, l_.str.32.106@PAGEOFF
+	mov	x0, x21
+	bl	_halide_error
+	mov	w0, #-42
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB136_13:                              ; %if.end5
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8]
+	blr	x8
+	str	x19, [x22, #8]
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8, #112]
+	mov	x0, x21
+	mov	x1, x22
+	mov	x2, x20
+	blr	x8
+	mov	x20, x0
+	ldr	x8, [x19, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	cmp	w20, #0                         ; =0
+	mov	w8, #-16
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh486, Lloh487
+	.loh AdrpAdd	Lloh488, Lloh489
+                                        ; -- End function
+	.globl	_halide_device_detach_native    ; -- Begin function halide_device_detach_native
+	.weak_definition	_halide_device_detach_native
+	.p2align	2
+_halide_device_detach_native:           ; @halide_device_detach_native
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x1
+	mov	x19, x0
+	cbz	x1, LBB137_5
+; %bb.1:                                ; %if.end.i
+	ldp	x8, x22, [x20]
+	cmp	x8, #0                          ; =0
+	ccmp	x22, #0, #0, ne
+	b.eq	LBB137_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x22, #0                         ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB137_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w8, [x20, #24]
+	mvn	w8, w8
+	tst	x8, #0x3
+	b.ne	LBB137_10
+; %bb.4:                                ; %if.then24.i
+	mov	x0, x19
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB137_7
+	b	LBB137_9
+LBB137_5:                               ; %if.then.i
+Lloh490:
+	adrp	x1, l_.str.33.107@PAGE
+Lloh491:
+	add	x1, x1, l_.str.33.107@PAGEOFF
+	mov	x0, x19
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB137_7
+	b	LBB137_9
+LBB137_6:                               ; %if.then8.i
+	mov	x0, x19
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB137_9
+LBB137_7:                               ; %cleanup
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB137_8:                               ; %if.then14.i
+	mov	x0, x19
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB137_7
+LBB137_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x22, [x20, #8]
+LBB137_10:                              ; %if.end
+	cbz	x22, LBB137_14
+; %bb.11:                               ; %if.then3
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #120]
+	mov	x0, x19
+	mov	x1, x20
+	blr	x8
+	mov	x21, x0
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	ldr	x8, [x20]
+	cbz	x8, LBB137_13
+; %bb.12:                               ; %if.then8
+Lloh492:
+	adrp	x1, l_.str.34.108@PAGE
+Lloh493:
+	add	x1, x1, l_.str.34.108@PAGEOFF
+	mov	x0, x19
+	bl	_halide_print
+	bl	_abort
+LBB137_13:                              ; %do.end
+	cmp	w21, #0                         ; =0
+	mov	w8, #-33
+	csel	w0, wzr, w8, eq
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB137_14:
+	mov	w0, #0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh490, Lloh491
+	.loh AdrpAdd	Lloh492, Lloh493
+                                        ; -- End function
+	.globl	_halide_default_device_wrap_native ; -- Begin function halide_default_device_wrap_native
+	.weak_definition	_halide_default_device_wrap_native
+	.p2align	2
+_halide_default_device_wrap_native:     ; @halide_default_device_wrap_native
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	ldr	x8, [x1]
+	cbz	x8, LBB138_2
+; %bb.1:
+	mov	w0, #-32
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB138_2:                               ; %if.end
+	mov	x19, x2
+	mov	x20, x1
+	ldr	x8, [x1, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8]
+	blr	x8
+	mov	w0, #0
+	str	x19, [x20]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_device_detach_native ; -- Begin function halide_default_device_detach_native
+	.weak_definition	_halide_default_device_detach_native
+	.p2align	2
+_halide_default_device_detach_native:   ; @halide_default_device_detach_native
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x1
+	cbz	x1, LBB139_5
+; %bb.1:                                ; %if.end.i
+	ldp	x8, x9, [x19]
+	cmp	x8, #0                          ; =0
+	ccmp	x9, #0, #0, ne
+	b.eq	LBB139_6
+; %bb.2:                                ; %if.end10.i
+	cmp	x9, #0                          ; =0
+	ccmp	x8, #0, #0, ne
+	b.eq	LBB139_8
+; %bb.3:                                ; %if.end16.i
+	ldr	w9, [x19, #24]
+	mvn	w9, w9
+	tst	x9, #0x3
+	b.ne	LBB139_10
+; %bb.4:                                ; %if.then24.i
+	bl	_halide_error_host_and_device_dirty
+	cbnz	w0, LBB139_7
+	b	LBB139_9
+LBB139_5:                               ; %if.then.i
+Lloh494:
+	adrp	x1, l_.str.35@PAGE
+Lloh495:
+	add	x1, x1, l_.str.35@PAGEOFF
+	bl	_halide_error_buffer_is_null
+	cbnz	w0, LBB139_7
+	b	LBB139_9
+LBB139_6:                               ; %if.then8.i
+	bl	_halide_error_no_device_interface
+	cbz	w0, LBB139_9
+LBB139_7:                               ; %cleanup
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB139_8:                               ; %if.then14.i
+	bl	_halide_error_device_interface_no_device
+	cbnz	w0, LBB139_7
+LBB139_9:                               ; %_ZN12_GLOBAL__N_126debug_log_and_validate_bufEPvPK15halide_buffer_tPKc.exit.if.end_crit_edge
+	ldr	x8, [x19]
+LBB139_10:                              ; %if.end
+	cbz	x8, LBB139_12
+; %bb.11:                               ; %if.end3
+	ldr	x8, [x19, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	mov	w0, #0
+	stp	xzr, xzr, [x19]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB139_12:
+	mov	w0, #0
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh494, Lloh495
+                                        ; -- End function
+	.globl	_halide_device_and_host_free_as_destructor ; -- Begin function halide_device_and_host_free_as_destructor
+	.weak_definition	_halide_device_and_host_free_as_destructor
+	.p2align	2
+_halide_device_and_host_free_as_destructor: ; @halide_device_and_host_free_as_destructor
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	b	_halide_device_and_host_free
+                                        ; -- End function
+	.globl	_halide_device_host_nop_free    ; -- Begin function halide_device_host_nop_free
+	.weak_definition	_halide_device_host_nop_free
+	.p2align	2
+_halide_device_host_nop_free:           ; @halide_device_host_nop_free
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_buffer_copy     ; -- Begin function halide_default_buffer_copy
+	.weak_definition	_halide_default_buffer_copy
+	.p2align	2
+_halide_default_buffer_copy:            ; @halide_default_buffer_copy
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #-39
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_buffer_copy_already_locked ; -- Begin function halide_buffer_copy_already_locked
+	.weak_definition	_halide_buffer_copy_already_locked
+	.p2align	2
+_halide_buffer_copy_already_locked:     ; @halide_buffer_copy_already_locked
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	sub	sp, sp, #416                    ; =416
+	mov	x19, x3
+	mov	x20, x2
+	mov	x21, x1
+	mov	x22, x0
+	cbz	x2, LBB143_3
+; %bb.1:                                ; %land.lhs.true
+	ldr	x8, [x19, #8]
+	cmp	x8, #0                          ; =0
+	ccmp	x8, x20, #4, ne
+	b.ne	LBB143_7
+; %bb.2:                                ; %land.lhs.true5
+	ldr	x8, [x19]
+	cbz	x8, LBB143_12
+LBB143_3:                               ; %if.end13
+	ldr	x9, [x21]
+	ldr	x8, [x21, #16]
+	cbz	x9, LBB143_8
+; %bb.4:                                ; %land.rhs
+	cbz	x8, LBB143_11
+; %bb.5:                                ; %land.end.thread264
+	ldr	x8, [x21, #24]
+	and	w23, w8, #0x1
+	mov	w24, #0
+	tbnz	w8, #1, LBB143_10
+LBB143_6:
+	mov	w25, #0
+	cmp	x20, #0                         ; =0
+	cset	w27, ne
+	ldr	x26, [x19, #16]
+	cbz	x20, LBB143_15
+	b	LBB143_17
+LBB143_7:                               ; %if.then
+Lloh496:
+	adrp	x1, l_.str.41@PAGE
+Lloh497:
+	add	x1, x1, l_.str.41@PAGEOFF
+	mov	x0, x22
+	bl	_halide_error
+	mov	w0, #-42
+	b	LBB143_40
+LBB143_8:                               ; %land.end
+	cbz	x8, LBB143_13
+; %bb.9:                                ; %land.end.land.rhs26_crit_edge
+	ldr	x8, [x21, #24]
+	mov	w23, #1
+	mov	w24, #0
+	tbz	w8, #1, LBB143_6
+LBB143_10:                              ; %lor.rhs28
+	ldr	x8, [x21, #8]
+	cmp	x8, #0                          ; =0
+	cset	w25, ne
+	cmp	x20, #0                         ; =0
+	cset	w27, ne
+	ldr	x26, [x19, #16]
+	cbz	x20, LBB143_15
+	b	LBB143_17
+LBB143_11:
+	mov	w23, #0
+	mov	w24, #1
+	b	LBB143_14
+LBB143_12:                              ; %if.then7
+	mov	x0, x22
+	mov	x1, x19
+	mov	x2, x20
+	bl	_halide_device_malloc
+	cbnz	w0, LBB143_40
+	b	LBB143_3
+LBB143_13:
+	mov	w24, #1
+	mov	w23, #1
+LBB143_14:
+	mov	w25, #1
+	cmp	x20, #0                         ; =0
+	cset	w27, ne
+	ldr	x26, [x19, #16]
+	cbnz	x20, LBB143_17
+LBB143_15:                              ; %land.end32
+	cbnz	x26, LBB143_17
+; %bb.16:
+	mov	w0, #-34
+	b	LBB143_40
+LBB143_17:                              ; %if.end41
+	cmp	x20, #0                         ; =0
+	cset	w8, eq
+	orr	w8, w8, w23
+	tbnz	w8, #0, LBB143_19
+; %bb.18:                               ; %if.end49
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8, #80]
+	mov	x0, x22
+	mov	x1, x21
+	mov	x2, x20
+	mov	x3, x19
+	blr	x8
+	cmn	w0, #42                         ; =42
+	b.ne	LBB143_33
+LBB143_19:                              ; %if.then51
+	cmp	x26, #0                         ; =0
+	cset	w8, eq
+	and	w8, w24, w8
+	tbz	w8, #0, LBB143_21
+LBB143_20:
+	mov	w0, #-42
+	b	LBB143_40
+LBB143_21:                              ; %if.end58
+	orr	w8, w25, w27
+	tbz	w8, #0, LBB143_27
+; %bb.22:                               ; %if.else
+	orr	w8, w23, w27
+	tbz	w8, #0, LBB143_28
+; %bb.23:                               ; %if.else81
+	cmp	x26, #0                         ; =0
+	cset	w8, eq
+	orr	w8, w23, w8
+	tbz	w8, #0, LBB143_31
+; %bb.24:                               ; %if.else98
+	cbz	x20, LBB143_20
+; %bb.25:                               ; %if.then100
+	mov	x0, x22
+	mov	x1, x21
+	bl	__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+	cbnz	w0, LBB143_40
+; %bb.26:                               ; %if.then105
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8, #80]
+	mov	x0, x22
+	mov	x1, x21
+	mov	x2, x20
+	mov	x3, x19
+	blr	x8
+	b	LBB143_33
+LBB143_27:                              ; %if.end117.thread258
+	mov	x8, sp
+	mov	x0, x21
+	mov	w1, #1
+	mov	x2, x19
+	mov	w3, #1
+	bl	__ZN6Halide7Runtime8Internal16make_buffer_copyEPK15halide_buffer_tbS4_b
+	mov	x0, sp
+	mov	x1, x22
+	bl	__ZN6Halide7Runtime8Internal11copy_memoryERKNS1_11device_copyEPv
+	b	LBB143_34
+LBB143_28:                              ; %if.then66
+	ldr	x8, [x21, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #80]
+	mov	x0, x22
+	mov	x1, x21
+	mov	x2, #0
+	mov	x3, x19
+	blr	x8
+	cmn	w0, #42                         ; =42
+	b.ne	LBB143_33
+; %bb.29:                               ; %if.then74
+	mov	x0, x22
+	mov	x1, x21
+	bl	__ZN6Halide7Runtime8Internal27copy_to_host_already_lockedEPvP15halide_buffer_t
+	cbnz	w0, LBB143_40
+; %bb.30:                               ; %if.then77
+	mov	x0, x22
+	mov	x1, x21
+	mov	x2, #0
+	mov	x3, x19
+	bl	_halide_buffer_copy_already_locked
+	b	LBB143_33
+LBB143_31:                              ; %if.then85
+	ldr	x8, [x21, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #80]
+	mov	x0, x22
+	mov	x1, x21
+	mov	x2, #0
+	mov	x3, x19
+	blr	x8
+	cbnz	w0, LBB143_40
+; %bb.32:                               ; %if.then95
+	ldr	x8, [x19, #24]
+	orr	x8, x8, #0x1
+	str	x8, [x19, #24]
+	mov	x0, x22
+	mov	x1, x19
+	mov	x2, x20
+	bl	_copy_to_device_already_locked
+LBB143_33:                              ; %if.end117
+	cbnz	w0, LBB143_40
+LBB143_34:                              ; %land.lhs.true126
+	cmp	x19, x21
+	b.eq	LBB143_37
+; %bb.35:                               ; %if.then128
+	ldr	x8, [x19, #24]
+	and	x8, x8, #0xfffffffffffffffc
+	mov	w0, #0
+	cbz	x20, LBB143_38
+; %bb.36:                               ; %if.then130
+	orr	x8, x8, #0x2
+	b	LBB143_39
+LBB143_37:
+	mov	w0, #0
+	b	LBB143_40
+LBB143_38:                              ; %if.else133
+	orr	x8, x8, #0x1
+LBB143_39:                              ; %cleanup143
+	str	x8, [x19, #24]
+LBB143_40:                              ; %cleanup143
+	add	sp, sp, #416                    ; =416
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh496, Lloh497
+                                        ; -- End function
+	.globl	_halide_buffer_copy             ; -- Begin function halide_buffer_copy
+	.weak_definition	_halide_buffer_copy
+	.p2align	2
+_halide_buffer_copy:                    ; @halide_buffer_copy
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x3
+	mov	x20, x2
+	mov	x19, x1
+	mov	x22, x0
+Lloh498:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh499:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	cbz	x20, LBB144_2
+; %bb.1:                                ; %if.then
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8]
+	blr	x8
+LBB144_2:                               ; %if.end
+	ldr	x8, [x19, #8]
+	cbz	x8, LBB144_4
+; %bb.3:                                ; %if.then12
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8]
+	blr	x8
+LBB144_4:                               ; %if.end16
+	mov	x0, x22
+	mov	x1, x19
+	mov	x2, x20
+	mov	x3, x21
+	bl	_halide_buffer_copy_already_locked
+	mov	x21, x0
+	cbz	x20, LBB144_6
+; %bb.5:                                ; %if.then18
+	ldr	x8, [x20, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+LBB144_6:                               ; %if.end20
+	ldr	x8, [x19, #8]
+	cbz	x8, LBB144_8
+; %bb.7:                                ; %if.then23
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+LBB144_8:                               ; %if.end27
+Lloh500:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh501:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	x0, x21
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh498, Lloh499
+	.loh AdrpLdrGot	Lloh500, Lloh501
+                                        ; -- End function
+	.globl	_halide_default_device_crop     ; -- Begin function halide_default_device_crop
+	.weak_definition	_halide_default_device_crop
+	.p2align	2
+_halide_default_device_crop:            ; @halide_default_device_crop
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh502:
+	adrp	x1, l_.str.58@PAGE
+Lloh503:
+	add	x1, x1, l_.str.58@PAGEOFF
+	bl	_halide_error
+	mov	w0, #-40
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh502, Lloh503
+                                        ; -- End function
+	.globl	_halide_default_device_slice    ; -- Begin function halide_default_device_slice
+	.weak_definition	_halide_default_device_slice
+	.p2align	2
+_halide_default_device_slice:           ; @halide_default_device_slice
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh504:
+	adrp	x1, l_.str.59@PAGE
+Lloh505:
+	add	x1, x1, l_.str.59@PAGEOFF
+	bl	_halide_error
+	mov	w0, #-40
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh504, Lloh505
+                                        ; -- End function
+	.globl	_halide_device_crop             ; -- Begin function halide_device_crop
+	.weak_definition	_halide_device_crop
+	.p2align	2
+_halide_device_crop:                    ; @halide_device_crop
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x2
+	mov	x21, x1
+	mov	x19, x0
+Lloh506:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh507:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	ldr	x8, [x21]
+	cbz	x8, LBB147_3
+; %bb.1:                                ; %if.end
+	ldr	x8, [x20]
+	cbz	x8, LBB147_4
+; %bb.2:                                ; %if.then3
+Lloh508:
+	adrp	x1, l_.str.60@PAGE
+Lloh509:
+	add	x1, x1, l_.str.60@PAGEOFF
+	b	LBB147_7
+LBB147_3:
+	mov	w19, #0
+	b	LBB147_8
+LBB147_4:                               ; %if.end4
+	ldr	w8, [x21, #36]
+	ldr	w9, [x20, #36]
+	cmp	w8, w9
+	b.ne	LBB147_6
+; %bb.5:                                ; %if.end7
+	ldr	x8, [x21, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x21, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #88]
+	mov	x0, x19
+	mov	x1, x21
+	mov	x2, x20
+	blr	x8
+	mov	x19, x0
+	b	LBB147_8
+LBB147_6:                               ; %if.then6
+Lloh510:
+	adrp	x1, l_.str.61@PAGE
+Lloh511:
+	add	x1, x1, l_.str.61@PAGEOFF
+LBB147_7:                               ; %cleanup
+	mov	x0, x19
+	bl	_halide_error
+	mov	w19, #-41
+LBB147_8:                               ; %cleanup
+Lloh512:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh513:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	x0, x19
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh506, Lloh507
+	.loh AdrpAdd	Lloh508, Lloh509
+	.loh AdrpAdd	Lloh510, Lloh511
+	.loh AdrpLdrGot	Lloh512, Lloh513
+                                        ; -- End function
+	.globl	_halide_device_slice            ; -- Begin function halide_device_slice
+	.weak_definition	_halide_device_slice
+	.p2align	2
+_halide_device_slice:                   ; @halide_device_slice
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x19, x4
+	mov	x21, x3
+	mov	x22, x2
+	mov	x23, x1
+	mov	x20, x0
+Lloh514:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh515:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+	ldr	x8, [x23]
+	cbz	x8, LBB148_3
+; %bb.1:                                ; %if.end
+	ldr	x8, [x19]
+	cbz	x8, LBB148_4
+; %bb.2:                                ; %if.then3
+Lloh516:
+	adrp	x1, l_.str.60@PAGE
+Lloh517:
+	add	x1, x1, l_.str.60@PAGEOFF
+	b	LBB148_7
+LBB148_3:
+	mov	w19, #0
+	b	LBB148_8
+LBB148_4:                               ; %if.end4
+	ldr	w8, [x23, #36]
+	ldr	w9, [x19, #36]
+	add	w9, w9, #1                      ; =1
+	cmp	w8, w9
+	b.ne	LBB148_6
+; %bb.5:                                ; %if.end7
+	ldr	x8, [x23, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8]
+	blr	x8
+	ldr	x8, [x23, #8]
+	ldr	x8, [x8, #120]
+	ldr	x8, [x8, #96]
+	mov	x0, x20
+	mov	x1, x23
+	mov	x2, x22
+	mov	x3, x21
+	mov	x4, x19
+	blr	x8
+	mov	x19, x0
+	b	LBB148_8
+LBB148_6:                               ; %if.then6
+Lloh518:
+	adrp	x1, l_.str.64@PAGE
+Lloh519:
+	add	x1, x1, l_.str.64@PAGEOFF
+LBB148_7:                               ; %cleanup
+	mov	x0, x20
+	bl	_halide_error
+	mov	w19, #-41
+LBB148_8:                               ; %cleanup
+Lloh520:
+	adrp	x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh521:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	mov	x0, x19
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh514, Lloh515
+	.loh AdrpAdd	Lloh516, Lloh517
+	.loh AdrpAdd	Lloh518, Lloh519
+	.loh AdrpLdrGot	Lloh520, Lloh521
+                                        ; -- End function
+	.globl	_halide_default_device_release_crop ; -- Begin function halide_default_device_release_crop
+	.weak_definition	_halide_default_device_release_crop
+	.p2align	2
+_halide_default_device_release_crop:    ; @halide_default_device_release_crop
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldr	x8, [x1]
+	cbz	x8, LBB149_2
+; %bb.1:                                ; %if.end
+Lloh522:
+	adrp	x1, l_.str.58@PAGE
+Lloh523:
+	add	x1, x1, l_.str.58@PAGEOFF
+	bl	_halide_error
+	mov	w0, #-40
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+LBB149_2:
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh522, Lloh523
+                                        ; -- End function
+	.globl	_halide_device_release_crop     ; -- Begin function halide_device_release_crop
+	.weak_definition	_halide_device_release_crop
+	.p2align	2
+_halide_device_release_crop:            ; @halide_device_release_crop
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	ldr	x8, [x1]
+	cbz	x8, LBB150_2
+; %bb.1:                                ; %if.then
+	mov	x19, x1
+	mov	x20, x0
+Lloh524:
+	adrp	x21, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGE
+Lloh525:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal17device_copy_mutexE@GOTPAGEOFF]
+	mov	x0, x21
+	bl	_halide_mutex_lock
+	ldr	x22, [x19, #8]
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #104]
+	mov	x0, x20
+	mov	x1, x19
+	blr	x8
+	mov	x20, x0
+	str	xzr, [x19]
+	ldr	x8, [x22, #120]
+	ldr	x8, [x8, #8]
+	blr	x8
+	str	xzr, [x19, #8]
+	mov	x0, x21
+	bl	_halide_mutex_unlock
+	mov	x0, x20
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB150_2:                               ; %return
+	mov	w0, #0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh524, Lloh525
+                                        ; -- End function
+	.globl	_halide_float16_bits_to_float   ; -- Begin function halide_float16_bits_to_float
+	.weak_definition	_halide_float16_bits_to_float
+	.p2align	2
+_halide_float16_bits_to_float:          ; @halide_float16_bits_to_float
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ubfx	w9, w0, #10, #5
+	ands	w8, w0, #0x3ff
+	b.eq	LBB151_3
+; %bb.1:                                ; %entry
+	cbnz	w9, LBB151_3
+; %bb.2:                                ; %if.then
+	clz	w10, w8
+	eor	w9, w10, #0x1f
+	mov	w11, #1
+	lsl	w11, w11, w9
+	bic	w8, w8, w11
+	mov	w11, #23
+	sub	w9, w11, w9
+	lsl	w9, w8, w9
+	mov	w8, #1124073472
+	sub	w8, w8, w10, lsl #23
+	b	LBB151_4
+LBB151_3:                               ; %if.else
+	lsl	w8, w8, #13
+	mov	w10, #2139095040
+	cmp	w9, #31                         ; =31
+	mov	w11, #939524096
+	add	w11, w11, w9, lsl #23
+	csel	w10, w10, w11, eq
+	cmp	w9, #0                          ; =0
+	csel	w9, wzr, w10, eq
+LBB151_4:                               ; %if.end28
+	lsr	w10, w0, #15
+	bfi	w8, w10, #31, #1
+	orr	w8, w8, w9
+	fmov	s0, w8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_float16_bits_to_double  ; -- Begin function halide_float16_bits_to_double
+	.weak_definition	_halide_float16_bits_to_double
+	.p2align	2
+_halide_float16_bits_to_double:         ; @halide_float16_bits_to_double
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	bl	_halide_float16_bits_to_float
+	fcvt	d0, s0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_error_bounds_inference_call_failed ; -- Begin function halide_error_bounds_inference_call_failed
+	.weak_definition	_halide_error_bounds_inference_call_failed
+	.p2align	2
+_halide_error_bounds_inference_call_failed: ; @halide_error_bounds_inference_call_failed
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x19, x2
+	mov	x22, x1
+	mov	x21, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB153_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+Lloh526:
+	adrp	x2, l_.str.111@PAGE
+Lloh527:
+	add	x2, x2, l_.str.111@PAGEOFF
+	mov	x0, x20
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB153_3
+LBB153_2:                               ; %entry.split
+Lloh528:
+	adrp	x2, l_.str.111@PAGE
+Lloh529:
+	add	x2, x2, l_.str.111@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB153_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh530:
+	adrp	x2, l_.str.1.112@PAGE
+Lloh531:
+	add	x2, x2, l_.str.1.112@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w19
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x20, LBB153_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x21
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x21
+	mov	x1, x20
+	b	LBB153_6
+LBB153_5:                               ; %if.then.i
+Lloh532:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh533:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x21
+LBB153_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+	mov	x0, x19
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh526, Lloh527
+	.loh AdrpAdd	Lloh528, Lloh529
+	.loh AdrpAdd	Lloh530, Lloh531
+	.loh AdrpAdd	Lloh532, Lloh533
+                                        ; -- End function
+	.globl	_halide_error_extern_stage_failed ; -- Begin function halide_error_extern_stage_failed
+	.weak_definition	_halide_error_extern_stage_failed
+	.p2align	2
+_halide_error_extern_stage_failed:      ; @halide_error_extern_stage_failed
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x19, x2
+	mov	x22, x1
+	mov	x21, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB154_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+Lloh534:
+	adrp	x2, l_.str.2.113@PAGE
+Lloh535:
+	add	x2, x2, l_.str.2.113@PAGEOFF
+	mov	x0, x20
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB154_3
+LBB154_2:                               ; %entry.split
+Lloh536:
+	adrp	x2, l_.str.2.113@PAGE
+Lloh537:
+	add	x2, x2, l_.str.2.113@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB154_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh538:
+	adrp	x2, l_.str.1.112@PAGE
+Lloh539:
+	add	x2, x2, l_.str.1.112@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w19
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x20, LBB154_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x21
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x21
+	mov	x1, x20
+	b	LBB154_6
+LBB154_5:                               ; %if.then.i
+Lloh540:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh541:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x21
+LBB154_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+	mov	x0, x19
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh534, Lloh535
+	.loh AdrpAdd	Lloh536, Lloh537
+	.loh AdrpAdd	Lloh538, Lloh539
+	.loh AdrpAdd	Lloh540, Lloh541
+                                        ; -- End function
+	.globl	_halide_error_explicit_bounds_too_small ; -- Begin function halide_error_explicit_bounds_too_small
+	.weak_definition	_halide_error_explicit_bounds_too_small
+	.p2align	2
+_halide_error_explicit_bounds_too_small: ; @halide_error_explicit_bounds_too_small
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x21, x6
+	mov	x22, x5
+	mov	x24, x4
+	mov	x25, x3
+	mov	x27, x2
+	mov	x26, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB155_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh542:
+	adrp	x2, l_.str.3.114@PAGE
+Lloh543:
+	add	x2, x2, l_.str.3.114@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB155_3
+LBB155_2:                               ; %entry.split
+Lloh544:
+	adrp	x2, l_.str.3.114@PAGE
+Lloh545:
+	add	x2, x2, l_.str.3.114@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB155_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x27
+	bl	_halide_string_to_string
+Lloh546:
+	adrp	x2, l_.str.4.115@PAGE
+Lloh547:
+	add	x2, x2, l_.str.4.115@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x26
+	bl	_halide_string_to_string
+Lloh548:
+	adrp	x2, l_.str.5.116@PAGE
+Lloh549:
+	add	x2, x2, l_.str.5.116@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w25
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh550:
+	adrp	x25, l_.str.6.117@PAGE
+Lloh551:
+	add	x25, x25, l_.str.6.117@PAGEOFF
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh552:
+	adrp	x2, l_.str.7.118@PAGE
+Lloh553:
+	add	x2, x2, l_.str.7.118@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w22
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh554:
+	adrp	x2, l_.str.8.119@PAGE
+Lloh555:
+	add	x2, x2, l_.str.8.119@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB155_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB155_6
+LBB155_5:                               ; %if.then.i
+Lloh556:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh557:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB155_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-2
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh542, Lloh543
+	.loh AdrpAdd	Lloh544, Lloh545
+	.loh AdrpAdd	Lloh554, Lloh555
+	.loh AdrpAdd	Lloh552, Lloh553
+	.loh AdrpAdd	Lloh550, Lloh551
+	.loh AdrpAdd	Lloh548, Lloh549
+	.loh AdrpAdd	Lloh546, Lloh547
+	.loh AdrpAdd	Lloh556, Lloh557
+                                        ; -- End function
+	.globl	_halide_error_bad_type          ; -- Begin function halide_error_bad_type
+	.weak_definition	_halide_error_bad_type
+	.p2align	2
+_halide_error_bad_type:                 ; @halide_error_bad_type
+; %bb.0:                                ; %entry
+	sub	sp, sp, #80                     ; =80
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x21, x1
+	mov	x19, x0
+	stp	w3, w2, [sp, #24]
+	str	wzr, [sp, #16]
+	str	wzr, [sp, #8]
+	add	x0, sp, #16                     ; =16
+	add	x1, sp, #24                     ; =24
+	mov	w2, #4
+	bl	_memcpy
+	add	x0, sp, #8                      ; =8
+	add	x1, sp, #28                     ; =28
+	mov	w2, #4
+	bl	_memcpy
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB156_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+	mov	x0, x20
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+	b	LBB156_3
+LBB156_2:                               ; %entry.split
+	mov	x1, #0
+	mov	x2, x21
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB156_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+Lloh558:
+	adrp	x2, l_.str.9.120@PAGE
+Lloh559:
+	add	x2, x2, l_.str.9.120@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	add	x2, sp, #16                     ; =16
+	mov	x1, x22
+	bl	_halide_type_to_string
+Lloh560:
+	adrp	x2, l_.str.10.121@PAGE
+Lloh561:
+	add	x2, x2, l_.str.10.121@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	add	x2, sp, #8                      ; =8
+	mov	x1, x22
+	bl	_halide_type_to_string
+	cbz	x20, LBB156_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x19
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x19
+	mov	x1, x20
+	b	LBB156_6
+LBB156_5:                               ; %if.then.i
+Lloh562:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh563:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x19
+LBB156_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+	mov	w0, #-3
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #80                     ; =80
+	ret
+	.loh AdrpAdd	Lloh560, Lloh561
+	.loh AdrpAdd	Lloh558, Lloh559
+	.loh AdrpAdd	Lloh562, Lloh563
+                                        ; -- End function
+	.globl	_halide_error_bad_dimensions    ; -- Begin function halide_error_bad_dimensions
+	.weak_definition	_halide_error_bad_dimensions
+	.p2align	2
+_halide_error_bad_dimensions:           ; @halide_error_bad_dimensions
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x23, x3
+	mov	x21, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB157_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+	mov	x0, x19
+	mov	x1, x22
+	mov	x2, x24
+	bl	_halide_string_to_string
+	b	LBB157_3
+LBB157_2:                               ; %entry.split
+	mov	x1, #0
+	mov	x2, x24
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB157_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+Lloh564:
+	adrp	x2, l_.str.11.122@PAGE
+Lloh565:
+	add	x2, x2, l_.str.11.122@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w23
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh566:
+	adrp	x2, l_.str.12.123@PAGE
+Lloh567:
+	add	x2, x2, l_.str.12.123@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh568:
+	adrp	x2, l_.str.13.124@PAGE
+Lloh569:
+	add	x2, x2, l_.str.13.124@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB157_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB157_6
+LBB157_5:                               ; %if.then.i
+Lloh570:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh571:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB157_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-43
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh568, Lloh569
+	.loh AdrpAdd	Lloh566, Lloh567
+	.loh AdrpAdd	Lloh564, Lloh565
+	.loh AdrpAdd	Lloh570, Lloh571
+                                        ; -- End function
+	.globl	_halide_error_access_out_of_bounds ; -- Begin function halide_error_access_out_of_bounds
+	.weak_definition	_halide_error_access_out_of_bounds
+	.p2align	2
+_halide_error_access_out_of_bounds:     ; @halide_error_access_out_of_bounds
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x21, x2
+	mov	x26, x1
+	mov	x19, x0
+	cmp	w3, w5
+	b.ge	LBB158_3
+; %bb.1:                                ; %if.then
+	mov	x23, x5
+	mov	x25, x3
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB158_6
+; %bb.2:                                ; %if.then6.i
+	add	x22, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+	mov	x0, x20
+	mov	x1, x22
+	mov	x2, x26
+	bl	_halide_string_to_string
+	b	LBB158_7
+LBB158_3:                               ; %if.else
+	mov	x22, x6
+	mov	x24, x4
+	cmp	w4, w6
+	b.le	LBB158_13
+; %bb.4:                                ; %if.then8
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB158_9
+; %bb.5:                                ; %if.then6.i59
+	add	x23, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+	mov	x0, x20
+	mov	x1, x23
+	mov	x2, x26
+	bl	_halide_string_to_string
+	b	LBB158_10
+LBB158_6:                               ; %if.then.split
+	mov	x1, #0
+	mov	x2, x26
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB158_7:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+Lloh572:
+	adrp	x2, l_.str.14.125@PAGE
+Lloh573:
+	add	x2, x2, l_.str.14.125@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w25
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh574:
+	adrp	x2, l_.str.15.126@PAGE
+Lloh575:
+	add	x2, x2, l_.str.15.126@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w23
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh576:
+	adrp	x2, l_.str.16.127@PAGE
+Lloh577:
+	add	x2, x2, l_.str.16.127@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x20, LBB158_11
+LBB158_8:                               ; %if.else.i100
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x19
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x19
+	mov	x1, x20
+	b	LBB158_12
+LBB158_9:                               ; %if.then8.split
+	mov	x1, #0
+	mov	x2, x26
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB158_10:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit62
+Lloh578:
+	adrp	x2, l_.str.14.125@PAGE
+Lloh579:
+	add	x2, x2, l_.str.14.125@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh580:
+	adrp	x2, l_.str.17.128@PAGE
+Lloh581:
+	add	x2, x2, l_.str.17.128@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w22
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh582:
+	adrp	x2, l_.str.16.127@PAGE
+Lloh583:
+	add	x2, x2, l_.str.16.127@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+                                        ; kill: def $w21 killed $w21 killed $x21 def $x21
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbnz	x20, LBB158_8
+LBB158_11:                              ; %if.then.i
+Lloh584:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh585:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x19
+LBB158_12:                              ; %if.end17.sink.split
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+LBB158_13:                              ; %if.end17
+	mov	w0, #-4
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh576, Lloh577
+	.loh AdrpAdd	Lloh574, Lloh575
+	.loh AdrpAdd	Lloh572, Lloh573
+	.loh AdrpAdd	Lloh582, Lloh583
+	.loh AdrpAdd	Lloh580, Lloh581
+	.loh AdrpAdd	Lloh578, Lloh579
+	.loh AdrpAdd	Lloh584, Lloh585
+                                        ; -- End function
+	.globl	_halide_error_buffer_allocation_too_large ; -- Begin function halide_error_buffer_allocation_too_large
+	.weak_definition	_halide_error_buffer_allocation_too_large
+	.p2align	2
+_halide_error_buffer_allocation_too_large: ; @halide_error_buffer_allocation_too_large
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB159_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh586:
+	adrp	x2, l_.str.18.129@PAGE
+Lloh587:
+	add	x2, x2, l_.str.18.129@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB159_3
+LBB159_2:                               ; %entry.split
+Lloh588:
+	adrp	x2, l_.str.18.129@PAGE
+Lloh589:
+	add	x2, x2, l_.str.18.129@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB159_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh590:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh591:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh592:
+	adrp	x2, l_.str.20.131@PAGE
+Lloh593:
+	add	x2, x2, l_.str.20.131@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	cbz	x19, LBB159_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB159_6
+LBB159_5:                               ; %if.then.i
+Lloh594:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh595:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB159_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-5
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh586, Lloh587
+	.loh AdrpAdd	Lloh588, Lloh589
+	.loh AdrpAdd	Lloh592, Lloh593
+	.loh AdrpAdd	Lloh590, Lloh591
+	.loh AdrpAdd	Lloh594, Lloh595
+                                        ; -- End function
+	.globl	_halide_error_buffer_extents_negative ; -- Begin function halide_error_buffer_extents_negative
+	.weak_definition	_halide_error_buffer_extents_negative
+	.p2align	2
+_halide_error_buffer_extents_negative:  ; @halide_error_buffer_extents_negative
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x23, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB160_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh596:
+	adrp	x2, l_.str.21.132@PAGE
+Lloh597:
+	add	x2, x2, l_.str.21.132@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB160_3
+LBB160_2:                               ; %entry.split
+Lloh598:
+	adrp	x2, l_.str.21.132@PAGE
+Lloh599:
+	add	x2, x2, l_.str.21.132@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB160_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh600:
+	adrp	x2, l_.str.22.133@PAGE
+Lloh601:
+	add	x2, x2, l_.str.22.133@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w23
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh602:
+	adrp	x2, l_.str.23.134@PAGE
+Lloh603:
+	add	x2, x2, l_.str.23.134@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh604:
+	adrp	x2, l_.str.8.119@PAGE
+Lloh605:
+	add	x2, x2, l_.str.8.119@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB160_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB160_6
+LBB160_5:                               ; %if.then.i
+Lloh606:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh607:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB160_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-28
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh596, Lloh597
+	.loh AdrpAdd	Lloh598, Lloh599
+	.loh AdrpAdd	Lloh604, Lloh605
+	.loh AdrpAdd	Lloh602, Lloh603
+	.loh AdrpAdd	Lloh600, Lloh601
+	.loh AdrpAdd	Lloh606, Lloh607
+                                        ; -- End function
+	.globl	_halide_error_buffer_extents_too_large ; -- Begin function halide_error_buffer_extents_too_large
+	.weak_definition	_halide_error_buffer_extents_too_large
+	.p2align	2
+_halide_error_buffer_extents_too_large: ; @halide_error_buffer_extents_too_large
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB161_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh608:
+	adrp	x2, l_.str.24.135@PAGE
+Lloh609:
+	add	x2, x2, l_.str.24.135@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB161_3
+LBB161_2:                               ; %entry.split
+Lloh610:
+	adrp	x2, l_.str.24.135@PAGE
+Lloh611:
+	add	x2, x2, l_.str.24.135@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB161_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh612:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh613:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh614:
+	adrp	x2, l_.str.20.131@PAGE
+Lloh615:
+	add	x2, x2, l_.str.20.131@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x19, LBB161_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB161_6
+LBB161_5:                               ; %if.then.i
+Lloh616:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh617:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB161_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-6
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh608, Lloh609
+	.loh AdrpAdd	Lloh610, Lloh611
+	.loh AdrpAdd	Lloh614, Lloh615
+	.loh AdrpAdd	Lloh612, Lloh613
+	.loh AdrpAdd	Lloh616, Lloh617
+                                        ; -- End function
+	.globl	_halide_error_constraints_make_required_region_smaller ; -- Begin function halide_error_constraints_make_required_region_smaller
+	.weak_definition	_halide_error_constraints_make_required_region_smaller
+	.p2align	2
+_halide_error_constraints_make_required_region_smaller: ; @halide_error_constraints_make_required_region_smaller
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x23, x5
+	mov	x21, x3
+	mov	x24, x2
+	mov	x25, x1
+	mov	x19, x0
+	add	w8, w5, w6
+	sub	w27, w8, #1                     ; =1
+	add	w8, w3, w4
+	sub	w26, w8, #1                     ; =1
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB162_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+Lloh618:
+	adrp	x2, l_.str.25.136@PAGE
+Lloh619:
+	add	x2, x2, l_.str.25.136@PAGEOFF
+	mov	x0, x20
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB162_3
+LBB162_2:                               ; %entry.split
+Lloh620:
+	adrp	x2, l_.str.25.136@PAGE
+Lloh621:
+	add	x2, x2, l_.str.25.136@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB162_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x25
+	bl	_halide_string_to_string
+Lloh622:
+	adrp	x2, l_.str.26.137@PAGE
+Lloh623:
+	add	x2, x2, l_.str.26.137@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh624:
+	adrp	x24, l_.str.27.138@PAGE
+Lloh625:
+	add	x24, x24, l_.str.27.138@PAGEOFF
+	mov	x1, x22
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh626:
+	adrp	x2, l_.str.28.139@PAGE
+Lloh627:
+	add	x2, x2, l_.str.28.139@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w23
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh628:
+	adrp	x23, l_.str.6.117@PAGE
+Lloh629:
+	add	x23, x23, l_.str.6.117@PAGEOFF
+	mov	x1, x22
+	mov	x2, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w27
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x22
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh630:
+	adrp	x2, l_.str.29.140@PAGE
+Lloh631:
+	add	x2, x2, l_.str.29.140@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x22
+	mov	x2, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w26
+	mov	x1, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh632:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh633:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x20, LBB162_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x19
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x19
+	mov	x1, x20
+	b	LBB162_6
+LBB162_5:                               ; %if.then.i
+Lloh634:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh635:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x19
+LBB162_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+	mov	w0, #-7
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh618, Lloh619
+	.loh AdrpAdd	Lloh620, Lloh621
+	.loh AdrpAdd	Lloh632, Lloh633
+	.loh AdrpAdd	Lloh630, Lloh631
+	.loh AdrpAdd	Lloh628, Lloh629
+	.loh AdrpAdd	Lloh626, Lloh627
+	.loh AdrpAdd	Lloh624, Lloh625
+	.loh AdrpAdd	Lloh622, Lloh623
+	.loh AdrpAdd	Lloh634, Lloh635
+                                        ; -- End function
+	.globl	_halide_error_constraint_violated ; -- Begin function halide_error_constraint_violated
+	.weak_definition	_halide_error_constraint_violated
+	.p2align	2
+_halide_error_constraint_violated:      ; @halide_error_constraint_violated
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x21, x4
+	mov	x22, x3
+	mov	x24, x2
+	mov	x25, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB163_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh636:
+	adrp	x2, l_.str.31.142@PAGE
+Lloh637:
+	add	x2, x2, l_.str.31.142@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB163_3
+LBB163_2:                               ; %entry.split
+Lloh638:
+	adrp	x2, l_.str.31.142@PAGE
+Lloh639:
+	add	x2, x2, l_.str.31.142@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB163_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+Lloh640:
+	adrp	x25, l_.str.32.143@PAGE
+Lloh641:
+	add	x25, x25, l_.str.32.143@PAGEOFF
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh642:
+	adrp	x2, l_.str.33.144@PAGE
+Lloh643:
+	add	x2, x2, l_.str.33.144@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh644:
+	adrp	x2, l_.str.8.119@PAGE
+Lloh645:
+	add	x2, x2, l_.str.8.119@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB163_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB163_6
+LBB163_5:                               ; %if.then.i
+Lloh646:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh647:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB163_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-8
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh636, Lloh637
+	.loh AdrpAdd	Lloh638, Lloh639
+	.loh AdrpAdd	Lloh644, Lloh645
+	.loh AdrpAdd	Lloh642, Lloh643
+	.loh AdrpAdd	Lloh640, Lloh641
+	.loh AdrpAdd	Lloh646, Lloh647
+                                        ; -- End function
+	.globl	_halide_error_param_too_small_i64 ; -- Begin function halide_error_param_too_small_i64
+	.weak_definition	_halide_error_param_too_small_i64
+	.p2align	2
+_halide_error_param_too_small_i64:      ; @halide_error_param_too_small_i64
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB164_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh648:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh649:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB164_3
+LBB164_2:                               ; %entry.split
+Lloh650:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh651:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB164_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh652:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh653:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh654:
+	adrp	x2, l_.str.35.146@PAGE
+Lloh655:
+	add	x2, x2, l_.str.35.146@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x19, LBB164_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB164_6
+LBB164_5:                               ; %if.then.i
+Lloh656:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh657:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB164_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-9
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh648, Lloh649
+	.loh AdrpAdd	Lloh650, Lloh651
+	.loh AdrpAdd	Lloh654, Lloh655
+	.loh AdrpAdd	Lloh652, Lloh653
+	.loh AdrpAdd	Lloh656, Lloh657
+                                        ; -- End function
+	.globl	_halide_error_param_too_small_u64 ; -- Begin function halide_error_param_too_small_u64
+	.weak_definition	_halide_error_param_too_small_u64
+	.p2align	2
+_halide_error_param_too_small_u64:      ; @halide_error_param_too_small_u64
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB165_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh658:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh659:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB165_3
+LBB165_2:                               ; %entry.split
+Lloh660:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh661:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB165_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh662:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh663:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh664:
+	adrp	x2, l_.str.35.146@PAGE
+Lloh665:
+	add	x2, x2, l_.str.35.146@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	cbz	x19, LBB165_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB165_6
+LBB165_5:                               ; %if.then.i
+Lloh666:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh667:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB165_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-9
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh658, Lloh659
+	.loh AdrpAdd	Lloh660, Lloh661
+	.loh AdrpAdd	Lloh664, Lloh665
+	.loh AdrpAdd	Lloh662, Lloh663
+	.loh AdrpAdd	Lloh666, Lloh667
+                                        ; -- End function
+	.globl	_halide_error_param_too_small_f64 ; -- Begin function halide_error_param_too_small_f64
+	.weak_definition	_halide_error_param_too_small_f64
+	.p2align	2
+_halide_error_param_too_small_f64:      ; @halide_error_param_too_small_f64
+; %bb.0:                                ; %entry
+	stp	d9, d8, [sp, #-64]!             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov.16b	v8, v1
+	mov.16b	v9, v0
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB166_2
+; %bb.1:                                ; %if.then6.i
+	add	x21, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh668:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh669:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x21
+	bl	_halide_string_to_string
+	b	LBB166_3
+LBB166_2:                               ; %entry.split
+Lloh670:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh671:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x21, #0
+LBB166_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x21
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh672:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh673:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x21
+	bl	_halide_string_to_string
+	mov	x1, x21
+	mov.16b	v0, v9
+	mov	w2, #1
+	bl	_halide_double_to_string
+Lloh674:
+	adrp	x2, l_.str.35.146@PAGE
+Lloh675:
+	add	x2, x2, l_.str.35.146@PAGEOFF
+	mov	x1, x21
+	bl	_halide_string_to_string
+	mov	x1, x21
+	mov.16b	v0, v8
+	mov	w2, #1
+	bl	_halide_double_to_string
+	cbz	x19, LBB166_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB166_6
+LBB166_5:                               ; %if.then.i
+Lloh676:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh677:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB166_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-9
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	d9, d8, [sp], #64               ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh668, Lloh669
+	.loh AdrpAdd	Lloh670, Lloh671
+	.loh AdrpAdd	Lloh674, Lloh675
+	.loh AdrpAdd	Lloh672, Lloh673
+	.loh AdrpAdd	Lloh676, Lloh677
+                                        ; -- End function
+	.globl	_halide_error_param_too_large_i64 ; -- Begin function halide_error_param_too_large_i64
+	.weak_definition	_halide_error_param_too_large_i64
+	.p2align	2
+_halide_error_param_too_large_i64:      ; @halide_error_param_too_large_i64
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB167_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh678:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh679:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB167_3
+LBB167_2:                               ; %entry.split
+Lloh680:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh681:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB167_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh682:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh683:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh684:
+	adrp	x2, l_.str.36@PAGE
+Lloh685:
+	add	x2, x2, l_.str.36@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x19, LBB167_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB167_6
+LBB167_5:                               ; %if.then.i
+Lloh686:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh687:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB167_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-10
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh678, Lloh679
+	.loh AdrpAdd	Lloh680, Lloh681
+	.loh AdrpAdd	Lloh684, Lloh685
+	.loh AdrpAdd	Lloh682, Lloh683
+	.loh AdrpAdd	Lloh686, Lloh687
+                                        ; -- End function
+	.globl	_halide_error_param_too_large_u64 ; -- Begin function halide_error_param_too_large_u64
+	.weak_definition	_halide_error_param_too_large_u64
+	.p2align	2
+_halide_error_param_too_large_u64:      ; @halide_error_param_too_large_u64
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB168_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh688:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh689:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB168_3
+LBB168_2:                               ; %entry.split
+Lloh690:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh691:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB168_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh692:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh693:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+Lloh694:
+	adrp	x2, l_.str.36@PAGE
+Lloh695:
+	add	x2, x2, l_.str.36@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	cbz	x19, LBB168_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB168_6
+LBB168_5:                               ; %if.then.i
+Lloh696:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh697:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB168_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-10
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh688, Lloh689
+	.loh AdrpAdd	Lloh690, Lloh691
+	.loh AdrpAdd	Lloh694, Lloh695
+	.loh AdrpAdd	Lloh692, Lloh693
+	.loh AdrpAdd	Lloh696, Lloh697
+                                        ; -- End function
+	.globl	_halide_error_param_too_large_f64 ; -- Begin function halide_error_param_too_large_f64
+	.weak_definition	_halide_error_param_too_large_f64
+	.p2align	2
+_halide_error_param_too_large_f64:      ; @halide_error_param_too_large_f64
+; %bb.0:                                ; %entry
+	stp	d9, d8, [sp, #-64]!             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov.16b	v8, v1
+	mov.16b	v9, v0
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB169_2
+; %bb.1:                                ; %if.then6.i
+	add	x21, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh698:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh699:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x0, x19
+	mov	x1, x21
+	bl	_halide_string_to_string
+	b	LBB169_3
+LBB169_2:                               ; %entry.split
+Lloh700:
+	adrp	x2, l_.str.34.145@PAGE
+Lloh701:
+	add	x2, x2, l_.str.34.145@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x21, #0
+LBB169_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x21
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh702:
+	adrp	x2, l_.str.19.130@PAGE
+Lloh703:
+	add	x2, x2, l_.str.19.130@PAGEOFF
+	mov	x1, x21
+	bl	_halide_string_to_string
+	mov	x1, x21
+	mov.16b	v0, v9
+	mov	w2, #1
+	bl	_halide_double_to_string
+Lloh704:
+	adrp	x2, l_.str.36@PAGE
+Lloh705:
+	add	x2, x2, l_.str.36@PAGEOFF
+	mov	x1, x21
+	bl	_halide_string_to_string
+	mov	x1, x21
+	mov.16b	v0, v8
+	mov	w2, #1
+	bl	_halide_double_to_string
+	cbz	x19, LBB169_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB169_6
+LBB169_5:                               ; %if.then.i
+Lloh706:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh707:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB169_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-10
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	d9, d8, [sp], #64               ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh698, Lloh699
+	.loh AdrpAdd	Lloh700, Lloh701
+	.loh AdrpAdd	Lloh704, Lloh705
+	.loh AdrpAdd	Lloh702, Lloh703
+	.loh AdrpAdd	Lloh706, Lloh707
+                                        ; -- End function
+	.globl	_halide_error_out_of_memory     ; -- Begin function halide_error_out_of_memory
+	.weak_definition	_halide_error_out_of_memory
+	.p2align	2
+_halide_error_out_of_memory:            ; @halide_error_out_of_memory
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh708:
+	adrp	x1, l_.str.37@PAGE
+Lloh709:
+	add	x1, x1, l_.str.37@PAGEOFF
+	bl	_halide_error
+	mov	w0, #-11
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh708, Lloh709
+                                        ; -- End function
+	.globl	_halide_error_buffer_argument_is_null ; -- Begin function halide_error_buffer_argument_is_null
+	.weak_definition	_halide_error_buffer_argument_is_null
+	.p2align	2
+_halide_error_buffer_argument_is_null:  ; @halide_error_buffer_argument_is_null
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB171_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh710:
+	adrp	x2, l_.str.38@PAGE
+Lloh711:
+	add	x2, x2, l_.str.38@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB171_3
+LBB171_2:                               ; %entry.split
+Lloh712:
+	adrp	x2, l_.str.38@PAGE
+Lloh713:
+	add	x2, x2, l_.str.38@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB171_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh714:
+	adrp	x2, l_.str.39@PAGE
+Lloh715:
+	add	x2, x2, l_.str.39@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB171_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB171_6
+LBB171_5:                               ; %if.then.i
+Lloh716:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh717:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB171_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-12
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh710, Lloh711
+	.loh AdrpAdd	Lloh712, Lloh713
+	.loh AdrpAdd	Lloh714, Lloh715
+	.loh AdrpAdd	Lloh716, Lloh717
+                                        ; -- End function
+	.globl	_halide_error_debug_to_file_failed ; -- Begin function halide_error_debug_to_file_failed
+	.weak_definition	_halide_error_debug_to_file_failed
+	.p2align	2
+_halide_error_debug_to_file_failed:     ; @halide_error_debug_to_file_failed
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB172_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh718:
+	adrp	x2, l_.str.40@PAGE
+Lloh719:
+	add	x2, x2, l_.str.40@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB172_3
+LBB172_2:                               ; %entry.split
+Lloh720:
+	adrp	x2, l_.str.40@PAGE
+Lloh721:
+	add	x2, x2, l_.str.40@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB172_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh722:
+	adrp	x2, l_.str.41.147@PAGE
+Lloh723:
+	add	x2, x2, l_.str.41.147@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh724:
+	adrp	x2, l_.str.42@PAGE
+Lloh725:
+	add	x2, x2, l_.str.42@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	cbz	x19, LBB172_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB172_6
+LBB172_5:                               ; %if.then.i
+Lloh726:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh727:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB172_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-13
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh718, Lloh719
+	.loh AdrpAdd	Lloh720, Lloh721
+	.loh AdrpAdd	Lloh724, Lloh725
+	.loh AdrpAdd	Lloh722, Lloh723
+	.loh AdrpAdd	Lloh726, Lloh727
+                                        ; -- End function
+	.globl	_halide_error_unaligned_host_ptr ; -- Begin function halide_error_unaligned_host_ptr
+	.weak_definition	_halide_error_unaligned_host_ptr
+	.p2align	2
+_halide_error_unaligned_host_ptr:       ; @halide_error_unaligned_host_ptr
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x2
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB173_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh728:
+	adrp	x2, l_.str.43@PAGE
+Lloh729:
+	add	x2, x2, l_.str.43@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB173_3
+LBB173_2:                               ; %entry.split
+Lloh730:
+	adrp	x2, l_.str.43@PAGE
+Lloh731:
+	add	x2, x2, l_.str.43@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB173_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh732:
+	adrp	x2, l_.str.44@PAGE
+Lloh733:
+	add	x2, x2, l_.str.44@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh734:
+	adrp	x2, l_.str.45@PAGE
+Lloh735:
+	add	x2, x2, l_.str.45@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB173_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB173_6
+LBB173_5:                               ; %if.then.i
+Lloh736:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh737:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB173_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-24
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh728, Lloh729
+	.loh AdrpAdd	Lloh730, Lloh731
+	.loh AdrpAdd	Lloh734, Lloh735
+	.loh AdrpAdd	Lloh732, Lloh733
+	.loh AdrpAdd	Lloh736, Lloh737
+                                        ; -- End function
+	.globl	_halide_error_device_dirty_with_no_device_support ; -- Begin function halide_error_device_dirty_with_no_device_support
+	.weak_definition	_halide_error_device_dirty_with_no_device_support
+	.p2align	2
+_halide_error_device_dirty_with_no_device_support: ; @halide_error_device_dirty_with_no_device_support
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB174_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh738:
+	adrp	x2, l_.str.46@PAGE
+Lloh739:
+	add	x2, x2, l_.str.46@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB174_3
+LBB174_2:                               ; %entry.split
+Lloh740:
+	adrp	x2, l_.str.46@PAGE
+Lloh741:
+	add	x2, x2, l_.str.46@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB174_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh742:
+	adrp	x2, l_.str.47@PAGE
+Lloh743:
+	add	x2, x2, l_.str.47@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+Lloh744:
+	adrp	x2, l_.str.48@PAGE
+Lloh745:
+	add	x2, x2, l_.str.48@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB174_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB174_6
+LBB174_5:                               ; %if.then.i
+Lloh746:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh747:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB174_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-44
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh738, Lloh739
+	.loh AdrpAdd	Lloh740, Lloh741
+	.loh AdrpAdd	Lloh744, Lloh745
+	.loh AdrpAdd	Lloh742, Lloh743
+	.loh AdrpAdd	Lloh746, Lloh747
+                                        ; -- End function
+	.globl	_halide_error_host_is_null      ; -- Begin function halide_error_host_is_null
+	.weak_definition	_halide_error_host_is_null
+	.p2align	2
+_halide_error_host_is_null:             ; @halide_error_host_is_null
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB175_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh748:
+	adrp	x2, l_.str.43@PAGE
+Lloh749:
+	add	x2, x2, l_.str.43@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB175_3
+LBB175_2:                               ; %entry.split
+Lloh750:
+	adrp	x2, l_.str.43@PAGE
+Lloh751:
+	add	x2, x2, l_.str.43@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB175_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh752:
+	adrp	x2, l_.str.49@PAGE
+Lloh753:
+	add	x2, x2, l_.str.49@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB175_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB175_6
+LBB175_5:                               ; %if.then.i
+Lloh754:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh755:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB175_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-34
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh748, Lloh749
+	.loh AdrpAdd	Lloh750, Lloh751
+	.loh AdrpAdd	Lloh752, Lloh753
+	.loh AdrpAdd	Lloh754, Lloh755
+                                        ; -- End function
+	.globl	_halide_error_bad_fold          ; -- Begin function halide_error_bad_fold
+	.weak_definition	_halide_error_bad_fold
+	.p2align	2
+_halide_error_bad_fold:                 ; @halide_error_bad_fold
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x24, x2
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB176_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh756:
+	adrp	x2, l_.str.50.148@PAGE
+Lloh757:
+	add	x2, x2, l_.str.50.148@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB176_3
+LBB176_2:                               ; %entry.split
+Lloh758:
+	adrp	x2, l_.str.50.148@PAGE
+Lloh759:
+	add	x2, x2, l_.str.50.148@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB176_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh760:
+	adrp	x2, l_.str.51@PAGE
+Lloh761:
+	add	x2, x2, l_.str.51@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh762:
+	adrp	x2, l_.str.52@PAGE
+Lloh763:
+	add	x2, x2, l_.str.52@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh764:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh765:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB176_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB176_6
+LBB176_5:                               ; %if.then.i
+Lloh766:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh767:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB176_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-25
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh756, Lloh757
+	.loh AdrpAdd	Lloh758, Lloh759
+	.loh AdrpAdd	Lloh764, Lloh765
+	.loh AdrpAdd	Lloh762, Lloh763
+	.loh AdrpAdd	Lloh760, Lloh761
+	.loh AdrpAdd	Lloh766, Lloh767
+                                        ; -- End function
+	.globl	_halide_error_bad_extern_fold   ; -- Begin function halide_error_bad_extern_fold
+	.weak_definition	_halide_error_bad_extern_fold
+	.p2align	2
+_halide_error_bad_extern_fold:          ; @halide_error_bad_extern_fold
+; %bb.0:                                ; %entry
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80                    ; =80
+	mov	x21, x6
+	mov	x23, x5
+	mov	x26, x4
+	mov	x22, x3
+	mov	x27, x2
+	mov	x24, x1
+	mov	x19, x0
+	cmp	w3, w5
+	b.lt	LBB177_2
+; %bb.1:                                ; %lor.lhs.false
+	add	w25, w26, w22
+	add	w8, w21, w23
+	cmp	w25, w8
+	b.le	LBB177_7
+LBB177_2:                               ; %if.then
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB177_4
+; %bb.3:                                ; %if.then6.i
+	add	x25, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+Lloh768:
+	adrp	x2, l_.str.53@PAGE
+Lloh769:
+	add	x2, x2, l_.str.53@PAGEOFF
+	mov	x0, x20
+	mov	x1, x25
+	bl	_halide_string_to_string
+	b	LBB177_5
+LBB177_4:                               ; %if.then.split
+Lloh770:
+	adrp	x2, l_.str.53@PAGE
+Lloh771:
+	add	x2, x2, l_.str.53@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x25, #0
+LBB177_5:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	sxtw	x2, w27
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh772:
+	adrp	x2, l_.str.51@PAGE
+Lloh773:
+	add	x2, x2, l_.str.51@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+	mov	x1, x25
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh774:
+	adrp	x2, l_.str.54@PAGE
+Lloh775:
+	add	x2, x2, l_.str.54@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w22
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh776:
+	adrp	x24, l_.str.55@PAGE
+Lloh777:
+	add	x24, x24, l_.str.55@PAGEOFF
+	mov	x1, x25
+	mov	x2, x24
+	bl	_halide_string_to_string
+	add	w8, w26, w22
+	sub	w8, w8, #1                      ; =1
+	sxtw	x2, w8
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh778:
+	adrp	x2, l_.str.56@PAGE
+Lloh779:
+	add	x2, x2, l_.str.56@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+Lloh780:
+	adrp	x2, l_.str.57@PAGE
+Lloh781:
+	add	x2, x2, l_.str.57@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+	sxtw	x2, w23
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x25
+	mov	x2, x24
+	bl	_halide_string_to_string
+	add	w8, w21, w23
+	sub	w8, w8, #1                      ; =1
+	sxtw	x2, w8
+	mov	x1, x25
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh782:
+	adrp	x2, l_.str.58.149@PAGE
+Lloh783:
+	add	x2, x2, l_.str.58.149@PAGEOFF
+	mov	x1, x25
+	bl	_halide_string_to_string
+	cbz	x20, LBB177_11
+LBB177_6:                               ; %if.else.i167
+	sub	x8, x0, x20
+	add	x2, x8, #1                      ; =1
+	mov	x0, x19
+	mov	x1, x20
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x19
+	mov	x1, x20
+	b	LBB177_12
+LBB177_7:                               ; %if.else
+	mov	w0, #1024
+	bl	_malloc
+	mov	x20, x0
+	cbz	x0, LBB177_9
+; %bb.8:                                ; %if.then6.i107
+	add	x23, x20, #1023                 ; =1023
+	strb	wzr, [x20, #1023]
+Lloh784:
+	adrp	x2, l_.str.53@PAGE
+Lloh785:
+	add	x2, x2, l_.str.53@PAGEOFF
+	mov	x0, x20
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB177_10
+LBB177_9:                               ; %if.else.split
+Lloh786:
+	adrp	x2, l_.str.53@PAGE
+Lloh787:
+	add	x2, x2, l_.str.53@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB177_10:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit110
+                                        ; kill: def $w27 killed $w27 killed $x27 def $x27
+	sxtw	x2, w27
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh788:
+	adrp	x2, l_.str.51@PAGE
+Lloh789:
+	add	x2, x2, l_.str.51@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh790:
+	adrp	x2, l_.str.54@PAGE
+Lloh791:
+	add	x2, x2, l_.str.54@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+                                        ; kill: def $w22 killed $w22 killed $x22 def $x22
+	sxtw	x2, w22
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh792:
+	adrp	x2, l_.str.55@PAGE
+Lloh793:
+	add	x2, x2, l_.str.55@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sub	w8, w25, #1                     ; =1
+	sxtw	x2, w8
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh794:
+	adrp	x2, l_.str.56@PAGE
+Lloh795:
+	add	x2, x2, l_.str.56@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh796:
+	adrp	x2, l_.str.59.150@PAGE
+Lloh797:
+	add	x2, x2, l_.str.59.150@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+Lloh798:
+	adrp	x2, l_.str.60.151@PAGE
+Lloh799:
+	add	x2, x2, l_.str.60.151@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh800:
+	adrp	x2, l_.str.30.141@PAGE
+Lloh801:
+	add	x2, x2, l_.str.30.141@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbnz	x20, LBB177_6
+LBB177_11:                              ; %if.then.i
+Lloh802:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh803:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x19
+LBB177_12:                              ; %if.end
+	bl	_halide_error
+	mov	x0, x20
+	bl	_free
+	mov	w0, #-35
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh768, Lloh769
+	.loh AdrpAdd	Lloh770, Lloh771
+	.loh AdrpAdd	Lloh782, Lloh783
+	.loh AdrpAdd	Lloh780, Lloh781
+	.loh AdrpAdd	Lloh778, Lloh779
+	.loh AdrpAdd	Lloh776, Lloh777
+	.loh AdrpAdd	Lloh774, Lloh775
+	.loh AdrpAdd	Lloh772, Lloh773
+	.loh AdrpAdd	Lloh784, Lloh785
+	.loh AdrpAdd	Lloh786, Lloh787
+	.loh AdrpAdd	Lloh800, Lloh801
+	.loh AdrpAdd	Lloh798, Lloh799
+	.loh AdrpAdd	Lloh796, Lloh797
+	.loh AdrpAdd	Lloh794, Lloh795
+	.loh AdrpAdd	Lloh792, Lloh793
+	.loh AdrpAdd	Lloh790, Lloh791
+	.loh AdrpAdd	Lloh788, Lloh789
+	.loh AdrpAdd	Lloh802, Lloh803
+                                        ; -- End function
+	.globl	_halide_error_fold_factor_too_small ; -- Begin function halide_error_fold_factor_too_small
+	.weak_definition	_halide_error_fold_factor_too_small
+	.p2align	2
+_halide_error_fold_factor_too_small:    ; @halide_error_fold_factor_too_small
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x21, x5
+	mov	x22, x4
+	mov	x26, x3
+	mov	x25, x2
+	mov	x24, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB178_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh804:
+	adrp	x2, l_.str.61.152@PAGE
+Lloh805:
+	add	x2, x2, l_.str.61.152@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB178_3
+LBB178_2:                               ; %entry.split
+Lloh806:
+	adrp	x2, l_.str.61.152@PAGE
+Lloh807:
+	add	x2, x2, l_.str.61.152@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB178_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	sxtw	x2, w26
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh808:
+	adrp	x2, l_.str.62@PAGE
+Lloh809:
+	add	x2, x2, l_.str.62@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x25
+	bl	_halide_string_to_string
+Lloh810:
+	adrp	x2, l_.str.51@PAGE
+Lloh811:
+	add	x2, x2, l_.str.51@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh812:
+	adrp	x2, l_.str.63@PAGE
+Lloh813:
+	add	x2, x2, l_.str.63@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh814:
+	adrp	x2, l_.str.32.143@PAGE
+Lloh815:
+	add	x2, x2, l_.str.32.143@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh816:
+	adrp	x2, l_.str.64.153@PAGE
+Lloh817:
+	add	x2, x2, l_.str.64.153@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB178_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB178_6
+LBB178_5:                               ; %if.then.i
+Lloh818:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh819:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB178_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-26
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh804, Lloh805
+	.loh AdrpAdd	Lloh806, Lloh807
+	.loh AdrpAdd	Lloh816, Lloh817
+	.loh AdrpAdd	Lloh814, Lloh815
+	.loh AdrpAdd	Lloh812, Lloh813
+	.loh AdrpAdd	Lloh810, Lloh811
+	.loh AdrpAdd	Lloh808, Lloh809
+	.loh AdrpAdd	Lloh818, Lloh819
+                                        ; -- End function
+	.globl	_halide_error_requirement_failed ; -- Begin function halide_error_requirement_failed
+	.weak_definition	_halide_error_requirement_failed
+	.p2align	2
+_halide_error_requirement_failed:       ; @halide_error_requirement_failed
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x2
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB179_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh820:
+	adrp	x2, l_.str.65@PAGE
+Lloh821:
+	add	x2, x2, l_.str.65@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB179_3
+LBB179_2:                               ; %entry.split
+Lloh822:
+	adrp	x2, l_.str.65@PAGE
+Lloh823:
+	add	x2, x2, l_.str.65@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB179_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh824:
+	adrp	x2, l_.str.66@PAGE
+Lloh825:
+	add	x2, x2, l_.str.66@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x21
+	bl	_halide_string_to_string
+	cbz	x19, LBB179_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB179_6
+LBB179_5:                               ; %if.then.i
+Lloh826:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh827:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB179_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-27
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh820, Lloh821
+	.loh AdrpAdd	Lloh822, Lloh823
+	.loh AdrpAdd	Lloh824, Lloh825
+	.loh AdrpAdd	Lloh826, Lloh827
+                                        ; -- End function
+	.globl	_halide_error_specialize_fail   ; -- Begin function halide_error_specialize_fail
+	.weak_definition	_halide_error_specialize_fail
+	.p2align	2
+_halide_error_specialize_fail:          ; @halide_error_specialize_fail
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB180_2
+; %bb.1:                                ; %if.else.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh828:
+	adrp	x2, l_.str.67@PAGE
+Lloh829:
+	add	x2, x2, l_.str.67@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB180_3
+LBB180_2:                               ; %if.then.i
+Lloh830:
+	adrp	x2, l_.str.67@PAGE
+Lloh831:
+	add	x2, x2, l_.str.67@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x1, #0
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh832:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh833:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB180_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-31
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh828, Lloh829
+	.loh AdrpAdd	Lloh832, Lloh833
+	.loh AdrpAdd	Lloh830, Lloh831
+                                        ; -- End function
+	.globl	_halide_error_no_device_interface ; -- Begin function halide_error_no_device_interface
+	.weak_definition	_halide_error_no_device_interface
+	.p2align	2
+_halide_error_no_device_interface:      ; @halide_error_no_device_interface
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB181_2
+; %bb.1:                                ; %if.else.i
+	add	x1, x19, #1023                  ; =1023
+	strb	wzr, [x19, #1023]
+Lloh834:
+	adrp	x2, l_.str.68@PAGE
+Lloh835:
+	add	x2, x2, l_.str.68@PAGEOFF
+	mov	x0, x19
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB181_3
+LBB181_2:                               ; %if.then.i
+Lloh836:
+	adrp	x2, l_.str.68@PAGE
+Lloh837:
+	add	x2, x2, l_.str.68@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+Lloh838:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh839:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB181_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh834, Lloh835
+	.loh AdrpAdd	Lloh838, Lloh839
+	.loh AdrpAdd	Lloh836, Lloh837
+                                        ; -- End function
+	.globl	_halide_error_device_interface_no_device ; -- Begin function halide_error_device_interface_no_device
+	.weak_definition	_halide_error_device_interface_no_device
+	.p2align	2
+_halide_error_device_interface_no_device: ; @halide_error_device_interface_no_device
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB182_2
+; %bb.1:                                ; %if.else.i
+	add	x1, x19, #1023                  ; =1023
+	strb	wzr, [x19, #1023]
+Lloh840:
+	adrp	x2, l_.str.69@PAGE
+Lloh841:
+	add	x2, x2, l_.str.69@PAGEOFF
+	mov	x0, x19
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB182_3
+LBB182_2:                               ; %if.then.i
+Lloh842:
+	adrp	x2, l_.str.69@PAGE
+Lloh843:
+	add	x2, x2, l_.str.69@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+Lloh844:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh845:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB182_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-36
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh840, Lloh841
+	.loh AdrpAdd	Lloh844, Lloh845
+	.loh AdrpAdd	Lloh842, Lloh843
+                                        ; -- End function
+	.globl	_halide_error_host_and_device_dirty ; -- Begin function halide_error_host_and_device_dirty
+	.weak_definition	_halide_error_host_and_device_dirty
+	.p2align	2
+_halide_error_host_and_device_dirty:    ; @halide_error_host_and_device_dirty
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB183_2
+; %bb.1:                                ; %if.else.i
+	add	x1, x19, #1023                  ; =1023
+	strb	wzr, [x19, #1023]
+Lloh846:
+	adrp	x2, l_.str.70@PAGE
+Lloh847:
+	add	x2, x2, l_.str.70@PAGEOFF
+	mov	x0, x19
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB183_3
+LBB183_2:                               ; %if.then.i
+Lloh848:
+	adrp	x2, l_.str.70@PAGE
+Lloh849:
+	add	x2, x2, l_.str.70@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+Lloh850:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh851:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB183_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-37
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh846, Lloh847
+	.loh AdrpAdd	Lloh850, Lloh851
+	.loh AdrpAdd	Lloh848, Lloh849
+                                        ; -- End function
+	.globl	_halide_error_buffer_is_null    ; -- Begin function halide_error_buffer_is_null
+	.weak_definition	_halide_error_buffer_is_null
+	.p2align	2
+_halide_error_buffer_is_null:           ; @halide_error_buffer_is_null
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB184_2
+; %bb.1:                                ; %if.then6.i
+	add	x22, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh852:
+	adrp	x2, l_.str.71@PAGE
+Lloh853:
+	add	x2, x2, l_.str.71@PAGEOFF
+	mov	x0, x19
+	mov	x1, x22
+	bl	_halide_string_to_string
+	b	LBB184_3
+LBB184_2:                               ; %entry.split
+Lloh854:
+	adrp	x2, l_.str.71@PAGE
+Lloh855:
+	add	x2, x2, l_.str.71@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x22, #0
+LBB184_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	mov	x1, x22
+	mov	x2, x21
+	bl	_halide_string_to_string
+Lloh856:
+	adrp	x2, l_.str.72@PAGE
+Lloh857:
+	add	x2, x2, l_.str.72@PAGEOFF
+	mov	x1, x22
+	bl	_halide_string_to_string
+	cbz	x19, LBB184_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB184_6
+LBB184_5:                               ; %if.then.i
+Lloh858:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh859:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB184_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-38
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh852, Lloh853
+	.loh AdrpAdd	Lloh854, Lloh855
+	.loh AdrpAdd	Lloh856, Lloh857
+	.loh AdrpAdd	Lloh858, Lloh859
+                                        ; -- End function
+	.globl	_halide_error_storage_bound_too_small ; -- Begin function halide_error_storage_bound_too_small
+	.weak_definition	_halide_error_storage_bound_too_small
+	.p2align	2
+_halide_error_storage_bound_too_small:  ; @halide_error_storage_bound_too_small
+; %bb.0:                                ; %entry
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x21, x4
+	mov	x25, x3
+	mov	x24, x2
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB185_2
+; %bb.1:                                ; %if.then6.i
+	add	x23, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+Lloh860:
+	adrp	x2, l_.str.73@PAGE
+Lloh861:
+	add	x2, x2, l_.str.73@PAGEOFF
+	mov	x0, x19
+	mov	x1, x23
+	bl	_halide_string_to_string
+	b	LBB185_3
+LBB185_2:                               ; %entry.split
+Lloh862:
+	adrp	x2, l_.str.73@PAGE
+Lloh863:
+	add	x2, x2, l_.str.73@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+	mov	x23, #0
+LBB185_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EEC2EPvPc.exit
+	sxtw	x2, w25
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh864:
+	adrp	x2, l_.str.62@PAGE
+Lloh865:
+	add	x2, x2, l_.str.62@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x24
+	bl	_halide_string_to_string
+Lloh866:
+	adrp	x2, l_.str.51@PAGE
+Lloh867:
+	add	x2, x2, l_.str.51@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	mov	x1, x23
+	mov	x2, x22
+	bl	_halide_string_to_string
+Lloh868:
+	adrp	x2, l_.str.74@PAGE
+Lloh869:
+	add	x2, x2, l_.str.74@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	sxtw	x2, w21
+	mov	x1, x23
+	mov	w3, #1
+	bl	_halide_int64_to_string
+Lloh870:
+	adrp	x2, l_.str.64.153@PAGE
+Lloh871:
+	add	x2, x2, l_.str.64.153@PAGEOFF
+	mov	x1, x23
+	bl	_halide_string_to_string
+	cbz	x19, LBB185_5
+; %bb.4:                                ; %if.else.i
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB185_6
+LBB185_5:                               ; %if.then.i
+Lloh872:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh873:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB185_6:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-45
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh860, Lloh861
+	.loh AdrpAdd	Lloh862, Lloh863
+	.loh AdrpAdd	Lloh870, Lloh871
+	.loh AdrpAdd	Lloh868, Lloh869
+	.loh AdrpAdd	Lloh866, Lloh867
+	.loh AdrpAdd	Lloh864, Lloh865
+	.loh AdrpAdd	Lloh872, Lloh873
+                                        ; -- End function
+	.globl	_halide_error_device_crop_failed ; -- Begin function halide_error_device_crop_failed
+	.weak_definition	_halide_error_device_crop_failed
+	.p2align	2
+_halide_error_device_crop_failed:       ; @halide_error_device_crop_failed
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB186_2
+; %bb.1:                                ; %if.else.i
+	add	x1, x19, #1023                  ; =1023
+	strb	wzr, [x19, #1023]
+Lloh874:
+	adrp	x2, l_.str.75@PAGE
+Lloh875:
+	add	x2, x2, l_.str.75@PAGEOFF
+	mov	x0, x19
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x0, x20
+	mov	x1, x19
+	b	LBB186_3
+LBB186_2:                               ; %if.then.i
+Lloh876:
+	adrp	x2, l_.str.75@PAGE
+Lloh877:
+	add	x2, x2, l_.str.75@PAGEOFF
+	mov	x1, #0
+	bl	_halide_string_to_string
+Lloh878:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh879:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+LBB186_3:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE1ELy1024EED2Ev.exit
+	bl	_halide_error
+	mov	x0, x19
+	bl	_free
+	mov	w0, #-41
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh874, Lloh875
+	.loh AdrpAdd	Lloh878, Lloh879
+	.loh AdrpAdd	Lloh876, Lloh877
+                                        ; -- End function
+	.globl	_halide_profiler_shutdown       ; -- Begin function halide_profiler_shutdown
+	.weak_definition	_halide_profiler_shutdown
+	.p2align	2
+_halide_profiler_shutdown:              ; @halide_profiler_shutdown
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	bl	_halide_profiler_get_state
+	mov	x19, x0
+	ldr	x0, [x0, #40]
+	cbz	x0, LBB187_2
+; %bb.1:                                ; %if.end
+	mov	w8, #-2
+	str	w8, [x19, #16]
+	bl	_halide_join_thread
+	str	xzr, [x19, #40]
+	mov	w8, #-1
+	str	w8, [x19, #16]
+	mov	x0, #0
+	mov	x1, x19
+	bl	_halide_profiler_report_unlocked
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_profiler_reset_unlocked
+LBB187_2:                               ; %cleanup
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_profiler_get_state      ; -- Begin function halide_profiler_get_state
+	.weak_definition	_halide_profiler_get_state
+	.p2align	2
+_halide_profiler_get_state:             ; @halide_profiler_get_state
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh880:
+	adrp	x0, __ZZ25halide_profiler_get_stateE1s@PAGE
+Lloh881:
+	add	x0, x0, __ZZ25halide_profiler_get_stateE1s@PAGEOFF
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh880, Lloh881
+                                        ; -- End function
+	.section	__TEXT,__literal8,8byte_literals
+	.p2align	3                               ; -- Begin function halide_profiler_report_unlocked
+lCPI189_0:
+	.quad	0x3ddb7cdfd9d7bdbb              ; double 1.0E-10
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_halide_profiler_report_unlocked
+	.weak_definition	_halide_profiler_report_unlocked
+	.p2align	2
+_halide_profiler_report_unlocked:       ; @halide_profiler_report_unlocked
+; %bb.0:                                ; %entry
+	sub	sp, sp, #128                    ; =128
+	stp	d9, d8, [sp, #16]               ; 16-byte Folded Spill
+	stp	x28, x27, [sp, #32]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #48]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #64]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #80]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #96]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #112]            ; 16-byte Folded Spill
+	add	x29, sp, #112                   ; =112
+	mov	x22, x1
+	mov	x20, x0
+	mov	w0, #1024
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB189_2
+; %bb.1:                                ; %if.then6.i
+	add	x21, x19, #1023                 ; =1023
+	strb	wzr, [x19, #1023]
+	ldr	x27, [x22, #24]
+	mov	x26, x19
+	cbnz	x27, LBB189_3
+	b	LBB189_60
+LBB189_2:
+	mov	x21, #0
+	ldr	x27, [x22, #24]
+	mov	x26, x19
+	cbz	x27, LBB189_60
+LBB189_3:                               ; %for.body.lr.ph
+	mov	w8, #1
+	sub	x8, x8, x19
+	str	x8, [sp]                        ; 8-byte Folded Spill
+	mov	w25, #72
+Lloh882:
+	adrp	x28, l_.str.20.177@PAGE
+Lloh883:
+	add	x28, x28, l_.str.20.177@PAGEOFF
+Lloh884:
+	adrp	x8, lCPI189_0@PAGE
+Lloh885:
+	ldr	d8, [x8, lCPI189_0@PAGEOFF]
+	mov	x26, x19
+	b	LBB189_5
+LBB189_4:                               ; %cleanup181
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	x27, [x27, #64]
+	cbz	x27, LBB189_60
+LBB189_5:                               ; %for.body
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB189_58 Depth 2
+                                        ;     Child Loop BB189_20 Depth 2
+                                        ;       Child Loop BB189_26 Depth 3
+                                        ;       Child Loop BB189_31 Depth 3
+                                        ;       Child Loop BB189_36 Depth 3
+                                        ;       Child Loop BB189_42 Depth 3
+                                        ;       Child Loop BB189_45 Depth 3
+                                        ;       Child Loop BB189_47 Depth 3
+	ldr	w8, [x27, #80]
+	cbz	w8, LBB189_4
+; %bb.6:                                ; %if.end
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	x24, [x27]
+	cbz	x19, LBB189_8
+; %bb.7:                                ; %if.then.i278
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	strb	wzr, [x19]
+	ldp	x22, x23, [x27, #32]
+	cmp	x22, x23
+	cset	w26, eq
+	ldr	x2, [x27, #48]
+	mov	x0, x19
+	b	LBB189_9
+LBB189_8:                               ; %if.end.split
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldp	x22, x23, [x27, #32]
+	cmp	x22, x23
+	cset	w26, eq
+	ldr	x2, [x27, #48]
+	mov	x0, #0
+LBB189_9:                               ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EE5clearEv.exit
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	mov	x1, x21
+	bl	_halide_string_to_string
+	ucvtf	s0, x24
+	mov	w8, #9216
+	movk	w8, #18804, lsl #16
+	fmov	s1, w8
+	fdiv	s9, s0, s1
+	mov	x1, x21
+Lloh886:
+	adrp	x24, l_.str.7.164@PAGE
+Lloh887:
+	add	x24, x24, l_.str.7.164@PAGEOFF
+	mov	x2, x24
+	bl	_halide_string_to_string
+	mov	x1, x21
+Lloh888:
+	adrp	x2, l_.str.8.165@PAGE
+Lloh889:
+	add	x2, x2, l_.str.8.165@PAGEOFF
+	bl	_halide_string_to_string
+	fcvt	d0, s9
+	mov	x1, x21
+	mov	w2, #0
+	bl	_halide_double_to_string
+	mov	x1, x21
+Lloh890:
+	adrp	x2, l_.str.9.166@PAGE
+Lloh891:
+	add	x2, x2, l_.str.9.166@PAGEOFF
+	bl	_halide_string_to_string
+	mov	x1, x21
+Lloh892:
+	adrp	x2, l_.str.10.167@PAGE
+Lloh893:
+	add	x2, x2, l_.str.10.167@PAGEOFF
+	bl	_halide_string_to_string
+	ldrsw	x2, [x27, #84]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x21
+Lloh894:
+	adrp	x2, l_.str.11.168@PAGE
+Lloh895:
+	add	x2, x2, l_.str.11.168@PAGEOFF
+	bl	_halide_string_to_string
+	ldrsw	x2, [x27, #80]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x21
+Lloh896:
+	adrp	x2, l_.str.12.169@PAGE
+Lloh897:
+	add	x2, x2, l_.str.12.169@PAGEOFF
+	bl	_halide_string_to_string
+	ldr	s0, [x27, #80]
+	scvtf	s0, s0
+	fdiv	s0, s9, s0
+	fcvt	d0, s0
+	mov	x1, x21
+	mov	w2, #0
+	bl	_halide_double_to_string
+	mov	x1, x21
+Lloh898:
+	adrp	x2, l_.str.13.170@PAGE
+Lloh899:
+	add	x2, x2, l_.str.13.170@PAGEOFF
+	bl	_halide_string_to_string
+	str	w26, [sp, #12]                  ; 4-byte Folded Spill
+	tbnz	w26, #0, LBB189_11
+; %bb.10:                               ; %if.then24
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ucvtf	d0, x22
+	ucvtf	d1, x23
+	fadd	d1, d1, d8
+	fdiv	d0, d0, d1
+	fcvt	s9, d0
+	mov	x1, x21
+Lloh900:
+	adrp	x2, l_.str.14.171@PAGE
+Lloh901:
+	add	x2, x2, l_.str.14.171@PAGEOFF
+	bl	_halide_string_to_string
+	fcvt	d0, s9
+	mov	x1, x21
+	mov	w2, #0
+	bl	_halide_double_to_string
+	mov	x1, x21
+	mov	x2, x24
+	bl	_halide_string_to_string
+LBB189_11:                              ; %if.end28
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	mov	x1, x21
+Lloh902:
+	adrp	x2, l_.str.15.172@PAGE
+Lloh903:
+	add	x2, x2, l_.str.15.172@PAGEOFF
+	bl	_halide_string_to_string
+	ldrsw	x2, [x27, #88]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x21
+Lloh904:
+	adrp	x2, l_.str.16.173@PAGE
+Lloh905:
+	add	x2, x2, l_.str.16.173@PAGEOFF
+	bl	_halide_string_to_string
+	ldr	x2, [x27, #16]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	mov	x1, x21
+Lloh906:
+	adrp	x2, l_.str.17.174@PAGE
+Lloh907:
+	add	x2, x2, l_.str.17.174@PAGEOFF
+	bl	_halide_string_to_string
+	mov	x26, x0
+	cbz	x19, LBB189_13
+; %bb.12:                               ; %if.then.i352
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	x8, [sp]                        ; 8-byte Folded Reload
+	add	x2, x8, x26
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x1, x19
+	mov	x0, x20
+	bl	_halide_print
+	ldr	x8, [x27]
+	cbnz	x8, LBB189_15
+	b	LBB189_14
+LBB189_13:                              ;   in Loop: Header=BB189_5 Depth=1
+Lloh908:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh909:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+	bl	_halide_print
+	ldr	x8, [x27]
+	cbnz	x8, LBB189_15
+LBB189_14:                              ; %lor.end
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	x8, [x27, #24]
+	cbz	x8, LBB189_56
+LBB189_15:                              ; %for.cond53.preheader
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	w8, [x27, #72]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB189_4
+; %bb.16:                               ; %for.body57.lr.ph
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	mov	x22, #0
+	b	LBB189_20
+LBB189_17:                              ; %if.then.i379
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x8, [sp]                        ; 8-byte Folded Reload
+	add	x2, x8, x26
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	mov	x1, x19
+LBB189_18:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EE3strEv.exit381
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x0, x20
+	bl	_halide_print
+LBB189_19:                              ; %cleanup172
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	add	x22, x22, #1                    ; =1
+	ldrsw	x8, [x27, #72]
+	cmp	x22, x8
+	b.ge	LBB189_4
+LBB189_20:                              ; %for.body57
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB189_26 Depth 3
+                                        ;       Child Loop BB189_31 Depth 3
+                                        ;       Child Loop BB189_36 Depth 3
+                                        ;       Child Loop BB189_42 Depth 3
+                                        ;       Child Loop BB189_45 Depth 3
+                                        ;       Child Loop BB189_47 Depth 3
+	cbz	x19, LBB189_22
+; %bb.21:                               ; %if.then.i356
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	strb	wzr, [x19]
+LBB189_22:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EE5clearEv.exit358
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x23, [x27, #56]
+	madd	x24, x22, x25, x23
+	cbnz	x22, LBB189_24
+; %bb.23:                               ; %land.lhs.true
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x8, [x24]
+	mov	x26, x19
+	cbz	x8, LBB189_19
+LBB189_24:                              ; %if.end66
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x0, x19
+	mov	x1, x21
+Lloh910:
+	adrp	x2, l_.str.18.175@PAGE
+Lloh911:
+	add	x2, x2, l_.str.18.175@PAGEOFF
+	bl	_halide_string_to_string
+	madd	x8, x22, x25, x23
+	ldr	x2, [x8, #56]
+	mov	x1, x21
+	bl	_halide_string_to_string
+	mov	x1, x21
+Lloh912:
+	adrp	x2, l_.str.19.176@PAGE
+Lloh913:
+	add	x2, x2, l_.str.19.176@PAGEOFF
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #24                         ; =24
+	b.hi	LBB189_27
+; %bb.25:                               ; %while.body.preheader
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	w26, [sp, #12]                  ; 4-byte Folded Reload
+LBB189_26:                              ; %while.body
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x1, x21
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #25                         ; =25
+	b.lo	LBB189_26
+	b	LBB189_28
+LBB189_27:                              ;   in Loop: Header=BB189_20 Depth=2
+	ldr	w26, [sp, #12]                  ; 4-byte Folded Reload
+LBB189_28:                              ; %while.end
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x8, [x24]
+	ucvtf	s0, x8
+	ldr	s1, [x27, #80]
+	scvtf	s1, s1
+	mov	w8, #9216
+	movk	w8, #18804, lsl #16
+	fmov	s2, w8
+	fmul	s1, s1, s2
+	fdiv	s0, s0, s1
+	fcvt	d0, s0
+	mov	x1, x21
+	mov	w2, #0
+	bl	_halide_double_to_string
+	cbz	x0, LBB189_30
+; %bb.29:                               ; %if.then.i393
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	sub	x8, x0, #3                      ; =3
+	cmp	x8, x19
+	csel	x0, x19, x8, lo
+	strb	wzr, [x0]
+LBB189_30:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EE5eraseEi.exit
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+Lloh914:
+	adrp	x2, l_.str.21.178@PAGE
+Lloh915:
+	add	x2, x2, l_.str.21.178@PAGEOFF
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #34                         ; =34
+	b.hi	LBB189_32
+LBB189_31:                              ; %while.body86
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x1, x21
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #35                         ; =35
+	b.lo	LBB189_31
+LBB189_32:                              ; %while.end88
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x8, [x27]
+	cbz	x8, LBB189_34
+; %bb.33:                               ; %if.then91
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldr	x9, [x24]
+	mov	w10, #100
+	mul	x9, x9, x10
+	udiv	x24, x9, x8
+	b	LBB189_35
+LBB189_34:                              ;   in Loop: Header=BB189_20 Depth=2
+	mov	x24, #0
+LBB189_35:                              ; %if.end97
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+Lloh916:
+	adrp	x2, l_.str.22.179@PAGE
+Lloh917:
+	add	x2, x2, l_.str.22.179@PAGEOFF
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	mov	x1, x21
+Lloh918:
+	adrp	x2, l_.str.23.180@PAGE
+Lloh919:
+	add	x2, x2, l_.str.23.180@PAGEOFF
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #42                         ; =42
+	b.hi	LBB189_37
+LBB189_36:                              ; %while.body105
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x1, x21
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #43                         ; =43
+	b.lo	LBB189_36
+LBB189_37:                              ; %while.end107
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	tbz	w26, #0, LBB189_39
+; %bb.38:                               ;   in Loop: Header=BB189_20 Depth=2
+	mov	w24, #58
+	madd	x26, x22, x25, x23
+	ldr	x8, [x26, #16]!
+	cbnz	x8, LBB189_44
+	b	LBB189_52
+LBB189_39:                              ; %if.then109
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	madd	x8, x22, x25, x23
+	ldp	d0, d1, [x8, #40]
+	ucvtf	d0, d0
+	ucvtf	d1, d1
+	fadd	d1, d1, d8
+	fdiv	d0, d0, d1
+	fcvt	s9, d0
+	mov	x1, x21
+Lloh920:
+	adrp	x2, l_.str.24.181@PAGE
+Lloh921:
+	add	x2, x2, l_.str.24.181@PAGEOFF
+	bl	_halide_string_to_string
+	fcvt	d0, s9
+	mov	x1, x21
+	mov	w2, #0
+	bl	_halide_double_to_string
+	cbz	x0, LBB189_41
+; %bb.40:                               ; %if.then.i441
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	sub	x8, x0, #3                      ; =3
+	cmp	x8, x19
+	csel	x0, x19, x8, lo
+	strb	wzr, [x0]
+LBB189_41:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EE5eraseEi.exit442
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	sub	x8, x0, x19
+	cmp	x8, #57                         ; =57
+	b.hi	LBB189_43
+LBB189_42:                              ; %while.body124
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x1, x21
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, #58                         ; =58
+	b.lo	LBB189_42
+LBB189_43:                              ;   in Loop: Header=BB189_20 Depth=2
+	mov	w24, #73
+	madd	x26, x22, x25, x23
+	ldr	x8, [x26, #16]!
+	cbz	x8, LBB189_52
+LBB189_44:                              ; %if.then130
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+Lloh922:
+	adrp	x2, l_.str.25.182@PAGE
+Lloh923:
+	add	x2, x2, l_.str.25.182@PAGEOFF
+	bl	_halide_string_to_string
+	ldr	x2, [x26]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+	sub	x8, x0, x19
+	mov	x1, x21
+	cmp	x8, x24
+	b.hs	LBB189_46
+LBB189_45:                              ; %while.body138
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	mov	x1, x21
+	cmp	x8, x24
+	b.lo	LBB189_45
+LBB189_46:                              ; %while.end140
+                                        ;   in Loop: Header=BB189_20 Depth=2
+Lloh924:
+	adrp	x2, l_.str.26.183@PAGE
+Lloh925:
+	add	x2, x2, l_.str.26.183@PAGEOFF
+	bl	_halide_string_to_string
+	madd	x26, x22, x25, x23
+	ldrsw	x2, [x26, #64]!
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+	add	x24, x24, #15                   ; =15
+	sub	x8, x0, x19
+	cmp	x8, x24
+	b.hs	LBB189_48
+LBB189_47:                              ; %while.body148
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ;     Parent Loop BB189_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	mov	x1, x21
+	mov	x2, x28
+	bl	_halide_string_to_string
+	sub	x8, x0, x19
+	cmp	x8, x24
+	b.lo	LBB189_47
+LBB189_48:                              ; %while.end150
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	ldrsw	x8, [x26]
+	cbz	w8, LBB189_50
+; %bb.49:                               ; %if.then153
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	madd	x9, x22, x25, x23
+	ldr	x9, [x9, #24]
+	udiv	x24, x9, x8
+	b	LBB189_51
+LBB189_50:                              ;   in Loop: Header=BB189_20 Depth=2
+	mov	x24, #0
+LBB189_51:                              ; %if.end159
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+Lloh926:
+	adrp	x2, l_.str.27.184@PAGE
+Lloh927:
+	add	x2, x2, l_.str.27.184@PAGEOFF
+	bl	_halide_string_to_string
+	sxtw	x2, w24
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_int64_to_string
+LBB189_52:                              ; %if.end162
+                                        ;   in Loop: Header=BB189_20 Depth=2
+Lloh928:
+	adrp	x24, l_.str.7.164@PAGE
+Lloh929:
+	add	x24, x24, l_.str.7.164@PAGEOFF
+	madd	x23, x22, x25, x23
+	ldr	x8, [x23, #32]!
+	cbz	x8, LBB189_54
+; %bb.53:                               ; %if.then165
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+Lloh930:
+	adrp	x2, l_.str.28.185@PAGE
+Lloh931:
+	add	x2, x2, l_.str.28.185@PAGEOFF
+	bl	_halide_string_to_string
+	ldr	x2, [x23]
+	mov	x1, x21
+	mov	w3, #1
+	bl	_halide_uint64_to_string
+LBB189_54:                              ; %if.end169
+                                        ;   in Loop: Header=BB189_20 Depth=2
+	mov	x1, x21
+	mov	x2, x24
+	bl	_halide_string_to_string
+	mov	x26, x0
+	cbnz	x19, LBB189_17
+; %bb.55:                               ;   in Loop: Header=BB189_20 Depth=2
+Lloh932:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh933:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	b	LBB189_18
+LBB189_56:                              ; %for.cond41.preheader
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	w8, [x27, #72]
+	cmp	w8, #1                          ; =1
+	b.lt	LBB189_4
+; %bb.57:                               ; %for.body44.lr.ph
+                                        ;   in Loop: Header=BB189_5 Depth=1
+	ldr	x9, [x27, #56]
+	add	x9, x9, #32                     ; =32
+LBB189_58:                              ; %for.body44
+                                        ;   Parent Loop BB189_5 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	ldr	x10, [x9]
+	cbnz	x10, LBB189_15
+; %bb.59:                               ; %for.cond41
+                                        ;   in Loop: Header=BB189_58 Depth=2
+	add	x9, x9, #72                     ; =72
+	subs	x8, x8, #1                      ; =1
+	b.ne	LBB189_58
+	b	LBB189_4
+LBB189_60:                              ; %for.cond.cleanup
+	cbz	x19, LBB189_62
+; %bb.61:                               ; %if.else.i
+	sub	x8, x26, x19
+	add	x2, x8, #1                      ; =1
+	mov	x0, x20
+	mov	x1, x19
+	bl	_halide_msan_annotate_memory_is_initialized
+	b	LBB189_63
+LBB189_62:                              ; %if.then.i
+Lloh934:
+	adrp	x1, l_.str.29.163@PAGE
+Lloh935:
+	add	x1, x1, l_.str.29.163@PAGEOFF
+	mov	x0, x20
+	bl	_halide_error
+LBB189_63:                              ; %_ZN6Halide7Runtime8Internal12_GLOBAL__N_17PrinterILNS1_11PrinterTypeE2ELy1024EED2Ev.exit
+	mov	x0, x19
+	ldp	x29, x30, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #32]             ; 16-byte Folded Reload
+	ldp	d9, d8, [sp, #16]               ; 16-byte Folded Reload
+	add	sp, sp, #128                    ; =128
+	b	_free
+	.loh AdrpLdr	Lloh884, Lloh885
+	.loh AdrpAdd	Lloh882, Lloh883
+	.loh AdrpAdd	Lloh898, Lloh899
+	.loh AdrpAdd	Lloh896, Lloh897
+	.loh AdrpAdd	Lloh894, Lloh895
+	.loh AdrpAdd	Lloh892, Lloh893
+	.loh AdrpAdd	Lloh890, Lloh891
+	.loh AdrpAdd	Lloh888, Lloh889
+	.loh AdrpAdd	Lloh886, Lloh887
+	.loh AdrpAdd	Lloh900, Lloh901
+	.loh AdrpAdd	Lloh906, Lloh907
+	.loh AdrpAdd	Lloh904, Lloh905
+	.loh AdrpAdd	Lloh902, Lloh903
+	.loh AdrpAdd	Lloh908, Lloh909
+	.loh AdrpAdd	Lloh912, Lloh913
+	.loh AdrpAdd	Lloh910, Lloh911
+	.loh AdrpAdd	Lloh914, Lloh915
+	.loh AdrpAdd	Lloh918, Lloh919
+	.loh AdrpAdd	Lloh916, Lloh917
+	.loh AdrpAdd	Lloh920, Lloh921
+	.loh AdrpAdd	Lloh922, Lloh923
+	.loh AdrpAdd	Lloh924, Lloh925
+	.loh AdrpAdd	Lloh926, Lloh927
+	.loh AdrpAdd	Lloh928, Lloh929
+	.loh AdrpAdd	Lloh930, Lloh931
+	.loh AdrpAdd	Lloh932, Lloh933
+	.loh AdrpAdd	Lloh934, Lloh935
+                                        ; -- End function
+	.globl	_halide_profiler_reset_unlocked ; -- Begin function halide_profiler_reset_unlocked
+	.weak_definition	_halide_profiler_reset_unlocked
+	.p2align	2
+_halide_profiler_reset_unlocked:        ; @halide_profiler_reset_unlocked
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+	ldr	x20, [x0, #24]
+	cbz	x20, LBB190_2
+LBB190_1:                               ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x20, #64]
+	str	x8, [x19, #24]
+	ldr	x0, [x20, #56]
+	bl	_free
+	mov	x0, x20
+	bl	_free
+	ldr	x20, [x19, #24]
+	cbnz	x20, LBB190_1
+LBB190_2:                               ; %while.end
+	str	wzr, [x19, #12]
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy ; -- Begin function _ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy
+	.weak_definition	__ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy
+	.p2align	2
+__ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy: ; @_ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x2
+	mov	x20, x1
+	mov	x23, x0
+	bl	_halide_profiler_get_state
+	mov	x22, x0
+	ldr	x19, [x0, #24]
+	cbnz	x19, LBB191_8
+LBB191_1:                               ; %for.end
+	mov	w0, #96
+	bl	_malloc
+	mov	x19, x0
+	cbz	x0, LBB191_11
+; %bb.2:                                ; %if.end7
+	ldr	x8, [x22, #24]
+	str	x8, [x19, #64]
+	str	x23, [x19, #48]
+	ldr	w8, [x22, #12]
+	stp	w20, w8, [x19, #72]
+	str	xzr, [x19, #80]
+	movi.2d	v0, #0000000000000000
+	stp	q0, q0, [x19]
+	str	wzr, [x19, #88]
+	str	q0, [x19, #32]
+	mov	w8, #72
+	smull	x0, w20, w8
+	bl	_malloc
+	str	x0, [x19, #56]
+	cbz	x0, LBB191_10
+; %bb.3:                                ; %for.cond17.preheader
+	cmp	w20, #1                         ; =1
+	b.lt	LBB191_6
+; %bb.4:                                ; %for.body20.lr.ph
+	mov	w8, w20
+	add	x9, x0, #40                     ; =40
+	movi.2d	v0, #0000000000000000
+LBB191_5:                               ; %for.body20
+                                        ; =>This Inner Loop Header: Depth=1
+	stur	xzr, [x9, #-40]
+	ldr	x10, [x21], #8
+	str	x10, [x9, #16]
+	str	wzr, [x9, #24]
+	stp	q0, q0, [x9, #-32]
+	str	q0, [x9], #72
+	subs	x8, x8, #1                      ; =1
+	b.ne	LBB191_5
+LBB191_6:                               ; %for.cond.cleanup19
+	ldr	w8, [x22, #12]
+	add	w8, w8, w20
+	str	w8, [x22, #12]
+	str	x19, [x22, #24]
+	b	LBB191_11
+LBB191_7:                               ; %for.inc
+                                        ;   in Loop: Header=BB191_8 Depth=1
+	ldr	x19, [x19, #64]
+	cbz	x19, LBB191_1
+LBB191_8:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x19, #48]
+	cmp	x8, x23
+	b.ne	LBB191_7
+; %bb.9:                                ; %land.lhs.true
+                                        ;   in Loop: Header=BB191_8 Depth=1
+	ldr	w8, [x19, #72]
+	cmp	w8, w20
+	b.ne	LBB191_7
+	b	LBB191_11
+LBB191_10:                              ; %if.then15
+	mov	x0, x19
+	bl	_free
+	mov	x19, #0
+LBB191_11:                              ; %cleanup62
+	mov	x0, x19
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi ; -- Begin function _ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi
+	.weak_definition	__ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi
+	.p2align	2
+__ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi: ; @_ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+                                        ; kill: def $w3 killed $w3 def $x3
+	ldr	x9, [x0, #24]
+	cbz	x9, LBB192_8
+; %bb.1:                                ; %for.body.preheader
+	mov	x10, #0
+	mov	x11, x9
+	b	LBB192_3
+LBB192_2:                               ; %if.end23
+                                        ;   in Loop: Header=BB192_3 Depth=1
+	ldr	x11, [x8, #64]
+	mov	x10, x8
+	cbz	x11, LBB192_8
+LBB192_3:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	mov	x8, x11
+	ldrsw	x11, [x11, #76]
+	cmp	w11, w1
+	b.gt	LBB192_2
+; %bb.4:                                ; %land.lhs.true
+                                        ;   in Loop: Header=BB192_3 Depth=1
+	ldr	w12, [x8, #72]
+	add	w12, w12, w11
+	cmp	w12, w1
+	b.le	LBB192_2
+; %bb.5:                                ; %if.then
+	cbz	x10, LBB192_7
+; %bb.6:                                ; %if.then4
+	ldr	x12, [x8, #64]
+	str	x12, [x10, #64]
+	str	x9, [x8, #64]
+	str	x8, [x0, #24]
+LBB192_7:                               ; %if.end
+	ldr	x9, [x8, #56]
+	mov	w10, #72
+	smaddl	x9, w1, w10, x9
+	mneg	x10, x11, x10
+	add	x9, x9, x10
+	ldr	x10, [x9]
+	add	x10, x10, x2
+	str	x10, [x9]
+	sxtw	x10, w3
+	ldp	x11, x12, [x9, #40]
+	add	x11, x11, x10
+	add	x12, x12, #1                    ; =1
+	stp	x11, x12, [x9, #40]
+	ldr	x9, [x8]
+	add	x9, x9, x2
+	str	x9, [x8]
+	ldr	w9, [x8, #84]
+	add	w9, w9, #1                      ; =1
+	str	w9, [x8, #84]
+	ldp	x9, x11, [x8, #32]
+	add	x9, x9, x10
+	add	x10, x11, #1                    ; =1
+	stp	x9, x10, [x8, #32]
+LBB192_8:                               ; %cleanup25
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_profiler_sample         ; -- Begin function halide_profiler_sample
+	.weak_definition	_halide_profiler_sample
+	.p2align	2
+_halide_profiler_sample:                ; @halide_profiler_sample
+; %bb.0:                                ; %entry
+	sub	sp, sp, #64                     ; =64
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x20, x1
+	mov	x19, x0
+	ldr	x8, [x0, #32]
+	cbz	x8, LBB193_2
+; %bb.1:                                ; %if.then
+	add	x0, sp, #12                     ; =12
+	add	x1, sp, #8                      ; =8
+	blr	x8
+	b	LBB193_3
+LBB193_2:                               ; %if.else
+	ldp	w9, w8, [x19, #16]
+	stp	w8, w9, [sp, #8]
+LBB193_3:                               ; %if.end
+	mov	x0, #0
+	bl	_halide_current_time_ns
+	ldr	w1, [sp, #12]
+	cmn	w1, #2                          ; =2
+	b.ne	LBB193_5
+; %bb.4:
+	mov	w0, #-1
+	b	LBB193_8
+LBB193_5:                               ; %if.else4
+	mov	x21, x0
+	tbnz	w1, #31, LBB193_7
+; %bb.6:                                ; %if.then6
+	ldr	x8, [x20]
+	sub	x2, x21, x8
+	ldr	w3, [sp, #8]
+	mov	x0, x19
+	bl	__ZN6Halide7Runtime8Internal9bill_funcEP21halide_profiler_stateiyi
+LBB193_7:                               ; %if.end8
+	str	x21, [x20]
+	ldr	w0, [x19, #8]
+LBB193_8:                               ; %cleanup
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #64                     ; =64
+	ret
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv ; -- Begin function _ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv
+	.weak_definition	__ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv
+	.p2align	2
+__ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv: ; @_ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48                     ; =48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	bl	_halide_profiler_get_state
+	mov	x19, x0
+	bl	_halide_mutex_lock
+LBB194_1:                               ; %entry
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB194_4 Depth 2
+	ldr	w8, [x19, #16]
+	cmn	w8, #2                          ; =2
+	b.eq	LBB194_5
+; %bb.2:                                ; %while.body
+                                        ;   in Loop: Header=BB194_1 Depth=1
+	mov	x0, #0
+	bl	_halide_current_time_ns
+	str	x0, [sp, #8]
+	add	x1, sp, #8                      ; =8
+	mov	x0, x19
+	bl	_halide_profiler_sample
+	tbnz	w0, #31, LBB194_1
+; %bb.3:                                ; %if.end.preheader
+                                        ;   in Loop: Header=BB194_1 Depth=1
+	mov	x20, x0
+LBB194_4:                               ; %if.end
+                                        ;   Parent Loop BB194_1 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	mov	x0, #0
+	mov	x1, x20
+	bl	_halide_sleep_ms
+	mov	x0, x19
+	bl	_halide_mutex_lock
+	add	x1, sp, #8                      ; =8
+	mov	x0, x19
+	bl	_halide_profiler_sample
+	mov	x20, x0
+	tbz	w0, #31, LBB194_4
+	b	LBB194_1
+LBB194_5:                               ; %while.end8
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48                     ; =48
+	ret
+                                        ; -- End function
+	.globl	_halide_profiler_get_pipeline_state ; -- Begin function halide_profiler_get_pipeline_state
+	.weak_definition	_halide_profiler_get_pipeline_state
+	.p2align	2
+_halide_profiler_get_pipeline_state:    ; @halide_profiler_get_pipeline_state
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x21, x0
+	bl	_halide_profiler_get_state
+	mov	x19, x0
+	bl	_halide_mutex_lock
+	ldr	x20, [x19, #24]
+	cbz	x20, LBB195_3
+LBB195_1:                               ; %for.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	x8, [x20, #48]
+	cmp	x8, x21
+	b.eq	LBB195_3
+; %bb.2:                                ; %for.inc
+                                        ;   in Loop: Header=BB195_1 Depth=1
+	ldr	x20, [x20, #64]
+	cbnz	x20, LBB195_1
+LBB195_3:                               ; %cleanup
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	mov	x0, x20
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_profiler_pipeline_start ; -- Begin function halide_profiler_pipeline_start
+	.weak_definition	_halide_profiler_pipeline_start
+	.p2align	2
+_halide_profiler_pipeline_start:        ; @halide_profiler_pipeline_start
+; %bb.0:                                ; %entry
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48                    ; =48
+	mov	x21, x3
+	mov	x22, x2
+	mov	x23, x1
+	mov	x20, x0
+	bl	_halide_profiler_get_state
+	mov	x19, x0
+	bl	_halide_mutex_lock
+	ldr	x8, [x19, #40]
+	cbnz	x8, LBB196_2
+; %bb.1:                                ; %if.then
+	mov	x0, x20
+	bl	_halide_start_clock
+Lloh936:
+	adrp	x0, __ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv@GOTPAGE
+Lloh937:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal24sampling_profiler_threadEPv@GOTPAGEOFF]
+	mov	x1, #0
+	bl	_halide_spawn_thread
+	str	x0, [x19, #40]
+LBB196_2:                               ; %if.end
+	mov	x0, x23
+	mov	x1, x22
+	mov	x2, x21
+	bl	__ZN6Halide7Runtime8Internal23find_or_create_pipelineEPKciPKy
+	cbz	x0, LBB196_4
+; %bb.3:                                ; %if.end8
+	ldp	w20, w8, [x0, #76]
+	add	w8, w8, #1                      ; =1
+	str	w8, [x0, #80]
+	b	LBB196_5
+LBB196_4:                               ; %if.then6
+	mov	x0, x20
+	bl	_halide_error_out_of_memory
+	mov	x20, x0
+LBB196_5:                               ; %cleanup
+	mov	x0, x19
+	bl	_halide_mutex_unlock
+	mov	x0, x20
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh936, Lloh937
+                                        ; -- End function
+	.globl	_halide_profiler_stack_peak_update ; -- Begin function halide_profiler_stack_peak_update
+	.weak_definition	_halide_profiler_stack_peak_update
+	.p2align	2
+_halide_profiler_stack_peak_update:     ; @halide_profiler_stack_peak_update
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x2
+	mov	x20, x1
+	cbz	x1, LBB197_2
+; %bb.1:                                ; %do.end
+	ldr	w10, [x20, #72]
+	cmp	w10, #1                         ; =1
+	b.ge	LBB197_3
+	b	LBB197_10
+LBB197_2:                               ; %if.then
+Lloh938:
+	adrp	x1, l_.str.186@PAGE
+Lloh939:
+	add	x1, x1, l_.str.186@PAGEOFF
+	bl	_halide_print
+	bl	_abort
+	ldr	w10, [x20, #72]
+	cmp	w10, #1                         ; =1
+	b.lt	LBB197_10
+LBB197_3:                               ; %for.body.lr.ph
+	mov	x8, #0
+	mov	w9, #72
+	b	LBB197_6
+LBB197_4:                               ; %for.inc.loopexit
+                                        ;   in Loop: Header=BB197_6 Depth=1
+	ldr	w10, [x20, #72]
+LBB197_5:                               ; %for.inc
+                                        ;   in Loop: Header=BB197_6 Depth=1
+	add	x8, x8, #1                      ; =1
+	cmp	x8, w10, sxtw
+	b.ge	LBB197_10
+LBB197_6:                               ; %for.body
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB197_8 Depth 2
+	ldr	x11, [x19, x8, lsl #3]
+	cbz	x11, LBB197_5
+; %bb.7:                                ; %if.then3
+                                        ;   in Loop: Header=BB197_6 Depth=1
+	ldr	x10, [x20, #56]
+	madd	x10, x8, x9, x10
+	ldr	x12, [x10, #32]!
+LBB197_8:                               ; %while.cond.i
+                                        ;   Parent Loop BB197_6 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	cmp	x12, x11
+	b.hs	LBB197_4
+; %bb.9:                                ; %while.body.i
+                                        ;   in Loop: Header=BB197_8 Depth=2
+	mov	x13, x12
+	casal	x13, x11, [x10]
+	cmp	x12, x13
+	mov	x12, x13
+	b.ne	LBB197_8
+	b	LBB197_4
+LBB197_10:                              ; %for.cond.cleanup
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.loh AdrpAdd	Lloh938, Lloh939
+                                        ; -- End function
+	.globl	_halide_profiler_memory_allocate ; -- Begin function halide_profiler_memory_allocate
+	.weak_definition	_halide_profiler_memory_allocate
+	.p2align	2
+_halide_profiler_memory_allocate:       ; @halide_profiler_memory_allocate
+; %bb.0:                                ; %entry
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	cbz	x3, LBB198_11
+; %bb.1:                                ; %if.end
+	mov	x19, x3
+	mov	x21, x2
+	mov	x20, x1
+	mov	x22, x0
+	cbz	x1, LBB198_12
+; %bb.2:                                ; %do.body4
+	tbnz	w21, #31, LBB198_13
+LBB198_3:                               ; %do.body10
+	ldr	w8, [x20, #72]
+	cmp	w8, w21
+	b.gt	LBB198_5
+LBB198_4:                               ; %if.then12
+Lloh940:
+	adrp	x1, l_.str.3.189@PAGE
+Lloh941:
+	add	x1, x1, l_.str.3.189@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+LBB198_5:                               ; %do.end15
+	ldr	x8, [x20, #56]
+	sxtw	x9, w21
+	add	x10, x20, #88                   ; =88
+	mov	w11, #1
+	ldaddal	w11, w10, [x10]
+	add	x10, x20, #24                   ; =24
+	ldaddal	x19, x10, [x10]
+	add	x10, x20, #8                    ; =8
+	ldaddal	x19, x10, [x10]
+	add	x10, x10, x19
+	ldr	x11, [x20, #16]
+LBB198_6:                               ; %while.cond.i
+                                        ; =>This Inner Loop Header: Depth=1
+	cmp	x11, x10
+	b.hs	LBB198_8
+; %bb.7:                                ; %while.body.i
+                                        ;   in Loop: Header=BB198_6 Depth=1
+	add	x12, x20, #16                   ; =16
+	mov	x13, x11
+	casal	x13, x10, [x12]
+	cmp	x11, x13
+	mov	x11, x13
+	b.ne	LBB198_6
+LBB198_8:                               ; %_ZN12_GLOBAL__N_125sync_compare_max_and_swapIyEEvPT_S1_.exit
+	mov	w10, #72
+	madd	x8, x9, x10, x8
+	add	x9, x8, #64                     ; =64
+	mov	w10, #1
+	ldaddal	w10, w9, [x9]
+	add	x9, x8, #24                     ; =24
+	ldaddal	x19, x9, [x9]
+	add	x9, x8, #8                      ; =8
+	ldaddal	x19, x9, [x9]
+	add	x9, x9, x19
+	ldr	x10, [x8, #16]!
+LBB198_9:                               ; %while.cond.i43
+                                        ; =>This Inner Loop Header: Depth=1
+	cmp	x10, x9
+	b.hs	LBB198_11
+; %bb.10:                               ; %while.body.i45
+                                        ;   in Loop: Header=BB198_9 Depth=1
+	mov	x11, x10
+	casal	x11, x9, [x8]
+	cmp	x10, x11
+	mov	x10, x11
+	b.ne	LBB198_9
+LBB198_11:                              ; %return
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+	ret
+LBB198_12:                              ; %if.then2
+Lloh942:
+	adrp	x1, l_.str.1.187@PAGE
+Lloh943:
+	add	x1, x1, l_.str.1.187@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+	tbz	w21, #31, LBB198_3
+LBB198_13:                              ; %if.then6
+Lloh944:
+	adrp	x1, l_.str.2.188@PAGE
+Lloh945:
+	add	x1, x1, l_.str.2.188@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+	ldr	w8, [x20, #72]
+	cmp	w8, w21
+	b.le	LBB198_4
+	b	LBB198_5
+	.loh AdrpAdd	Lloh940, Lloh941
+	.loh AdrpAdd	Lloh942, Lloh943
+	.loh AdrpAdd	Lloh944, Lloh945
+                                        ; -- End function
+	.globl	_halide_profiler_memory_free    ; -- Begin function halide_profiler_memory_free
+	.weak_definition	_halide_profiler_memory_free
+	.p2align	2
+_halide_profiler_memory_free:           ; @halide_profiler_memory_free
+; %bb.0:                                ; %entry
+	cbz	x3, LBB199_6
+; %bb.1:                                ; %if.end
+	stp	x22, x21, [sp, #-48]!           ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	add	x29, sp, #32                    ; =32
+	mov	x20, x3
+	mov	x19, x2
+	mov	x21, x1
+	mov	x22, x0
+	cbz	x1, LBB199_7
+; %bb.2:                                ; %do.body4
+	tbnz	w19, #31, LBB199_8
+LBB199_3:                               ; %do.body10
+	ldr	w8, [x21, #72]
+	cmp	w8, w19
+	b.gt	LBB199_5
+LBB199_4:                               ; %if.then12
+Lloh946:
+	adrp	x1, l_.str.6.192@PAGE
+Lloh947:
+	add	x1, x1, l_.str.6.192@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+LBB199_5:                               ; %do.end15
+	ldr	x8, [x21, #56]
+	add	x9, x21, #8                     ; =8
+	neg	x10, x20
+	ldaddal	x10, x9, [x9]
+	mov	w9, #72
+	smaddl	x8, w19, w9, x8
+	add	x8, x8, #8                      ; =8
+	ldaddal	x10, x8, [x8]
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp], #48             ; 16-byte Folded Reload
+LBB199_6:                               ; %return
+	ret
+LBB199_7:                               ; %if.then2
+Lloh948:
+	adrp	x1, l_.str.4.190@PAGE
+Lloh949:
+	add	x1, x1, l_.str.4.190@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+	tbz	w19, #31, LBB199_3
+LBB199_8:                               ; %if.then6
+Lloh950:
+	adrp	x1, l_.str.5.191@PAGE
+Lloh951:
+	add	x1, x1, l_.str.5.191@PAGEOFF
+	mov	x0, x22
+	bl	_halide_print
+	bl	_abort
+	ldr	w8, [x21, #72]
+	cmp	w8, w19
+	b.le	LBB199_4
+	b	LBB199_5
+	.loh AdrpAdd	Lloh946, Lloh947
+	.loh AdrpAdd	Lloh948, Lloh949
+	.loh AdrpAdd	Lloh950, Lloh951
+                                        ; -- End function
+	.globl	_halide_profiler_report         ; -- Begin function halide_profiler_report
+	.weak_definition	_halide_profiler_report
+	.p2align	2
+_halide_profiler_report:                ; @halide_profiler_report
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	mov	x19, x0
+	bl	_halide_profiler_get_state
+	mov	x20, x0
+	bl	_halide_mutex_lock
+	mov	x0, x19
+	mov	x1, x20
+	bl	_halide_profiler_report_unlocked
+	mov	x0, x20
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+                                        ; -- End function
+	.globl	_halide_profiler_reset          ; -- Begin function halide_profiler_reset
+	.weak_definition	_halide_profiler_reset
+	.p2align	2
+_halide_profiler_reset:                 ; @halide_profiler_reset
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16                    ; =16
+	bl	_halide_profiler_get_state
+	mov	x19, x0
+	bl	_halide_mutex_lock
+	mov	x0, x19
+	bl	_halide_profiler_reset_unlocked
+	mov	x0, x19
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	b	_halide_mutex_unlock
+                                        ; -- End function
+	.globl	_halide_profiler_pipeline_end   ; -- Begin function halide_profiler_pipeline_end
+	.weak_definition	_halide_profiler_pipeline_end
+	.p2align	2
+_halide_profiler_pipeline_end:          ; @halide_profiler_pipeline_end
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w8, #-1
+	str	w8, [x1, #16]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_msan_annotate_memory_is_initialized ; -- Begin function halide_msan_annotate_memory_is_initialized
+	.weak_definition	_halide_msan_annotate_memory_is_initialized
+	.p2align	2
+_halide_msan_annotate_memory_is_initialized: ; @halide_msan_annotate_memory_is_initialized
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_msan_check_memory_is_initialized ; -- Begin function halide_msan_check_memory_is_initialized
+	.weak_definition	_halide_msan_check_memory_is_initialized
+	.p2align	2
+_halide_msan_check_memory_is_initialized: ; @halide_msan_check_memory_is_initialized
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_msan_check_buffer_is_initialized ; -- Begin function halide_msan_check_buffer_is_initialized
+	.weak_definition	_halide_msan_check_buffer_is_initialized
+	.p2align	2
+_halide_msan_check_buffer_is_initialized: ; @halide_msan_check_buffer_is_initialized
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_msan_annotate_buffer_is_initialized ; -- Begin function halide_msan_annotate_buffer_is_initialized
+	.weak_definition	_halide_msan_annotate_buffer_is_initialized
+	.p2align	2
+_halide_msan_annotate_buffer_is_initialized: ; @halide_msan_annotate_buffer_is_initialized
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_msan_annotate_buffer_is_initialized_as_destructor ; -- Begin function halide_msan_annotate_buffer_is_initialized_as_destructor
+	.weak_definition	_halide_msan_annotate_buffer_is_initialized_as_destructor
+	.p2align	2
+_halide_msan_annotate_buffer_is_initialized_as_destructor: ; @halide_msan_annotate_buffer_is_initialized_as_destructor
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_default_can_use_target_features ; -- Begin function halide_default_can_use_target_features
+	.weak_definition	_halide_default_can_use_target_features
+	.p2align	2
+_halide_default_can_use_target_features: ; @halide_default_can_use_target_features
+; %bb.0:                                ; %entry
+	sub	sp, sp, #80                     ; =80
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64                    ; =64
+	mov	x19, x1
+	mov	x20, x0
+Lloh952:
+	adrp	x0, __ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE@GOTPAGE
+Lloh953:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_lock
+Lloh954:
+	adrp	x21, __ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE@GOTPAGE
+Lloh955:
+	ldr	x21, [x21, __ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE@GOTPAGEOFF]
+	ldrb	w8, [x21]
+	cbnz	w8, LBB208_2
+; %bb.1:                                ; %if.then
+	mov	x8, sp
+	bl	__ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv
+Lloh956:
+	adrp	x0, __ZN6Halide7Runtime8Internal27halide_cpu_features_storageE@GOTPAGE
+Lloh957:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal27halide_cpu_features_storageE@GOTPAGEOFF]
+	mov	x1, sp
+	mov	w2, #32
+	bl	_memcpy
+	mov	w8, #1
+	strb	w8, [x21]
+LBB208_2:                               ; %if.end
+Lloh958:
+	adrp	x0, __ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE@GOTPAGE
+Lloh959:
+	ldr	x0, [x0, __ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE@GOTPAGEOFF]
+	bl	_halide_mutex_unlock
+	cmp	w20, #2                         ; =2
+	b.eq	LBB208_4
+; %bb.3:                                ; %if.then1
+Lloh960:
+	adrp	x1, l_.str.197@PAGE
+Lloh961:
+	add	x1, x1, l_.str.197@PAGEOFF
+	mov	x0, #0
+	bl	_halide_error
+LBB208_4:                               ; %if.end2
+	ldr	x9, [x19]
+Lloh962:
+	adrp	x8, __ZN6Halide7Runtime8Internal27halide_cpu_features_storageE@GOTPAGE
+Lloh963:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal27halide_cpu_features_storageE@GOTPAGEOFF]
+	ldr	x10, [x8]
+	ands	x9, x10, x9
+	b.eq	LBB208_6
+; %bb.5:                                ; %if.then7
+	ldr	x10, [x8, #16]
+	bics	xzr, x9, x10
+	b.ne	LBB208_9
+LBB208_6:                               ; %for.inc.critedge
+	ldr	x9, [x19, #8]
+	ldr	x10, [x8, #8]
+	ands	x9, x10, x9
+	b.eq	LBB208_8
+; %bb.7:                                ; %if.then7.1
+	ldr	x8, [x8, #24]
+	bics	xzr, x9, x8
+	b.ne	LBB208_9
+LBB208_8:                               ; %for.inc.critedge.1
+	mov	w0, #1
+	b	LBB208_10
+LBB208_9:
+	mov	w0, #0
+LBB208_10:                              ; %cleanup15
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #80                     ; =80
+	ret
+	.loh AdrpLdrGot	Lloh954, Lloh955
+	.loh AdrpLdrGot	Lloh952, Lloh953
+	.loh AdrpLdrGot	Lloh956, Lloh957
+	.loh AdrpLdrGot	Lloh958, Lloh959
+	.loh AdrpAdd	Lloh960, Lloh961
+	.loh AdrpLdrGot	Lloh962, Lloh963
+                                        ; -- End function
+	.globl	_halide_set_custom_can_use_target_features ; -- Begin function halide_set_custom_can_use_target_features
+	.weak_definition	_halide_set_custom_can_use_target_features
+	.p2align	2
+_halide_set_custom_can_use_target_features: ; @halide_set_custom_can_use_target_features
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh964:
+	adrp	x9, __ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE@GOTPAGE
+Lloh965:
+	ldr	x9, [x9, __ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE@GOTPAGEOFF]
+	ldr	x8, [x9]
+	str	x0, [x9]
+	mov	x0, x8
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.loh AdrpLdrGot	Lloh964, Lloh965
+                                        ; -- End function
+	.globl	_halide_can_use_target_features ; -- Begin function halide_can_use_target_features
+	.weak_definition	_halide_can_use_target_features
+	.p2align	2
+_halide_can_use_target_features:        ; @halide_can_use_target_features
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+Lloh966:
+	adrp	x8, __ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE@GOTPAGE
+Lloh967:
+	ldr	x8, [x8, __ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE@GOTPAGEOFF]
+Lloh968:
+	ldr	x2, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	br	x2
+	.loh AdrpLdrGotLdr	Lloh966, Lloh967, Lloh968
+                                        ; -- End function
+	.globl	__ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv ; -- Begin function _ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv
+	.weak_definition	__ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv
+	.p2align	2
+__ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv: ; @_ZN6Halide7Runtime8Internal23halide_get_cpu_featuresEv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	movi.2d	v0, #0000000000000000
+	stp	q0, q0, [x8]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_use_jit_module          ; -- Begin function halide_use_jit_module
+	.weak_definition	_halide_use_jit_module
+	.p2align	2
+_halide_use_jit_module:                 ; @halide_use_jit_module
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_halide_release_jit_module      ; -- Begin function halide_release_jit_module
+	.weak_definition	_halide_release_jit_module
+	.p2align	2
+_halide_release_jit_module:             ; @halide_release_jit_module
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.section	__TEXT,__literal16,16byte_literals
+	.p2align	4                               ; -- Begin function sobel3x3
+lCPI214_0:
+	.long	28                              ; 0x1c
+	.long	29                              ; 0x1d
+	.long	30                              ; 0x1e
+	.long	31                              ; 0x1f
+lCPI214_1:
+	.long	24                              ; 0x18
+	.long	25                              ; 0x19
+	.long	26                              ; 0x1a
+	.long	27                              ; 0x1b
+lCPI214_2:
+	.long	20                              ; 0x14
+	.long	21                              ; 0x15
+	.long	22                              ; 0x16
+	.long	23                              ; 0x17
+lCPI214_3:
+	.long	16                              ; 0x10
+	.long	17                              ; 0x11
+	.long	18                              ; 0x12
+	.long	19                              ; 0x13
+lCPI214_4:
+	.long	12                              ; 0xc
+	.long	13                              ; 0xd
+	.long	14                              ; 0xe
+	.long	15                              ; 0xf
+lCPI214_5:
+	.long	8                               ; 0x8
+	.long	9                               ; 0x9
+	.long	10                              ; 0xa
+	.long	11                              ; 0xb
+lCPI214_6:
+	.long	4                               ; 0x4
+	.long	5                               ; 0x5
+	.long	6                               ; 0x6
+	.long	7                               ; 0x7
+lCPI214_7:
+	.long	0                               ; 0x0
+	.long	1                               ; 0x1
+	.long	2                               ; 0x2
+	.long	3                               ; 0x3
+lCPI214_8:
+	.long	4294967295                      ; 0xffffffff
+	.long	0                               ; 0x0
+	.long	1                               ; 0x1
+	.long	2                               ; 0x2
+lCPI214_9:
+	.long	3                               ; 0x3
+	.long	4                               ; 0x4
+	.long	5                               ; 0x5
+	.long	6                               ; 0x6
+lCPI214_10:
+	.long	7                               ; 0x7
+	.long	8                               ; 0x8
+	.long	9                               ; 0x9
+	.long	10                              ; 0xa
+lCPI214_11:
+	.long	11                              ; 0xb
+	.long	12                              ; 0xc
+	.long	13                              ; 0xd
+	.long	14                              ; 0xe
+lCPI214_12:
+	.long	15                              ; 0xf
+	.long	16                              ; 0x10
+	.long	17                              ; 0x11
+	.long	18                              ; 0x12
+lCPI214_13:
+	.long	19                              ; 0x13
+	.long	20                              ; 0x14
+	.long	21                              ; 0x15
+	.long	22                              ; 0x16
+lCPI214_14:
+	.long	23                              ; 0x17
+	.long	24                              ; 0x18
+	.long	25                              ; 0x19
+	.long	26                              ; 0x1a
+lCPI214_15:
+	.long	27                              ; 0x1b
+	.long	28                              ; 0x1c
+	.long	29                              ; 0x1d
+	.long	30                              ; 0x1e
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_sobel3x3
+	.p2align	2
+_sobel3x3:                              ; @sobel3x3
+; %bb.0:                                ; %entry
+	stp	d15, d14, [sp, #-160]!          ; 16-byte Folded Spill
+	stp	d13, d12, [sp, #16]             ; 16-byte Folded Spill
+	stp	d11, d10, [sp, #32]             ; 16-byte Folded Spill
+	stp	d9, d8, [sp, #48]               ; 16-byte Folded Spill
+	stp	x28, x27, [sp, #64]             ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #80]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #96]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #112]            ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #128]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #144]            ; 16-byte Folded Spill
+	sub	sp, sp, #656                    ; =656
+	ldr	x13, [x0, #40]
+	ldr	x8, [x1, #40]
+	ldr	w20, [x8, #4]
+	add	w10, w20, #31                   ; =31
+	asr	w9, w10, #5
+	str	w9, [sp, #640]                  ; 4-byte Folded Spill
+	add	w9, w20, #63                    ; =63
+	asr	w9, w9, #5
+	cmp	w9, #1                          ; =1
+	csinc	w2, w9, wzr, lt
+	ldr	w11, [x13, #4]
+	add	w17, w20, #62                   ; =62
+	cmp	w17, w11
+	ldr	x21, [x0, #16]
+	csel	w12, w17, w11, lt
+	add	w12, w12, #1                    ; =1
+	asr	w12, w12, #5
+	cmp	w12, w2
+	ldp	w3, w23, [x13, #20]
+	stp	x13, x8, [sp, #8]               ; 16-byte Folded Spill
+	csel	w12, w12, w2, gt
+	and	w14, w10, #0xffffffe0
+	sub	w10, w20, #1                    ; =1
+	and	w10, w10, #0xffffffe0
+	ldp	w15, w5, [x8, #20]
+	orr	w16, w10, #0x2
+	add	w10, w15, #7                    ; =7
+	ldr	x24, [x1, #16]
+	asr	w10, w10, #3
+	adrp	x22, lCPI214_0@PAGE
+	adrp	x7, lCPI214_2@PAGE
+	adrp	x28, lCPI214_3@PAGE
+	adrp	x30, lCPI214_5@PAGE
+	adrp	x6, lCPI214_6@PAGE
+	cmp	w15, #1                         ; =1
+	str	x3, [sp, #608]                  ; 8-byte Folded Spill
+	b.lt	LBB214_62
+; %bb.1:                                ; %"for output.s0.y.y.preheader"
+	mov	x25, #0
+	cmp	w14, w16
+	csel	w13, w14, w16, gt
+	add	w13, w13, #63                   ; =63
+	asr	w14, w13, #5
+	bic	w15, w14, w13, asr #31
+	sxtw	x16, w3
+	str	x16, [sp, #592]                 ; 8-byte Folded Spill
+	lsl	w15, w15, #5
+	mov	w16, #10
+	sxtw	x4, w2
+	umull	x15, w15, w16
+	lsl	w16, w14, #1
+	sub	w11, w11, #1                    ; =1
+	dup.4s	v16, w11
+	lsl	w17, w14, #2
+	add	w0, w16, w14
+	lsl	w1, w0, #1
+	orr	x11, x15, #0x3
+	str	x11, [sp, #552]                 ; 8-byte Folded Spill
+	lsl	w11, w14, #3
+	sub	w19, w9, w12
+	sxtw	x15, w16
+	sub	w27, w12, w2
+	lsr	x16, x15, #1
+	sub	w15, w3, #1                     ; =1
+	str	w15, [sp, #544]                 ; 4-byte Folded Spill
+	sxtw	x0, w0
+	add	w2, w17, w14
+	sxtw	x17, w17
+	sub	w15, w11, w14
+	lsr	x17, x17, #2
+	add	w3, w11, w14
+	sxtw	x2, w2
+	sxtw	x1, w1
+	lsr	x1, x1, #1
+	dup.4s	v0, w5
+	str	q0, [sp, #528]                  ; 16-byte Folded Spill
+	str	x4, [sp, #584]                  ; 8-byte Folded Spill
+	add	x4, x21, x4, lsl #5
+	add	x4, x4, #15                     ; =15
+	str	x4, [sp, #512]                  ; 8-byte Folded Spill
+	lsl	w4, w12, #5
+	sub	w4, w4, #1                      ; =1
+	str	w4, [sp, #504]                  ; 4-byte Folded Spill
+	add	x4, x24, #16                    ; =16
+	lsl	w26, w5, #1
+	str	w26, [sp, #628]                 ; 4-byte Folded Spill
+	add	w26, w26, w5
+	str	w26, [sp, #624]                 ; 4-byte Folded Spill
+	mov	w26, #18
+	mov	w8, #18
+	bfi	x8, x16, #6, #58
+	str	x8, [sp, #448]                  ; 8-byte Folded Spill
+	mov	w8, #18
+	mov	w16, #18
+	bfi	x16, x0, #5, #59
+	str	x16, [sp, #416]                 ; 8-byte Folded Spill
+	mov	w16, #18
+	bfi	x16, x17, #7, #57
+	str	x16, [sp, #408]                 ; 8-byte Folded Spill
+	mov	w16, #18
+	bfi	x16, x2, #5, #59
+	str	x16, [sp, #384]                 ; 8-byte Folded Spill
+	bfi	x26, x1, #6, #58
+	str	x26, [sp, #464]                 ; 8-byte Folded Spill
+	mov	w16, #1
+	str	w16, [sp, #620]                 ; 4-byte Folded Spill
+	ldr	q0, [x22, lCPI214_0@PAGEOFF]
+	str	q0, [sp, #368]                  ; 16-byte Folded Spill
+	sxtw	x16, w5
+	sbfx	x26, x13, #5, #27
+Lloh969:
+	adrp	x13, lCPI214_1@PAGE
+Lloh970:
+	ldr	q0, [x13, lCPI214_1@PAGEOFF]
+	str	q0, [sp, #352]                  ; 16-byte Folded Spill
+	ldr	q0, [x7, lCPI214_2@PAGEOFF]
+	str	q0, [sp, #336]                  ; 16-byte Folded Spill
+	sbfiz	x22, x14, #5, #32
+	sxtw	x12, w12
+	str	x12, [sp, #328]                 ; 8-byte Folded Spill
+	ldr	q0, [x28, lCPI214_3@PAGEOFF]
+	str	q0, [sp, #304]                  ; 16-byte Folded Spill
+Lloh971:
+	adrp	x12, lCPI214_4@PAGE
+Lloh972:
+	ldr	q0, [x12, lCPI214_4@PAGEOFF]
+	str	q0, [sp, #288]                  ; 16-byte Folded Spill
+	ldr	q0, [x30, lCPI214_5@PAGEOFF]
+	str	q0, [sp, #272]                  ; 16-byte Folded Spill
+	ldr	q0, [x6, lCPI214_6@PAGEOFF]
+	str	q0, [sp, #256]                  ; 16-byte Folded Spill
+Lloh973:
+	adrp	x12, lCPI214_7@PAGE
+Lloh974:
+	ldr	q0, [x12, lCPI214_7@PAGEOFF]
+	str	q0, [sp, #240]                  ; 16-byte Folded Spill
+	sbfiz	x12, x3, #5, #32
+	str	x12, [sp, #232]                 ; 8-byte Folded Spill
+	movi.2d	v17, #0000000000000000
+Lloh975:
+	adrp	x12, lCPI214_8@PAGE
+Lloh976:
+	ldr	q0, [x12, lCPI214_8@PAGEOFF]
+	sbfiz	x11, x11, #5, #32
+	str	x11, [sp, #224]                 ; 8-byte Folded Spill
+	smin.4s	v0, v0, v16
+Lloh977:
+	adrp	x11, lCPI214_9@PAGE
+Lloh978:
+	ldr	q1, [x11, lCPI214_9@PAGEOFF]
+	smin.4s	v1, v1, v16
+Lloh979:
+	adrp	x11, lCPI214_10@PAGE
+Lloh980:
+	ldr	q2, [x11, lCPI214_10@PAGEOFF]
+	bfi	x8, x26, #5, #59
+	str	x8, [sp, #440]                  ; 8-byte Folded Spill
+	smin.4s	v2, v2, v16
+Lloh981:
+	adrp	x8, lCPI214_11@PAGE
+Lloh982:
+	ldr	q3, [x8, lCPI214_11@PAGEOFF]
+	lsl	x8, x16, #3
+	str	x8, [sp, #216]                  ; 8-byte Folded Spill
+	smin.4s	v3, v3, v16
+Lloh983:
+	adrp	x8, lCPI214_12@PAGE
+Lloh984:
+	ldr	q4, [x8, lCPI214_12@PAGEOFF]
+	smin.4s	v4, v4, v16
+Lloh985:
+	adrp	x8, lCPI214_13@PAGE
+Lloh986:
+	ldr	q5, [x8, lCPI214_13@PAGEOFF]
+	sbfiz	x8, x15, #5, #32
+	str	x8, [sp, #208]                  ; 8-byte Folded Spill
+	smin.4s	v5, v5, v16
+Lloh987:
+	adrp	x8, lCPI214_14@PAGE
+Lloh988:
+	ldr	q6, [x8, lCPI214_14@PAGEOFF]
+	smin.4s	v6, v6, v16
+Lloh989:
+	adrp	x8, lCPI214_15@PAGE
+Lloh990:
+	ldr	q7, [x8, lCPI214_15@PAGEOFF]
+	str	q16, [sp, #560]                 ; 16-byte Folded Spill
+	smin.4s	v7, v7, v16
+	mov	w8, w9
+	str	x8, [sp, #200]                  ; 8-byte Folded Spill
+	smax.4s	v0, v0, v17
+	str	q0, [sp, #176]                  ; 16-byte Folded Spill
+	smax.4s	v0, v1, v17
+	str	q0, [sp, #160]                  ; 16-byte Folded Spill
+	smax.4s	v0, v2, v17
+	str	q0, [sp, #144]                  ; 16-byte Folded Spill
+	ldr	w8, [sp, #640]                  ; 4-byte Folded Reload
+	mov	w8, w8
+	str	x8, [sp, #136]                  ; 8-byte Folded Spill
+	smax.4s	v1, v3, v17
+	smax.4s	v0, v4, v17
+	stp	q0, q1, [sp, #96]               ; 32-byte Folded Spill
+	smax.4s	v0, v5, v17
+	str	q0, [sp, #80]                   ; 16-byte Folded Spill
+	mov	w8, w10
+	str	x8, [sp, #72]                   ; 8-byte Folded Spill
+	smax.4s	v1, v6, v17
+	smax.4s	v0, v7, v17
+	stp	q0, q1, [sp, #32]               ; 32-byte Folded Spill
+	str	x4, [sp, #480]                  ; 8-byte Folded Spill
+	mov	x28, x4
+	lsl	w8, w5, #3
+	str	w8, [sp, #28]                   ; 4-byte Folded Spill
+LBB214_2:                               ; %"for output.s0.y.y"
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB214_5 Depth 2
+                                        ;     Child Loop BB214_8 Depth 2
+                                        ;       Child Loop BB214_13 Depth 3
+                                        ;       Child Loop BB214_16 Depth 3
+                                        ;     Child Loop BB214_20 Depth 2
+                                        ;       Child Loop BB214_22 Depth 3
+                                        ;     Child Loop BB214_26 Depth 2
+	str	x5, [sp, #632]                  ; 8-byte Folded Spill
+	mov	x0, #0
+	ldr	x1, [sp, #552]                  ; 8-byte Folded Reload
+	bl	_halide_malloc
+	mov	x1, x0
+	lsl	w8, w25, #3
+	cmp	x25, #0                         ; =0
+	csinc	w11, w8, wzr, ne
+	add	w9, w8, #9                      ; =9
+	ldr	x10, [sp, #608]                 ; 8-byte Folded Reload
+	cmp	w9, w10
+	csel	w12, w9, w10, lt
+	sub	w10, w11, #1                    ; =1
+	cmp	w12, w11
+	csel	w9, w10, w12, lt
+	cmn	w20, #31                        ; =31
+	mov	x4, x25
+	ldr	q7, [sp, #560]                  ; 16-byte Folded Reload
+	ldp	q17, q16, [sp, #352]            ; 32-byte Folded Reload
+	ldr	q18, [sp, #336]                 ; 16-byte Folded Reload
+	ldp	q20, q19, [sp, #288]            ; 32-byte Folded Reload
+	ldp	q22, q21, [sp, #256]            ; 32-byte Folded Reload
+	ldr	q23, [sp, #240]                 ; 16-byte Folded Reload
+	movi.2d	v24, #0000000000000000
+	ldr	x30, [sp, #200]                 ; 8-byte Folded Reload
+	b.lt	LBB214_6
+; %bb.3:                                ; %"for output.s0.y.y"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	cbnz	x4, LBB214_6
+; %bb.4:                                ; %"for bounded_input.s0.x.x.preheader"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	add	x13, x1, #16                    ; =16
+	mov	w14, #-1
+	mov	x15, x30
+LBB214_5:                               ; %"for bounded_input.s0.x.x"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	dup.4s	v0, w14
+	add.4s	v1, v0, v19
+	add.4s	v2, v0, v23
+	smin.4s	v2, v2, v7
+	smin.4s	v1, v1, v7
+	smax.4s	v2, v2, v24
+	smax.4s	v1, v1, v24
+	fmov	w16, s2
+	ldr	b3, [x21, w16, uxtw]
+	fmov	w16, s1
+	ldr	b4, [x21, w16, uxtw]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[1], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[1], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[2], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[3], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v22
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[2], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[4], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v1, v0, v18
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[3], [x16]
+	fmov	w16, s1
+	add	x16, x21, x16
+	ld1.b	{ v4 }[4], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[5], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[5], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[6], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[7], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v21
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[6], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[8], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v1, v0, v17
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[7], [x16]
+	fmov	w16, s1
+	add	x16, x21, x16
+	ld1.b	{ v4 }[8], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[9], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[9], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[10], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[11], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v20
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[10], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[12], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v0, v0, v16
+	smin.4s	v0, v0, v7
+	smax.4s	v0, v0, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[11], [x16]
+	fmov	w16, s0
+	add	x16, x21, x16
+	ld1.b	{ v4 }[12], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[13], [x16]
+	mov.s	w16, v0[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[13], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[14], [x16]
+	mov.s	w16, v0[2]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[14], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[15], [x16]
+	mov.s	w16, v0[3]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[15], [x16]
+	stp	q3, q4, [x13, #-16]
+	add	x13, x13, #32                   ; =32
+	add	w14, w14, #32                   ; =32
+	subs	x15, x15, #1                    ; =1
+	b.ne	LBB214_5
+LBB214_6:                               ; %after_bb
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	subs	w13, w12, w11
+	ldr	x3, [sp, #632]                  ; 8-byte Folded Reload
+	ldr	x5, [sp, #592]                  ; 8-byte Folded Reload
+	ldr	w6, [sp, #544]                  ; 4-byte Folded Reload
+	ldr	x7, [sp, #512]                  ; 8-byte Folded Reload
+	ldr	w25, [sp, #504]                 ; 4-byte Folded Reload
+	ldp	q26, q25, [sp, #160]            ; 32-byte Folded Reload
+	ldr	q27, [sp, #144]                 ; 16-byte Folded Reload
+	ldp	q29, q28, [sp, #96]             ; 32-byte Folded Reload
+	ldr	q30, [sp, #80]                  ; 16-byte Folded Reload
+	ldp	q8, q31, [sp, #32]              ; 32-byte Folded Reload
+	b.mi	LBB214_18
+; %bb.7:                                ; %"for bounded_input.s0.y.rebased.preheader"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	mov	x12, #0
+	cmp	x4, #0                          ; =0
+	cset	w11, eq
+	mov	w13, w13
+	add	x15, x1, #16                    ; =16
+	mul	x16, x26, x11
+	ldr	x14, [sp, #584]                 ; 8-byte Folded Reload
+	add	x14, x14, x16
+	add	x14, x15, x14, lsl #5
+	ldr	x17, [sp, #328]                 ; 8-byte Folded Reload
+	add	x16, x17, x16
+	add	x15, x15, x16, lsl #5
+LBB214_8:                               ; %"for bounded_input.s0.y.rebased"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB214_13 Depth 3
+                                        ;       Child Loop BB214_16 Depth 3
+	add	w16, w10, w12
+	cmn	w20, #32                        ; =32
+	b.le	LBB214_10
+; %bb.9:                                ; %then_bb2
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	mul	w16, w16, w23
+	dup.4s	v0, w16
+	add.4s	v1, v25, v0
+	fmov	w17, s1
+	ldr	b2, [x21, w17, sxtw]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[1], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[2], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v26, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[3], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[4], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[5], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[6], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v27, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[7], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[8], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[9], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[10], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v28, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[11], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[12], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[13], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[14], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v29, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[15], [x17]
+	fmov	w17, s1
+	ldr	b3, [x21, w17, sxtw]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[1], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[2], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v30, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[3], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[4], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[5], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[6], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v31, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[7], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[8], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[9], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[10], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v0, v8, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[11], [x17]
+	fmov	w17, s0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[12], [x17]
+	mov.s	w17, v0[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[13], [x17]
+	mov.s	w17, v0[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[14], [x17]
+	mov.s	w17, v0[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[15], [x17]
+	add	x17, x12, x11
+	madd	x17, x22, x17, x1
+	stp	q2, q3, [x17]
+	b	LBB214_11
+LBB214_10:                              ; %"for bounded_input.s0.y.rebased.after_bb1_crit_edge"
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	mul	w16, w16, w23
+LBB214_11:                              ; %after_bb1
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	cmp	w27, #1                         ; =1
+	b.lt	LBB214_14
+; %bb.12:                               ; %"for bounded_input.s0.x.x.rebased.preheader"
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	add	x17, x7, w16, sxtw
+	mov	x0, x14
+	mov	x2, x27
+LBB214_13:                              ; %"for bounded_input.s0.x.x.rebased"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ;     Parent Loop BB214_8 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldp	q0, q1, [x17, #-16]
+	stp	q0, q1, [x0, #-16]
+	add	x17, x17, #32                   ; =32
+	add	x0, x0, #32                     ; =32
+	subs	x2, x2, #1                      ; =1
+	b.ne	LBB214_13
+LBB214_14:                              ; %"end for bounded_input.s0.x.x.rebased"
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	cmp	w19, #1                         ; =1
+	b.lt	LBB214_17
+; %bb.15:                               ; %"for bounded_input.s0.x.x.rebased4.preheader"
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	dup.4s	v0, w16
+	mov	x16, x25
+	mov	x17, x15
+	mov	x0, x19
+LBB214_16:                              ; %"for bounded_input.s0.x.x.rebased4"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ;     Parent Loop BB214_8 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	dup.4s	v1, w16
+	add.4s	v2, v1, v23
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add.4s	v3, v2, v0
+	fmov	w2, s3
+	ldr	b2, [x21, w2, sxtw]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[1], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v22
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[2], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[3], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[4], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[5], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v21
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[6], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[7], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[8], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[9], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v19
+	smin.4s	v4, v4, v7
+	smax.4s	v4, v4, v24
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[10], [x2]
+	add.4s	v4, v4, v0
+	fmov	w2, s4
+	ldr	b5, [x21, w2, sxtw]
+	mov.s	w2, v4[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[1], [x2]
+	mov.s	w2, v4[2]
+	add.4s	v6, v1, v17
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[2], [x2]
+	mov.s	w2, v4[3]
+	add.4s	v4, v1, v18
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[3], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[11], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[4], [x2]
+	mov.s	w2, v3[1]
+	add.4s	v4, v1, v20
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[5], [x2]
+	mov.s	w2, v3[2]
+	smin.4s	v4, v4, v7
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[6], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v6, v7
+	smax.4s	v4, v4, v24
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add.4s	v4, v4, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[7], [x2]
+	fmov	w2, s4
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[12], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[8], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[9], [x2]
+	mov.s	w2, v3[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[10], [x2]
+	mov.s	w2, v3[3]
+	add.4s	v1, v1, v16
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add.4s	v1, v1, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[11], [x2]
+	fmov	w2, s1
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[12], [x2]
+	mov.s	w2, v4[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[13], [x2]
+	mov.s	w2, v1[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[13], [x2]
+	mov.s	w2, v4[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[14], [x2]
+	mov.s	w2, v1[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[14], [x2]
+	mov.s	w2, v4[3]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[15], [x2]
+	mov.s	w2, v1[3]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[15], [x2]
+	stp	q2, q5, [x17, #-16]
+	add	x17, x17, #32                   ; =32
+	add	w16, w16, #32                   ; =32
+	subs	x0, x0, #1                      ; =1
+	b.ne	LBB214_16
+LBB214_17:                              ; %"end for bounded_input.s0.x.x.rebased5"
+                                        ;   in Loop: Header=BB214_8 Depth=2
+	add	x16, x12, #1                    ; =1
+	add	x14, x14, x22
+	add	x15, x15, x22
+	cmp	x12, x13
+	mov	x12, x16
+	b.ne	LBB214_8
+LBB214_18:                              ; %"end for bounded_input.s0.y.rebased"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	sub	w10, w8, w9
+	cmn	w10, #8                         ; =8
+	b.lt	LBB214_24
+; %bb.19:                               ; %"for bounded_input.s0.y.rebased7.preheader"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	mov	x11, #0
+	add	w10, w10, #8                    ; =8
+	sxtw	x12, w9
+	add	x13, x1, #16                    ; =16
+	ldr	w14, [sp, #620]                 ; 4-byte Folded Reload
+	add	w9, w9, w14
+	mul	w9, w26, w9
+LBB214_20:                              ; %"for bounded_input.s0.y.rebased7"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB214_22 Depth 3
+	add	x14, x11, x12
+	cmp	x14, x5
+	csel	w15, w14, w6, lt
+	cmn	w20, #31                        ; =31
+	b.lt	LBB214_23
+; %bb.21:                               ; %"for bounded_input.s0.x.x10.preheader"
+                                        ;   in Loop: Header=BB214_20 Depth=2
+	sxtw	x14, w9
+	add	x14, x13, x14, lsl #5
+	bic	w15, w15, w15, asr #31
+	mul	w15, w15, w23
+	dup.4s	v0, w15
+	mov	w15, #-1
+	mov	x16, x30
+LBB214_22:                              ; %"for bounded_input.s0.x.x10"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ;     Parent Loop BB214_20 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	dup.4s	v1, w15
+	add.4s	v2, v1, v23
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add.4s	v3, v2, v0
+	fmov	w17, s3
+	ldr	b2, [x21, w17, sxtw]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[1], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v22
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[2], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[3], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[4], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[5], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v21
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[6], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[7], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[8], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[9], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v19
+	smin.4s	v4, v4, v7
+	smax.4s	v4, v4, v24
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[10], [x17]
+	add.4s	v4, v4, v0
+	fmov	w17, s4
+	ldr	b5, [x21, w17, sxtw]
+	mov.s	w17, v4[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[1], [x17]
+	mov.s	w17, v4[2]
+	add.4s	v6, v1, v17
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[2], [x17]
+	mov.s	w17, v4[3]
+	add.4s	v4, v1, v18
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[3], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[11], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[4], [x17]
+	mov.s	w17, v3[1]
+	add.4s	v4, v1, v20
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[5], [x17]
+	mov.s	w17, v3[2]
+	smin.4s	v4, v4, v7
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[6], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v6, v7
+	smax.4s	v4, v4, v24
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add.4s	v4, v4, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[7], [x17]
+	fmov	w17, s4
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[12], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[8], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[9], [x17]
+	mov.s	w17, v3[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[10], [x17]
+	mov.s	w17, v3[3]
+	add.4s	v1, v1, v16
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add.4s	v1, v1, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[11], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[12], [x17]
+	mov.s	w17, v4[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[13], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[13], [x17]
+	mov.s	w17, v4[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[14], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[14], [x17]
+	mov.s	w17, v4[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[15], [x17]
+	mov.s	w17, v1[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[15], [x17]
+	stp	q2, q5, [x14, #-16]
+	add	x14, x14, #32                   ; =32
+	add	w15, w15, #32                   ; =32
+	subs	x16, x16, #1                    ; =1
+	b.ne	LBB214_22
+LBB214_23:                              ; %"end for bounded_input.s0.x.x11"
+                                        ;   in Loop: Header=BB214_20 Depth=2
+	add	x14, x11, #1                    ; =1
+	add	w9, w9, w26
+	cmp	x11, x10
+	mov	x11, x14
+	b.ne	LBB214_20
+LBB214_24:                              ; %"consume bounded_input"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	cmp	w20, #1                         ; =1
+	str	x4, [sp, #600]                  ; 8-byte Folded Spill
+	b.lt	LBB214_29
+; %bb.25:                               ; %"for output.s0.x.x.preheader"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	mov	x9, #0
+	ldr	x12, [sp, #480]                 ; 8-byte Folded Reload
+	add	x10, x12, w3, sxtw
+	ldr	w11, [sp, #628]                 ; 4-byte Folded Reload
+	add	x11, x12, w11, sxtw
+	ldr	w13, [sp, #624]                 ; 4-byte Folded Reload
+	add	x12, x12, w13, sxtw
+	dup.4s	v0, w8
+	orr.16b	v0, v0, v22
+	ldp	x14, x8, [sp, #224]             ; 16-byte Folded Reload
+	add	x8, x1, x8
+	ldp	x15, x13, [sp, #440]            ; 16-byte Folded Reload
+	add	x13, x1, x13
+	ldr	q1, [sp, #528]                  ; 16-byte Folded Reload
+	mul.4s	v1, v0, v1
+	sshll2.2d	v0, v1, #0
+	str	q0, [sp, #640]                  ; 16-byte Folded Spill
+	sshll.2d	v1, v1, #0
+	add	x14, x1, x14
+	add	x15, x1, x15
+	ldp	x17, x16, [sp, #408]            ; 16-byte Folded Reload
+	add	x16, x1, x16
+	add	x17, x1, x17
+	ldr	x0, [sp, #384]                  ; 8-byte Folded Reload
+	add	x0, x1, x0
+	ldr	x2, [sp, #208]                  ; 8-byte Folded Reload
+	add	x2, x1, x2
+	ldr	x3, [sp, #464]                  ; 8-byte Folded Reload
+	add	x3, x1, x3
+	ldr	x4, [sp, #136]                  ; 8-byte Folded Reload
+LBB214_26:                              ; %"for output.s0.x.x"
+                                        ;   Parent Loop BB214_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	add	x5, x1, x9
+	ldp	q22, q23, [x5]
+	ldur	q17, [x5, #2]
+	ldur	q16, [x5, #18]
+	add	x6, x13, x9
+	ldur	q5, [x6, #-18]
+	ldur	q4, [x6, #-2]
+	ldp	q3, q2, [x6, #-16]
+	ldur	q6, [x5, #1]
+	ldur	q7, [x5, #17]
+	ushll.8h	v18, v6, #1
+	ushll2.8h	v6, v6, #1
+	ushll.8h	v20, v7, #1
+	ushll2.8h	v7, v7, #1
+	uaddl.8h	v21, v17, v22
+	uaddl2.8h	v24, v17, v22
+	uaddl.8h	v25, v16, v23
+	uaddl2.8h	v19, v16, v23
+	add.8h	v19, v19, v7
+	add.8h	v20, v25, v20
+	ldur	q7, [x6, #-17]
+	ldur	q25, [x6, #-1]
+	ushll.8h	v26, v7, #1
+	ushll2.8h	v27, v7, #1
+	ushll.8h	v7, v25, #1
+	add.8h	v28, v24, v6
+	ushll2.8h	v6, v25, #1
+	uaddl.8h	v29, v3, v5
+	uaddl2.8h	v30, v3, v5
+	uaddl.8h	v24, v2, v4
+	uaddl2.8h	v25, v2, v4
+	add.8h	v31, v21, v18
+	add.8h	v6, v25, v6
+	add.8h	v7, v24, v7
+	add	x5, x15, x9
+	ldur	q25, [x5, #-18]
+	ldur	q24, [x5, #-2]
+	add.8h	v18, v30, v27
+	ushll.8h	v30, v25, #1
+	ushll2.8h	v27, v25, #1
+	ushll.8h	v8, v24, #1
+	ushll2.8h	v9, v24, #1
+	uaddl.8h	v10, v5, v22
+	add.8h	v21, v29, v26
+	uaddl2.8h	v22, v5, v22
+	uaddl.8h	v26, v4, v23
+	uaddl2.8h	v23, v4, v23
+	add.8h	v23, v23, v9
+	add.8h	v29, v26, v8
+	add.8h	v22, v22, v27
+	ldp	q27, q26, [x5, #-16]
+	ushll.8h	v8, v27, #1
+	ushll2.8h	v9, v27, #1
+	ushll.8h	v11, v26, #1
+	add.8h	v30, v10, v30
+	ushll2.8h	v10, v26, #1
+	uaddl.8h	v12, v3, v17
+	uaddl2.8h	v17, v3, v17
+	uaddl.8h	v13, v2, v16
+	uaddl2.8h	v16, v2, v16
+	add.8h	v16, v16, v10
+	add.8h	v10, v13, v11
+	add.8h	v17, v17, v9
+	add.8h	v8, v12, v8
+	uabd.8h	v30, v30, v8
+	uabd.8h	v29, v29, v10
+	uabd.8h	v17, v22, v17
+	uabd.8h	v16, v23, v16
+	uaba.8h	v30, v31, v21
+	uaba.8h	v17, v28, v18
+	uaba.8h	v29, v20, v7
+	uaba.8h	v16, v19, v6
+	uqxtn.8b	v19, v30
+	uqxtn.8b	v20, v29
+	uqxtn2.16b	v19, v17
+	uqxtn2.16b	v20, v16
+	add	x6, x28, x9
+	stp	q19, q20, [x6, #-16]
+	add	x6, x16, x9
+	ldur	q20, [x6, #-18]
+	ldur	q19, [x6, #-2]
+	ldp	q17, q16, [x6, #-16]
+	ldur	q22, [x5, #-17]
+	ldur	q23, [x5, #-1]
+	ushll.8h	v28, v22, #1
+	ushll2.8h	v22, v22, #1
+	ushll.8h	v29, v23, #1
+	uaddl.8h	v30, v27, v25
+	ushll2.8h	v23, v23, #1
+	uaddl2.8h	v31, v27, v25
+	uaddl.8h	v8, v26, v24
+	uaddl2.8h	v9, v26, v24
+	add.8h	v9, v9, v23
+	add.8h	v29, v8, v29
+	add.8h	v31, v31, v22
+	ldur	q22, [x6, #-17]
+	ldur	q23, [x6, #-1]
+	ushll.8h	v8, v22, #1
+	ushll2.8h	v10, v22, #1
+	ushll.8h	v11, v23, #1
+	add.8h	v28, v30, v28
+	ushll2.8h	v22, v23, #1
+	uaddl.8h	v12, v17, v20
+	uaddl.8h	v23, v16, v19
+	uaddl2.8h	v30, v16, v19
+	add.8h	v22, v30, v22
+	add.8h	v23, v23, v11
+	ushll2.8h	v30, v4, #1
+	ushll.8h	v11, v4, #1
+	ushll2.8h	v13, v5, #1
+	ushll.8h	v14, v5, #1
+	uaddw.8h	v14, v14, v25
+	uaddl2.8h	v15, v17, v20
+	uaddw2.8h	v25, v13, v25
+	uaddw.8h	v11, v11, v24
+	uaddw2.8h	v24, v30, v24
+	uaddw2.8h	v24, v24, v19
+	uaddw.8h	v11, v11, v19
+	add.8h	v30, v15, v10
+	uaddw2.8h	v25, v25, v20
+	ushll2.8h	v10, v2, #1
+	ushll2.8h	v13, v3, #1
+	ushll.8h	v15, v3, #1
+	uaddw.8h	v15, v15, v27
+	uaddw.8h	v14, v14, v20
+	uaddw2.8h	v27, v13, v27
+	ushll.8h	v13, v2, #1
+	uaddw.8h	v13, v13, v26
+	uaddw2.8h	v26, v10, v26
+	uaddw2.8h	v26, v26, v16
+	add.8h	v8, v12, v8
+	uaddw.8h	v10, v13, v16
+	uaddw2.8h	v27, v27, v17
+	uaddw.8h	v12, v15, v17
+	uabd.8h	v12, v14, v12
+	uabd.8h	v10, v11, v10
+	uabd.8h	v25, v25, v27
+	uabd.8h	v24, v24, v26
+	uaba.8h	v12, v28, v8
+	uaba.8h	v25, v31, v30
+	uaba.8h	v10, v29, v23
+	uaba.8h	v24, v9, v22
+	uqxtn.8b	v26, v12
+	uqxtn.8b	v27, v10
+	uqxtn2.16b	v26, v25
+	uqxtn2.16b	v27, v24
+	add	x5, x10, x9
+	stp	q26, q27, [x5, #-16]
+	add	x5, x17, x9
+	ldur	q28, [x5, #-18]
+	ldur	q26, [x5, #-2]
+	ldp	q25, q24, [x5, #-16]
+	ldur	q27, [x5, #-17]
+	ldur	q29, [x5, #-1]
+	ushll.8h	v9, v27, #1
+	ushll2.8h	v31, v27, #1
+	ushll.8h	v10, v29, #1
+	ushll2.8h	v27, v29, #1
+	uaddl.8h	v11, v25, v28
+	uaddl2.8h	v12, v25, v28
+	uaddl.8h	v29, v24, v26
+	uaddl2.8h	v13, v24, v26
+	ushll2.8h	v14, v19, #1
+	ushll2.8h	v15, v20, #1
+	add.8h	v27, v13, v27
+	ushll.8h	v13, v20, #1
+	uaddw.8h	v13, v13, v5
+	uaddw2.8h	v5, v15, v5
+	ushll.8h	v15, v19, #1
+	uaddw.8h	v15, v15, v4
+	add.8h	v29, v29, v10
+	uaddw2.8h	v4, v14, v4
+	uaddw2.8h	v4, v4, v26
+	uaddw.8h	v10, v15, v26
+	uaddw2.8h	v5, v5, v28
+	ushll2.8h	v14, v16, #1
+	add.8h	v31, v12, v31
+	ushll2.8h	v12, v17, #1
+	ushll.8h	v15, v17, #1
+	uaddw.8h	v15, v15, v3
+	uaddw2.8h	v3, v12, v3
+	ushll.8h	v12, v16, #1
+	uaddw.8h	v13, v13, v28
+	uaddw.8h	v12, v12, v2
+	uaddw2.8h	v2, v14, v2
+	uaddw2.8h	v2, v2, v24
+	uaddw.8h	v12, v12, v24
+	uaddw2.8h	v3, v3, v25
+	add.8h	v9, v11, v9
+	uaddw.8h	v11, v15, v25
+	uabd.8h	v11, v13, v11
+	uabd.8h	v3, v5, v3
+	uabd.8h	v5, v10, v12
+	uabd.8h	v2, v4, v2
+	uaba.8h	v11, v21, v9
+	uaba.8h	v3, v18, v31
+	uaba.8h	v5, v7, v29
+	uaba.8h	v2, v6, v27
+	uqxtn.8b	v4, v11
+	uqxtn.8b	v5, v5
+	uqxtn2.16b	v4, v3
+	uqxtn2.16b	v5, v2
+	add	x5, x11, x9
+	stp	q4, q5, [x5, #-16]
+	add	x5, x0, x9
+	ldur	q4, [x5, #-18]
+	ldur	q5, [x5, #-2]
+	ldp	q3, q2, [x5, #-16]
+	ldur	q6, [x5, #-17]
+	ldur	q7, [x5, #-1]
+	ushll.8h	v18, v6, #1
+	ushll2.8h	v21, v6, #1
+	ushll.8h	v10, v7, #1
+	ushll2.8h	v6, v7, #1
+	uaddl.8h	v11, v3, v4
+	uaddl2.8h	v12, v3, v4
+	uaddl2.8h	v7, v2, v5
+	add.8h	v6, v7, v6
+	ushll2.8h	v7, v26, #1
+	ushll2.8h	v13, v28, #1
+	ushll.8h	v14, v28, #1
+	uaddw.8h	v14, v14, v20
+	uaddl.8h	v15, v2, v5
+	uaddw2.8h	v20, v13, v20
+	ushll.8h	v13, v26, #1
+	uaddw.8h	v13, v13, v19
+	uaddw2.8h	v7, v7, v19
+	uaddw2.8h	v19, v7, v5
+	add.8h	v7, v15, v10
+	uaddw.8h	v10, v13, v5
+	uaddw2.8h	v13, v20, v4
+	uaddw.8h	v14, v14, v4
+	ushll2.8h	v15, v24, #1
+	ushll2.8h	v0, v25, #1
+	add.8h	v20, v12, v21
+	ushll.8h	v21, v25, #1
+	uaddw.8h	v12, v21, v17
+	uaddw2.8h	v0, v0, v17
+	ushll.8h	v17, v24, #1
+	uaddw.8h	v17, v17, v16
+	add.8h	v21, v11, v18
+	uaddw2.8h	v16, v15, v16
+	uaddw2.8h	v16, v16, v2
+	uaddw.8h	v17, v17, v2
+	uaddw2.8h	v0, v0, v3
+	uaddw.8h	v18, v12, v3
+	uabd.8h	v18, v14, v18
+	uabd.8h	v0, v13, v0
+	uabd.8h	v17, v10, v17
+	uabd.8h	v16, v19, v16
+	uaba.8h	v18, v8, v21
+	uaba.8h	v17, v23, v7
+	uaba.8h	v0, v30, v20
+	uaba.8h	v16, v22, v6
+	uqxtn.8b	v18, v18
+	uqxtn.8b	v17, v17
+	uqxtn2.16b	v18, v0
+	uqxtn2.16b	v17, v16
+	add	x5, x12, x9
+	stp	q18, q17, [x5, #-16]
+	add	x5, x3, x9
+	ldur	q19, [x5, #-18]
+	ldur	q17, [x5, #-2]
+	ldp	q18, q16, [x5, #-16]
+	ldur	q0, [x5, #-17]
+	ldur	q22, [x5, #-1]
+	ushll.8h	v30, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v23, v22, #1
+	ushll2.8h	v22, v22, #1
+	uaddl.8h	v8, v18, v19
+	uaddl.8h	v10, v16, v17
+	uaddl2.8h	v11, v16, v17
+	add.8h	v22, v11, v22
+	add.8h	v23, v10, v23
+	ushll2.8h	v10, v5, #1
+	ushll.8h	v11, v5, #1
+	ushll2.8h	v12, v4, #1
+	ushll.8h	v13, v4, #1
+	uaddw.8h	v13, v13, v28
+	uaddl2.8h	v14, v18, v19
+	uaddw2.8h	v28, v12, v28
+	uaddw.8h	v11, v11, v26
+	uaddw2.8h	v26, v10, v26
+	uaddw2.8h	v10, v26, v17
+	uaddw.8h	v11, v11, v17
+	add.8h	v26, v14, v0
+	uaddw2.8h	v0, v28, v19
+	ushll2.8h	v28, v2, #1
+	ushll2.8h	v12, v3, #1
+	ushll.8h	v14, v3, #1
+	uaddw.8h	v14, v14, v25
+	uaddw.8h	v13, v13, v19
+	uaddw2.8h	v25, v12, v25
+	ushll.8h	v12, v2, #1
+	uaddw.8h	v12, v12, v24
+	uaddw2.8h	v24, v28, v24
+	uaddw2.8h	v28, v24, v16
+	add.8h	v24, v8, v30
+	uaddw.8h	v30, v12, v16
+	uaddw2.8h	v25, v25, v18
+	uaddw.8h	v8, v14, v18
+	uabd.8h	v8, v13, v8
+	uabd.8h	v30, v11, v30
+	uabd.8h	v0, v0, v25
+	uabd.8h	v10, v10, v28
+	uaba.8h	v8, v9, v24
+	uaba.8h	v0, v31, v26
+	uaba.8h	v30, v29, v23
+	uaba.8h	v10, v27, v22
+	uqxtn.8b	v27, v8
+	uqxtn.8b	v28, v30
+	uqxtn2.16b	v27, v0
+	dup.2d	v25, x9
+	add.2d	v29, v25, v1
+	uqxtn2.16b	v28, v10
+	mov.d	x5, v29[1]
+	fmov	x6, d29
+	add	x6, x24, x6
+	stp	q27, q28, [x6]
+	add	x6, x2, x9
+	ldp	q8, q28, [x6]
+	ldur	q30, [x6, #2]
+	ldur	q27, [x6, #18]
+	ldur	q0, [x6, #1]
+	ldur	q29, [x6, #17]
+	ushll.8h	v10, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v31, v29, #1
+	ushll2.8h	v29, v29, #1
+	uaddl.8h	v11, v30, v8
+	uaddl2.8h	v9, v30, v8
+	uaddl.8h	v12, v27, v28
+	uaddl2.8h	v13, v27, v28
+	add.8h	v29, v13, v29
+	add.8h	v31, v12, v31
+	add.8h	v9, v9, v0
+	ushll2.8h	v0, v17, #1
+	ushll.8h	v12, v17, #1
+	ushll2.8h	v13, v19, #1
+	ushll.8h	v14, v19, #1
+	uaddw.8h	v14, v14, v4
+	add.8h	v10, v11, v10
+	uaddw2.8h	v4, v13, v4
+	uaddw.8h	v11, v12, v5
+	uaddw2.8h	v0, v0, v5
+	ushll2.8h	v5, v16, #1
+	ushll2.8h	v12, v18, #1
+	ushll.8h	v13, v18, #1
+	uaddw.8h	v13, v13, v3
+	uaddw2.8h	v3, v12, v3
+	ushll.8h	v12, v16, #1
+	uaddw.8h	v12, v12, v2
+	uaddw2.8h	v2, v5, v2
+	uaddw.8h	v5, v14, v8
+	uaddw.8h	v13, v13, v30
+	uabd.8h	v5, v5, v13
+	uaddw2.8h	v4, v4, v8
+	uaddw2.8h	v3, v3, v30
+	uabd.8h	v3, v4, v3
+	uaddw2.8h	v0, v0, v28
+	uaddw.8h	v4, v11, v28
+	uaddw2.8h	v2, v2, v27
+	uaddw.8h	v11, v12, v27
+	uabd.8h	v4, v4, v11
+	uabd.8h	v0, v0, v2
+	uaba.8h	v5, v21, v10
+	uaba.8h	v3, v20, v9
+	uaba.8h	v4, v7, v31
+	uaba.8h	v0, v6, v29
+	uqxtn.8b	v2, v5
+	uqxtn.8b	v4, v4
+	uqxtn2.16b	v2, v3
+	uqxtn2.16b	v4, v0
+	add	x5, x24, x5
+	stp	q2, q4, [x5]
+	add	x5, x14, x9
+	ldp	q5, q3, [x5]
+	ldur	q4, [x5, #2]
+	ldur	q2, [x5, #18]
+	ldur	q0, [x5, #1]
+	ldur	q6, [x5, #17]
+	ushll.8h	v7, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v20, v6, #1
+	ushll2.8h	v6, v6, #1
+	uaddl.8h	v21, v4, v5
+	uaddl2.8h	v11, v2, v3
+	add.8h	v11, v11, v6
+	uaddl.8h	v6, v2, v3
+	add.8h	v20, v6, v20
+	uaddl2.8h	v6, v4, v5
+	add.8h	v0, v6, v0
+	ushll.8h	v6, v8, #1
+	add.8h	v7, v21, v7
+	uaddw.8h	v6, v6, v19
+	uaddw.8h	v6, v6, v5
+	ushll.8h	v21, v30, #1
+	uaddw.8h	v21, v21, v18
+	uaddw.8h	v21, v21, v4
+	uabd.8h	v21, v6, v21
+	uaba.8h	v21, v24, v7
+	ushll2.8h	v6, v28, #1
+	ushll2.8h	v7, v8, #1
+	uaddw2.8h	v7, v7, v19
+	ushll.8h	v19, v28, #1
+	uaddw.8h	v19, v19, v17
+	uaddw2.8h	v6, v6, v17
+	ushll2.8h	v17, v30, #1
+	uaddw2.8h	v17, v17, v18
+	uaddw2.8h	v7, v7, v5
+	uaddw2.8h	v17, v17, v4
+	uabd.8h	v7, v7, v17
+	uaba.8h	v7, v26, v0
+	ushll2.8h	v0, v27, #1
+	ushll.8h	v17, v27, #1
+	uaddw.8h	v17, v17, v16
+	uaddw2.8h	v0, v0, v16
+	uaddw.8h	v16, v19, v3
+	uaddw.8h	v17, v17, v2
+	uabd.8h	v16, v16, v17
+	uaddw2.8h	v6, v6, v3
+	uaddw2.8h	v0, v0, v2
+	uabd.8h	v0, v6, v0
+	ldr	q6, [sp, #640]                  ; 16-byte Folded Reload
+	add.2d	v6, v25, v6
+	uaba.8h	v16, v23, v20
+	uaba.8h	v0, v22, v11
+	uqxtn.8b	v17, v21
+	uqxtn.8b	v16, v16
+	uqxtn2.16b	v17, v7
+	uqxtn2.16b	v16, v0
+	fmov	x5, d6
+	add	x5, x24, x5
+	stp	q17, q16, [x5]
+	add	x5, x8, x9
+	ldp	q0, q16, [x5]
+	ldur	q17, [x5, #2]
+	ldur	q7, [x5, #18]
+	ldur	q18, [x5, #1]
+	ushll.8h	v19, v18, #1
+	uaddl.8h	v20, v17, v0
+	add.8h	v19, v20, v19
+	ushll.8h	v20, v5, #1
+	uaddw.8h	v20, v20, v8
+	ushll.8h	v21, v4, #1
+	uaddw.8h	v21, v21, v30
+	uaddw.8h	v20, v20, v0
+	uaddw.8h	v21, v21, v17
+	uabd.8h	v20, v20, v21
+	ldur	q21, [x5, #17]
+	uaba.8h	v20, v10, v19
+	ushll.8h	v19, v21, #1
+	uaddl.8h	v22, v7, v16
+	add.8h	v19, v22, v19
+	ushll2.8h	v18, v18, #1
+	ushll2.8h	v5, v5, #1
+	uaddw2.8h	v5, v5, v8
+	uaddl2.8h	v22, v17, v0
+	add.8h	v18, v22, v18
+	uaddw2.8h	v0, v5, v0
+	ushll2.8h	v4, v4, #1
+	uaddw2.8h	v4, v4, v30
+	uaddw2.8h	v4, v4, v17
+	uabd.8h	v0, v0, v4
+	uaba.8h	v0, v9, v18
+	ushll.8h	v4, v3, #1
+	uaddw.8h	v4, v4, v28
+	uaddw.8h	v4, v4, v16
+	ushll.8h	v5, v2, #1
+	uaddw.8h	v5, v5, v27
+	uaddw.8h	v5, v5, v7
+	uabd.8h	v4, v4, v5
+	uaba.8h	v4, v31, v19
+	ushll2.8h	v5, v21, #1
+	uaddl2.8h	v17, v7, v16
+	add.8h	v5, v17, v5
+	ushll2.8h	v3, v3, #1
+	uaddw2.8h	v3, v3, v28
+	uaddw2.8h	v3, v3, v16
+	ushll2.8h	v2, v2, #1
+	uaddw2.8h	v2, v2, v27
+	uaddw2.8h	v2, v2, v7
+	uabd.8h	v2, v3, v2
+	uaba.8h	v2, v29, v5
+	mov.d	x5, v6[1]
+	uqxtn.8b	v3, v20
+	uqxtn2.16b	v3, v0
+	uqxtn.8b	v0, v4
+	uqxtn2.16b	v0, v2
+	add	x5, x24, x5
+	stp	q3, q0, [x5]
+	add	x9, x9, #32                     ; =32
+	subs	x4, x4, #1                      ; =1
+	b.ne	LBB214_26
+LBB214_27:                              ; %if.then.i
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	mov	x0, #0
+	bl	_halide_free
+LBB214_28:                              ; %call_destructor.exit
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	ldr	x25, [sp, #600]                 ; 8-byte Folded Reload
+	add	x25, x25, #1                    ; =1
+	ldr	w8, [sp, #620]                  ; 4-byte Folded Reload
+	sub	w8, w8, #8                      ; =8
+	str	w8, [sp, #620]                  ; 4-byte Folded Spill
+	ldr	x5, [sp, #632]                  ; 8-byte Folded Reload
+	ldr	w9, [sp, #28]                   ; 4-byte Folded Reload
+	add	w5, w5, w9
+	ldr	w8, [sp, #628]                  ; 4-byte Folded Reload
+	add	w8, w8, w9
+	str	w8, [sp, #628]                  ; 4-byte Folded Spill
+	ldr	w8, [sp, #624]                  ; 4-byte Folded Reload
+	add	w8, w8, w9
+	str	w8, [sp, #624]                  ; 4-byte Folded Spill
+	ldr	x8, [sp, #216]                  ; 8-byte Folded Reload
+	add	x28, x28, x8
+	ldr	x8, [sp, #72]                   ; 8-byte Folded Reload
+	cmp	x25, x8
+	b.ne	LBB214_2
+	b	LBB214_30
+LBB214_29:                              ; %"end for output.s0.x.x"
+                                        ;   in Loop: Header=BB214_2 Depth=1
+	cbnz	x1, LBB214_27
+	b	LBB214_28
+LBB214_30:                              ; %"end for output.s0.y.y.loopexit"
+	ldr	x9, [sp, #8]                    ; 8-byte Folded Reload
+	ldr	w11, [x9, #4]
+	ldp	w8, w23, [x9, #20]
+	str	x8, [sp, #608]                  ; 8-byte Folded Spill
+	ldr	x8, [sp, #16]                   ; 8-byte Folded Reload
+	ldr	w20, [x8, #4]
+	ldp	w15, w5, [x8, #20]
+	add	w10, w20, #31                   ; =31
+	asr	w8, w10, #5
+	add	w9, w20, #63                    ; =63
+	asr	w9, w9, #5
+	add	w17, w20, #62                   ; =62
+	and	w14, w10, #0xffffffe0
+	sub	w10, w20, #1                    ; =1
+	and	w10, w10, #0xffffffe0
+	orr	w16, w10, #0x2
+	add	w10, w15, #7                    ; =7
+	asr	w10, w10, #3
+	adrp	x7, lCPI214_1@PAGE
+	adrp	x30, lCPI214_4@PAGE
+LBB214_31:                              ; %"end for output.s0.y.y"
+	str	w8, [sp, #640]                  ; 4-byte Folded Spill
+	cmp	w9, #1                          ; =1
+	csinc	w13, w9, wzr, lt
+	cmp	w17, w11
+	csel	w12, w17, w11, lt
+	add	w12, w12, #1                    ; =1
+	asr	w12, w12, #5
+	cmp	w12, w13
+	csel	w12, w12, w13, gt
+	cmp	w15, #1                         ; =1
+	adrp	x2, lCPI214_11@PAGE
+	adrp	x3, lCPI214_10@PAGE
+	adrp	x8, lCPI214_9@PAGE
+	adrp	x4, lCPI214_8@PAGE
+	adrp	x6, lCPI214_0@PAGE
+	adrp	x27, lCPI214_2@PAGE
+	adrp	x26, lCPI214_3@PAGE
+	b.lt	LBB214_61
+; %bb.32:                               ; %"for output.s0.y.y31.preheader"
+	mov	x19, #0
+	cmp	w14, w16
+	csel	w14, w14, w16, gt
+	add	w15, w14, #63                   ; =63
+	asr	w14, w15, #5
+	bic	w16, w14, w15, asr #31
+	lsl	w16, w16, #5
+	lsl	w17, w14, #1
+	mov	w0, #10
+	sxtw	x1, w17
+	umull	x16, w16, w0
+	lsr	x0, x1, #1
+	mov	w1, #18
+	bfi	x1, x0, #6, #58
+	str	x1, [sp, #592]                  ; 8-byte Folded Spill
+	add	w17, w17, w14
+	sxtw	x0, w17
+	mov	w1, #18
+	bfi	x1, x0, #5, #59
+	str	x1, [sp, #584]                  ; 8-byte Folded Spill
+	sub	w11, w11, #1                    ; =1
+	dup.4s	v16, w11
+	lsl	w11, w14, #2
+	sxtw	x0, w11
+	lsr	x0, x0, #2
+	mov	w1, #18
+	bfi	x1, x0, #7, #57
+	str	x1, [sp, #552]                  ; 8-byte Folded Spill
+	add	w11, w11, w14
+	sxtw	x11, w11
+	mov	w0, #18
+	bfi	x0, x11, #5, #59
+	str	x0, [sp, #544]                  ; 8-byte Folded Spill
+	lsl	w11, w17, #1
+	sxtw	x11, w11
+	lsr	x11, x11, #1
+	mov	w17, #18
+	bfi	x17, x11, #6, #58
+	str	x17, [sp, #528]                 ; 8-byte Folded Spill
+	ldr	q0, [x6, lCPI214_0@PAGEOFF]
+	str	q0, [sp, #512]                  ; 16-byte Folded Spill
+	orr	x11, x16, #0x3
+	str	x11, [sp, #504]                 ; 8-byte Folded Spill
+	ldr	q0, [x7, lCPI214_1@PAGEOFF]
+	str	q0, [sp, #480]                  ; 16-byte Folded Spill
+	sub	w22, w9, w12
+	sbfx	x25, x15, #5, #27
+	ldr	q0, [x27, lCPI214_2@PAGEOFF]
+	str	q0, [sp, #464]                  ; 16-byte Folded Spill
+	sbfiz	x27, x14, #5, #32
+	ldr	q0, [x26, lCPI214_3@PAGEOFF]
+	str	q0, [sp, #448]                  ; 16-byte Folded Spill
+	sub	w28, w12, w13
+	sxtw	x17, w13
+	ldr	q0, [x30, lCPI214_4@PAGEOFF]
+	str	q0, [sp, #416]                  ; 16-byte Folded Spill
+	ldr	x15, [sp, #608]                 ; 8-byte Folded Reload
+	sub	w11, w15, #1                    ; =1
+	str	w11, [sp, #408]                 ; 4-byte Folded Spill
+Lloh991:
+	adrp	x11, lCPI214_5@PAGE
+Lloh992:
+	ldr	q0, [x11, lCPI214_5@PAGEOFF]
+	str	q0, [sp, #384]                  ; 16-byte Folded Spill
+	lsl	w11, w14, #3
+Lloh993:
+	adrp	x13, lCPI214_6@PAGE
+Lloh994:
+	ldr	q0, [x13, lCPI214_6@PAGEOFF]
+	str	q0, [sp, #368]                  ; 16-byte Folded Spill
+	sub	w13, w11, w14
+	add	w14, w11, w14
+Lloh995:
+	adrp	x16, lCPI214_7@PAGE
+Lloh996:
+	ldr	q0, [x16, lCPI214_7@PAGEOFF]
+	str	q0, [sp, #352]                  ; 16-byte Folded Spill
+	sxtw	x16, w12
+	str	x16, [sp, #336]                 ; 8-byte Folded Spill
+	ldr	q0, [x4, lCPI214_8@PAGEOFF]
+                                        ; kill: def $w15 killed $w15 killed $x15 def $x15
+	sxtw	x15, w15
+	str	x15, [sp, #328]                 ; 8-byte Folded Spill
+	dup.4s	v1, w5
+	str	q1, [sp, #304]                  ; 16-byte Folded Spill
+	ldr	q1, [x8, lCPI214_9@PAGEOFF]
+	str	x17, [sp, #440]                 ; 8-byte Folded Spill
+	add	x15, x21, x17, lsl #5
+	add	x8, x15, #15                    ; =15
+	str	x8, [sp, #288]                  ; 8-byte Folded Spill
+	lsl	w12, w12, #5
+	sub	w8, w12, #1                     ; =1
+	str	w8, [sp, #272]                  ; 4-byte Folded Spill
+	ldr	q2, [x3, lCPI214_10@PAGEOFF]
+	add	x26, x24, #16                   ; =16
+	ldr	q3, [x2, lCPI214_11@PAGEOFF]
+	lsl	w8, w5, #1
+Lloh997:
+	adrp	x12, lCPI214_12@PAGE
+Lloh998:
+	ldr	q4, [x12, lCPI214_12@PAGEOFF]
+	str	w8, [sp, #628]                  ; 4-byte Folded Spill
+	add	w8, w8, w5
+	str	w8, [sp, #624]                  ; 4-byte Folded Spill
+Lloh999:
+	adrp	x12, lCPI214_13@PAGE
+Lloh1000:
+	ldr	q5, [x12, lCPI214_13@PAGEOFF]
+	mov	w8, #18
+Lloh1001:
+	adrp	x12, lCPI214_14@PAGE
+Lloh1002:
+	ldr	q6, [x12, lCPI214_14@PAGEOFF]
+	mov	x12, x5
+Lloh1003:
+	adrp	x15, lCPI214_15@PAGE
+Lloh1004:
+	ldr	q7, [x15, lCPI214_15@PAGEOFF]
+	mov	w15, #1
+	str	w15, [sp, #620]                 ; 4-byte Folded Spill
+	sbfiz	x14, x14, #5, #32
+	movi.2d	v17, #0000000000000000
+	sbfiz	x11, x11, #5, #32
+	stp	x11, x14, [sp, #224]            ; 16-byte Folded Spill
+	smin.4s	v0, v0, v16
+	smin.4s	v1, v1, v16
+	bfi	x8, x25, #5, #59
+	str	x8, [sp, #240]                  ; 8-byte Folded Spill
+	smin.4s	v2, v2, v16
+	sbfiz	x11, x12, #3, #32
+	smin.4s	v3, v3, v16
+	smin.4s	v4, v4, v16
+	sbfiz	x8, x13, #5, #32
+	stp	x8, x11, [sp, #208]             ; 16-byte Folded Spill
+	smin.4s	v5, v5, v16
+	smin.4s	v6, v6, v16
+	str	q16, [sp, #560]                 ; 16-byte Folded Spill
+	smin.4s	v7, v7, v16
+	mov	w8, w9
+	str	x8, [sp, #200]                  ; 8-byte Folded Spill
+	smax.4s	v0, v0, v17
+	str	q0, [sp, #176]                  ; 16-byte Folded Spill
+	smax.4s	v0, v1, v17
+	str	q0, [sp, #160]                  ; 16-byte Folded Spill
+	smax.4s	v0, v2, v17
+	str	q0, [sp, #144]                  ; 16-byte Folded Spill
+	ldr	w8, [sp, #640]                  ; 4-byte Folded Reload
+	mov	w8, w8
+	str	x8, [sp, #136]                  ; 8-byte Folded Spill
+	smax.4s	v1, v3, v17
+	smax.4s	v0, v4, v17
+	stp	q0, q1, [sp, #96]               ; 32-byte Folded Spill
+	smax.4s	v0, v5, v17
+	str	q0, [sp, #80]                   ; 16-byte Folded Spill
+	mov	w8, w10
+	str	x8, [sp, #72]                   ; 8-byte Folded Spill
+	smax.4s	v1, v6, v17
+	smax.4s	v0, v7, v17
+	stp	q0, q1, [sp, #32]               ; 32-byte Folded Spill
+	str	x26, [sp, #256]                 ; 8-byte Folded Spill
+	lsl	w8, w5, #3
+	str	w8, [sp, #28]                   ; 4-byte Folded Spill
+LBB214_33:                              ; %"for output.s0.y.y31"
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB214_36 Depth 2
+                                        ;     Child Loop BB214_39 Depth 2
+                                        ;       Child Loop BB214_44 Depth 3
+                                        ;       Child Loop BB214_47 Depth 3
+                                        ;     Child Loop BB214_51 Depth 2
+                                        ;       Child Loop BB214_53 Depth 3
+                                        ;     Child Loop BB214_57 Depth 2
+	str	x5, [sp, #632]                  ; 8-byte Folded Spill
+	mov	x0, #0
+	ldr	x1, [sp, #504]                  ; 8-byte Folded Reload
+	bl	_halide_malloc
+	mov	x1, x0
+	lsl	w8, w19, #3
+	cmp	x19, #0                         ; =0
+	csinc	w11, w8, wzr, ne
+	add	w9, w8, #9                      ; =9
+	ldr	x10, [sp, #608]                 ; 8-byte Folded Reload
+	cmp	w9, w10
+	csel	w12, w9, w10, lt
+	sub	w10, w11, #1                    ; =1
+	cmp	w12, w11
+	csel	w9, w10, w12, lt
+	cmn	w20, #31                        ; =31
+	mov	x4, x19
+	ldr	q7, [sp, #560]                  ; 16-byte Folded Reload
+	ldr	q16, [sp, #512]                 ; 16-byte Folded Reload
+	ldp	q18, q17, [sp, #464]            ; 32-byte Folded Reload
+	ldr	q19, [sp, #448]                 ; 16-byte Folded Reload
+	ldr	q20, [sp, #416]                 ; 16-byte Folded Reload
+	ldp	q22, q21, [sp, #368]            ; 32-byte Folded Reload
+	ldr	q23, [sp, #352]                 ; 16-byte Folded Reload
+	movi.2d	v24, #0000000000000000
+	ldr	x30, [sp, #200]                 ; 8-byte Folded Reload
+	b.lt	LBB214_37
+; %bb.34:                               ; %"for output.s0.y.y31"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	cbnz	x4, LBB214_37
+; %bb.35:                               ; %"for bounded_input.s0.x.x41.preheader"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	add	x13, x1, #16                    ; =16
+	mov	w14, #-1
+	mov	x15, x30
+LBB214_36:                              ; %"for bounded_input.s0.x.x41"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	dup.4s	v0, w14
+	add.4s	v1, v0, v19
+	add.4s	v2, v0, v23
+	smin.4s	v2, v2, v7
+	smin.4s	v1, v1, v7
+	smax.4s	v2, v2, v24
+	smax.4s	v1, v1, v24
+	fmov	w16, s2
+	ldr	b3, [x21, w16, uxtw]
+	fmov	w16, s1
+	ldr	b4, [x21, w16, uxtw]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[1], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[1], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[2], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[3], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v22
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[2], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[4], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v1, v0, v18
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[3], [x16]
+	fmov	w16, s1
+	add	x16, x21, x16
+	ld1.b	{ v4 }[4], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[5], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[5], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[6], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[7], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v21
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[6], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[8], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v1, v0, v17
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[7], [x16]
+	fmov	w16, s1
+	add	x16, x21, x16
+	ld1.b	{ v4 }[8], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[9], [x16]
+	mov.s	w16, v1[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[9], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[10], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[11], [x16]
+	mov.s	w16, v1[2]
+	add.4s	v2, v0, v20
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[10], [x16]
+	fmov	w16, s2
+	add	x16, x21, x16
+	ld1.b	{ v3 }[12], [x16]
+	mov.s	w16, v1[3]
+	add.4s	v0, v0, v16
+	smin.4s	v0, v0, v7
+	smax.4s	v0, v0, v24
+	add	x16, x21, x16
+	ld1.b	{ v4 }[11], [x16]
+	fmov	w16, s0
+	add	x16, x21, x16
+	ld1.b	{ v4 }[12], [x16]
+	mov.s	w16, v2[1]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[13], [x16]
+	mov.s	w16, v0[1]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[13], [x16]
+	mov.s	w16, v2[2]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[14], [x16]
+	mov.s	w16, v0[2]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[14], [x16]
+	mov.s	w16, v2[3]
+	add	x16, x21, x16
+	ld1.b	{ v3 }[15], [x16]
+	mov.s	w16, v0[3]
+	add	x16, x21, x16
+	ld1.b	{ v4 }[15], [x16]
+	stp	q3, q4, [x13, #-16]
+	add	x13, x13, #32                   ; =32
+	add	w14, w14, #32                   ; =32
+	subs	x15, x15, #1                    ; =1
+	b.ne	LBB214_36
+LBB214_37:                              ; %after_bb38
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	subs	w13, w12, w11
+	ldr	x3, [sp, #632]                  ; 8-byte Folded Reload
+	ldr	w5, [sp, #408]                  ; 4-byte Folded Reload
+	ldr	x6, [sp, #328]                  ; 8-byte Folded Reload
+	ldr	x7, [sp, #288]                  ; 8-byte Folded Reload
+	ldr	w19, [sp, #272]                 ; 4-byte Folded Reload
+	ldp	q26, q25, [sp, #160]            ; 32-byte Folded Reload
+	ldr	q27, [sp, #144]                 ; 16-byte Folded Reload
+	ldp	q29, q28, [sp, #96]             ; 32-byte Folded Reload
+	ldr	q30, [sp, #80]                  ; 16-byte Folded Reload
+	ldp	q8, q31, [sp, #32]              ; 32-byte Folded Reload
+	b.mi	LBB214_49
+; %bb.38:                               ; %"for bounded_input.s0.y.rebased48.preheader"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	mov	x12, #0
+	cmp	x4, #0                          ; =0
+	cset	w11, eq
+	mov	w13, w13
+	add	x15, x1, #16                    ; =16
+	mul	x16, x25, x11
+	ldr	x14, [sp, #440]                 ; 8-byte Folded Reload
+	add	x14, x14, x16
+	add	x14, x15, x14, lsl #5
+	ldr	x17, [sp, #336]                 ; 8-byte Folded Reload
+	add	x16, x17, x16
+	add	x15, x15, x16, lsl #5
+LBB214_39:                              ; %"for bounded_input.s0.y.rebased48"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB214_44 Depth 3
+                                        ;       Child Loop BB214_47 Depth 3
+	add	w16, w10, w12
+	cmn	w20, #32                        ; =32
+	b.le	LBB214_41
+; %bb.40:                               ; %then_bb52
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	mul	w16, w16, w23
+	dup.4s	v0, w16
+	add.4s	v1, v25, v0
+	fmov	w17, s1
+	ldr	b2, [x21, w17, sxtw]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[1], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[2], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v26, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[3], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[4], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[5], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[6], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v27, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[7], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[8], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[9], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[10], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v28, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[11], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[12], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[13], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[14], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v29, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[15], [x17]
+	fmov	w17, s1
+	ldr	b3, [x21, w17, sxtw]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[1], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[2], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v30, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[3], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[4], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[5], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[6], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v1, v31, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[7], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[8], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[9], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[10], [x17]
+	mov.s	w17, v1[3]
+	add.4s	v0, v8, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[11], [x17]
+	fmov	w17, s0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[12], [x17]
+	mov.s	w17, v0[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[13], [x17]
+	mov.s	w17, v0[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[14], [x17]
+	mov.s	w17, v0[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v3 }[15], [x17]
+	add	x17, x12, x11
+	madd	x17, x27, x17, x1
+	stp	q2, q3, [x17]
+	b	LBB214_42
+LBB214_41:                              ; %"for bounded_input.s0.y.rebased48.after_bb51_crit_edge"
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	mul	w16, w16, w23
+LBB214_42:                              ; %after_bb51
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	cmp	w28, #1                         ; =1
+	b.lt	LBB214_45
+; %bb.43:                               ; %"for bounded_input.s0.x.x.rebased57.preheader"
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	add	x17, x7, w16, sxtw
+	mov	x0, x14
+	mov	x2, x28
+LBB214_44:                              ; %"for bounded_input.s0.x.x.rebased57"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ;     Parent Loop BB214_39 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	ldp	q0, q1, [x17, #-16]
+	stp	q0, q1, [x0, #-16]
+	add	x17, x17, #32                   ; =32
+	add	x0, x0, #32                     ; =32
+	subs	x2, x2, #1                      ; =1
+	b.ne	LBB214_44
+LBB214_45:                              ; %"end for bounded_input.s0.x.x.rebased58"
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	cmp	w22, #1                         ; =1
+	b.lt	LBB214_48
+; %bb.46:                               ; %"for bounded_input.s0.x.x.rebased62.preheader"
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	dup.4s	v0, w16
+	mov	x16, x19
+	mov	x17, x15
+	mov	x0, x22
+LBB214_47:                              ; %"for bounded_input.s0.x.x.rebased62"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ;     Parent Loop BB214_39 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	dup.4s	v1, w16
+	add.4s	v2, v1, v23
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add.4s	v3, v2, v0
+	fmov	w2, s3
+	ldr	b2, [x21, w2, sxtw]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[1], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v22
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[2], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[3], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[4], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[5], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v21
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[6], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[7], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[8], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[9], [x2]
+	mov.s	w2, v3[2]
+	add.4s	v4, v1, v19
+	smin.4s	v4, v4, v7
+	smax.4s	v4, v4, v24
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[10], [x2]
+	add.4s	v4, v4, v0
+	fmov	w2, s4
+	ldr	b5, [x21, w2, sxtw]
+	mov.s	w2, v4[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[1], [x2]
+	mov.s	w2, v4[2]
+	add.4s	v6, v1, v17
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[2], [x2]
+	mov.s	w2, v4[3]
+	add.4s	v4, v1, v18
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[3], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[11], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[4], [x2]
+	mov.s	w2, v3[1]
+	add.4s	v4, v1, v20
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[5], [x2]
+	mov.s	w2, v3[2]
+	smin.4s	v4, v4, v7
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[6], [x2]
+	mov.s	w2, v3[3]
+	smin.4s	v3, v6, v7
+	smax.4s	v4, v4, v24
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add.4s	v4, v4, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[7], [x2]
+	fmov	w2, s4
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[12], [x2]
+	fmov	w2, s3
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[8], [x2]
+	mov.s	w2, v3[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[9], [x2]
+	mov.s	w2, v3[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[10], [x2]
+	mov.s	w2, v3[3]
+	add.4s	v1, v1, v16
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add.4s	v1, v1, v0
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[11], [x2]
+	fmov	w2, s1
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[12], [x2]
+	mov.s	w2, v4[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[13], [x2]
+	mov.s	w2, v1[1]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[13], [x2]
+	mov.s	w2, v4[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[14], [x2]
+	mov.s	w2, v1[2]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[14], [x2]
+	mov.s	w2, v4[3]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v2 }[15], [x2]
+	mov.s	w2, v1[3]
+	add	x2, x21, w2, sxtw
+	ld1.b	{ v5 }[15], [x2]
+	stp	q2, q5, [x17, #-16]
+	add	x17, x17, #32                   ; =32
+	add	w16, w16, #32                   ; =32
+	subs	x0, x0, #1                      ; =1
+	b.ne	LBB214_47
+LBB214_48:                              ; %"end for bounded_input.s0.x.x.rebased63"
+                                        ;   in Loop: Header=BB214_39 Depth=2
+	add	x16, x12, #1                    ; =1
+	add	x14, x14, x27
+	add	x15, x15, x27
+	cmp	x12, x13
+	mov	x12, x16
+	b.ne	LBB214_39
+LBB214_49:                              ; %"end for bounded_input.s0.y.rebased49"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	sub	w10, w8, w9
+	cmn	w10, #8                         ; =8
+	b.lt	LBB214_55
+; %bb.50:                               ; %"for bounded_input.s0.y.rebased69.preheader"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	mov	x11, #0
+	add	w10, w10, #8                    ; =8
+	sxtw	x12, w9
+	add	x13, x1, #16                    ; =16
+	ldr	w14, [sp, #620]                 ; 4-byte Folded Reload
+	add	w9, w9, w14
+	mul	w9, w25, w9
+LBB214_51:                              ; %"for bounded_input.s0.y.rebased69"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ; =>  This Loop Header: Depth=2
+                                        ;       Child Loop BB214_53 Depth 3
+	add	x14, x11, x12
+	cmp	x14, x6
+	csel	w15, w14, w5, lt
+	cmn	w20, #31                        ; =31
+	b.lt	LBB214_54
+; %bb.52:                               ; %"for bounded_input.s0.x.x74.preheader"
+                                        ;   in Loop: Header=BB214_51 Depth=2
+	sxtw	x14, w9
+	add	x14, x13, x14, lsl #5
+	bic	w15, w15, w15, asr #31
+	mul	w15, w15, w23
+	dup.4s	v0, w15
+	mov	w15, #-1
+	mov	x16, x30
+LBB214_53:                              ; %"for bounded_input.s0.x.x74"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ;     Parent Loop BB214_51 Depth=2
+                                        ; =>    This Inner Loop Header: Depth=3
+	dup.4s	v1, w15
+	add.4s	v2, v1, v23
+	smin.4s	v2, v2, v7
+	smax.4s	v2, v2, v24
+	add.4s	v3, v2, v0
+	fmov	w17, s3
+	ldr	b2, [x21, w17, sxtw]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[1], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v22
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[2], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[3], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[4], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[5], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v21
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[6], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[7], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[8], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[9], [x17]
+	mov.s	w17, v3[2]
+	add.4s	v4, v1, v19
+	smin.4s	v4, v4, v7
+	smax.4s	v4, v4, v24
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[10], [x17]
+	add.4s	v4, v4, v0
+	fmov	w17, s4
+	ldr	b5, [x21, w17, sxtw]
+	mov.s	w17, v4[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[1], [x17]
+	mov.s	w17, v4[2]
+	add.4s	v6, v1, v17
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[2], [x17]
+	mov.s	w17, v4[3]
+	add.4s	v4, v1, v18
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[3], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v4, v7
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[11], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[4], [x17]
+	mov.s	w17, v3[1]
+	add.4s	v4, v1, v20
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[5], [x17]
+	mov.s	w17, v3[2]
+	smin.4s	v4, v4, v7
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[6], [x17]
+	mov.s	w17, v3[3]
+	smin.4s	v3, v6, v7
+	smax.4s	v4, v4, v24
+	smax.4s	v3, v3, v24
+	add.4s	v3, v3, v0
+	add.4s	v4, v4, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[7], [x17]
+	fmov	w17, s4
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[12], [x17]
+	fmov	w17, s3
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[8], [x17]
+	mov.s	w17, v3[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[9], [x17]
+	mov.s	w17, v3[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[10], [x17]
+	mov.s	w17, v3[3]
+	add.4s	v1, v1, v16
+	smin.4s	v1, v1, v7
+	smax.4s	v1, v1, v24
+	add.4s	v1, v1, v0
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[11], [x17]
+	fmov	w17, s1
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[12], [x17]
+	mov.s	w17, v4[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[13], [x17]
+	mov.s	w17, v1[1]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[13], [x17]
+	mov.s	w17, v4[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[14], [x17]
+	mov.s	w17, v1[2]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[14], [x17]
+	mov.s	w17, v4[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v2 }[15], [x17]
+	mov.s	w17, v1[3]
+	add	x17, x21, w17, sxtw
+	ld1.b	{ v5 }[15], [x17]
+	stp	q2, q5, [x14, #-16]
+	add	x14, x14, #32                   ; =32
+	add	w15, w15, #32                   ; =32
+	subs	x16, x16, #1                    ; =1
+	b.ne	LBB214_53
+LBB214_54:                              ; %"end for bounded_input.s0.x.x75"
+                                        ;   in Loop: Header=BB214_51 Depth=2
+	add	x14, x11, #1                    ; =1
+	add	w9, w9, w25
+	cmp	x11, x10
+	mov	x11, x14
+	b.ne	LBB214_51
+LBB214_55:                              ; %"consume bounded_input77"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	cmp	w20, #1                         ; =1
+	str	x4, [sp, #600]                  ; 8-byte Folded Spill
+	b.lt	LBB214_60
+; %bb.56:                               ; %"for output.s0.x.x88.preheader"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	mov	x9, #0
+	ldr	x12, [sp, #256]                 ; 8-byte Folded Reload
+	add	x10, x12, w3, sxtw
+	ldr	w11, [sp, #628]                 ; 4-byte Folded Reload
+	add	x11, x12, w11, sxtw
+	ldr	w13, [sp, #624]                 ; 4-byte Folded Reload
+	add	x12, x12, w13, sxtw
+	dup.4s	v0, w8
+	orr.16b	v0, v0, v22
+	ldp	x14, x8, [sp, #224]             ; 16-byte Folded Reload
+	add	x8, x1, x8
+	ldr	x13, [sp, #592]                 ; 8-byte Folded Reload
+	add	x13, x1, x13
+	ldr	q1, [sp, #304]                  ; 16-byte Folded Reload
+	mul.4s	v1, v0, v1
+	sshll2.2d	v0, v1, #0
+	str	q0, [sp, #640]                  ; 16-byte Folded Spill
+	sshll.2d	v1, v1, #0
+	add	x14, x1, x14
+	ldr	x15, [sp, #240]                 ; 8-byte Folded Reload
+	add	x15, x1, x15
+	ldr	x16, [sp, #584]                 ; 8-byte Folded Reload
+	add	x16, x1, x16
+	ldr	x17, [sp, #552]                 ; 8-byte Folded Reload
+	add	x17, x1, x17
+	ldr	x0, [sp, #544]                  ; 8-byte Folded Reload
+	add	x0, x1, x0
+	ldr	x2, [sp, #208]                  ; 8-byte Folded Reload
+	add	x2, x1, x2
+	ldr	x3, [sp, #528]                  ; 8-byte Folded Reload
+	add	x3, x1, x3
+	ldr	x4, [sp, #136]                  ; 8-byte Folded Reload
+LBB214_57:                              ; %"for output.s0.x.x88"
+                                        ;   Parent Loop BB214_33 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	add	x5, x1, x9
+	ldp	q22, q23, [x5]
+	ldur	q17, [x5, #2]
+	ldur	q16, [x5, #18]
+	add	x6, x13, x9
+	ldur	q5, [x6, #-18]
+	ldur	q4, [x6, #-2]
+	ldp	q3, q2, [x6, #-16]
+	ldur	q6, [x5, #1]
+	ldur	q7, [x5, #17]
+	ushll.8h	v18, v6, #1
+	ushll2.8h	v6, v6, #1
+	ushll.8h	v20, v7, #1
+	ushll2.8h	v7, v7, #1
+	uaddl.8h	v21, v17, v22
+	uaddl2.8h	v24, v17, v22
+	uaddl.8h	v25, v16, v23
+	uaddl2.8h	v19, v16, v23
+	add.8h	v19, v19, v7
+	add.8h	v20, v25, v20
+	ldur	q7, [x6, #-17]
+	ldur	q25, [x6, #-1]
+	ushll.8h	v26, v7, #1
+	ushll2.8h	v27, v7, #1
+	ushll.8h	v7, v25, #1
+	add.8h	v28, v24, v6
+	ushll2.8h	v6, v25, #1
+	uaddl.8h	v29, v3, v5
+	uaddl2.8h	v30, v3, v5
+	uaddl.8h	v24, v2, v4
+	uaddl2.8h	v25, v2, v4
+	add.8h	v31, v21, v18
+	add.8h	v6, v25, v6
+	add.8h	v7, v24, v7
+	add	x5, x15, x9
+	ldur	q25, [x5, #-18]
+	ldur	q24, [x5, #-2]
+	add.8h	v18, v30, v27
+	ushll.8h	v30, v25, #1
+	ushll2.8h	v27, v25, #1
+	ushll.8h	v8, v24, #1
+	ushll2.8h	v9, v24, #1
+	uaddl.8h	v10, v5, v22
+	add.8h	v21, v29, v26
+	uaddl2.8h	v22, v5, v22
+	uaddl.8h	v26, v4, v23
+	uaddl2.8h	v23, v4, v23
+	add.8h	v23, v23, v9
+	add.8h	v29, v26, v8
+	add.8h	v22, v22, v27
+	ldp	q27, q26, [x5, #-16]
+	ushll.8h	v8, v27, #1
+	ushll2.8h	v9, v27, #1
+	ushll.8h	v11, v26, #1
+	add.8h	v30, v10, v30
+	ushll2.8h	v10, v26, #1
+	uaddl.8h	v12, v3, v17
+	uaddl2.8h	v17, v3, v17
+	uaddl.8h	v13, v2, v16
+	uaddl2.8h	v16, v2, v16
+	add.8h	v16, v16, v10
+	add.8h	v10, v13, v11
+	add.8h	v17, v17, v9
+	add.8h	v8, v12, v8
+	uabd.8h	v30, v30, v8
+	uabd.8h	v29, v29, v10
+	uabd.8h	v17, v22, v17
+	uabd.8h	v16, v23, v16
+	uaba.8h	v30, v31, v21
+	uaba.8h	v17, v28, v18
+	uaba.8h	v29, v20, v7
+	uaba.8h	v16, v19, v6
+	uqxtn.8b	v19, v30
+	uqxtn.8b	v20, v29
+	uqxtn2.16b	v19, v17
+	uqxtn2.16b	v20, v16
+	add	x6, x26, x9
+	stp	q19, q20, [x6, #-16]
+	add	x6, x16, x9
+	ldur	q20, [x6, #-18]
+	ldur	q19, [x6, #-2]
+	ldp	q17, q16, [x6, #-16]
+	ldur	q22, [x5, #-17]
+	ldur	q23, [x5, #-1]
+	ushll.8h	v28, v22, #1
+	ushll2.8h	v22, v22, #1
+	ushll.8h	v29, v23, #1
+	uaddl.8h	v30, v27, v25
+	ushll2.8h	v23, v23, #1
+	uaddl2.8h	v31, v27, v25
+	uaddl.8h	v8, v26, v24
+	uaddl2.8h	v9, v26, v24
+	add.8h	v9, v9, v23
+	add.8h	v29, v8, v29
+	add.8h	v31, v31, v22
+	ldur	q22, [x6, #-17]
+	ldur	q23, [x6, #-1]
+	ushll.8h	v8, v22, #1
+	ushll2.8h	v10, v22, #1
+	ushll.8h	v11, v23, #1
+	add.8h	v28, v30, v28
+	ushll2.8h	v22, v23, #1
+	uaddl.8h	v12, v17, v20
+	uaddl.8h	v23, v16, v19
+	uaddl2.8h	v30, v16, v19
+	add.8h	v22, v30, v22
+	add.8h	v23, v23, v11
+	ushll2.8h	v30, v4, #1
+	ushll.8h	v11, v4, #1
+	ushll2.8h	v13, v5, #1
+	ushll.8h	v14, v5, #1
+	uaddw.8h	v14, v14, v25
+	uaddl2.8h	v15, v17, v20
+	uaddw2.8h	v25, v13, v25
+	uaddw.8h	v11, v11, v24
+	uaddw2.8h	v24, v30, v24
+	uaddw2.8h	v24, v24, v19
+	uaddw.8h	v11, v11, v19
+	add.8h	v30, v15, v10
+	uaddw2.8h	v25, v25, v20
+	ushll2.8h	v10, v2, #1
+	ushll2.8h	v13, v3, #1
+	ushll.8h	v15, v3, #1
+	uaddw.8h	v15, v15, v27
+	uaddw.8h	v14, v14, v20
+	uaddw2.8h	v27, v13, v27
+	ushll.8h	v13, v2, #1
+	uaddw.8h	v13, v13, v26
+	uaddw2.8h	v26, v10, v26
+	uaddw2.8h	v26, v26, v16
+	add.8h	v8, v12, v8
+	uaddw.8h	v10, v13, v16
+	uaddw2.8h	v27, v27, v17
+	uaddw.8h	v12, v15, v17
+	uabd.8h	v12, v14, v12
+	uabd.8h	v10, v11, v10
+	uabd.8h	v25, v25, v27
+	uabd.8h	v24, v24, v26
+	uaba.8h	v12, v28, v8
+	uaba.8h	v25, v31, v30
+	uaba.8h	v10, v29, v23
+	uaba.8h	v24, v9, v22
+	uqxtn.8b	v26, v12
+	uqxtn.8b	v27, v10
+	uqxtn2.16b	v26, v25
+	uqxtn2.16b	v27, v24
+	add	x5, x10, x9
+	stp	q26, q27, [x5, #-16]
+	add	x5, x17, x9
+	ldur	q28, [x5, #-18]
+	ldur	q26, [x5, #-2]
+	ldp	q25, q24, [x5, #-16]
+	ldur	q27, [x5, #-17]
+	ldur	q29, [x5, #-1]
+	ushll.8h	v9, v27, #1
+	ushll2.8h	v31, v27, #1
+	ushll.8h	v10, v29, #1
+	ushll2.8h	v27, v29, #1
+	uaddl.8h	v11, v25, v28
+	uaddl2.8h	v12, v25, v28
+	uaddl.8h	v29, v24, v26
+	uaddl2.8h	v13, v24, v26
+	ushll2.8h	v14, v19, #1
+	ushll2.8h	v15, v20, #1
+	add.8h	v27, v13, v27
+	ushll.8h	v13, v20, #1
+	uaddw.8h	v13, v13, v5
+	uaddw2.8h	v5, v15, v5
+	ushll.8h	v15, v19, #1
+	uaddw.8h	v15, v15, v4
+	add.8h	v29, v29, v10
+	uaddw2.8h	v4, v14, v4
+	uaddw2.8h	v4, v4, v26
+	uaddw.8h	v10, v15, v26
+	uaddw2.8h	v5, v5, v28
+	ushll2.8h	v14, v16, #1
+	add.8h	v31, v12, v31
+	ushll2.8h	v12, v17, #1
+	ushll.8h	v15, v17, #1
+	uaddw.8h	v15, v15, v3
+	uaddw2.8h	v3, v12, v3
+	ushll.8h	v12, v16, #1
+	uaddw.8h	v13, v13, v28
+	uaddw.8h	v12, v12, v2
+	uaddw2.8h	v2, v14, v2
+	uaddw2.8h	v2, v2, v24
+	uaddw.8h	v12, v12, v24
+	uaddw2.8h	v3, v3, v25
+	add.8h	v9, v11, v9
+	uaddw.8h	v11, v15, v25
+	uabd.8h	v11, v13, v11
+	uabd.8h	v3, v5, v3
+	uabd.8h	v5, v10, v12
+	uabd.8h	v2, v4, v2
+	uaba.8h	v11, v21, v9
+	uaba.8h	v3, v18, v31
+	uaba.8h	v5, v7, v29
+	uaba.8h	v2, v6, v27
+	uqxtn.8b	v4, v11
+	uqxtn.8b	v5, v5
+	uqxtn2.16b	v4, v3
+	uqxtn2.16b	v5, v2
+	add	x5, x11, x9
+	stp	q4, q5, [x5, #-16]
+	add	x5, x0, x9
+	ldur	q4, [x5, #-18]
+	ldur	q5, [x5, #-2]
+	ldp	q3, q2, [x5, #-16]
+	ldur	q6, [x5, #-17]
+	ldur	q7, [x5, #-1]
+	ushll.8h	v18, v6, #1
+	ushll2.8h	v21, v6, #1
+	ushll.8h	v10, v7, #1
+	ushll2.8h	v6, v7, #1
+	uaddl.8h	v11, v3, v4
+	uaddl2.8h	v12, v3, v4
+	uaddl2.8h	v7, v2, v5
+	add.8h	v6, v7, v6
+	ushll2.8h	v7, v26, #1
+	ushll2.8h	v13, v28, #1
+	ushll.8h	v14, v28, #1
+	uaddw.8h	v14, v14, v20
+	uaddl.8h	v15, v2, v5
+	uaddw2.8h	v20, v13, v20
+	ushll.8h	v13, v26, #1
+	uaddw.8h	v13, v13, v19
+	uaddw2.8h	v7, v7, v19
+	uaddw2.8h	v19, v7, v5
+	add.8h	v7, v15, v10
+	uaddw.8h	v10, v13, v5
+	uaddw2.8h	v13, v20, v4
+	uaddw.8h	v14, v14, v4
+	ushll2.8h	v15, v24, #1
+	ushll2.8h	v0, v25, #1
+	add.8h	v20, v12, v21
+	ushll.8h	v21, v25, #1
+	uaddw.8h	v12, v21, v17
+	uaddw2.8h	v0, v0, v17
+	ushll.8h	v17, v24, #1
+	uaddw.8h	v17, v17, v16
+	add.8h	v21, v11, v18
+	uaddw2.8h	v16, v15, v16
+	uaddw2.8h	v16, v16, v2
+	uaddw.8h	v17, v17, v2
+	uaddw2.8h	v0, v0, v3
+	uaddw.8h	v18, v12, v3
+	uabd.8h	v18, v14, v18
+	uabd.8h	v0, v13, v0
+	uabd.8h	v17, v10, v17
+	uabd.8h	v16, v19, v16
+	uaba.8h	v18, v8, v21
+	uaba.8h	v17, v23, v7
+	uaba.8h	v0, v30, v20
+	uaba.8h	v16, v22, v6
+	uqxtn.8b	v18, v18
+	uqxtn.8b	v17, v17
+	uqxtn2.16b	v18, v0
+	uqxtn2.16b	v17, v16
+	add	x5, x12, x9
+	stp	q18, q17, [x5, #-16]
+	add	x5, x3, x9
+	ldur	q19, [x5, #-18]
+	ldur	q17, [x5, #-2]
+	ldp	q18, q16, [x5, #-16]
+	ldur	q0, [x5, #-17]
+	ldur	q22, [x5, #-1]
+	ushll.8h	v30, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v23, v22, #1
+	ushll2.8h	v22, v22, #1
+	uaddl.8h	v8, v18, v19
+	uaddl.8h	v10, v16, v17
+	uaddl2.8h	v11, v16, v17
+	add.8h	v22, v11, v22
+	add.8h	v23, v10, v23
+	ushll2.8h	v10, v5, #1
+	ushll.8h	v11, v5, #1
+	ushll2.8h	v12, v4, #1
+	ushll.8h	v13, v4, #1
+	uaddw.8h	v13, v13, v28
+	uaddl2.8h	v14, v18, v19
+	uaddw2.8h	v28, v12, v28
+	uaddw.8h	v11, v11, v26
+	uaddw2.8h	v26, v10, v26
+	uaddw2.8h	v10, v26, v17
+	uaddw.8h	v11, v11, v17
+	add.8h	v26, v14, v0
+	uaddw2.8h	v0, v28, v19
+	ushll2.8h	v28, v2, #1
+	ushll2.8h	v12, v3, #1
+	ushll.8h	v14, v3, #1
+	uaddw.8h	v14, v14, v25
+	uaddw.8h	v13, v13, v19
+	uaddw2.8h	v25, v12, v25
+	ushll.8h	v12, v2, #1
+	uaddw.8h	v12, v12, v24
+	uaddw2.8h	v24, v28, v24
+	uaddw2.8h	v28, v24, v16
+	add.8h	v24, v8, v30
+	uaddw.8h	v30, v12, v16
+	uaddw2.8h	v25, v25, v18
+	uaddw.8h	v8, v14, v18
+	uabd.8h	v8, v13, v8
+	uabd.8h	v30, v11, v30
+	uabd.8h	v0, v0, v25
+	uabd.8h	v10, v10, v28
+	uaba.8h	v8, v9, v24
+	uaba.8h	v0, v31, v26
+	uaba.8h	v30, v29, v23
+	uaba.8h	v10, v27, v22
+	uqxtn.8b	v27, v8
+	uqxtn.8b	v28, v30
+	uqxtn2.16b	v27, v0
+	dup.2d	v25, x9
+	add.2d	v29, v25, v1
+	uqxtn2.16b	v28, v10
+	mov.d	x5, v29[1]
+	fmov	x6, d29
+	add	x6, x24, x6
+	stp	q27, q28, [x6]
+	add	x6, x2, x9
+	ldp	q8, q28, [x6]
+	ldur	q30, [x6, #2]
+	ldur	q27, [x6, #18]
+	ldur	q0, [x6, #1]
+	ldur	q29, [x6, #17]
+	ushll.8h	v10, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v31, v29, #1
+	ushll2.8h	v29, v29, #1
+	uaddl.8h	v11, v30, v8
+	uaddl2.8h	v9, v30, v8
+	uaddl.8h	v12, v27, v28
+	uaddl2.8h	v13, v27, v28
+	add.8h	v29, v13, v29
+	add.8h	v31, v12, v31
+	add.8h	v9, v9, v0
+	ushll2.8h	v0, v17, #1
+	ushll.8h	v12, v17, #1
+	ushll2.8h	v13, v19, #1
+	ushll.8h	v14, v19, #1
+	uaddw.8h	v14, v14, v4
+	add.8h	v10, v11, v10
+	uaddw2.8h	v4, v13, v4
+	uaddw.8h	v11, v12, v5
+	uaddw2.8h	v0, v0, v5
+	ushll2.8h	v5, v16, #1
+	ushll2.8h	v12, v18, #1
+	ushll.8h	v13, v18, #1
+	uaddw.8h	v13, v13, v3
+	uaddw2.8h	v3, v12, v3
+	ushll.8h	v12, v16, #1
+	uaddw.8h	v12, v12, v2
+	uaddw2.8h	v2, v5, v2
+	uaddw.8h	v5, v14, v8
+	uaddw.8h	v13, v13, v30
+	uabd.8h	v5, v5, v13
+	uaddw2.8h	v4, v4, v8
+	uaddw2.8h	v3, v3, v30
+	uabd.8h	v3, v4, v3
+	uaddw2.8h	v0, v0, v28
+	uaddw.8h	v4, v11, v28
+	uaddw2.8h	v2, v2, v27
+	uaddw.8h	v11, v12, v27
+	uabd.8h	v4, v4, v11
+	uabd.8h	v0, v0, v2
+	uaba.8h	v5, v21, v10
+	uaba.8h	v3, v20, v9
+	uaba.8h	v4, v7, v31
+	uaba.8h	v0, v6, v29
+	uqxtn.8b	v2, v5
+	uqxtn.8b	v4, v4
+	uqxtn2.16b	v2, v3
+	uqxtn2.16b	v4, v0
+	add	x5, x24, x5
+	stp	q2, q4, [x5]
+	add	x5, x14, x9
+	ldp	q5, q3, [x5]
+	ldur	q4, [x5, #2]
+	ldur	q2, [x5, #18]
+	ldur	q0, [x5, #1]
+	ldur	q6, [x5, #17]
+	ushll.8h	v7, v0, #1
+	ushll2.8h	v0, v0, #1
+	ushll.8h	v20, v6, #1
+	ushll2.8h	v6, v6, #1
+	uaddl.8h	v21, v4, v5
+	uaddl2.8h	v11, v2, v3
+	add.8h	v11, v11, v6
+	uaddl.8h	v6, v2, v3
+	add.8h	v20, v6, v20
+	uaddl2.8h	v6, v4, v5
+	add.8h	v0, v6, v0
+	ushll.8h	v6, v8, #1
+	add.8h	v7, v21, v7
+	uaddw.8h	v6, v6, v19
+	uaddw.8h	v6, v6, v5
+	ushll.8h	v21, v30, #1
+	uaddw.8h	v21, v21, v18
+	uaddw.8h	v21, v21, v4
+	uabd.8h	v21, v6, v21
+	uaba.8h	v21, v24, v7
+	ushll2.8h	v6, v28, #1
+	ushll2.8h	v7, v8, #1
+	uaddw2.8h	v7, v7, v19
+	ushll.8h	v19, v28, #1
+	uaddw.8h	v19, v19, v17
+	uaddw2.8h	v6, v6, v17
+	ushll2.8h	v17, v30, #1
+	uaddw2.8h	v17, v17, v18
+	uaddw2.8h	v7, v7, v5
+	uaddw2.8h	v17, v17, v4
+	uabd.8h	v7, v7, v17
+	uaba.8h	v7, v26, v0
+	ushll2.8h	v0, v27, #1
+	ushll.8h	v17, v27, #1
+	uaddw.8h	v17, v17, v16
+	uaddw2.8h	v0, v0, v16
+	uaddw.8h	v16, v19, v3
+	uaddw.8h	v17, v17, v2
+	uabd.8h	v16, v16, v17
+	uaddw2.8h	v6, v6, v3
+	uaddw2.8h	v0, v0, v2
+	uabd.8h	v0, v6, v0
+	ldr	q6, [sp, #640]                  ; 16-byte Folded Reload
+	add.2d	v6, v25, v6
+	uaba.8h	v16, v23, v20
+	uaba.8h	v0, v22, v11
+	uqxtn.8b	v17, v21
+	uqxtn.8b	v16, v16
+	uqxtn2.16b	v17, v7
+	uqxtn2.16b	v16, v0
+	fmov	x5, d6
+	add	x5, x24, x5
+	stp	q17, q16, [x5]
+	add	x5, x8, x9
+	ldp	q0, q16, [x5]
+	ldur	q17, [x5, #2]
+	ldur	q7, [x5, #18]
+	ldur	q18, [x5, #1]
+	ushll.8h	v19, v18, #1
+	uaddl.8h	v20, v17, v0
+	add.8h	v19, v20, v19
+	ushll.8h	v20, v5, #1
+	uaddw.8h	v20, v20, v8
+	ushll.8h	v21, v4, #1
+	uaddw.8h	v21, v21, v30
+	uaddw.8h	v20, v20, v0
+	uaddw.8h	v21, v21, v17
+	uabd.8h	v20, v20, v21
+	ldur	q21, [x5, #17]
+	uaba.8h	v20, v10, v19
+	ushll.8h	v19, v21, #1
+	uaddl.8h	v22, v7, v16
+	add.8h	v19, v22, v19
+	ushll2.8h	v18, v18, #1
+	ushll2.8h	v5, v5, #1
+	uaddw2.8h	v5, v5, v8
+	uaddl2.8h	v22, v17, v0
+	add.8h	v18, v22, v18
+	uaddw2.8h	v0, v5, v0
+	ushll2.8h	v4, v4, #1
+	uaddw2.8h	v4, v4, v30
+	uaddw2.8h	v4, v4, v17
+	uabd.8h	v0, v0, v4
+	uaba.8h	v0, v9, v18
+	ushll.8h	v4, v3, #1
+	uaddw.8h	v4, v4, v28
+	uaddw.8h	v4, v4, v16
+	ushll.8h	v5, v2, #1
+	uaddw.8h	v5, v5, v27
+	uaddw.8h	v5, v5, v7
+	uabd.8h	v4, v4, v5
+	uaba.8h	v4, v31, v19
+	ushll2.8h	v5, v21, #1
+	uaddl2.8h	v17, v7, v16
+	add.8h	v5, v17, v5
+	ushll2.8h	v3, v3, #1
+	uaddw2.8h	v3, v3, v28
+	uaddw2.8h	v3, v3, v16
+	ushll2.8h	v2, v2, #1
+	uaddw2.8h	v2, v2, v27
+	uaddw2.8h	v2, v2, v7
+	uabd.8h	v2, v3, v2
+	uaba.8h	v2, v29, v5
+	mov.d	x5, v6[1]
+	uqxtn.8b	v3, v20
+	uqxtn2.16b	v3, v0
+	uqxtn.8b	v0, v4
+	uqxtn2.16b	v0, v2
+	add	x5, x24, x5
+	stp	q3, q0, [x5]
+	add	x9, x9, #32                     ; =32
+	subs	x4, x4, #1                      ; =1
+	b.ne	LBB214_57
+LBB214_58:                              ; %if.then.i227
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	mov	x0, #0
+	bl	_halide_free
+LBB214_59:                              ; %call_destructor.exit228
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	ldr	x19, [sp, #600]                 ; 8-byte Folded Reload
+	add	x19, x19, #1                    ; =1
+	ldr	w8, [sp, #620]                  ; 4-byte Folded Reload
+	sub	w8, w8, #8                      ; =8
+	str	w8, [sp, #620]                  ; 4-byte Folded Spill
+	ldr	x5, [sp, #632]                  ; 8-byte Folded Reload
+	ldr	w9, [sp, #28]                   ; 4-byte Folded Reload
+	add	w5, w5, w9
+	ldr	w8, [sp, #628]                  ; 4-byte Folded Reload
+	add	w8, w8, w9
+	str	w8, [sp, #628]                  ; 4-byte Folded Spill
+	ldr	w8, [sp, #624]                  ; 4-byte Folded Reload
+	add	w8, w8, w9
+	str	w8, [sp, #624]                  ; 4-byte Folded Spill
+	ldr	x8, [sp, #216]                  ; 8-byte Folded Reload
+	add	x26, x26, x8
+	ldr	x8, [sp, #72]                   ; 8-byte Folded Reload
+	cmp	x19, x8
+	b.ne	LBB214_33
+	b	LBB214_61
+LBB214_60:                              ; %"end for output.s0.x.x89"
+                                        ;   in Loop: Header=BB214_33 Depth=1
+	cbnz	x1, LBB214_58
+	b	LBB214_59
+LBB214_61:                              ; %"end for output.s0.y.y32"
+	mov	w0, #0
+	add	sp, sp, #656                    ; =656
+	ldp	x29, x30, [sp, #144]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #128]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp, #64]             ; 16-byte Folded Reload
+	ldp	d9, d8, [sp, #48]               ; 16-byte Folded Reload
+	ldp	d11, d10, [sp, #32]             ; 16-byte Folded Reload
+	ldp	d13, d12, [sp, #16]             ; 16-byte Folded Reload
+	ldp	d15, d14, [sp], #160            ; 16-byte Folded Reload
+	ret
+LBB214_62:
+	adrp	x7, lCPI214_1@PAGE
+	adrp	x30, lCPI214_4@PAGE
+	ldr	w8, [sp, #640]                  ; 4-byte Folded Reload
+	b	LBB214_31
+	.loh AdrpLdr	Lloh989, Lloh990
+	.loh AdrpAdrp	Lloh987, Lloh989
+	.loh AdrpLdr	Lloh987, Lloh988
+	.loh AdrpLdr	Lloh985, Lloh986
+	.loh AdrpAdrp	Lloh983, Lloh985
+	.loh AdrpLdr	Lloh983, Lloh984
+	.loh AdrpLdr	Lloh981, Lloh982
+	.loh AdrpLdr	Lloh979, Lloh980
+	.loh AdrpAdrp	Lloh977, Lloh979
+	.loh AdrpLdr	Lloh977, Lloh978
+	.loh AdrpLdr	Lloh975, Lloh976
+	.loh AdrpLdr	Lloh973, Lloh974
+	.loh AdrpAdrp	Lloh971, Lloh973
+	.loh AdrpLdr	Lloh971, Lloh972
+	.loh AdrpLdr	Lloh969, Lloh970
+	.loh AdrpLdr	Lloh1003, Lloh1004
+	.loh AdrpLdr	Lloh1001, Lloh1002
+	.loh AdrpAdrp	Lloh999, Lloh1001
+	.loh AdrpLdr	Lloh999, Lloh1000
+	.loh AdrpAdrp	Lloh997, Lloh999
+	.loh AdrpLdr	Lloh997, Lloh998
+	.loh AdrpLdr	Lloh995, Lloh996
+	.loh AdrpLdr	Lloh993, Lloh994
+	.loh AdrpLdr	Lloh991, Lloh992
+                                        ; -- End function
+	.globl	_sobel3x3_argv                  ; -- Begin function sobel3x3_argv
+	.p2align	2
+_sobel3x3_argv:                         ; @sobel3x3_argv
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	ldp	x8, x1, [x0]
+	mov	x0, x8
+	bl	_sobel3x3
+	mov	w0, #0
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+                                        ; -- End function
+	.globl	_sobel3x3_metadata              ; -- Begin function sobel3x3_metadata
+	.p2align	2
+_sobel3x3_metadata:                     ; @sobel3x3_metadata
+; %bb.0:                                ; %entry
+Lloh1005:
+	adrp	x0, l_sobel3x3_metadata_storage@PAGE
+Lloh1006:
+	add	x0, x0, l_sobel3x3_metadata_storage@PAGEOFF
+	ret
+	.loh AdrpAdd	Lloh1005, Lloh1006
+                                        ; -- End function
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal13custom_mallocE ; @_ZN6Halide7Runtime8Internal13custom_mallocE
+	.weak_definition	__ZN6Halide7Runtime8Internal13custom_mallocE
+	.p2align	3
+__ZN6Halide7Runtime8Internal13custom_mallocE:
+	.quad	_halide_default_malloc
+
+	.globl	__ZN6Halide7Runtime8Internal11custom_freeE ; @_ZN6Halide7Runtime8Internal11custom_freeE
+	.weak_definition	__ZN6Halide7Runtime8Internal11custom_freeE
+	.p2align	3
+__ZN6Halide7Runtime8Internal11custom_freeE:
+	.quad	_halide_default_free
+
+	.globl	__ZN6Halide7Runtime8Internal13error_handlerE ; @_ZN6Halide7Runtime8Internal13error_handlerE
+	.weak_definition	__ZN6Halide7Runtime8Internal13error_handlerE
+	.p2align	3
+__ZN6Halide7Runtime8Internal13error_handlerE:
+	.quad	_halide_default_error
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str:                                 ; @.str
+	.asciz	"Error: "
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal12custom_printE ; @_ZN6Halide7Runtime8Internal12custom_printE
+	.weak_definition	__ZN6Halide7Runtime8Internal12custom_printE
+	.p2align	3
+__ZN6Halide7Runtime8Internal12custom_printE:
+	.quad	_halide_default_print
+
+	.globl	__ZN6Halide7Runtime8Internal29halide_reference_clock_initedE ; @_ZN6Halide7Runtime8Internal29halide_reference_clock_initedE
+	.weak_definition	__ZN6Halide7Runtime8Internal29halide_reference_clock_initedE
+__ZN6Halide7Runtime8Internal29halide_reference_clock_initedE:
+	.byte	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal22halide_reference_clockE ; @_ZN6Halide7Runtime8Internal22halide_reference_clockE
+	.weak_definition	__ZN6Halide7Runtime8Internal22halide_reference_clockE
+	.p2align	3
+__ZN6Halide7Runtime8Internal22halide_reference_clockE:
+	.quad	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal20halide_timebase_infoE ; @_ZN6Halide7Runtime8Internal20halide_timebase_infoE
+	.weak_definition	__ZN6Halide7Runtime8Internal20halide_timebase_infoE
+	.p2align	2
+__ZN6Halide7Runtime8Internal20halide_timebase_infoE:
+	.space	8
+
+	.globl	__ZN6Halide7Runtime8Internal15Synchronization5tableE ; @_ZN6Halide7Runtime8Internal15Synchronization5tableE
+	.weak_definition	__ZN6Halide7Runtime8Internal15Synchronization5tableE
+	.p2align	3
+__ZN6Halide7Runtime8Internal15Synchronization5tableE:
+	.space	24576
+
+	.globl	__ZN6Halide7Runtime8Internal10work_queueE ; @_ZN6Halide7Runtime8Internal10work_queueE
+	.weak_definition	__ZN6Halide7Runtime8Internal10work_queueE
+	.p2align	3
+__ZN6Halide7Runtime8Internal10work_queueE:
+	.space	8
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.quad	0
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.space	4
+	.space	8
+	.space	8
+	.space	8
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.space	2048
+	.byte	0                               ; 0x0
+	.byte	0                               ; 0x0
+	.space	2
+	.long	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal14custom_do_taskE ; @_ZN6Halide7Runtime8Internal14custom_do_taskE
+	.weak_definition	__ZN6Halide7Runtime8Internal14custom_do_taskE
+	.p2align	3
+__ZN6Halide7Runtime8Internal14custom_do_taskE:
+	.quad	_halide_default_do_task
+
+	.globl	__ZN6Halide7Runtime8Internal19custom_do_loop_taskE ; @_ZN6Halide7Runtime8Internal19custom_do_loop_taskE
+	.weak_definition	__ZN6Halide7Runtime8Internal19custom_do_loop_taskE
+	.p2align	3
+__ZN6Halide7Runtime8Internal19custom_do_loop_taskE:
+	.quad	_halide_default_do_loop_task
+
+	.globl	__ZN6Halide7Runtime8Internal17custom_do_par_forE ; @_ZN6Halide7Runtime8Internal17custom_do_par_forE
+	.weak_definition	__ZN6Halide7Runtime8Internal17custom_do_par_forE
+	.p2align	3
+__ZN6Halide7Runtime8Internal17custom_do_par_forE:
+	.quad	_halide_default_do_par_for
+
+	.section	__DATA,__const
+	.globl	__ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE ; @_ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE
+	.weak_def_can_be_hidden	__ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE
+	.p2align	3
+__ZTVN6Halide7Runtime8Internal15Synchronization21mutex_parking_controlE:
+	.quad	0
+	.quad	0
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control8validateERNS2_15validate_actionE
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization21mutex_parking_control6unparkEib
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.5:                               ; @.str.5
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/synchronization_common.h:386 halide_abort_if_false() failed: next != nullptr\n"
+
+	.section	__DATA,__const
+	.globl	__ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE ; @_ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE
+	.weak_def_can_be_hidden	__ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE
+	.p2align	3
+__ZTVN6Halide7Runtime8Internal15Synchronization20wait_parking_controlE:
+	.quad	0
+	.quad	0
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control8validateERNS2_15validate_actionE
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control12before_sleepEv
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization20wait_parking_control6unparkEib
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.5.6:                             ; @.str.5.6
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/synchronization_common.h:994 halide_abort_if_false() failed: val & 0x1\n"
+
+	.section	__DATA,__const
+	.globl	__ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE ; @_ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE
+	.weak_def_can_be_hidden	__ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE
+	.p2align	3
+__ZTVN6Halide7Runtime8Internal15Synchronization25broadcast_parking_controlE:
+	.quad	0
+	.quad	0
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control8validateERNS2_15validate_actionE
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control6unparkEib
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization25broadcast_parking_control16requeue_callbackERKNS2_15validate_actionEbb
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.6:                               ; @.str.6
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/thread_pool_common.h:155 halide_abort_if_false() failed: bytes == limit && \"Logic error in thread pool work queue initialization.\\n\"\n"
+
+l_.str.3:                               ; @.str.3
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/thread_pool_common.h:527 halide_abort_if_false() failed: (min_threads <= ((task_parent->task.min_threads * task_parent->active_workers) - task_parent->threads_reserved)) && \"Logic error: thread over commit.\\n\"\n"
+
+l_.str.1:                               ; @.str.1
+	.asciz	"HL_NUM_THREADS"
+
+l_.str.2:                               ; @.str.2
+	.asciz	"HL_NUMTHREADS"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE ; @_ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE
+	.weak_definition	__ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE
+	.p2align	3
+__ZN6Halide7Runtime8Internal24custom_do_parallel_tasksE:
+	.quad	_halide_default_do_parallel_tasks
+
+	.globl	__ZN6Halide7Runtime8Internal21custom_semaphore_initE ; @_ZN6Halide7Runtime8Internal21custom_semaphore_initE
+	.weak_definition	__ZN6Halide7Runtime8Internal21custom_semaphore_initE
+	.p2align	3
+__ZN6Halide7Runtime8Internal21custom_semaphore_initE:
+	.quad	_halide_default_semaphore_init
+
+	.globl	__ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE ; @_ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE
+	.weak_definition	__ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE
+	.p2align	3
+__ZN6Halide7Runtime8Internal28custom_semaphore_try_acquireE:
+	.quad	_halide_default_semaphore_try_acquire
+
+	.globl	__ZN6Halide7Runtime8Internal24custom_semaphore_releaseE ; @_ZN6Halide7Runtime8Internal24custom_semaphore_releaseE
+	.weak_definition	__ZN6Halide7Runtime8Internal24custom_semaphore_releaseE
+	.p2align	3
+__ZN6Halide7Runtime8Internal24custom_semaphore_releaseE:
+	.quad	_halide_default_semaphore_release
+
+	.section	__DATA,__mod_term_func,mod_term_funcs
+	.p2align	3
+	.quad	_halide_thread_pool_cleanup
+	.quad	_halide_trace_cleanup
+	.quad	_halide_cache_cleanup
+	.quad	_halide_profiler_shutdown
+	.section	__DATA,__const
+	.globl	__ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE ; @_ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE
+	.weak_def_can_be_hidden	__ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE
+	.p2align	3
+__ZTVN6Halide7Runtime8Internal15Synchronization22signal_parking_controlE:
+	.quad	0
+	.quad	0
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control8validateERNS2_15validate_actionE
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control12before_sleepEv
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization22signal_parking_control6unparkEib
+	.quad	__ZN6Halide7Runtime8Internal15Synchronization15parking_control16requeue_callbackERKNS2_15validate_actionEbb
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.4:                               ; @.str.4
+	.asciz	"halide_set_num_threads: must be >= 0."
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal17custom_get_symbolE ; @_ZN6Halide7Runtime8Internal17custom_get_symbolE
+	.weak_definition	__ZN6Halide7Runtime8Internal17custom_get_symbolE
+	.p2align	3
+__ZN6Halide7Runtime8Internal17custom_get_symbolE:
+	.quad	_halide_default_get_symbol
+
+	.globl	__ZN6Halide7Runtime8Internal19custom_load_libraryE ; @_ZN6Halide7Runtime8Internal19custom_load_libraryE
+	.weak_definition	__ZN6Halide7Runtime8Internal19custom_load_libraryE
+	.p2align	3
+__ZN6Halide7Runtime8Internal19custom_load_libraryE:
+	.quad	_halide_default_load_library
+
+	.globl	__ZN6Halide7Runtime8Internal25custom_get_library_symbolE ; @_ZN6Halide7Runtime8Internal25custom_get_library_symbolE
+	.weak_definition	__ZN6Halide7Runtime8Internal25custom_get_library_symbolE
+	.p2align	3
+__ZN6Halide7Runtime8Internal25custom_get_library_symbolE:
+	.quad	_halide_default_get_library_symbol
+
+	.globl	__ZN6Halide7Runtime8Internal17halide_gpu_deviceE ; @_ZN6Halide7Runtime8Internal17halide_gpu_deviceE
+	.weak_definition	__ZN6Halide7Runtime8Internal17halide_gpu_deviceE
+	.p2align	2
+__ZN6Halide7Runtime8Internal17halide_gpu_deviceE:
+	.long	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal22halide_gpu_device_lockE ; @_ZN6Halide7Runtime8Internal22halide_gpu_device_lockE
+	.weak_definition	__ZN6Halide7Runtime8Internal22halide_gpu_device_lockE
+__ZN6Halide7Runtime8Internal22halide_gpu_device_lockE:
+	.byte	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE ; @_ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE
+	.weak_definition	__ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE
+__ZN6Halide7Runtime8Internal29halide_gpu_device_initializedE:
+	.byte	0                               ; 0x0
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.8:                               ; @.str.8
+	.asciz	"HL_GPU_DEVICE"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal19halide_trace_bufferE ; @_ZN6Halide7Runtime8Internal19halide_trace_bufferE
+	.weak_definition	__ZN6Halide7Runtime8Internal19halide_trace_bufferE
+	.p2align	3
+__ZN6Halide7Runtime8Internal19halide_trace_bufferE:
+	.quad	0
+
+	.globl	__ZN6Halide7Runtime8Internal17halide_trace_fileE ; @_ZN6Halide7Runtime8Internal17halide_trace_fileE
+	.weak_definition	__ZN6Halide7Runtime8Internal17halide_trace_fileE
+	.p2align	2
+__ZN6Halide7Runtime8Internal17halide_trace_fileE:
+	.long	4294967295                      ; 0xffffffff
+
+	.globl	__ZN6Halide7Runtime8Internal22halide_trace_file_lockE ; @_ZN6Halide7Runtime8Internal22halide_trace_file_lockE
+	.weak_definition	__ZN6Halide7Runtime8Internal22halide_trace_file_lockE
+__ZN6Halide7Runtime8Internal22halide_trace_file_lockE:
+	.byte	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal29halide_trace_file_initializedE ; @_ZN6Halide7Runtime8Internal29halide_trace_file_initializedE
+	.weak_definition	__ZN6Halide7Runtime8Internal29halide_trace_file_initializedE
+__ZN6Halide7Runtime8Internal29halide_trace_file_initializedE:
+	.byte	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE ; @_ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE
+	.weak_definition	__ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE
+	.p2align	3
+__ZN6Halide7Runtime8Internal35halide_trace_file_internally_openedE:
+	.quad	0
+
+	.globl	__ZN6Halide7Runtime8Internal19halide_custom_traceE ; @_ZN6Halide7Runtime8Internal19halide_custom_traceE
+	.weak_definition	__ZN6Halide7Runtime8Internal19halide_custom_traceE
+	.p2align	3
+__ZN6Halide7Runtime8Internal19halide_custom_traceE:
+	.quad	_halide_default_trace
+
+	.p2align	2                               ; @_ZZ20halide_default_traceE3ids
+__ZZ20halide_default_traceE3ids:
+	.long	1                               ; 0x1
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.32:                              ; @.str.32
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/tracing.cpp:115 halide_abort_if_false() failed: success && \"Could not write to trace file\"\n"
+
+l_.str.31:                              ; @.str.31
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/tracing.cpp:87 halide_abort_if_false() failed: size <= buffer_size\n"
+
+l_.str.1.10:                            ; @.str.1.10
+	.space	1
+
+l_.str.2.11:                            ; @.str.2.11
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/tracing.cpp:218 halide_abort_if_false() failed: print_bits <= 64 && \"Tracing bad type\"\n"
+
+	.section	__DATA,__const
+	.p2align	3                               ; @__const.halide_default_trace.event_types
+l___const.halide_default_trace.event_types:
+	.quad	l_.str.3.12
+	.quad	l_.str.4.13
+	.quad	l_.str.5.14
+	.quad	l_.str.6.15
+	.quad	l_.str.7
+	.quad	l_.str.8.16
+	.quad	l_.str.9.17
+	.quad	l_.str.10
+	.quad	l_.str.11
+	.quad	l_.str.12
+	.quad	l_.str.13
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.17:                              ; @.str.17
+	.asciz	"<"
+
+l_.str.20:                              ; @.str.20
+	.asciz	">)"
+
+l_.str.18:                              ; @.str.18
+	.asciz	">, <"
+
+l_.str.22:                              ; @.str.22
+	.asciz	" = <"
+
+l_.str.23:                              ; @.str.23
+	.asciz	" = "
+
+l_.str.24:                              ; @.str.24
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/tracing.cpp:287 halide_abort_if_false() failed: print_bits >= 16 && \"Tracing a bad type\"\n"
+
+l_.str.25:                              ; @.str.25
+	.asciz	">"
+
+l_.str.26:                              ; @.str.26
+	.asciz	" tag = \""
+
+l_.str.27:                              ; @.str.27
+	.asciz	"\""
+
+l_.str.3.12:                            ; @.str.3.12
+	.asciz	"Load"
+
+l_.str.4.13:                            ; @.str.4.13
+	.asciz	"Store"
+
+l_.str.5.14:                            ; @.str.5.14
+	.asciz	"Begin realization"
+
+l_.str.6.15:                            ; @.str.6.15
+	.asciz	"End realization"
+
+l_.str.7:                               ; @.str.7
+	.asciz	"Produce"
+
+l_.str.8.16:                            ; @.str.8.16
+	.asciz	"End produce"
+
+l_.str.9.17:                            ; @.str.9.17
+	.asciz	"Consume"
+
+l_.str.10:                              ; @.str.10
+	.asciz	"End consume"
+
+l_.str.11:                              ; @.str.11
+	.asciz	"Begin pipeline"
+
+l_.str.12:                              ; @.str.12
+	.asciz	"End pipeline"
+
+l_.str.13:                              ; @.str.13
+	.asciz	"Tag"
+
+l_.str.28:                              ; @.str.28
+	.asciz	"HL_TRACE_FILE"
+
+l_.str.29:                              ; @.str.29
+	.asciz	"ab"
+
+l_.str.30:                              ; @.str.30
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/tracing.cpp:351 halide_abort_if_false() failed: file && \"Failed to open trace file\\n\"\n"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE ; @_ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE
+	.weak_definition	__ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE
+	.p2align	1
+__ZN6Halide7Runtime8Internal30pixel_type_to_tiff_sample_typeE:
+	.short	3                               ; 0x3
+	.short	3                               ; 0x3
+	.short	1                               ; 0x1
+	.short	2                               ; 0x2
+	.short	1                               ; 0x1
+	.short	2                               ; 0x2
+	.short	1                               ; 0x1
+	.short	2                               ; 0x2
+	.short	1                               ; 0x1
+	.short	2                               ; 0x2
+
+	.globl	__ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE ; @_ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE
+	.weak_definition	__ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE
+__ZN6Halide7Runtime8Internal31pixel_type_to_matlab_class_codeE:
+	.ascii	"\007\006\t\b\013\n\r\f\017\016"
+
+	.globl	__ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE ; @_ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE
+	.weak_definition	__ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE
+__ZN6Halide7Runtime8Internal30pixel_type_to_matlab_type_codeE:
+	.ascii	"\007\t\002\001\004\003\006\005\r\f"
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.34:                              ; @.str.34
+	.asciz	"Bounds query buffer passed to halide_debug_to_file"
+
+l_.str.1.35:                            ; @.str.1.35
+	.asciz	"Can't debug_to_file a Func with more than four dimensions\n"
+
+l_.str.2.36:                            ; @.str.2.36
+	.asciz	"wb"
+
+l_.str.3.37:                            ; @.str.3.37
+	.asciz	".tiff"
+
+l_.str.4.38:                            ; @.str.4.38
+	.asciz	".tif"
+
+l_.str.5.39:                            ; @.str.5.39
+	.asciz	".mat"
+
+	.section	__TEXT,__const
+l___const.halide_debug_to_file.header:  ; @__const.halide_debug_to_file.header
+	.asciz	"MATLAB 5.0 MAT-file, produced by Halide                                                                                     \000\001IM"
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.6.40:                            ; @.str.6.40
+	.asciz	"Can't debug_to_file to a .mat file greater than 4GB\n"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal16memoization_lockE ; @_ZN6Halide7Runtime8Internal16memoization_lockE
+	.weak_definition	__ZN6Halide7Runtime8Internal16memoization_lockE
+	.p2align	3
+__ZN6Halide7Runtime8Internal16memoization_lockE:
+	.space	8
+
+	.globl	__ZN6Halide7Runtime8Internal13cache_entriesE ; @_ZN6Halide7Runtime8Internal13cache_entriesE
+	.weak_definition	__ZN6Halide7Runtime8Internal13cache_entriesE
+	.p2align	3
+__ZN6Halide7Runtime8Internal13cache_entriesE:
+	.space	2048
+
+	.globl	__ZN6Halide7Runtime8Internal18most_recently_usedE ; @_ZN6Halide7Runtime8Internal18most_recently_usedE
+	.weak_definition	__ZN6Halide7Runtime8Internal18most_recently_usedE
+	.p2align	3
+__ZN6Halide7Runtime8Internal18most_recently_usedE:
+	.quad	0
+
+	.globl	__ZN6Halide7Runtime8Internal19least_recently_usedE ; @_ZN6Halide7Runtime8Internal19least_recently_usedE
+	.weak_definition	__ZN6Halide7Runtime8Internal19least_recently_usedE
+	.p2align	3
+__ZN6Halide7Runtime8Internal19least_recently_usedE:
+	.quad	0
+
+	.globl	__ZN6Halide7Runtime8Internal14max_cache_sizeE ; @_ZN6Halide7Runtime8Internal14max_cache_sizeE
+	.weak_definition	__ZN6Halide7Runtime8Internal14max_cache_sizeE
+	.p2align	3
+__ZN6Halide7Runtime8Internal14max_cache_sizeE:
+	.quad	1048576                         ; 0x100000
+
+	.globl	__ZN6Halide7Runtime8Internal18current_cache_sizeE ; @_ZN6Halide7Runtime8Internal18current_cache_sizeE
+	.weak_definition	__ZN6Halide7Runtime8Internal18current_cache_sizeE
+	.p2align	3
+__ZN6Halide7Runtime8Internal18current_cache_sizeE:
+	.quad	0                               ; 0x0
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.2.42:                            ; @.str.2.42
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:284 halide_abort_if_false() failed: prev_hash_entry != nullptr\n"
+
+l_.str.3.43:                            ; @.str.3.43
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:373 halide_abort_if_false() failed: entry->more_recent != nullptr\n"
+
+l_.str.4.44:                            ; @.str.4.44
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:377 halide_abort_if_false() failed: least_recently_used == entry\n"
+
+l_.str.5.45:                            ; @.str.5.45
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:380 halide_abort_if_false() failed: entry->more_recent != nullptr\n"
+
+l_.str.9.46:                            ; @.str.9.46
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:472 halide_abort_if_false() failed: no_host_pointers_equal\n"
+
+l_.str.12.47:                           ; @.str.12.47
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/cache.cpp:550 halide_abort_if_false() failed: entry->in_use_count > 0\n"
+
+l_.str.50:                              ; @.str.50
+	.asciz	"<nullptr>"
+
+l_.str.1.57:                            ; @.str.1.57
+	.asciz	"-nan"
+
+l_.str.2.58:                            ; @.str.2.58
+	.asciz	"nan"
+
+l_.str.3.59:                            ; @.str.3.59
+	.asciz	"-inf"
+
+l_.str.4.60:                            ; @.str.4.60
+	.asciz	"inf"
+
+l_.str.5.61:                            ; @.str.5.61
+	.asciz	"-0.000000e+00"
+
+l_.str.6.62:                            ; @.str.6.62
+	.asciz	"0.000000e+00"
+
+l_.str.7.63:                            ; @.str.7.63
+	.asciz	"-0.000000"
+
+l_.str.8.64:                            ; @.str.8.64
+	.asciz	"0.000000"
+
+l_.str.9.65:                            ; @.str.9.65
+	.asciz	"-"
+
+l_.str.11.67:                           ; @.str.11.67
+	.asciz	"e+"
+
+l_.str.12.68:                           ; @.str.12.68
+	.asciz	"e-"
+
+l_.str.13.71:                           ; @.str.13.71
+	.asciz	"0123456789abcdef"
+
+l_.str.18.72:                           ; @.str.18.72
+	.asciz	"bad_type_code"
+
+l_.str.17.73:                           ; @.str.17.73
+	.asciz	"handle"
+
+l_.str.16.74:                           ; @.str.16.74
+	.asciz	"float"
+
+l_.str.15.75:                           ; @.str.15.75
+	.asciz	"uint"
+
+l_.str.14.76:                           ; @.str.14.76
+	.asciz	"int"
+
+l_.str.19.77:                           ; @.str.19.77
+	.asciz	"x"
+
+l_.str.20.78:                           ; @.str.20.78
+	.asciz	"nullptr"
+
+l_.str.21.79:                           ; @.str.21.79
+	.asciz	"buffer("
+
+l_.str.23.82:                           ; @.str.23.82
+	.asciz	", {"
+
+l_.str.24.83:                           ; @.str.24.83
+	.asciz	"}"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE ; @_ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE
+	.weak_definition	__ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE
+__ZN6Halide7Runtime8Internal36halide_reuse_device_allocations_flagE:
+	.byte	1                               ; 0x1
+
+	.globl	__ZN6Halide7Runtime8Internal21allocation_pools_lockE ; @_ZN6Halide7Runtime8Internal21allocation_pools_lockE
+	.weak_definition	__ZN6Halide7Runtime8Internal21allocation_pools_lockE
+	.p2align	3
+__ZN6Halide7Runtime8Internal21allocation_pools_lockE:
+	.space	8
+
+	.globl	__ZN6Halide7Runtime8Internal23device_allocation_poolsE ; @_ZN6Halide7Runtime8Internal23device_allocation_poolsE
+	.weak_definition	__ZN6Halide7Runtime8Internal23device_allocation_poolsE
+	.p2align	3
+__ZN6Halide7Runtime8Internal23device_allocation_poolsE:
+	.quad	0
+
+	.globl	__ZN6Halide7Runtime8Internal17device_copy_mutexE ; @_ZN6Halide7Runtime8Internal17device_copy_mutexE
+	.weak_definition	__ZN6Halide7Runtime8Internal17device_copy_mutexE
+	.p2align	3
+__ZN6Halide7Runtime8Internal17device_copy_mutexE:
+	.space	8
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.6.88:                            ; @.str.6.88
+	.asciz	"halide_copy_to_host"
+
+l_.str.7.89:                            ; @.str.7.89
+	.asciz	"halide_copy_to_device"
+
+l_.str.9.90:                            ; @.str.9.90
+	.asciz	"halide_copy_to_device does not support switching interfaces\n"
+
+l_.str.17.91:                           ; @.str.17.91
+	.asciz	"halide_device_malloc"
+
+l_.str.20.92:                           ; @.str.20.92
+	.asciz	"halide_device_malloc doesn't support switching interfaces\n"
+
+l_.str.16.93:                           ; @.str.16.93
+	.asciz	"halide_device_sync"
+
+l_.str.21.96:                           ; @.str.21.96
+	.asciz	"halide_device_free"
+
+l_.str.22.97:                           ; @.str.22.97
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/device_interface.cpp:252 halide_abort_if_false() failed: buf->device == 0\n"
+
+l_.str.23.98:                           ; @.str.23.98
+	.asciz	"halide_device_and_host_malloc"
+
+l_.str.25.99:                           ; @.str.25.99
+	.asciz	"halide_device_and_host_malloc doesn't support switching interfaces\n"
+
+l_.str.26.100:                          ; @.str.26.100
+	.asciz	"allocating host and device memory failed\n"
+
+l_.str.27.101:                          ; @.str.27.101
+	.asciz	"halide_device_and_host_free"
+
+l_.str.28.102:                          ; @.str.28.102
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/device_interface.cpp:317 halide_abort_if_false() failed: buf->device == 0\n"
+
+l_.str.29.103:                          ; @.str.29.103
+	.asciz	"halide_default_device_and_host_malloc"
+
+l_.str.30.104:                          ; @.str.30.104
+	.asciz	"halide_default_device_and_host_free"
+
+l_.str.31.105:                          ; @.str.31.105
+	.asciz	"halide_device_wrap_native"
+
+l_.str.32.106:                          ; @.str.32.106
+	.asciz	"halide_device_wrap_native doesn't support switching interfaces\n"
+
+l_.str.33.107:                          ; @.str.33.107
+	.asciz	"halide_device_detach_native"
+
+l_.str.34.108:                          ; @.str.34.108
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/device_interface.cpp:403 halide_abort_if_false() failed: buf->device == 0\n"
+
+l_.str.35:                              ; @.str.35
+	.asciz	"halide_default_device_detach_native"
+
+l_.str.41:                              ; @.str.41
+	.asciz	"halide_buffer_copy does not support switching device interfaces"
+
+l_.str.58:                              ; @.str.58
+	.asciz	"device_interface does not support cropping\n"
+
+l_.str.59:                              ; @.str.59
+	.asciz	"device_interface does not support slicing\n"
+
+l_.str.60:                              ; @.str.60
+	.asciz	"destination buffer already has a device allocation\n"
+
+l_.str.61:                              ; @.str.61
+	.asciz	"src and dst must have identical dimensionality\n"
+
+l_.str.64:                              ; @.str.64
+	.asciz	"dst must have exactly one fewer dimension than src\n"
+
+l_.str.111:                             ; @.str.111
+	.asciz	"Bounds inference call to external stage "
+
+l_.str.1.112:                           ; @.str.1.112
+	.asciz	" returned non-zero value: "
+
+l_.str.2.113:                           ; @.str.2.113
+	.asciz	"Call to external stage "
+
+l_.str.3.114:                           ; @.str.3.114
+	.asciz	"Bounds given for "
+
+l_.str.4.115:                           ; @.str.4.115
+	.asciz	" in "
+
+l_.str.5.116:                           ; @.str.5.116
+	.asciz	" (from "
+
+l_.str.6.117:                           ; @.str.6.117
+	.asciz	" to "
+
+l_.str.7.118:                           ; @.str.7.118
+	.asciz	") do not cover required region (from "
+
+l_.str.8.119:                           ; @.str.8.119
+	.asciz	")"
+
+l_.str.9.120:                           ; @.str.9.120
+	.asciz	" has type "
+
+l_.str.10.121:                          ; @.str.10.121
+	.asciz	" but type of the buffer passed in is "
+
+l_.str.11.122:                          ; @.str.11.122
+	.asciz	" requires a buffer of exactly "
+
+l_.str.12.123:                          ; @.str.12.123
+	.asciz	" dimensions, but the buffer passed in has "
+
+l_.str.13.124:                          ; @.str.13.124
+	.asciz	" dimensions"
+
+l_.str.14.125:                          ; @.str.14.125
+	.asciz	" is accessed at "
+
+l_.str.15.126:                          ; @.str.15.126
+	.asciz	", which is before the min ("
+
+l_.str.16.127:                          ; @.str.16.127
+	.asciz	") in dimension "
+
+l_.str.17.128:                          ; @.str.17.128
+	.asciz	", which is beyond the max ("
+
+l_.str.18.129:                          ; @.str.18.129
+	.asciz	"Total allocation for buffer "
+
+l_.str.19.130:                          ; @.str.19.130
+	.asciz	" is "
+
+l_.str.20.131:                          ; @.str.20.131
+	.asciz	", which exceeds the maximum size of "
+
+l_.str.21.132:                          ; @.str.21.132
+	.asciz	"The extents for buffer "
+
+l_.str.22.133:                          ; @.str.22.133
+	.asciz	" dimension "
+
+l_.str.23.134:                          ; @.str.23.134
+	.asciz	" is negative ("
+
+l_.str.24.135:                          ; @.str.24.135
+	.asciz	"Product of extents for buffer "
+
+l_.str.25.136:                          ; @.str.25.136
+	.asciz	"Applying the constraints on "
+
+l_.str.26.137:                          ; @.str.26.137
+	.asciz	" to the required region made it smaller in dimension "
+
+l_.str.27.138:                          ; @.str.27.138
+	.asciz	". "
+
+l_.str.28.139:                          ; @.str.28.139
+	.asciz	"Required size: "
+
+l_.str.29.140:                          ; @.str.29.140
+	.asciz	"Constrained size: "
+
+l_.str.30.141:                          ; @.str.30.141
+	.asciz	"."
+
+l_.str.31.142:                          ; @.str.31.142
+	.asciz	"Constraint violated: "
+
+l_.str.32.143:                          ; @.str.32.143
+	.asciz	" ("
+
+l_.str.33.144:                          ; @.str.33.144
+	.asciz	") == "
+
+l_.str.34.145:                          ; @.str.34.145
+	.asciz	"Parameter "
+
+l_.str.35.146:                          ; @.str.35.146
+	.asciz	" but must be at least "
+
+l_.str.36:                              ; @.str.36
+	.asciz	" but must be at most "
+
+l_.str.37:                              ; @.str.37
+	.asciz	"Out of memory (halide_malloc returned nullptr)"
+
+l_.str.38:                              ; @.str.38
+	.asciz	"Buffer argument "
+
+l_.str.39:                              ; @.str.39
+	.asciz	" is nullptr"
+
+l_.str.40:                              ; @.str.40
+	.asciz	"Failed to dump function "
+
+l_.str.41.147:                          ; @.str.41.147
+	.asciz	" to file "
+
+l_.str.42:                              ; @.str.42
+	.asciz	" with error "
+
+l_.str.43:                              ; @.str.43
+	.asciz	"The host pointer of "
+
+l_.str.44:                              ; @.str.44
+	.asciz	" is not aligned to a "
+
+l_.str.45:                              ; @.str.45
+	.asciz	" bytes boundary."
+
+l_.str.46:                              ; @.str.46
+	.asciz	"The buffer "
+
+l_.str.47:                              ; @.str.47
+	.asciz	" is dirty on device, but this pipeline was compiled "
+
+l_.str.48:                              ; @.str.48
+	.asciz	"with no support for device to host copies."
+
+l_.str.49:                              ; @.str.49
+	.asciz	" is null, but the pipeline will access it on the host."
+
+l_.str.50.148:                          ; @.str.50.148
+	.asciz	"The folded storage dimension "
+
+l_.str.51:                              ; @.str.51
+	.asciz	" of "
+
+l_.str.52:                              ; @.str.52
+	.asciz	" was accessed out of order by loop "
+
+l_.str.53:                              ; @.str.53
+	.asciz	"Cannot fold dimension "
+
+l_.str.54:                              ; @.str.54
+	.asciz	" because an extern stage accesses ["
+
+l_.str.55:                              ; @.str.55
+	.asciz	", "
+
+l_.str.56:                              ; @.str.56
+	.asciz	"],"
+
+l_.str.57:                              ; @.str.57
+	.asciz	" which is outside the range currently valid: ["
+
+l_.str.58.149:                          ; @.str.58.149
+	.asciz	"]."
+
+l_.str.59.150:                          ; @.str.59.150
+	.asciz	" which wraps around the boundary of the fold, "
+
+l_.str.60.151:                          ; @.str.60.151
+	.asciz	"which occurs at multiples of "
+
+l_.str.61.152:                          ; @.str.61.152
+	.asciz	"The fold factor ("
+
+l_.str.62:                              ; @.str.62
+	.asciz	") of dimension "
+
+l_.str.63:                              ; @.str.63
+	.asciz	" is too small to store the required region accessed by loop "
+
+l_.str.64.153:                          ; @.str.64.153
+	.asciz	")."
+
+l_.str.65:                              ; @.str.65
+	.asciz	"Requirement Failed: ("
+
+l_.str.66:                              ; @.str.66
+	.asciz	") "
+
+l_.str.67:                              ; @.str.67
+	.asciz	"A schedule specialized with specialize_fail() was chosen: "
+
+l_.str.68:                              ; @.str.68
+	.asciz	"Buffer has a non-zero device but no device interface.\n"
+
+l_.str.69:                              ; @.str.69
+	.asciz	"Buffer has a non-null device_interface but device is 0.\n"
+
+l_.str.70:                              ; @.str.70
+	.asciz	"Buffer has both host and device dirty bits set.\n"
+
+l_.str.71:                              ; @.str.71
+	.asciz	"Buffer pointer passed to "
+
+l_.str.72:                              ; @.str.72
+	.asciz	" is null.\n"
+
+l_.str.73:                              ; @.str.73
+	.asciz	"The explicit allocation bound ("
+
+l_.str.74:                              ; @.str.74
+	.asciz	" is too small to store the required region ("
+
+l_.str.75:                              ; @.str.75
+	.asciz	"Buffer could not be cropped (runtime error or unimplemented device option).\n"
+
+l_.str.29.163:                          ; @.str.29.163
+	.asciz	"Printer buffer allocation failed.\n"
+
+l_.str.7.164:                           ; @.str.7.164
+	.asciz	"\n"
+
+l_.str.8.165:                           ; @.str.8.165
+	.asciz	" total time: "
+
+l_.str.9.166:                           ; @.str.9.166
+	.asciz	" ms"
+
+l_.str.10.167:                          ; @.str.10.167
+	.asciz	"  samples: "
+
+l_.str.11.168:                          ; @.str.11.168
+	.asciz	"  runs: "
+
+l_.str.12.169:                          ; @.str.12.169
+	.asciz	"  time/run: "
+
+l_.str.13.170:                          ; @.str.13.170
+	.asciz	" ms\n"
+
+l_.str.14.171:                          ; @.str.14.171
+	.asciz	" average threads used: "
+
+l_.str.15.172:                          ; @.str.15.172
+	.asciz	" heap allocations: "
+
+l_.str.16.173:                          ; @.str.16.173
+	.asciz	"  peak heap usage: "
+
+l_.str.17.174:                          ; @.str.17.174
+	.asciz	" bytes\n"
+
+l_.str.18.175:                          ; @.str.18.175
+	.asciz	"  "
+
+l_.str.19.176:                          ; @.str.19.176
+	.asciz	": "
+
+l_.str.20.177:                          ; @.str.20.177
+	.asciz	" "
+
+l_.str.21.178:                          ; @.str.21.178
+	.asciz	"ms"
+
+l_.str.22.179:                          ; @.str.22.179
+	.asciz	"("
+
+l_.str.23.180:                          ; @.str.23.180
+	.asciz	"%)"
+
+l_.str.24.181:                          ; @.str.24.181
+	.asciz	"threads: "
+
+l_.str.25.182:                          ; @.str.25.182
+	.asciz	" peak: "
+
+l_.str.26.183:                          ; @.str.26.183
+	.asciz	" num: "
+
+l_.str.27.184:                          ; @.str.27.184
+	.asciz	" avg: "
+
+l_.str.28.185:                          ; @.str.28.185
+	.asciz	" stack: "
+
+	.section	__DATA,__data
+	.p2align	3                               ; @_ZZ25halide_profiler_get_stateE1s
+__ZZ25halide_profiler_get_stateE1s:
+	.space	8
+	.long	1                               ; 0x1
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.long	0                               ; 0x0
+	.quad	0
+	.quad	0
+	.quad	0
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.186:                             ; @.str.186
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:246 halide_abort_if_false() failed: p_stats != nullptr\n"
+
+l_.str.1.187:                           ; @.str.1.187
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:273 halide_abort_if_false() failed: p_stats != nullptr\n"
+
+l_.str.2.188:                           ; @.str.2.188
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:274 halide_abort_if_false() failed: func_id >= 0\n"
+
+l_.str.3.189:                           ; @.str.3.189
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:275 halide_abort_if_false() failed: func_id < p_stats->num_funcs\n"
+
+l_.str.4.190:                           ; @.str.4.190
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:309 halide_abort_if_false() failed: p_stats != nullptr\n"
+
+l_.str.5.191:                           ; @.str.5.191
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:310 halide_abort_if_false() failed: func_id >= 0\n"
+
+l_.str.6.192:                           ; @.str.6.192
+	.asciz	"/home/baronia3/new-MISAAL/MISAAL/frontends/halide/src/runtime/profiler_common.cpp:311 halide_abort_if_false() failed: func_id < p_stats->num_funcs\n"
+
+	.section	__DATA,__data
+	.globl	__ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE ; @_ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE
+	.weak_definition	__ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE
+	.p2align	3
+__ZN6Halide7Runtime8Internal30custom_can_use_target_featuresE:
+	.quad	_halide_default_can_use_target_features
+
+	.globl	__ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE ; @_ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE
+	.weak_definition	__ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE
+	.p2align	3
+__ZN6Halide7Runtime8Internal36halide_cpu_features_initialized_lockE:
+	.space	8
+
+	.globl	__ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE ; @_ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE
+	.weak_definition	__ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE
+__ZN6Halide7Runtime8Internal31halide_cpu_features_initializedE:
+	.byte	0                               ; 0x0
+
+	.globl	__ZN6Halide7Runtime8Internal27halide_cpu_features_storageE ; @_ZN6Halide7Runtime8Internal27halide_cpu_features_storageE
+	.weak_definition	__ZN6Halide7Runtime8Internal27halide_cpu_features_storageE
+	.p2align	3
+__ZN6Halide7Runtime8Internal27halide_cpu_features_storageE:
+	.space	32
+
+	.section	__TEXT,__cstring,cstring_literals
+l_.str.197:                             ; @.str.197
+	.asciz	"Internal error: wrong structure size passed to halide_can_use_target_features()\n"
+
+	.section	__TEXT,__const
+	.p2align	3                               ; @0
+l___unnamed_1:
+	.quad	0                               ; 0x0
+
+	.p2align	3                               ; @1
+l___unnamed_2:
+	.quad	0                               ; 0x0
+
+	.section	__DATA,__const
+	.p2align	4                               ; @2
+l___unnamed_3:
+	.quad	l___unnamed_1
+	.quad	0
+	.quad	l___unnamed_2
+	.quad	0
+
+	.section	__TEXT,__const
+	.p2align	5                               ; @str
+l_str:
+	.asciz	"input"
+
+	.p2align	3                               ; @3
+l___unnamed_4:
+	.quad	0                               ; 0x0
+
+	.p2align	3                               ; @4
+l___unnamed_5:
+	.quad	0                               ; 0x0
+
+	.section	__DATA,__const
+	.p2align	4                               ; @5
+l___unnamed_6:
+	.quad	l___unnamed_4
+	.quad	0
+	.quad	l___unnamed_5
+	.quad	0
+
+	.section	__TEXT,__const
+	.p2align	5                               ; @str.200
+l_str.200:
+	.asciz	"output"
+
+	.section	__DATA,__const
+	.p2align	4                               ; @6
+l___unnamed_7:
+	.quad	l_str
+	.long	1                               ; 0x1
+	.long	2                               ; 0x2
+	.byte	1                               ; 0x1
+	.byte	8                               ; 0x8
+	.short	1                               ; 0x1
+	.space	4
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	l___unnamed_3
+	.quad	l_str.200
+	.long	2                               ; 0x2
+	.long	2                               ; 0x2
+	.byte	1                               ; 0x1
+	.byte	8                               ; 0x8
+	.short	1                               ; 0x1
+	.space	4
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	l___unnamed_6
+
+	.section	__TEXT,__const
+	.p2align	5                               ; @str.201
+l_str.201:
+	.asciz	"arm-64-osx-arm_dot_prod-no_asserts-no_bounds_query"
+
+	.p2align	5                               ; @str.202
+l_str.202:
+	.asciz	"sobel3x3"
+
+	.section	__DATA,__const
+	.p2align	4                               ; @sobel3x3_metadata_storage
+l_sobel3x3_metadata_storage:
+	.long	1                               ; 0x1
+	.long	2                               ; 0x2
+	.quad	l___unnamed_7
+	.quad	l_str.201
+	.quad	l_str.202
+
+	.p2align	3                               ; @switch.table.halide_type_to_string
+l_switch.table.halide_type_to_string:
+	.quad	l_.str.14.76
+	.quad	l_.str.15.75
+	.quad	l_.str.16.74
+	.quad	l_.str.17.73
+
+.subsections_via_symbols
