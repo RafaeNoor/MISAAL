@@ -8,6 +8,7 @@ from  common.Instructions import Context
 import copy
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 from synthesizer.StepWiseSynthesizer import StepWiseSynthesizer
+from synthesizer.AllInstructionsSynthesizer import AllInstructionsSynthesizer
 from grammar_generator.TypedSimpleGrammarGenerator import TypedSimpleGrammarGenerator
 from utils.ContainsRegDef import ContainsRegDef
 import sys
@@ -469,9 +470,15 @@ class DoubleGrammarSynthesisUtils:
         TARGET = target
         spec = get_hydride_spec_from_ctx(src_ctx)
         spec.set_target(TARGET)
+        spec.input_precision = [16,16]
+        spec.input_shapes = [[1,16], [1,16]]
         # Use Hydride heurstic based synthesis for Destination but
         # expanded grammar for Src expression
-        GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
+
+        #GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
+
+        print(target_language_dsl)
+        GrammarGeneratorDst = AllInstructionsSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 20, depth = depth, target = TARGET, step = 0, scale_factor =1)
         dst_expression_grammar_tree = GrammarGeneratorDst.emit_synthesis_grammar(main_grammar_name = "dst-grammar-wrapper")
         statements.append(dst_expression_grammar_tree)
 

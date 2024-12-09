@@ -42,7 +42,7 @@ HYDRIDE_HEADER =  """
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
         (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
-        (current-bitwidth 16)
+        (current-bitwidth 32)
         """
 
 
@@ -353,6 +353,7 @@ def execute_racket_file_and_read_from_file(statements, fname_prefix):
 
 
 def cleanup_tmp_files():
+    return
     tmp_files = glob.glob("/tmp/base_*")
     print("Cleaning up {} tmp files ...".format(len(tmp_files)))
 

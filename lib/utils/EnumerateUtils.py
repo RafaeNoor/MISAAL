@@ -17,15 +17,29 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
         relavent_ctx = []
         for dsl_inst in dsl_list:
 
+
             accounted_for = []
             inst_relavent_ctx = []
-            for ctx in dsl_inst.contexts:
-                num_args = get_num_symbolic_args(ctx)
-                if num_args in accounted_for:
-                    continue
-                else:
-                    accounted_for.append(num_args)
-                    inst_relavent_ctx.append(ctx)
+            LEGACY = True
+            if LEGACY:
+                for ctx in dsl_inst.contexts:
+                    num_args = get_num_symbolic_args(ctx)
+                    if num_args in accounted_for:
+                        continue
+                    else:
+                        accounted_for.append(num_args)
+                        inst_relavent_ctx.append(ctx)
+            else:
+                for ctx in dsl_inst.contexts:
+                    num_args = get_num_symbolic_args(ctx)
+                    same_inputs = len(set([arg.size for arg in ctx.context_args if isinstance(arg,BitVector)])) == 1
+                    key = (num_args, same_inputs)
+                    if key in accounted_for:
+                        continue
+                    else:
+                        accounted_for.append(key)
+                        inst_relavent_ctx.append(ctx)
+
             relavent_ctx += inst_relavent_ctx
         relavent_ctx = sorted(relavent_ctx, key = lambda x : get_num_symbolic_args(x))
 

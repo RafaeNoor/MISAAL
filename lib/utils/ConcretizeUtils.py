@@ -260,6 +260,12 @@ def is_expression_template_valid(template):
     if isinstance(template[0], ConstBitVector):
         return True
 
+    if isinstance(template[0], Context):
+        required_num_sym_args = sum([1 for arg in template[0].context_args if isinstance(arg, BitVector)])
+        num_provided = len(template[1])
+
+        if num_provided != required_num_sym_args:
+            return False
 
     for sub_temp in template[1]:
         if not is_expression_template_valid(sub_temp[0]):
