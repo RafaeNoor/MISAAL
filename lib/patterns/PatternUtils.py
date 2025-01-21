@@ -3,7 +3,9 @@ import concurrent.futures
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.DSLInstructionUtils import *
 from utils.ConcretizeUtils import get_valid_concretization_generator
+from utils.CanonicalizeExpressions import CanonicalizeExpression
 from common.Types import *
+import copy
 
 
 def create_patterns(props, combined_dsl_list):
@@ -199,3 +201,145 @@ def is_redundant_pattern(pattern, dsl_list):
     pattern_names = set(src_names + dst_names)
     # Pattern is redundant if all context names are the same
     return len(pattern_names) == 1
+
+
+
+class ContextNumericIter:
+    def __init__(self, outer_context_ref, outer_context_arg_idx, value):
+        self.outer_context_ref = outer_context_ref
+        self.outer_context_arg_idx = outer_context_arg_idx
+        self.value = value
+
+
+class PatternAbstractor:
+    def __init__(self, patterns, dsl_list):
+        self.patterns = patterns
+        self.dsl_list = dsl_list
+        self.equality_checker = CanonicalizeExpression()
+
+    def abstract_patterns(self, patterns, dsl_list):
+        accounted_for_patterns_idxs = []
+
+        # First partition the patterns into buckets
+        # where all patterns in the given bucket have
+        # the same AutoLLVM IR equivalance classes in the
+        # same structure
+        buckets = []
+        for i in range(len(patterns)):
+            if i in accounted_for_patterns_idxs:
+                continue
+
+            pat_i = patterns[i]
+            bucket_i = [pat_i]
+            for j in range(i+1, len(patterns)):
+                pat_j = patterns[j]
+
+                src_expr_equal = self.equality_checker.isCanonical(pat_i.src_expr, pat_j.src_expr)
+                dst_expr_equal = self.equality_checker.isCanonical(pat_i.target_expr, pat_j.target_expr)
+
+                if src_expr_equal and dst_expr_equal:
+                    accounted_for_patterns_idxs.append(j)
+                    bucket_i.append(pat_j)
+            buckets.append(bucket_i)
+
+
+        print("Total # patterns:", len(patterns))
+        print("Total Number of buckets: ", len(buckets))
+        print(buckets[0][0].src_expr.emit_context_expr_string())
+        print(buckets[0][1].target_expr.emit_context_expr_string())
+
+        self.abstract_pattern_bucket(buckets[0], dsl_list)
+
+
+    def get_expr_num_numeric_positions(self, expr):
+
+        if isinstance(expr, Context):
+
+            num_positions = 0
+            for arg in expr.context_args:
+                num_positions += self.get_expr_num_numeric_positions(arg)
+            return num_positions
+
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+            return 1
+
+        return 0
+
+
+    def get_expr_numeric_positions(self, expr, outer_context = None, outer_args_idx = None):
+
+        if isinstance(expr, Context):
+            positions = []
+
+            for idx, arg in enumerate(expr.context_args):
+                sub_positions = self.get_expr_numeric_positions(arg, outer_context = expr, outer_args_idx = idx)
+
+                if len(sub_positions) != 0:
+                    positions += sub_positions
+
+            return positions
+
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+            iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
+            return [iterator]
+
+        return []
+
+
+
+
+    def set_expr_numeric_position(self, expr, position, value):
+        iterators = self.get_expr_numeric_positions(expr)
+
+        assert position < len(iterators), "Out of bounds numeric parameters access"
+        pos_iter = iterators[position]
+
+        # Update the outer handle in place
+        assert not pos_iter.outer_context_ref is None, "Can Only update inplace for expressions with outer contexts defined"
+
+        assert not pos_iter.outer_context_arg_idx is None, "Can only update inplace for expressions with relative context positions defined"
+
+
+        outer_ctx = pos_iter.outer_context_ref
+        ctx_arg_idx = pos_iter.outer_context_arg_idx
+
+        assert ctx_arg_idx < len(outer_ctx.context_args), "Out of bounds access for context args"
+
+        outer_ctx.context_args[ctx_arg_idx] = value
+
+
+
+
+
+
+
+
+    def abstract_pattern_bucket(self, bucket, dsl_list):
+        assert len(bucket) != 0, "Expecting at-least one pattern to abstract"
+
+        template_expr_src = copy.deepcopy(bucket[0].src_expr)
+        template_expr_dst = copy.deepcopy(bucket[0].target_expr)
+
+        print(template_expr_src.emit_context_expr_string())
+        print(template_expr_dst.emit_context_expr_string())
+        print("Src positions ", self.get_expr_num_numeric_positions(template_expr_src))
+        print("Dst positions ", self.get_expr_num_numeric_positions(template_expr_dst))
+
+        src_vals = self.get_expr_numeric_positions(template_expr_src)
+        print([iter_.value.value for iter_ in src_vals])
+
+        dst_vals = self.get_expr_numeric_positions(template_expr_dst)
+        print([iter_.value.value for iter_ in dst_vals])
+
+
+        rand_val = Integer("random", value = 69)
+
+        self.set_expr_numeric_position(template_expr_dst, 4, rand_val)
+
+        print("Post modification")
+        dst_vals = self.get_expr_numeric_positions(template_expr_dst)
+        print([iter_.value.value for iter_ in dst_vals])
+
+
+
+
