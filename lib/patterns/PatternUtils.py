@@ -6,6 +6,7 @@ from utils.ConcretizeUtils import get_valid_concretization_generator
 from utils.CanonicalizeExpressions import CanonicalizeExpression
 from common.Types import *
 import copy
+import json
 
 
 def create_patterns(props, combined_dsl_list):
@@ -217,6 +218,48 @@ class PatternAbstractor:
         self.dsl_list = dsl_list
         self.equality_checker = CanonicalizeExpression()
 
+
+    def emit_create_param_abstract_spec(self, input_values, output_value):
+        return "(TESTS {} (vector {}))".format(output_value, " ".join([str(v) for v in input_values]))
+
+    def emit_synthesize_query(self, test_cases, depth = 2):
+        return "(synthesize-param-expression {} {})".format(test_cases, depth)
+
+    def generate_param_expr(self, src_param_map, dst_param_map, dst_param_name, depth = 2):
+
+        statements = []
+
+        print(dst_param_map)
+        assert dst_param_name in dst_param_map, "Expected {} in dst_param_map".format(dst_param_name)
+
+        num_test_cases = len(dst_param_map[dst_param_name])
+        test_cases_def = []
+        for tc in range(num_test_cases):
+            values = []
+
+            target_value = dst_param_map[dst_param_name][tc]
+
+            for src_val_name, src_vals in src_param_map.items():
+                values.append(src_vals[tc])
+
+            for dst_val_name, dst_vals in dst_param_map.items():
+                if dst_val_name == dst_param_name:
+                    continue
+                values.append(dst_vals[tc])
+            test_case = self.emit_create_param_abstract_spec(values, target_value)
+            test_cases_def.append(test_case)
+
+        test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
+        statements.append(test_def)
+
+        synthesis_query = self.emit_synthesize_query("param-test-cases")
+        statements.append(synthesis_query)
+
+        result = execute_racket_file(statements)
+
+
+
+
     def abstract_patterns(self, patterns, dsl_list):
         accounted_for_patterns_idxs = []
 
@@ -332,13 +375,43 @@ class PatternAbstractor:
         print([iter_.value.value for iter_ in dst_vals])
 
 
-        rand_val = Integer("random", value = 69)
+        src_position_map = {}
+        dst_position_map = {}
 
-        self.set_expr_numeric_position(template_expr_dst, 4, rand_val)
+        for pattern in bucket:
+            src_expr = pattern.src_expr
+            dst_expr = pattern.target_expr
 
-        print("Post modification")
-        dst_vals = self.get_expr_numeric_positions(template_expr_dst)
-        print([iter_.value.value for iter_ in dst_vals])
+            src_iters = self.get_expr_numeric_positions(src_expr)
+            dst_iters = self.get_expr_numeric_positions(dst_expr)
+
+            for idx, si in enumerate(src_iters):
+                if idx not in src_position_map:
+                    src_position_map[idx] = []
+                src_position_map[idx].append(si.value.value)
+
+            for idx, di in enumerate(dst_iters):
+                if idx not in dst_position_map:
+                    dst_position_map[idx] = []
+                dst_position_map[idx].append(di.value.value)
+
+
+
+
+
+        print("Src")
+        print(json.dumps(src_position_map, indent = 4))
+
+        print("Dst")
+        print(json.dumps(dst_position_map, indent = 4))
+
+        self.generate_param_expr(src_position_map, dst_position_map, 0)
+
+
+
+
+
+
 
 
 
