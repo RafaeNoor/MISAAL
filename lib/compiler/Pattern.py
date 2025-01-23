@@ -25,6 +25,24 @@ class Pattern:
         self.target_language = target_language
         self.bidirectional = bidirectional
 
+    def swap(self):
+        src_expr = self.src_expr
+        target_expr = self.target_expr
+        src_dsl_list = self.src_dsl_list
+        target_dsl_list = self.target_dsl_list
+        src_language = self.src_language
+        target_language = self.target_language
+
+        self.src_expr = target_expr
+        self.src_dsl_list = target_dsl_list
+        self.src_language = target_language
+
+
+        self.target_expr = src_expr
+        self.target_dsl_list = src_dsl_list
+        self.target_language = src_language
+
+
     def get_pattern_eq_classes(self):
         dsl_list = self.src_dsl_list + self.target_dsl_list
         expr_names = get_ctx_expr_dsl_names(self.src_expr, dsl_list)
