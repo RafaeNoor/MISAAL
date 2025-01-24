@@ -1,1 +1,0 @@
-(typed:unsigned-vec-shr (typed:unsigned-vec-shr (reg (bv #x01 8)) (reg (bv #x01 8)) 16 1024) (reg (bv #x01 8)) 16 1024)

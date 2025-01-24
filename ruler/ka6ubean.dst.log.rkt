@@ -1,1 +1,0 @@
-(typed:unsigned-vec-min (reg (bv #x01 8)) (reg (bv #x00 8)) 8 1024)

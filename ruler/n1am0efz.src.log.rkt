@@ -1,1 +1,0 @@
-(hexagon_V6_vlsrwv_128B_dsl (hexagon_V6_vlsrwv_128B_dsl (reg (bv #x00 8)) (lit (bv #x00000000 32)) (reg (bv #x01 8)) 1024 1024 0 1024 32 1 0) (lit (bv #x00000000 32)) (hexagon_V6_vlsrwv_128B_dsl (reg (bv #x02 8)) (lit (bv #x0000 16)) (reg (bv #x02 8)) 1024 1024 0 1024 16 1 0) 1024 1024 0 1024 32 1 0)
