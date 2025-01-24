@@ -264,7 +264,7 @@ class EqClassEqualDepth(EqualOnValues):
         return 1
 
     def get_swizzle_by_name(self, name):
-        for dsl_inst in self.swizzle_dsl_list:
+        for dsl_inst in self.swizzle_dsl_list + self.input_dsl_list + self.output_dsl_list:
             if dsl_inst.name == name:
                 return dsl_inst
             for ctx in dsl_inst.contexts:

@@ -24,7 +24,9 @@ def get_matching_context(nested_expr, dsl_list):
     else:
         dsl_name = nested_expr[0]
 
-    print("DSL Name to search:", dsl_name)
+    # Support replacing typed operations
+    dsl_name = dsl_name.replace("typed_", "typed:")
+    #print("DSL Name to search:", dsl_name)
 
     matching_dsl_inst = None
 
@@ -37,15 +39,22 @@ def get_matching_context(nested_expr, dsl_list):
 
     # We iterate over the numeric arguments and at each step update matching_context
     # indices until we have a matching context
+
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
-    print("Checking:", nested_expr[1:])
+    num_reg_like_arguments = 0
+    #print("Checking:", nested_expr[1:])
     for idx, arg in enumerate(nested_expr[1:]):
 
         new_matching_context_indices = []
 
         if not isinstance(arg, str):
             # May be parsing halide expresison,  check if this is a buffer index
+
+
+
+            if isinstance(arg, list) and arg[0] != 'lit':
+                num_reg_like_arguments += 1
 
             if isinstance(arg, list) and arg[0] == 'buffer-index':
 
@@ -62,14 +71,13 @@ def get_matching_context(nested_expr, dsl_list):
                     ctx_arg =  ctx.context_args[idx]
 
                     if ctx_arg.size != int(arg[3]):
-                        print("Size does not match", ctx_arg.size, int(arg[3]))
+                        #print("Size does not match", ctx_arg.size, int(arg[3]))
                         continue
 
-                    input_prec = int(arg[2].split("int")[-1])
-
-                    if ctx.in_precision != input_prec:
-                        print("Precision does not match", ctx.in_precision, input_prec)
-                        continue
+                    #input_prec = int(arg[2].split("int")[-1])
+                    #if ctx.in_precision != input_prec:
+                    #    print("Precision does not match", ctx.in_precision, input_prec)
+                    #    continue
 
                     new_matching_context_indices.append(ci)
                 matching_context_indices = new_matching_context_indices
@@ -99,7 +107,6 @@ def get_matching_context(nested_expr, dsl_list):
             ctx = matching_dsl_inst.contexts[ci]
             ctx_arg =  ctx.context_args[idx]
 
-
             if isinstance(ctx_arg, LaneSize) and is_numeric:
                 # value
                 if int(ctx_arg.value) == parameter_value:
@@ -115,12 +122,35 @@ def get_matching_context(nested_expr, dsl_list):
             elif not is_numeric and isinstance(ctx_arg, Bool):
                 if ctx_arg.value == parameter_value:
                     new_matching_context_indices.append(ci)
+            elif is_numeric and isinstance(ctx_arg, Bool):
+                print(" Bool PARAMETER VALUE, ",parameter_value, " ctx_Arg value", ctx_arg.to_int())
+                print(type(parameter_value), type(ctx_arg.to_int()))
+                if parameter_value == 1 or parameter_value == 0:
+                    if ctx_arg.to_int() == parameter_value:
+                        print("Boolean value matches")
+                        new_matching_context_indices.append(ci)
+                else:
+                    print("Parameter value is neither")
             else:
+                print(parameter_value)
+                print(ctx_arg)
                 assert False, "Corresponding argument in context must be numeric or boolean"
 
         matching_context_indices = new_matching_context_indices
 
     if len(matching_context_indices) != 1:
+        # Split on registers
+        print("Num reg like arguments",num_reg_like_arguments)
+
+        for ctx_idx in  matching_context_indices:
+            test_ctx = matching_dsl_inst.contexts[ctx_idx]
+            num_ctx_args =  sum([1 for arg in test_ctx.context_args if isinstance(arg, BitVector)])
+
+
+            if num_reg_like_arguments ==  num_ctx_args:
+                matching_context_indices = [ctx_idx]
+                break
+
         print("MATCHING INDICES: ", matching_context_indices)
         print("Matching dsl_inst: ",matching_dsl_inst.name)
         matching_context_indices = [matching_context_indices[0]]
@@ -164,7 +194,6 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         reg_size = 8
         if not expecting_return_size is None:
-            print("Reg index reg size:", expecting_return_size)
             reg_size = expecting_return_size
 
         reg = Reg(reg_index_term, 8, reg_size)
@@ -179,12 +208,49 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         reg_size = 8
         if not expecting_return_size is None:
-            print("Buffer index reg size:", expecting_return_size)
             reg_size = expecting_return_size
 
         reg = Reg(reg_index_term, 8, reg_size)
         return reg
     elif first_term == 'lit':
+
+        lit_value = nested_expr[1][1]
+        lit_size = nested_expr[1][2]
+
+        if isinstance(lit_size, list):
+            lit_size = lit_size[1]
+
+        const_bv = ConstBitVector(lit_value, lit_size)
+
+        return const_bv
+
+    elif first_term == 'LIT':
+
+        lit_value = nested_expr[1]
+        lit_value = lit_value.replace("\"","")
+        lit_value = hex(int(lit_value))
+        if lit_value.startswith("-"):
+            lit_value = lit_value[1:]
+        lit_value = "#x" + lit_value[2:]
+        lit_size = nested_expr[2]
+
+        const_bv = ConstBitVector(lit_value, int(lit_size))
+
+        return const_bv
+
+    elif first_term == 'int-imm':
+
+        lit_value = nested_expr[1][1]
+        lit_size = nested_expr[1][2]
+
+        if isinstance(lit_size, list):
+            lit_size = lit_size[1]
+
+        const_bv = ConstBitVector(lit_value, lit_size)
+
+        return const_bv
+
+    elif first_term == 'typed:int-imm':
 
         lit_value = nested_expr[1][1]
         lit_size = nested_expr[1][2]
@@ -210,7 +276,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
 
     else:
-        print("Possibly dsl instruction in halide")
+        #print("Possibly dsl instruction in halide")
 
         matching_context = get_matching_context(nested_expr, dsl_list)
 

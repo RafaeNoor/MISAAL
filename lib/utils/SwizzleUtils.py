@@ -3,6 +3,7 @@ import copy
 import json
 import os
 
+from utils.WriteDSL import write_dsl_dict_to_file, convert_dsl_list_to_dict
 
 
 class Swizzle:
@@ -91,7 +92,9 @@ class Swizzle:
             operand = operands[operand_index]
 
             intra_operand_index = total_index - (operand_index * len(operand))
-
+            #print(shuffle_vector_args)
+            #print("Intra operand index:", intra_operand_index)
+            #print("Operand size:", len(operand))
             result.append(operand[intra_operand_index])
 
         return result
@@ -339,5 +342,118 @@ def get_swizzle_derivation_eq_class(swizzle_map_path, swizzle_dsl_list, target_d
     return eq_class_summary
 
 
+
+
+
+# After converting swizzles to equivlance classes, Hydride may fold
+# target specific swizzles into the same classes which have similar behavior
+# but have different typing behavior. For instance, the same equivlance class
+# may have swizzles which take in smaller inputs to construct larger inputs, take in
+# larger inputs to produce smaller inputs, take in equal size inputs and produce
+# same size inputs. This functio seperates these classes into these different categories
+# or (others) to aid when enumerating
+def split_swizzle_eq_class_by_size_behavior(dsl_list, output_dsl_name, output_path):
+
+
+
+    def create_updated_swizzles(ctx_classes, parent_dsl):
+        if len(ctx_classes) == 0:
+            return None
+
+        orig_name = parent_dsl.name
+
+        if len(ctx_classes) == len(parent_dsl.contexts):
+            return parent_dsl
+
+        dsl_inst_copy = copy.deepcopy(parent_dsl)
+
+        ctx_0 = ctx_classes[0]
+
+        dsl_inst_copy.name = ctx_0.name
+        dsl_inst_copy.contexts = []
+
+        for ctx in ctx_classes:
+            ctx_copy = copy.deepcopy(ctx)
+            ctx_copy.dsl_name = dsl_inst_copy.name +"_dsl"
+            ctx_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
+            dsl_inst_copy.contexts.append(ctx_copy)
+        if ctx_0.extensions != None and 'halide' not in ctx_0.extensions:
+            pass
+        else:
+            # Updated semantic function def according to ctx_0 name
+            print("=====")
+            print("ORIG NAME", parent_dsl.name, "should become", ctx_0.name)
+            print("PRE",dsl_inst_copy.semantics[0])
+            dsl_inst_copy.semantics[0] = dsl_inst_copy.semantics[0].replace(parent_dsl.name, ctx_0.name)
+            print("POST",dsl_inst_copy.semantics[0])
+        return dsl_inst_copy
+
+
+    updated_dsl_list = []
+
+    for dsl_inst in dsl_list:
+
+        same_size_ctxs = []
+        increase_size_ctxs = []
+        decrease_size_ctxs = []
+
+        for ctx in dsl_inst.contexts:
+
+            if ctx.in_vectsize > ctx.out_vectsize:
+                decrease_size_ctxs.append(ctx)
+            elif ctx.in_vectsize < ctx.out_vectsize:
+                increase_size_ctxs.append(ctx)
+            elif ctx.in_vectsize == ctx.out_vectsize:
+                same_size_ctxs.append(ctx)
+
+        test_variants = [ same_size_ctxs, increase_size_ctxs, decrease_size_ctxs]
+
+        for variant in test_variants:
+            new_inst  = create_updated_swizzles(variant, dsl_inst)
+            if not new_inst is None:
+                updated_dsl_list.append(new_inst)
+
+
+    write_dsl_dict_to_file(convert_dsl_list_to_dict(updated_dsl_list),output_dsl_name, output_path)
+
+
+    return updated_dsl_list
+
+
+
+
+
+
+# For frontends such as Halide, we often have to split vectors and concatenate vectors at different stages
+# of the expression. To create the identities required to do so, we first create an identity repair map
+# with expressions which extract/ concat slices and the operations themselves. This repair map can be used to derive
+# such properties
+def create_swizzle_identity_map(dsl_list):
+    legal_bv_ops = ["extract", "concat"]
+    extract_concat_dsl_list = []
+
+    for dsl_inst in dsl_list:
+        dsl_ops = dsl_inst.get_semantics_ops_list()
+
+        valid = True
+        for op in dsl_ops:
+            if op not in legal_bv_ops:
+                valid = False
+                break
+
+        if valid:
+            sample_ctx = dsl_inst.get_sample_context()
+            extract_concat_dsl_list.append(sample_ctx)
+
+    swizzle_map = {}
+
+    for extract_op in extract_concat_dsl_list:
+        swizzle_map[extract_op.name] = []
+
+        for dsl_inst in dsl_list:
+            sample_ctx = dsl_inst.get_sample_context()
+            swizzle_map[extract_op.name].append(sample_ctx.name)
+
+    return swizzle_map
 
 

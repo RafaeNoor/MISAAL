@@ -325,6 +325,7 @@ class Property:
 
 
     def kill_remaining_child_processes(self):
+        return
         def get_process_id(name):
             """Return process ids found by (partial) name or regex.
             >>> get_process_id('kthreadd')

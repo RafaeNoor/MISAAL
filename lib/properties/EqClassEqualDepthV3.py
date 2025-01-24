@@ -106,7 +106,7 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
             if substr is None:
                 return 1  + child_results
             else:
-                if substr in expr.name:
+                if substr in expr.name or substr in expr.dsl_name:
                     return 1 + child_results
             return child_results
         return 0
@@ -293,9 +293,11 @@ class EqClassEqualDepthV3(EqClassEqualDepthV2):
         max_out = 0
         max_ctx = None
 
+        NOT_EXCEED = 2048 + 1
+
         for ctx in valid_contexts:
             print(ctx.name)
-            if ctx.out_vectsize > max_out:
+            if ctx.out_vectsize > max_out and ctx.out_vectsize < NOT_EXCEED:
                 max_out = ctx.out_vectsize
                 max_ctx = ctx
 

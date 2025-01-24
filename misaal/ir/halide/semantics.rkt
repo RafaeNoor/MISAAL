@@ -81,6 +81,14 @@
   result
   )
 
+(define (do-typed:cast-int-extend vec iprec isigned? olane oprec)
+  (do-typed:cast-int vec iprec isigned? olane oprec)
+  )
+
+(define (do-typed:cast-int-truncate vec iprec isigned? olane oprec)
+  (do-typed:cast-int vec iprec isigned? olane oprec)
+  )
+
 
 
 (define (do-typed:cast-uint vec iprec isigned? olane oprec)
@@ -108,6 +116,14 @@
   ;(printf "Cast-uint result size: ~a\n" (bvlength result))
   result
 
+  )
+
+(define (do-typed:cast-uint-extend vec iprec isigned? olane oprec)
+  (do-typed:cast-uint vec iprec isigned? olane oprec)
+  )
+
+(define (do-typed:cast-uint-truncate vec iprec isigned? olane oprec)
+  (do-typed:cast-uint vec iprec isigned? olane oprec)
   )
 
 (define (do-typed:vec-broadcast n vec iprec isize)

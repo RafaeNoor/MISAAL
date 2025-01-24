@@ -1,234 +1,188 @@
 {
     "x86_swizzle_0": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_1": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_2": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_3": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_4": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_5": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_6": [
-        "_mm256_hadd_epi32",
-        "_mm256_hsub_epi32"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_7": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_8": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_9": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_10": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_11": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_12": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_13": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_14": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_15": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_16": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_17": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_18": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_19": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_20": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_21": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_22": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_23": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_24": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_25": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_26": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_27": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_28": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_29": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_30": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_31": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_32": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_33": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_34": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_35": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_36": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_37": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_38": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_39": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_40": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_41": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_42": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_43": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_44": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_45": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_46": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_47": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_48": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_49": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_50": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_51": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_52": [
-        "_mm_dpbusd_epi32",
-        "_mm_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_54": [
-        "_mm512_unpacklo_epi8",
-        "_mm512_unpackhi_epi8"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_58": [
-        "_mm_unpackhi_epi8"
+        "_mm_unpacklo_pi8"
     ],
     "x86_swizzle_69": [
-        "_mm_srl_epi64",
-        "_mm_sll_epi64",
-        "_mm_broadcastq_epi64",
-        "_mm_sra_epi64"
+        "_mm512_srl_epi64",
+        "_mm512_broadcastq_epi64",
+        "_mm512_sra_epi64",
+        "_mm512_sll_epi64"
     ],
     "x86_swizzle_70": [
-        "_mm_srl_epi64",
-        "_mm_sll_epi64",
-        "_mm_broadcastq_epi64",
-        "_mm_sra_epi64"
+        "_mm512_srl_epi64",
+        "_mm512_broadcastq_epi64",
+        "_mm512_sra_epi64",
+        "_mm512_sll_epi64"
     ],
     "x86_swizzle_127": [
         "_mm_broadcast_i32x2"
@@ -237,569 +191,417 @@
         "_mm_broadcast_i32x2"
     ],
     "x86_swizzle_152": [
-        "_mm512_unpackhi_epi64",
         "_mm512_unpacklo_epi64"
     ],
     "x86_swizzle_156": [
-        "_mm256_unpackhi_epi64",
-        "_mm256_unpacklo_epi64"
+        "_mm512_unpacklo_epi64"
     ],
     "x86_swizzle_163": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_164": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_165": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_166": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_167": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_168": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_169": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_170": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_171": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_172": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_173": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_174": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_175": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_176": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_177": [
-        "_mm_hsub_epi32",
-        "_mm_hadd_epi32"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_179": [
-        "_mm_unpackhi_epi64"
+        "_mm_unpacklo_pi32"
     ],
     "x86_swizzle_205": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_206": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_207": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_208": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_209": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_210": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_211": [
-        "_mm256_hadds_epi16",
-        "_mm256_hadd_epi16",
-        "_mm256_hsubs_epi16",
-        "_mm256_hsub_epi16"
+        "_mm256_hsub_epi32",
+        "_mm256_hadd_epi32"
     ],
     "x86_swizzle_212": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_213": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_214": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_215": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_216": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_217": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_218": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_219": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_220": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_221": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_222": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_223": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_224": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_225": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_226": [
-        "_mm_dpwssd_epi32",
-        "_mm_madd_epi16",
-        "_mm_dpwssds_epi32"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_227": [
-        "_mm_broadcastd_epi32"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_228": [
-        "_mm_broadcastd_epi32"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_239": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_240": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_241": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_242": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_243": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_244": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_245": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_246": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_247": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_248": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_249": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_250": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_251": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_252": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_253": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_254": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_255": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_256": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_257": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_258": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_259": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_260": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_261": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_262": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_263": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_264": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_265": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_266": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_267": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_268": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_269": [
-        "_mm_hadds_pi16",
-        "_mm_hsub_pi16",
-        "_mm_hadd_pi16",
-        "_mm_hsubs_pi16"
+        "_mm_hsub_epi16",
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_271": [
-        "_mm_unpackhi_epi16"
+        "_mm_unpacklo_pi8"
     ],
     "x86_swizzle_283": [
-        "_mm_unpackhi_pi8"
+        "_mm_unpacklo_pi8"
     ],
     "x86_swizzle_299": [
-        "_mm_unpackhi_epi32"
+        "_mm_unpacklo_pi8"
     ],
     "x86_swizzle_325": [
-        "_mm_broadcastb_epi8"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_326": [
-        "_mm_broadcastb_epi8"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_337": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_338": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_339": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_340": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_341": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_342": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_343": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_344": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_345": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_346": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_347": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_348": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_349": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_350": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_351": [
-        "_mm_hsubs_epi16",
         "_mm_hsub_epi16",
-        "_mm_hadd_epi16",
-        "_mm_hadds_epi16"
+        "_mm_hadd_pi16"
     ],
     "x86_swizzle_352": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_353": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_354": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_355": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_356": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_357": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_358": [
-        "_mm256_dpwssd_epi32",
-        "_mm256_dpwssds_epi32",
-        "_mm256_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_359": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_360": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_361": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_362": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_363": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_364": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_365": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_366": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_367": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_368": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_369": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_370": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_371": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_372": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_373": [
-        "_mm_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_374": [
         "_mm_hadd_pi32",
@@ -926,26 +728,20 @@
         "_mm_hsub_pi32"
     ],
     "x86_swizzle_405": [
-        "_mm512_dpwssd_epi32",
-        "_mm512_dpwssds_epi32",
-        "_mm512_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_406": [
-        "_mm512_dpwssd_epi32",
-        "_mm512_dpwssds_epi32",
-        "_mm512_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_407": [
-        "_mm512_dpwssd_epi32",
-        "_mm512_dpwssds_epi32",
-        "_mm512_madd_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_409": [
-        "_m_punpckhwd"
+        "_mm_unpacklo_pi8"
     ],
     "x86_swizzle_425": [
-        "_mm256_unpackhi_epi8",
-        "_mm256_unpacklo_epi8"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_439": [
         "_mm256_maddubs_epi16"
@@ -969,351 +765,319 @@
         "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_462": [
-        "_mm_unpackhi_pi32"
+        "_mm_unpacklo_pi32"
     ],
     "x86_swizzle_478": [
-        "_mm256_unpacklo_epi16",
-        "_mm256_unpackhi_epi16"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_485": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_486": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_487": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_488": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_489": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_490": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_491": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_492": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_493": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_494": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_495": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_496": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_497": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_498": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_499": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_500": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_501": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_502": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_503": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_504": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_505": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_506": [
-        "_mm256_dpbusd_epi32",
-        "_mm256_dpbusds_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_568": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_569": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_570": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_571": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_572": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_573": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_574": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_575": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_576": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_577": [
-        "_mm512_dpbusds_epi32",
-        "_mm512_dpbusd_epi32"
+        "_mm256_dpbusd_epi32"
     ],
     "x86_swizzle_606": [
-        "_mm512_unpacklo_epi32",
-        "_mm512_unpackhi_epi32"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_621": [
-        "_mm_broadcastw_epi16"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_622": [
-        "_mm_broadcastw_epi16"
+        "_mm512_broadcastq_epi64"
     ],
     "x86_swizzle_633": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_634": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_635": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_636": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_637": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_638": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_639": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_640": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_641": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_642": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_643": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_644": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_645": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_646": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_647": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_648": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_649": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_650": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_651": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_652": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_653": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_654": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_655": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_656": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_657": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_658": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_659": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_660": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_661": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_662": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_663": [
-        "_mm_maddubs_pi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_790": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_791": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_792": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_793": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_794": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_795": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_796": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_797": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_798": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_799": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_800": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_801": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_802": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_803": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_804": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_805": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_806": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_807": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_808": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_809": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_810": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_811": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_812": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_813": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_814": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_815": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_816": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_817": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_818": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_819": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_820": [
-        "_m_pmaddwd"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_843": [
-        "_mm512_unpacklo_epi16",
-        "_mm512_unpackhi_epi16"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_854": [
-        "_mm256_unpacklo_epi32",
-        "_mm256_unpackhi_epi32"
+        "_mm256_unpackhi_epi16",
+        "_mm512_unpacklo_epi16"
     ],
     "x86_swizzle_861": [
-        "_mm512_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_862": [
-        "_mm512_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ],
     "x86_swizzle_863": [
-        "_mm512_maddubs_epi16"
+        "_mm256_maddubs_epi16"
     ]
 }

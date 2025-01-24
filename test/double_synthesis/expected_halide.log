@@ -1,0 +1,65 @@
+
+generalized_lhs_exprs:
+ (typed:vec-add ; typed:vec-add_p64_s1024_signed_None
+	(buffer-index  0 'uint8 1024) ; < 128 x i8> False
+	(buffer-index  1 'uint8 1024) ; < 128 x i8> False
+	in_lanesize_0
+	in_vectsize_0
+ )
+
+
+
+
+generalized_rhs_exprs:
+ (typed:concat_vectors ; typed:concat_vectors_ip64_is512_op64_os1024_signed_None
+	 (typed:vec-add ; typed:vec-add_p64_s512_signed_None
+		 (typed:slice_vectors ; typed:slice_vectors_ip64_is1024_op64_os512_signed_None_8_1_8
+			(buffer-index  0 'uint8 1024) ; < 128 x i8> False
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Start from Half the number of elements
+			1 ;; Always 1
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Half the number of elements
+			in_lanesize_0
+			in_vectsize_0
+		 )
+		 (typed:slice_vectors ; typed:slice_vectors_ip64_is1024_op64_os512_signed_None_8_1_8
+			(buffer-index  1 'uint8 1024) ; < 128 x i8> False
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Start from Half the number of elements
+			1 ;; Always 1
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Half the number of elements
+			in_lanesize_0
+			in_vectsize_0
+		 )
+		in_lanesize_0
+        (/ in_vectsize_0 2)
+	 )
+	 (typed:vec-add ; typed:vec-add_p64_s512_signed_None
+		 (typed:slice_vectors ; typed:slice_vectors_ip64_is1024_op64_os512_signed_None_0_1_8
+			(buffer-index  0 'uint8 1024) ; < 128 x i8> False
+			0 ;; Always zero (base offset)
+			1 ;; Always 1 (stride)
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Half the number of elements
+			in_lanesize_0
+			in_vectsize_0
+		 )
+		 (typed:slice_vectors ; typed:slice_vectors_ip64_is1024_op64_os512_signed_None_0_1_8
+			(buffer-index  1 'uint8 1024) ; < 128 x i8> False
+			0 ;; Always zero
+			1 ;; Always 1
+			(/ (/ in_vectsize_0 in_lanesize_0) 2) ;; // Half the number of elements
+			in_lanesize_0
+			in_vectsize_0
+		 )
+		in_lanesize_0
+        (/ in_vectsize_0 2)
+	 )
+	in_lanesize_0
+    (/ in_vectsize_0 2)
+ )
+
+
+
+
+
+
+
+

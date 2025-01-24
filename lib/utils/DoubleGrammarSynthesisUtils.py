@@ -1,18 +1,21 @@
 from utils.DSLInstructionUtils import *
 from utils.CodeSynthesizerDesc import *
+from utils.CanonicalizeExpressions import CanonicalizeExpression
+from utils.ReadDSL import read_string_to_dsl
 from common.Types import *
 from common.StructDef import StructDef
 from  common.Instructions import Context
 import copy
 from grammar_gen.EqClassExpandGenerator import EqClassExpandGenerator
 from synthesizer.StepWiseSynthesizer import StepWiseSynthesizer
+from synthesizer.AllInstructionsSynthesizer import AllInstructionsSynthesizer
 from grammar_generator.TypedSimpleGrammarGenerator import TypedSimpleGrammarGenerator
 from utils.ContainsRegDef import ContainsRegDef
 import sys
 
 class DoubleGrammarSynthesisUtils:
 
-    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True):
+    def __init__(self, input_dsl_list = [], output_dsl_list = [], swizzle_dsl_list = [], auxilary_dsl_list = [], force_contains_all_regs = True, use_any_reg = True, required_src_name = None, required_dst_name = None, ensure_structure = False):
         self.input_dsl_list = input_dsl_list
         self.output_dsl_list = output_dsl_list
         self.swizzle_dsl_list = swizzle_dsl_list
@@ -21,6 +24,10 @@ class DoubleGrammarSynthesisUtils:
         self.force_contains_all_regs = force_contains_all_regs
         self.contains_reg_def = ContainsRegDef()
         self.use_any_reg = use_any_reg
+        self.required_src_name = required_src_name
+        self.required_dst_name = required_dst_name
+        self.ensure_structure = ensure_structure
+
 
 
     def get_registers(self, ctx):
@@ -81,36 +88,17 @@ class DoubleGrammarSynthesisUtils:
         relavent_output_subset = self.get_relevant_dsl_list([dst_ctx])
         print(relavent_output_subset)
 
-        assert len(relavent_output_subset) != 0, "Atleast one AutoLLVM IR class expected for target language"
+        assert len(relavent_output_subset) != 0 or isinstance(target_expr, Reg), "Atleast one AutoLLVM IR class expected for target language"
         relavent_input_subset = self.get_relevant_dsl_list([src_ctx])
         print(relavent_input_subset)
         assert len(relavent_input_subset) != 0, "Atleast one AutoLLVM IR class expected for src language"
         relavent_dsl_subset = self.get_relevant_dsl_list([src_ctx, dst_ctx])
         print(relavent_dsl_subset)
 
-        print("relavent_output_subset", len(relavent_output_subset), len(relavent_output_subset[0].contexts))
-        print("relavent_input_subset", len(relavent_input_subset),  len(relavent_input_subset[0].contexts))
-        print("relavent_combined_subset", len(relavent_dsl_subset))
+        #print("relavent_output_subset", len(relavent_output_subset), len(relavent_output_subset[0].contexts))
+        #print("relavent_input_subset", len(relavent_input_subset),  len(relavent_input_subset[0].contexts))
+        #print("relavent_combined_subset", len(relavent_dsl_subset))
 
-
-
-
-        if isinstance(dst_ctx, Reg):
-            print("Early return: Dst expression is a context")
-            return False, "", ""
-
-
-
-        dst_eq_class = self.get_eq_class(dst_ctx.dsl_name)
-
-        matching_ctx = False
-        for ctx in dst_eq_class.contexts:
-            if ctx.out_vectsize == src_ctx.out_vectsize:
-                matching_ctx = True
-
-        #if not matching_ctx:
-        #    print("Early return: No matching context")
-        #    return False, "", ""
 
 
 
@@ -145,37 +133,6 @@ class DoubleGrammarSynthesisUtils:
             reg_arg_idx_map[key] = 0
         print(reg_arg_map)
 
-        dst_regs = self.get_registers(dst_ctx)
-
-        """
-        common_param =  False
-
-
-        for idx, arg in enumerate(dst_regs):
-            reg = None
-            key = str(arg.size)
-            if key not in reg_arg_idx_map:
-                # Create a new register for every left over values
-                reg = Reg(str(len(src_ctx_regs)), precision, arg.size)
-                src_ctx_regs.append(reg)
-            else:
-                index = reg_arg_idx_map[key]
-                reg = reg_arg_map[key][index]
-                updated_index = (index + 1) % len(reg_arg_map[key])
-                reg_arg_idx_map[key] = updated_index
-
-            if int(reg.index) < src_regs_count:
-                common_param = True
-
-            arg.index = reg.index
-            arg.precision = reg.precision
-            arg.size = reg.size
-            arg.signed = reg.signed
-
-        if not common_param:
-            print("Early return: No common param")
-            return False, "" , ""
-        """
 
 
         statements = []
@@ -236,7 +193,8 @@ class DoubleGrammarSynthesisUtils:
 
         GrammarGeneratorSrc = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = src_output_size, input_sizes = src_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
 
-        src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src")
+        src_expression_label ,src_expression_grammar =  GrammarGeneratorSrc.emit_grammar(src_ctx, prefix = "src", required_root_name = self.required_src_name)
+
 
         if is_src_grammar:
             statements.append(src_expression_grammar)
@@ -249,7 +207,7 @@ class DoubleGrammarSynthesisUtils:
         dst_expression_label = None
 
         GrammarGeneratorDst = EqClassExpandGenerator(dsl_list = relavent_dsl_subset  , output_bitwidth = dst_output_size , input_sizes = dst_input_sizes, input_precs = input_precs, use_any_reg = self.use_any_reg)
-        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst")
+        dst_expression_label ,dst_expression_grammar =  GrammarGeneratorDst.emit_grammar(dst_ctx, prefix = "dst", required_root_name = self.required_dst_name)
 
         statements.append(dst_expression_grammar)
 
@@ -322,8 +280,29 @@ class DoubleGrammarSynthesisUtils:
                 synth_dst_str = ReadFile.read()
             os.remove(read_from_fname_dst)
 
+        if self.ensure_structure and is_simplified:
+            src_expr = self.read_str_to_expr(synth_src_str)
+            dst_expr = self.read_str_to_expr(synth_dst_str)
 
-        return is_simplified, synth_src_str, synth_dst_str
+            if self.structure_matches(src_expr, src_ctx) and self.structure_matches(dst_expr, dst_ctx):
+                return is_simplified, synth_src_str, synth_dst_str
+            else:
+                return False , "", ""
+
+
+        else:
+            return is_simplified, synth_src_str, synth_dst_str
+
+
+    def read_str_to_expr(self, expr_str):
+        combined_list = self.input_dsl_list + self.output_dsl_list + self.swizzle_dsl_list + self.auxilary_dsl_list
+
+        return read_string_to_dsl(expr_str, combined_list)
+
+    def structure_matches(self, expr, ref_expr):
+        canon_utils = CanonicalizeExpression()
+        return canon_utils.isCanonical(expr, ref_expr)
+
 
     def get_context_input_sizes(self, ctx):
         return sorted([arg.size for arg in ctx.context_args if isinstance(arg, BitVector)])
@@ -372,7 +351,7 @@ class DoubleGrammarSynthesisUtils:
 
 
 
-    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2):
+    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2, target = "x86"):
         src_ctx = copy.deepcopy(src_expr)
 
         print(emit_compact_context_expr_str(src_ctx))
@@ -488,12 +467,18 @@ class DoubleGrammarSynthesisUtils:
 
         dst_expression_label = None
 
-        TARGET = "x86"
+        TARGET = target
         spec = get_hydride_spec_from_ctx(src_ctx)
         spec.set_target(TARGET)
+        spec.input_precision = [16,16]
+        spec.input_shapes = [[1,16], [1,16]]
         # Use Hydride heurstic based synthesis for Destination but
         # expanded grammar for Src expression
-        GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
+
+        #GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
+
+        print(target_language_dsl)
+        GrammarGeneratorDst = AllInstructionsSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 20, depth = depth, target = TARGET, step = 0, scale_factor =1)
         dst_expression_grammar_tree = GrammarGeneratorDst.emit_synthesis_grammar(main_grammar_name = "dst-grammar-wrapper")
         statements.append(dst_expression_grammar_tree)
 

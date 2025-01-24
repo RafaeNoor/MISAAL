@@ -251,3 +251,96 @@ class RepairPostProcessUtils:
             )
           )
         """
+
+
+
+# For frontends such as Halide, we often have to split vectors and concatenate vectors at different stages
+# of the expression. To create the identities required to do so, we first create an identity repair map
+# with expressions which extract/ concat slices and the operations themselves. This repair map can be used to derive
+# such properties
+def create_repair_identity_map(dsl_list, include_self = True):
+    legal_bv_ops = ["extract", "concat"]
+    extract_concat_dsl_list = []
+
+    for dsl_inst in dsl_list:
+        dsl_ops = dsl_inst.get_semantics_ops_list()
+
+        valid = True
+        for op in dsl_ops:
+            if op not in legal_bv_ops:
+                valid = False
+                break
+
+        if valid:
+            extract_concat_dsl_list.append(dsl_inst)
+
+    repair_identity_map = {}
+
+    for dsl_inst in dsl_list:
+        repair_identity_map[dsl_inst.name] = []
+
+        repair_identity_map[dsl_inst.name].append(dsl_inst.name)
+
+        for extract_op in extract_concat_dsl_list:
+            repair_identity_map[dsl_inst.name].append(extract_op.name)
+        repair_identity_map[dsl_inst.name] = list(set(repair_identity_map[dsl_inst.name]))
+
+        if not include_self:
+            repair_identity_map[dsl_inst.name] = [x for x in repair_identity_map[dsl_inst.name] if x != dsl_inst.name]
+
+
+    return repair_identity_map
+
+
+def create_repair_swizzle_map(dsl_list, swizzle_list):
+    legal_bv_ops = ["extract", "concat", "sign-extend", "zero-extend", "bvssat", "bvusat", "bitvector->integer"]
+    extract_concat_dsl_list = []
+
+    for dsl_inst in dsl_list:
+        dsl_ops = dsl_inst.get_semantics_ops_list()
+
+        valid = True
+        for op in dsl_ops:
+            if op not in legal_bv_ops:
+                valid = False
+                break
+
+        sample_ctx = dsl_inst.get_sample_context()
+
+        if sample_ctx.out_vectsize is None:
+            valid = False
+
+        if valid:
+            extract_concat_dsl_list.append(dsl_inst.name)
+
+    repair_swizzle_map = {}
+
+
+
+    for swizzle in swizzle_list:
+        repair_swizzle_map[swizzle.name] = extract_concat_dsl_list
+
+
+
+    return repair_swizzle_map
+
+
+def invert_repair_map(repair_map):
+    orig_keys = [key for key in repair_map]
+
+    orig_items = []
+
+    for key in orig_keys:
+        orig_items += repair_map[key]
+
+    orig_items = list(set(orig_items))
+
+    inverted_map = {}
+    for key in orig_items:
+        inverted_map[key] = []
+
+    for key in orig_keys:
+        for item in repair_map[key]:
+            if key not in inverted_map[item]:
+                inverted_map[item].append(key)
+    return inverted_map

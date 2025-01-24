@@ -14,6 +14,8 @@ import concurrent.futures
 import signal
 import psutil
 from Specification import Specification
+from utils.CodeSynthesizerDesc import create_synth_desc
+from common.DSLParser import parse_dict
 
 REMOVE_RKT_FILES = True
 
@@ -40,7 +42,7 @@ HYDRIDE_HEADER =  """
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
         (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
-        (current-bitwidth 16)
+        (current-bitwidth 32)
         """
 
 
@@ -351,6 +353,7 @@ def execute_racket_file_and_read_from_file(statements, fname_prefix):
 
 
 def cleanup_tmp_files():
+    return
     tmp_files = glob.glob("/tmp/base_*")
     print("Cleaning up {} tmp files ...".format(len(tmp_files)))
 
@@ -1228,3 +1231,154 @@ def get_process_virtual_memory_megabytes():
 
 def get_process_physical_memory_megabytes():
     return psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
+
+
+def deduplicate_dsl_list(dsl_list):
+
+    names = []
+    unique = []
+
+    for dsl_inst in dsl_list:
+        if dsl_inst.name in names:
+            continue
+        names.append(dsl_inst.name)
+        unique.append(dsl_inst)
+
+    return unique
+
+
+def get_eq_class_for_ctx(ctx, dsl_list):
+    for dsl_inst in dsl_list:
+        if ctx.dsl_name.split("_dsl")[0] == dsl_inst.name:
+            return dsl_inst
+        for ctx_ in dsl_inst.contexts:
+            if ctx_.name == ctx.name:
+                return dsl_inst
+
+    return None
+
+
+def get_ctx_expr_dsl_names(expr, dsl_list):
+    if isinstance(expr, Context):
+        eq_class = get_eq_class_for_ctx(expr, dsl_list)
+        names = [eq_class.name]
+        for arg in expr.context_args:
+            names += get_ctx_expr_dsl_names(arg, dsl_list)
+        return list(set(names))
+
+    return []
+
+def get_ctx_expr_ctx_names(expr, dsl_list):
+    if isinstance(expr, Context):
+        names = [expr.name]
+        for arg in expr.context_args:
+            names += get_ctx_expr_ctx_names(arg, dsl_list)
+        return list(set(names))
+
+    return []
+
+def is_expression_constant(expr, dsl_list):
+    if isinstance(expr, Reg):
+        return False
+
+    expr_regs = get_unique_context_registers(expr)
+    if len(expr_regs) == 0:
+        return True
+
+    double_grammar_desc = create_synth_desc("desc", True, [], "", "")
+    double_grammar_desc.emit_sema = True
+    double_grammar_desc.emit_interpreter = True
+
+    statements = []
+    dsl_subset_names = get_ctx_expr_dsl_names(expr, dsl_list)
+
+
+
+    if double_grammar_desc.emit_interpreter:
+        statements.append(double_grammar_desc.emit_interpreter_framework([x for x in dsl_list if x.name in dsl_subset_names]))
+
+
+
+    sym_env = "(define sym-env (vector {}))".format(" ".join(["(?? (bitvector {}))".format(reg.size) for reg in expr_regs]))
+
+    statements.append(sym_env)
+
+    result_expr = "(define result ({}\n{}\n sym-env))".format(double_grammar_desc.interpreter_name, expr.emit_context_expr_string())
+
+    statements.append(result_expr)
+
+    exit_cond = "(cond [(concrete? result)  (exit 0)] [else (exit 1)])"
+
+    statements.append(exit_cond)
+
+    ret_code = execute_racket_file(statements)
+
+    return ret_code.returncode == 0
+
+
+
+
+def parse_dict_with_bounded(sema, keep_duplicate = False):
+    dsl_list = parse_dict(sema, keep_duplicate = keep_duplicate)
+
+    final_list = []
+
+    for dsl_inst in dsl_list:
+        if dsl_inst.has_bounded_behavior():
+            updated_inst = convert_bounded_dsl_inst_to_multiple_contexts(dsl_inst)
+
+            final_list.append(updated_inst)
+        else:
+            final_list.append(dsl_inst)
+    return final_list
+
+
+def create_context_expr_with_fresh_regs(ctx):
+    assert isinstance(ctx, Context)
+
+    arg_sizes = [arg.size for arg in ctx.context_args if isinstance(arg, BitVector)]
+    arg_idxs = [idx for idx, arg in enumerate(ctx.context_args) if isinstance(arg, BitVector)]
+    ctx_copy = copy.deepcopy(ctx)
+
+    for enum_idx, index in enumerate(arg_idxs):
+        arg_size = arg_sizes[enum_idx]
+        reg = Reg(str(enum_idx), 8, arg_size)
+        ctx_copy.context_args[index] = reg
+
+    return ctx_copy
+
+
+
+def is_expr_concat_slice_only(expr, dsl_list):
+    if not isinstance(expr, Context):
+        return False
+
+    dsl_names = get_ctx_expr_dsl_names(expr, dsl_list)
+
+
+    test_ops = ['typed:concat_vectors', 'typed:slice_vectors', 'typed:xBroadcast']
+
+    cond1 = any([op in dsl_names for op in test_ops])
+
+    cond2 = not any([op not in test_ops for op in dsl_names])
+
+    #print(test_ops)
+    #print(dsl_names)
+    #print(cond1)
+    #print(cond2)
+
+    return cond1 and cond2
+
+
+
+def expr_contains_swizzles(expr, dsl_list):
+    expr_names = get_ctx_expr_dsl_names(expr, dsl_list)
+    return any(["swizzle" in name for name in expr_names])
+
+
+def get_dsl_inst_from_dsl_list(inst_name, dsl_list):
+    for dsl_inst in dsl_list:
+        if inst_name == dsl_inst.name:
+            return dsl_inst
+    assert False, inst_name+" not in dsl_list"
+    return None

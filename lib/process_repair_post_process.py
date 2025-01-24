@@ -3,9 +3,9 @@ import os
 
 target = "x86"
 
-pass_path = "RepairRelavancePostProcess_PASS_{}.json".format(target)
-fail_path = "RepairRelavancePostProcess_FAIL_{}.json".format(target)
-error_path = "RepairRelavancePostProcess_ERROR_{}.json".format(target)
+pass_path = "RepairRelavancePostProcess_PASS_{}_VERSION_V4.json".format(target)
+fail_path = "RepairRelavancePostProcess_FAIL_{}_VERSION_V4.json".format(target)
+error_path = "RepairRelavancePostProcess_ERROR_{}_VERSION_V4.json".format(target)
 
 def process_path(path, category):
 
@@ -36,5 +36,5 @@ def process_path(path, category):
 
 
 process_path(pass_path, "PASS")
-process_path(fail_path, "FAIL")
-process_path(error_path, "ERROR")
+#process_path(fail_path, "FAIL")
+#process_path(error_path, "ERROR")

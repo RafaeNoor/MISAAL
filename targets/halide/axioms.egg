@@ -1,0 +1,425 @@
+
+
+;; Signed Widen Mul 
+(rewrite
+    (typed_signed-vec-widen-mul v1 v2 iprec isize)
+
+    (typed_signed-vec-mul
+        (typed_cast-int-extend v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed_cast-int-extend v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+(rewrite
+    (typed_signed-vec-mul
+        (typed_cast-int-extend v1 iprec isigned olane oprec)
+        (typed_cast-int-extend v2 iprec isigned olane oprec)
+        oprec osize 
+    )
+
+    (typed_signed-vec-widen-mul v1 v2 iprec (* iprec olane))
+    )
+
+;; Unsigned Widen Mul
+(rewrite
+    (typed_unsigned-vec-widen-mul v1 v2 iprec isize)
+
+    (typed_unsigned-vec-mul
+        (typed_cast-uint-extend v1 iprec 1 (/ isize iprec) (* iprec 2))
+        (typed_cast-uint-extend v2 iprec 1 (/ isize iprec) (* iprec 2))
+        (* iprec 2) (* isize 2)
+    )
+)
+
+
+(rewrite
+    (typed_unsigned-vec-mul
+        (typed_cast-uint-extend v1 iprec isigned olane oprec)
+        (typed_cast-uint-extend v2 iprec isigned olane oprec)
+        oprec osize 
+    )
+
+    (typed_unsigned-vec-widen-mul v1 v2 iprec (* iprec olane))
+
+)
+
+
+
+; Literals Casts
+(rewrite
+     (LIT val prec)
+    (typed_cast-int-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
+    ;:when ((< val 255))
+)
+
+(rewrite
+     (LIT val prec)
+    (typed_cast-uint-extend (LIT val (/ prec 2)) (/ prec 2) 1 1 prec)
+    ;:when ((< val 255))
+)
+
+; Halide casts of broadcast is equal to broadcast of casts
+
+(rewrite 
+ (typed_xBroadcast
+  (typed_cast-int-extend  reg_0 iprec 1 1 oprec)
+  isize
+  isize
+  factor
+ )
+
+ (typed_cast-int-extend  
+  (typed_xBroadcast
+   reg_0
+   iprec 
+   iprec
+   factor
+  )
+
+  iprec  1 factor oprec
+ )
+
+ )
+
+
+(rewrite 
+ (typed_xBroadcast
+  (typed_cast-uint-extend  reg_0 iprec 1 1 oprec)
+  isize
+  isize
+  factor
+ )
+
+ (typed_cast-uint-extend  
+  (typed_xBroadcast
+   reg_0
+   iprec 
+   iprec
+   factor
+  )
+
+  iprec  1 factor oprec
+ )
+
+ )
+
+;; Vector saturate
+(rewrite
+ (typed_cast-uint-truncate  
+  (typed_signed-vec-max
+   (typed_signed-vec-min
+    reg_0
+    (typed_xBroadcast (LIT "255" 16) 16 16 factor)
+    16
+    (* 16 factor)
+   )
+   (typed_xBroadcast (LIT "0" 16) 16 16 factor)
+   16
+   (* 16 factor)
+  )
+  16 1 factor 8 
+ )
+ (typed_vec-saturate  reg_0 16 1  factor 8 0)
+ )
+
+(rewrite
+ (typed_cast-uint-truncate  
+  (typed_signed-vec-max
+   (typed_signed-vec-min
+    reg_0
+    (typed_xBroadcast (LIT "65535" 32) 32 32 factor)
+    32
+    (* 32 factor)
+   )
+   (typed_xBroadcast (LIT "0" 32) 32 32 factor)
+   32
+   (* 32 factor)
+  )
+  32 1 factor 16 
+ )
+ (typed_vec-saturate  reg_0 32 1  factor 16 0)
+ )
+
+
+ (rewrite
+  (typed_cast-int-truncate  
+   (typed_signed-vec-max
+    (typed_signed-vec-min
+     reg_0
+     (typed_xBroadcast (LIT "32767" 32) 32 32 factor)
+     32
+     (* 32 factor)
+    )
+    (typed_xBroadcast (LIT "-32768" 32) 32 32 factor)
+    32
+    (* 32 factor)
+   )
+   32 1 factor 16 
+  )
+  (typed_vec-saturate  reg_0 32 1  factor 16 1)
+ )
+
+
+;; Vector saturate
+(rewrite
+ (typed_cast-int-truncate  
+  (typed_signed-vec-max
+   (typed_signed-vec-min
+    reg_0
+    (typed_xBroadcast (LIT "127" 16) 16 16 factor)
+    16
+    (* 16 factor)
+   )
+   (typed_xBroadcast (LIT "-128" 16) 16 16 factor)
+   16
+   (* 16 factor)
+  )
+  16 1 factor 8 
+ )
+ (typed_vec-saturate  reg_0 16 1  factor 8 1)
+ )
+
+(rewrite
+  (typed_cast-int-truncate  
+   (typed_signed-vec-max
+    (typed_signed-vec-min
+     reg_0
+     (typed_xBroadcast (LIT "2147483647" 64) 64 64 factor)
+     64
+     (* 64 factor)
+    )
+    (typed_xBroadcast (LIT "-2147483648" 64) 64 64 factor)
+    64
+    (* 64 factor)
+   )
+   64 1 factor  32
+  )
+  (typed_vec-saturate  reg_0 64 1  factor 32 1)
+ )
+
+
+
+
+(rewrite 
+(typed_signed-vec-rounding_mul_shift_right
+reg_0
+reg_1
+reg_2
+16
+2048
+)
+(typed_concat_vectors
+ (typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   64
+   1
+   64
+   16
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   64
+   1
+   64
+   16
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   64
+   1
+   64
+   16
+   2048
+  )
+  16
+  1024
+ )
+(typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   0 
+   1
+   64
+   16
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   0
+   1
+   64
+   16
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   0 
+   1
+   64
+   16
+   2048
+  )
+  16
+  1024
+ )
+ 
+ 16
+ 1024
+ )
+)
+
+(rewrite 
+(typed_signed-vec-rounding_mul_shift_right
+reg_0
+reg_1
+reg_2
+32
+2048
+)
+(typed_concat_vectors
+ (typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   32
+   1
+   32
+   32 
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   32 
+   1
+   32
+   32
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   32
+   1
+   32
+   32
+   2048
+  )
+  32
+  1024
+ )
+(typed_signed-vec-rounding_mul_shift_right
+  (typed_slice_vectors
+   reg_0
+   0 
+   1
+   32
+   32
+   2048
+  )
+  (typed_slice_vectors
+   reg_1
+   0
+   1
+   32
+   32
+   2048
+  )
+(typed_slice_vectors
+   reg_2
+   0 
+   1
+   32
+   32
+   2048
+  )
+  32
+  1024
+ )
+ 
+ 32
+ 1024
+ )
+)
+
+
+
+(rewrite
+ (typed_cast-uint-extend v1 iprec isigned olane oprec)
+ (typed_unsigned-vec-widen-mul 
+ v1 
+ (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+ iprec (* iprec olane))
+)
+(rewrite
+ (typed_cast-int-extend v1 iprec isigned olane oprec)
+ (typed_signed-vec-widen-mul 
+ v1 
+ (typed_xBroadcast (LIT "1" iprec) iprec iprec olane) 
+ iprec (* iprec olane))
+)
+
+
+
+(rewrite 
+ (typed_cast-uint-truncate
+  (typed_unsigned-vec-min
+   reg_0
+   (typed_xBroadcast (LIT "255" 16)  16 16 factor ) 16 (* factor 16))  16 1 factor 8)
+
+(typed_vec-saturate  reg_0 16 1  factor 8 0)
+
+ )
+
+(birewrite 
+ (typed_vec-shl
+  reg_0
+  (typed_xBroadcast (LIT "1" prec)  prec prec factor )
+  prec
+  size
+ )
+ (typed_signed-vec-mul
+  reg_0 
+  (typed_xBroadcast (LIT "2" prec)  prec prec factor )
+  prec size
+ )
+ )
+
+
+(rewrite 
+ (typed_vec-shl
+  reg_0
+  (typed_xBroadcast (LIT "1" prec)  prec prec factor )
+  prec
+  size
+ )
+ (typed_vec-add
+  reg_0 
+  reg_0 
+  prec size
+ )
+ )
+
+(rewrite
+ (typed_signed-vec-shr
+  reg_0
+  reg_1
+  prec
+  size
+ )
+
+ (typed_vec-shl
+  reg_0
+  (typed_signed-vec-mul
+   reg_1 
+   (typed_xBroadcast (LIT "-1" prec)  prec prec (/ size prec))
+   prec size
+  )
+  prec
+  size
+ )
+
+
+ )
+

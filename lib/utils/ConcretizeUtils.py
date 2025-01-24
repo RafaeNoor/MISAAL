@@ -160,10 +160,37 @@ def get_possible_input_sizes_of_eq_class(ctx_, dsl_list):
         for ctx in dsl_inst.contexts:
             if ctx.name == ctx_.name:
                 ret_size = True
+                break
 
-            for arg in ctx.context_args:
-                if isinstance(arg, BitVector):
-                    sizes.append(arg.size)
+        if ret_size:
+            for ctx in dsl_inst.contexts:
+                for arg in ctx.context_args:
+                    if isinstance(arg, BitVector):
+                        sizes.append(arg.size)
+
+        if ret_size:
+            return set(sizes)
+    return set()
+
+def get_possible_output_sizes_of_eq_class(ctx_, dsl_list):
+
+    if isinstance(ctx_, Reg):
+        return set()
+
+    for dsl_inst in dsl_list:
+        sizes = []
+        ret_size = False
+        for ctx in dsl_inst.contexts:
+            if ctx.name == ctx_.name:
+                ret_size = True
+                break
+
+        if ret_size:
+            for ctx in dsl_inst.contexts:
+                if ctx.out_vectsize is None:
+                    continue
+
+                sizes.append(ctx.out_vectsize)
 
         if ret_size:
             return set(sizes)
@@ -230,6 +257,15 @@ def is_expression_template_valid(template):
     if isinstance(template[0], Reg):
         return True
 
+    if isinstance(template[0], ConstBitVector):
+        return True
+
+    if isinstance(template[0], Context):
+        required_num_sym_args = sum([1 for arg in template[0].context_args if isinstance(arg, BitVector)])
+        num_provided = len(template[1])
+
+        if num_provided != required_num_sym_args:
+            return False
 
     for sub_temp in template[1]:
         if not is_expression_template_valid(sub_temp[0]):
@@ -245,6 +281,10 @@ def materialize_expression_template(valid_template):
     expr = valid_template[0]
 
     if isinstance(expr, Reg):
+        #print("Materialize reg size:", expr.size, expr.precision)
+        return expr
+
+    if isinstance(expr, ConstBitVector):
         #print("Materialize reg size:", expr.size, expr.precision)
         return expr
 
@@ -269,16 +309,21 @@ def materialize_expression_template(valid_template):
 
 
 
-def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
-    valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list)
+def get_valid_concretization_generator(ref_expr, output_size, dsl_list, root_ctx_name = None):
+    valid_expression_templates = get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, root_ctx_name = root_ctx_name)
 
+    valid = False
 
     for valid_template in valid_expression_templates:
+
         if not is_expression_template_valid(valid_template):
             continue
+        valid = True
         materialize_context = materialize_expression_template(valid_template)
-        return materialize_context
+        yield materialize_context
 
+    if valid:
+        return
 
     print(ref_expr.emit_context_expr_string())
     print(output_size)
@@ -288,11 +333,15 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list):
 
 
 
-def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
+def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, root_ctx_name = None):
 
     if isinstance(ref_expr, Reg):
         #print("Creating reg of required size: ", output_size)
         yield [Reg(ref_expr.index, ref_expr.precision, output_size, signed = ref_expr.signed), None]
+        return []
+
+    if isinstance(ref_expr, ConstBitVector):
+        yield [ConstBitVector(ref_expr.value, output_size, name = ref_expr.name), None]
         return []
 
 
@@ -323,13 +372,20 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
     valid_ctxs = []
 
     for ctx in dsl_inst.contexts:
+
+
         ctx_sym_args = get_ctx_sym_args(ctx)
 
-        if ctx_sym_args  != num_sym_args:
+        #if ctx_sym_args  != num_sym_args:
+        #    continue
+
+        if not root_ctx_name is None and ctx.name != root_ctx_name:
             continue
 
         if ctx.out_vectsize is None:
             continue
+
+
 
         if ctx.out_vectsize == output_size:
             valid_ctxs.append(ctx)
@@ -433,6 +489,7 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list):
                     continue
                 yield [valid_ctx, [(config_0, sym_idx)]]
         else:
+            print(ref_expr.emit_context_expr_string())
             assert False, "Unreachable number of sym args {}".format(num_sym_args)
 
 

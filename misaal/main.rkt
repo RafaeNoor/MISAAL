@@ -69,6 +69,7 @@
 (require misaal/synthesis/expanded_grammar_iterative_synthesis)
 (require misaal/synthesis/target_desc)
 (require misaal/synthesis/grammar_utils)
+(require misaal/synthesis/param_abstract)
 
 
 (provide 
@@ -111,5 +112,6 @@
 (all-from-out misaal/synthesis/ir_to_ir_transform)
 (all-from-out misaal/synthesis/target_desc)
 (all-from-out misaal/synthesis/grammar_utils)
+(all-from-out misaal/synthesis/param_abstract)
 
   )
