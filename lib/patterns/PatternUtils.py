@@ -239,6 +239,17 @@ class PatternAbstractor:
         assert dst_param_name in dst_param_map, "Expected {} in dst_param_map".format(dst_param_name)
 
         num_test_cases = len(dst_param_map[dst_param_name])
+        num_unique_test_cases = len(list(set(dst_param_map[dst_param_name])))
+
+        # Short circuit for those parameters
+        # which are always the same value
+        if num_unique_test_cases == 1:
+            return True, Integer("const", value = dst_param_map[dst_param_name][0])
+
+
+
+
+
         if not self.examples_limit is None:
             num_test_cases = min(num_test_cases, self.examples_limit)
         test_cases_def = []
@@ -260,6 +271,7 @@ class PatternAbstractor:
                     values.append(dst_vals[tc])
             test_case = self.emit_create_param_abstract_spec(values, target_value)
             test_cases_def.append(test_case)
+
 
         test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
         statements.append(test_def)
@@ -339,7 +351,10 @@ class PatternAbstractor:
                 num_positions += self.get_expr_num_numeric_positions(arg)
             return num_positions
 
-        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer, Variable]]):
+            return 1
+
+        if isinstance(expr, Context) and expr.extensions != None and 'integer_arith' in expr.extensions:
             return 1
 
         return 0
@@ -349,6 +364,10 @@ class PatternAbstractor:
 
         if isinstance(expr, Context):
             positions = []
+
+            if expr.extensions != None and 'integer_arith' in expr.extensions:
+                iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
+                return [iterator]
 
             for idx, arg in enumerate(expr.context_args):
                 sub_positions = self.get_expr_numeric_positions(arg, outer_context = expr, outer_args_idx = idx)
@@ -362,10 +381,6 @@ class PatternAbstractor:
             iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
             return [iterator]
 
-        if isinstance(expr, Context) and expr.extensions != None and 'integer_arith' in expr.extensions:
-            iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
-            return [iterator]
-
         return []
 
 
@@ -374,6 +389,8 @@ class PatternAbstractor:
     def set_expr_numeric_position(self, expr, position, value):
         iterators = self.get_expr_numeric_positions(expr)
 
+        print("set_expr_numeric_position")
+        print(position, iterators, len(iterators))
         assert position < len(iterators), "Out of bounds numeric parameters access"
         pos_iter = iterators[position]
 
@@ -526,8 +543,10 @@ class PatternAbstractor:
             for idx, param in enumerate(symbolic_params):
 
                 if idx < num_src_params:
+                    print("Set SRC")
                     self.set_expr_numeric_position(src_copy, idx, param)
                 else:
+                    print("Set DST")
                     dst_idx = idx - num_src_params
                     self.set_expr_numeric_position(dst_copy, dst_idx, param)
             pattern = Pattern(src_copy, dst_copy, src_dsl_list = pattern_template.src_dsl_list,target_dsl_list =  pattern_template.target_dsl_list, name = pattern_template.name, src_language = pattern_template.src_language, target_language = pattern_template.target_language, bidirectional = pattern_template.bidirectional)
@@ -637,7 +656,7 @@ class PatternAbstractor:
             if success:
                 print("Success for key", key)
                 print(expr)
-                parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema)
+                parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema) if isinstance(expr, str) else expr
                 # Increment before storing
                 # First adjust the references to 'regs' to reflect ordering according
                 # to the actual position iterators. Recall, that for each position,

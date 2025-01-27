@@ -262,6 +262,10 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         return const_bv
 
+    elif first_term == 'SCALAR':
+        scalar_value = Integer("scalar",value = nested_expr[1])
+        return scalar_value
+
     elif first_term.endswith("_dsl"):
         # Obtain a copy from the dsl_list whose parameters match then bind symbolic arguments expressions with
         # parsed contexts
