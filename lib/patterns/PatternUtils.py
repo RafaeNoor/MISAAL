@@ -358,7 +358,11 @@ class PatternAbstractor:
 
             return positions
 
-        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer, Variable]]):
+            iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
+            return [iterator]
+
+        if isinstance(expr, Context) and expr.extensions != None and 'integer_arith' in expr.extensions:
             iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
             return [iterator]
 
@@ -459,18 +463,6 @@ class PatternAbstractor:
     def inline_symbolic_references(self, symbolic_pattern_params, num_src_params):
 
 
-        #for pi, expr in enumerate(symbolic_pattern_params):
-        #    updated_expression = self.increment_regs(expr, geq = pi)
-        #    symbolic_pattern_params[pi] = updated_expression
-
-
-
-        for idx, expr in enumerate(symbolic_pattern_params):
-            print("#",idx)
-            if isinstance(expr, Context):
-                print(expr.emit_context_expr_string())
-            else:
-                print(expr.get_rkt_value())
 
 
         # Now that the register indices are adjusted correctly,
@@ -496,7 +488,6 @@ class PatternAbstractor:
                 #graph[reg_name].append(expr_name)
                 graph[expr_name].append(reg_name)
 
-        print(json.dumps(graph))
         ts = TopologicalSorter(graph)
         # Perform topological sort
         topological_order = ts.static_order()
@@ -524,6 +515,24 @@ class PatternAbstractor:
             else:
                 print(expr.get_rkt_value())
         return symbolic_pattern_params
+
+    def replace_parameters_with_symbolic_exprs(self, pattern_template, symbolic_params_versions, num_src_params):
+
+        patterns = []
+        for symbolic_params in symbolic_params_versions:
+
+            src_copy = copy.deepcopy(pattern_template.src_expr)
+            dst_copy = copy.deepcopy(pattern_template.target_expr)
+            for idx, param in enumerate(symbolic_params):
+
+                if idx < num_src_params:
+                    self.set_expr_numeric_position(src_copy, idx, param)
+                else:
+                    dst_idx = idx - num_src_params
+                    self.set_expr_numeric_position(dst_copy, dst_idx, param)
+            pattern = Pattern(src_copy, dst_copy, src_dsl_list = pattern_template.src_dsl_list,target_dsl_list =  pattern_template.target_dsl_list, name = pattern_template.name, src_language = pattern_template.src_language, target_language = pattern_template.target_language, bidirectional = pattern_template.bidirectional)
+            patterns.append(pattern)
+        return patterns
 
 
     def swap_patterns(self, bucket):
@@ -681,6 +690,15 @@ class PatternAbstractor:
         updated_symbolic_params = self.peel_symbolic_parameters(symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel)
         updated_symbolic_params = [self.inline_symbolic_references(params, num_src_params) for params in updated_symbolic_params]
         print(len(updated_symbolic_params))
+
+
+        abstract_patterns = self.replace_parameters_with_symbolic_exprs(bucket[0], updated_symbolic_params, num_src_params)
+
+        for idx, abs_pat in enumerate(abstract_patterns):
+            print("Abstract pattern", idx)
+            abs_pat.print_pattern()
+        return abstract_patterns
+
 
 
 
