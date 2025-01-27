@@ -7,6 +7,7 @@ from utils.CanonicalizeExpressions import CanonicalizeExpression
 from utils.ReadDSL import read_string_to_dsl
 from sema.integer_arith_sema import integer_arith_sema_dict
 from common.Types import *
+from collections import defaultdict
 import copy
 import json
 from graphlib import TopologicalSorter, CycleError
@@ -324,7 +325,8 @@ class PatternAbstractor:
         print("Total # patterns:", len(patterns))
         print("Total Number of buckets: ", len(buckets))
 
-        test_bucket = self.swap_patterns(buckets[0])
+        #test_bucket = self.swap_patterns(buckets[0])
+        test_bucket = (buckets[0])
         self.abstract_pattern_bucket(test_bucket, dsl_list)
 
 
@@ -420,6 +422,39 @@ class PatternAbstractor:
         return has_cycle
 
 
+    def peel_symbolic_parameters(self, symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel):
+
+        peeled_params = [symbolic_pattern_params]
+        num_src_regs = len([key for key in src_position_map])
+        num_dst_regs = len([key for key in dst_position_map])
+
+        for node in nodes_to_peel:
+            node = int(node)
+            peeled_params_iter = []
+            for param_version in peeled_params:
+
+                param = param_version[node]
+                concrete_values = []
+                if int(node) < num_src_regs:
+                    # Belonging to src parameters
+                    concrete_values = src_position_map[node]
+                else:
+                    dst_index = int(node) - num_src_regs
+                    concrete_values = dst_position_map[dst_index]
+
+                concrete_values = list(set(concrete_values))
+
+                print("concrete_values", concrete_values)
+                for conc_val in concrete_values:
+                    param_copy = copy.deepcopy(param_version)
+                    param_copy[node] = Integer("peel", value = conc_val)
+                    peeled_params_iter.append(param_copy)
+            peeled_params = peeled_params_iter
+        return peeled_params
+
+
+
+
 
     def inline_symbolic_references(self, symbolic_pattern_params, num_src_params):
 
@@ -465,10 +500,30 @@ class PatternAbstractor:
         ts = TopologicalSorter(graph)
         # Perform topological sort
         topological_order = ts.static_order()
-        print("topological ordering")
         for i in topological_order:
-            print(i)
+            index = int(i)
+            sym_expr = symbolic_pattern_params[index]
 
+            if isinstance(sym_expr, Variable):
+                continue
+            elif isinstance(sym_expr, Reg):
+                reg_index = int(sym_expr.index)
+                symbolic_pattern_params[index] = symbolic_pattern_params[reg_index]
+            elif isinstance(sym_expr, Context):
+                expr_regs = get_unique_context_registers(sym_expr)
+                for reg in expr_regs:
+                    reg_index = int(reg.index)
+                    sym_expr = bind_expr_to_reg(sym_expr, reg_index, symbolic_pattern_params[reg_index])
+                symbolic_pattern_params[index] = sym_expr
+
+
+        for idx, expr in enumerate(symbolic_pattern_params):
+            print("#",idx)
+            if isinstance(expr, Context):
+                print(expr.emit_context_expr_string())
+            else:
+                print(expr.get_rkt_value())
+        return symbolic_pattern_params
 
 
     def swap_patterns(self, bucket):
@@ -537,10 +592,6 @@ class PatternAbstractor:
         num_src_params = len(symbolic_pattern_params)
         num_dst_params = len([key for key in dst_position_map])
 
-        # To avoid circular definitions for dst parameters, maintain
-        # a list of cant use registers
-        cant_use_regs = { k + num_src_params : [] for k in dst_position_map }
-
         graph = {str(k) : [] for k in src_position_map}
         for idx, key in enumerate(dst_position_map):
             absolute_index = idx + num_src_params
@@ -555,19 +606,8 @@ class PatternAbstractor:
 
             absolute_index = key + num_src_params
             node_name = str(absolute_index)
-            #exclude_regs = cant_use_regs[absolute_index]
 
             exclude_regs = []
-            for reg_idx in range(num_src_params + num_dst_params):
-                if reg_idx == absolute_index:
-                    continue
-                if not self.should_exclude_reg(graph, absolute_index, reg_idx):
-                    continue
-
-                if reg_idx < absolute_index:
-                    exclude_regs.append(reg_idx)
-                else:
-                    exclude_regs.append(reg_idx-1)
 
 
             print("=*"*40)
@@ -605,13 +645,9 @@ class PatternAbstractor:
                     print(parsed_expression.get_rkt_value())
                 symbolic_pattern_params.append(parsed_expression)
 
-
-
                 expr_regs = get_unique_context_registers(parsed_expression)
 
                 for reg in expr_regs:
-                    #if int(reg.index) in cant_use_regs:
-                    #    cant_use_regs[int(reg.index)].append(absolute_index)
                     graph[node_name].append(str(reg.index))
 
             else:
@@ -619,13 +655,92 @@ class PatternAbstractor:
                 return False, None
 
 
-        symbolic_pattern_params = self.inline_symbolic_references(symbolic_pattern_params, num_src_params)
+        print("Graph after param synthesis")
+        print(json.dumps(graph))
+        print(self.find_node_in_most_cycles(graph), "is part of most cycles")
+
+
+        # The graph containing cycle implies circular definitions for the abstracted pattern. We break these
+        # cycles by 'peeling' out nodes in the graph and replacing them with the constant values they take in the
+        # concretely derived rewrites. We repeat this until the graph contains no cycles. We use a greedy algorithm
+        # to identify the node which is part of the most cycles and 'peel' that.
+
+        peeled_graph = copy.deepcopy(graph)
+        nodes_to_peel = []
+
+        while self.graph_has_cycle(peeled_graph):
+            to_peel, count = self.find_node_in_most_cycles(peeled_graph)
+            nodes_to_peel.append(to_peel)
+            peeled_graph.pop(to_peel, None)
+            for node in peeled_graph:
+                peeled_graph[node] = [value for value in peeled_graph[node] if value != to_peel]
+
+        print("To Peel!:", nodes_to_peel)
+
+        # Peel out nodes creating possibly multiple versions of parameterizations
+        updated_symbolic_params = self.peel_symbolic_parameters(symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel)
+        updated_symbolic_params = [self.inline_symbolic_references(params, num_src_params) for params in updated_symbolic_params]
+        print(len(updated_symbolic_params))
 
 
 
 
 
 
+
+
+
+
+
+
+    def find_cycles(self, graph):
+        """
+        Function to find all cycles in a directed graph using DFS.
+        Returns a list of cycles, where each cycle is a list of nodes.
+        """
+        def dfs(node, path, visited, all_cycles):
+            if node in path:  # Found a cycle
+                cycle_index = path.index(node)
+                cycle = path[cycle_index:]  # Extract the cycle from the path
+                all_cycles.append(cycle)
+                return
+
+            if node in visited:  # Skip already processed nodes
+                return
+
+            visited.add(node)
+            path.append(node)
+
+            # Recursively visit each neighbor
+            for neighbor in graph.get(node, []):
+                dfs(neighbor, path, visited, all_cycles)
+
+            path.pop()  # Backtrack
+
+        all_cycles = []
+        visited = set()
+        for node in graph:
+            if node not in visited:
+                dfs(node, [], visited, all_cycles)
+
+        return all_cycles
+
+    # Code obtained by ChatGPT!
+    def find_node_in_most_cycles(self, graph):
+        # Find all cycles in the graph
+        cycles = self.find_cycles(graph)
+
+        # Dictionary to count how many times each node appears in a cycle
+        node_cycle_count = {}
+
+        for cycle in cycles:
+            for node in cycle:
+                node_cycle_count[node] = node_cycle_count.get(node, 0) + 1
+
+        # Find the node that appears in the most cycles
+        most_cycles_node = max(node_cycle_count, key=node_cycle_count.get, default=None)
+
+        return most_cycles_node, node_cycle_count.get(most_cycles_node, 0)
 
 
 
