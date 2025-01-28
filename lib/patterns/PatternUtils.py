@@ -302,7 +302,7 @@ class PatternAbstractor:
 
 
 
-    def generate_param_expr_general(self, param_map, param_name, depth = 2):
+    def generate_param_expr_general(self, param_map, param_name, depth = 2, exclude_regs = []):
         statements = []
 
         assert param_name in param_map, "Expected {} in param_map".format(param_name)
@@ -335,7 +335,7 @@ class PatternAbstractor:
         test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
         statements.append(test_def)
 
-        synthesis_query = self.emit_synthesize_query("param-test-cases", depth = depth)
+        synthesis_query = self.emit_synthesize_query("param-test-cases", depth = depth, exclude_regs = exclude_regs)
 
         synthesis_result = "(define-values (sat? expr) {})".format(synthesis_query)
         statements.append(synthesis_result)
@@ -492,7 +492,6 @@ class PatternAbstractor:
                 failed_bucket_indicies.append(idx)
             else:
                 abstracted_patterns += new_patterns
-            break
 
         print("Total number of abstracted patterns", len(abstracted_patterns))
         print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
@@ -806,6 +805,7 @@ class PatternAbstractor:
             print("Testing Dst Key:", key, "absolute index:", absolute_index)
             print("Exclude regs:", exclude_regs)
 
+            # TODO replace these calls into generate_param_expr calls
 
             success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = True, exclude_regs = exclude_regs, depth = 2)
 
@@ -855,6 +855,7 @@ class PatternAbstractor:
             dst_param_index = int(dst_param_name) + num_src_params
             position_map[dst_param_index] = values
 
+
         for src_param_name in src_position_map:
             src_param_index = int(src_param_name)
             accounted = False
@@ -864,23 +865,16 @@ class PatternAbstractor:
                 accounted = accounted or (src_param_index in expr_reg_indices)
             if not accounted:
                 print("NEED TO LEGALIZE SRC FOR ", src_param_name)
-                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2)
+                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2, exclude_regs = [v for v in position_map if v < num_src_params])
 
                 if not success:
                     print("Unable to synthesize for src key", src_param_name)
                     return False, None
 
+                print(expr)
                 parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema) if isinstance(expr, str) else expr
-                print(parsed_expression)
                 parsed_expression = self.increment_regs(parsed_expression, geq = src_param_index)
                 symbolic_pattern_params[src_param_index] = parsed_expression
-
-
-
-
-
-
-
 
 
 
