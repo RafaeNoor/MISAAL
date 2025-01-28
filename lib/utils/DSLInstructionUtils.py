@@ -1358,3 +1358,16 @@ def get_dsl_inst_from_dsl_list(inst_name, dsl_list):
             return dsl_inst
     assert False, inst_name+" not in dsl_list"
     return None
+
+
+def bind_expr_to_reg(ctx, index, value):
+    if isinstance(ctx, Reg):
+        if int(ctx.index) == index:
+            return value
+        else:
+            return ctx
+    elif isinstance(ctx, Context):
+        for idx, arg in enumerate(ctx.context_args):
+            ctx.context_args[idx] = bind_expr_to_reg(arg, index, value)
+
+    return ctx

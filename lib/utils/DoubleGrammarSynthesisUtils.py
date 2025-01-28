@@ -351,7 +351,7 @@ class DoubleGrammarSynthesisUtils:
 
 
 
-    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2, target = "x86"):
+    def double_grammar_synthesis_hydride(self, src_expr, target_list, invoke_ref_custom = None, invoke_ref_lane_custom = None, invoke_target_custom = None, additional_statements = [], custom_src_output_size = None, custom_dst_output_size = None, custom_src_input_sizes = None, custom_target_input_sizes = None, is_src_grammar = True, depth = 2, target = "halide"):
         src_ctx = copy.deepcopy(src_expr)
 
         print(emit_compact_context_expr_str(src_ctx))
@@ -470,13 +470,14 @@ class DoubleGrammarSynthesisUtils:
         TARGET = target
         spec = get_hydride_spec_from_ctx(src_ctx)
         spec.set_target(TARGET)
-        spec.input_precision = [16,16]
-        spec.input_shapes = [[1,16], [1,16]]
+        #spec.input_precision = [16,16]
+        #spec.input_shapes = [[1,16], [1,16]]
         # Use Hydride heurstic based synthesis for Destination but
         # expanded grammar for Src expression
 
         #GrammarGeneratorDst = StepWiseSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 2, depth = depth, target = TARGET, step = 0, scale_factor =1)
 
+        print(spec)
         print(target_language_dsl)
         GrammarGeneratorDst = AllInstructionsSynthesizer(spec = spec, dsl_operators =target_language_dsl , grammar_generator = TypedSimpleGrammarGenerator(), contexts_per_dsl_inst = 20, depth = depth, target = TARGET, step = 0, scale_factor =1)
         dst_expression_grammar_tree = GrammarGeneratorDst.emit_synthesis_grammar(main_grammar_name = "dst-grammar-wrapper")
