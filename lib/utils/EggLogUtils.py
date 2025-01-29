@@ -139,12 +139,40 @@ def emit_expr_to_egg(expr, param_map = {}):
         return emit_reg_to_egg(expr)
     elif isinstance(expr, Bool):
         return emit_bool_to_egg(expr)
+    elif isinstance(expr, Variable):
+        return emit_variable_to_egg(expr)
     else:
         print(expr)
         assert False, "Unsupported type to emit to egg"
 
 
+def is_parameter_abstraction_ctx(expr):
+    return expr.extensions != None and 'integer_arith' in expr.extensions
+
+def emit_parameter_abstraction_ctx_to_egg(expr, param_map = {}):
+    name_to_symbol = {
+        "MUL" : "*",
+        "MOD" : "%",
+        "ADD" : "+",
+        "SUB" : "-",
+        "DIV" : "/"
+    }
+
+    assert expr.name in name_to_symbol
+
+    tokens = []
+    tokens.append(name_to_symbol[expr.name])
+    tokens.append(emit_expr_to_egg(expr.context_args[0], param_map = param_map))
+    tokens.append(emit_expr_to_egg(expr.context_args[1], param_map = param_map))
+
+    return "({}\n)".format("\n".join(tokens))
+
+
+
+
 def emit_ctx_to_egg(expr, param_map = {}):
+    if is_parameter_abstraction_ctx(expr):
+        return emit_parameter_abstraction_ctx_to_egg(expr, param_map = param_map)
     tokens = []
 
     tokens.append(egg_sanatize_name(expr.dsl_name))
@@ -198,6 +226,10 @@ def emit_bool_to_egg(expr):
 
 def emit_reg_to_egg(expr):
     return "reg_{}".format(expr.index)
+
+def emit_variable_to_egg(expr):
+    return expr.name
+
 
 
 def emit_rewrite_expr(candidate, simplified, bidirectional = False, param_map = None):

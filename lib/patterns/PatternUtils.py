@@ -218,7 +218,8 @@ class ContextNumericIter:
 
 
 class PatternAbstractor:
-    def __init__(self, patterns, dsl_list, examples_limit = None):
+    def __init__(self, patterns, dsl_list, examples_limit = None, target = "Halide"):
+        self.target = target
         self.patterns = patterns
         self.dsl_list = dsl_list
         self.equality_checker = CanonicalizeExpression()
@@ -476,6 +477,15 @@ class PatternAbstractor:
                 if src_expr_equal and dst_expr_equal:
                     accounted_for_patterns_idxs.append(j)
                     bucket_i.append(pat_j)
+
+                src_expr_dst_equal = self.equality_checker.isCanonical(pat_i.src_expr, pat_j.target_expr)
+                dst_expr_src_equal = self.equality_checker.isCanonical(pat_i.target_expr, pat_j.src_expr)
+
+                if src_expr_dst_equal and dst_expr_src_equal:
+                    accounted_for_patterns_idxs.append(j)
+                    pat_j.swap()
+                    bucket_i.append(pat_j)
+
             buckets.append(bucket_i)
 
 
@@ -485,18 +495,33 @@ class PatternAbstractor:
 
         abstracted_patterns = []
 
-        failed_bucket_indicies = []
-        for idx, test_bucket in enumerate(buckets):
-            succ, new_patterns = self.abstract_pattern_bucket(test_bucket, dsl_list)
+        def worker(task):
+            bucket, idx = task
+            succ, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
             if not succ:
                 failed_bucket_indicies.append(idx)
             else:
                 abstracted_patterns += new_patterns
 
+
+        POOL_SIZE = 8
+        pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
+        PARALLEL = True
+        failed_bucket_indicies = []
+        for idx, test_bucket in enumerate(buckets):
+            if PARALLEL:
+                pool.submit(worker, (test_bucket, idx))
+            else:
+                succ, new_patterns = self.abstract_pattern_bucket(test_bucket, dsl_list)
+                if not succ:
+                    failed_bucket_indicies.append(idx)
+                else:
+                    abstracted_patterns += new_patterns
+        pool.shutdown(wait=True)
         print("Total number of abstracted patterns", len(abstracted_patterns))
         print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
 
-        with open("failed_buckets.txt", "w+") as FailLog:
+        with open(self.target+"_failed_buckets.txt", "w+") as FailLog:
             FailLog.write(str(failed_bucket_indicies))
         return abstracted_patterns
 
@@ -865,7 +890,8 @@ class PatternAbstractor:
                 accounted = accounted or (src_param_index in expr_reg_indices)
             if not accounted:
                 print("NEED TO LEGALIZE SRC FOR ", src_param_name)
-                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2, exclude_regs = [v for v in position_map if v < num_src_params])
+                # exclude regs is num_src_params - 1 since one register of the src will not be included in the query any-ways
+                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2, exclude_regs = [v for v in position_map if v < num_src_params - 1])
 
                 if not success:
                     print("Unable to synthesize for src key", src_param_name)
