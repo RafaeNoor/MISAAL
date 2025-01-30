@@ -247,6 +247,14 @@ class PatternAbstractor:
         if num_unique_test_cases == 1:
             return True, Integer("const", value = dst_param_map[dst_param_name][0])
 
+        # Optimize for the case where the value is always to same as a src param
+        dst_values = dst_param_map[dst_param_name]
+        for src_param_name, src_values in src_param_map.items():
+            if src_values == dst_values:
+                print("Short circuited values")
+                return True, Reg(int(src_param_name), 8, 8)
+
+
         if not self.examples_limit is None:
             num_test_cases = min(num_test_cases, self.examples_limit)
         test_cases_def = []
@@ -319,6 +327,20 @@ class PatternAbstractor:
         if not self.examples_limit is None:
             num_test_cases = min(num_test_cases, self.examples_limit)
         test_cases_def = []
+
+
+        # Optimize for the case where the value is always to same as a src param
+        dst_values = param_map[param_name]
+        for other_param_name, other_values in param_map.items():
+            if other_param_name == param_name:
+                continue
+            if other_param_name < (len(exclude_regs) + 1):
+                continue
+            if other_values == dst_values:
+                print("Short circuited values general")
+                return True, Reg(int(other_param_name) - 1, 8, 8)
+
+
         for tc in range(num_test_cases):
             values = []
 
@@ -492,14 +514,22 @@ class PatternAbstractor:
         print("Total # patterns:", len(patterns))
         print("Total Number of buckets: ", len(buckets))
 
-
+        global abstracted_patterns
         abstracted_patterns = []
+
+        global concrete_patterns
+        concrete_patterns = 0
+
 
         def worker(task):
             bucket, idx = task
             succ, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
+            global abstracted_patterns
+            global concrete_patterns
             if not succ:
                 failed_bucket_indicies.append(idx)
+                concrete_patterns += len(bucket)
+                abstracted_patterns += bucket
             else:
                 abstracted_patterns += new_patterns
 
@@ -508,18 +538,24 @@ class PatternAbstractor:
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
         PARALLEL = True
         failed_bucket_indicies = []
+        #buckets = [buckets[564]]
         for idx, test_bucket in enumerate(buckets):
+            #test_bucket = self.swap_patterns(test_bucket)
             if PARALLEL:
                 pool.submit(worker, (test_bucket, idx))
             else:
                 succ, new_patterns = self.abstract_pattern_bucket(test_bucket, dsl_list)
                 if not succ:
+                    concrete_patterns += len(test_bucket)
                     failed_bucket_indicies.append(idx)
+                    abstracted_patterns += test_bucket
                 else:
                     abstracted_patterns += new_patterns
         pool.shutdown(wait=True)
         print("Total number of abstracted patterns", len(abstracted_patterns))
         print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
+        print("Number of abstract patterns (including concrete rewrites)", len(abstracted_patterns))
+        print("Number of remaining concrete rewrites",concrete_patterns )
 
         with open(self.target+"_failed_buckets.txt", "w+") as FailLog:
             FailLog.write(str(failed_bucket_indicies))
@@ -631,9 +667,42 @@ class PatternAbstractor:
 
     def peel_symbolic_parameters(self, symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel):
 
-        peeled_params = [symbolic_pattern_params]
         num_src_regs = len([key for key in src_position_map])
         num_dst_regs = len([key for key in dst_position_map])
+
+
+        combinations = []
+        for i in range(len(src_position_map[0])):
+            empty_list = copy.deepcopy(([0] * len(nodes_to_peel)))
+            combinations.append(empty_list)
+
+        for nidx, node in enumerate(nodes_to_peel):
+            node = int(node)
+
+            concrete_values = []
+            if int(node) < num_src_regs:
+                # Belonging to src parameters
+                concrete_values = src_position_map[node]
+            else:
+                dst_index = int(node) - num_src_regs
+                concrete_values = dst_position_map[dst_index]
+            for idx in range(len(combinations)):
+                combinations[idx][nidx] = concrete_values[idx]
+        combinations = [tuple(comb) for comb in combinations]
+        print("Combination of values:", combinations)
+        combinations = list(set(combinations))
+        print("Unique Combination of values:", combinations)
+
+
+        peeled_params = [copy.deepcopy(symbolic_pattern_params) for i in range(len(combinations))]
+
+
+        for p_idx, param_version in enumerate(peeled_params):
+            for n_idx, node in enumerate(nodes_to_peel):
+                conc_val = combinations[p_idx][n_idx]
+                param_version[int(node)] = Integer("peel", value = conc_val)
+        return peeled_params
+
 
         for node in nodes_to_peel:
             node = int(node)
@@ -753,6 +822,7 @@ class PatternAbstractor:
         template_expr_src = copy.deepcopy(bucket[0].src_expr)
         template_expr_dst = copy.deepcopy(bucket[0].target_expr)
 
+        nodes_to_peel = []
 
         print(template_expr_src.emit_context_expr_string())
         print(template_expr_dst.emit_context_expr_string())
@@ -839,8 +909,8 @@ class PatternAbstractor:
                 success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 2)
 
             # Extend to include other dst expression parameters as well
-            if not success:
-                success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 3)
+            #if not success:
+            #    success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 3)
 
             if success:
                 print("Success for key", key)
@@ -869,7 +939,9 @@ class PatternAbstractor:
 
             else:
                 print("Unable to synthesize for key", key)
-                return False, None
+                symbolic_pattern_params.append(Reg(absolute_index, 8,8))
+                nodes_to_peel.append(absolute_index)
+                #return False, None
 
         # Once all dst params have been synthesized, to ensure a pattern remains bidirectional
         # we must check that the symbol appears on both sides of the pattern. Therefore, verify that
@@ -895,11 +967,14 @@ class PatternAbstractor:
 
                 if not success:
                     print("Unable to synthesize for src key", src_param_name)
-                    return False, None
+                    nodes_to_peel.append(src_param_index)
+                    #return False, None
 
                 print(expr)
                 parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema) if isinstance(expr, str) else expr
                 parsed_expression = self.increment_regs(parsed_expression, geq = src_param_index)
+                if isinstance(parsed_expression, Reg):
+                    print("Reg", parsed_expression.index)
                 symbolic_pattern_params[src_param_index] = parsed_expression
 
 
@@ -915,7 +990,13 @@ class PatternAbstractor:
         # to identify the node which is part of the most cycles and 'peel' that.
 
         peeled_graph = copy.deepcopy(graph)
-        nodes_to_peel = []
+
+        print("Pre Peel", nodes_to_peel)
+
+        for to_peel in nodes_to_peel:
+            peeled_graph.pop(to_peel, None)
+            for node in peeled_graph:
+                peeled_graph[node] = [value for value in peeled_graph[node] if value != to_peel]
 
         while self.graph_has_cycle(peeled_graph):
             to_peel, count = self.find_node_in_most_cycles(peeled_graph)
