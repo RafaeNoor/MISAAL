@@ -11,14 +11,17 @@ from os.path import isfile, join
 
 # Python dictionaries for semantics
 from sema.hexsemantics_new import semantics as hvx_semantics
-from sema.halide_sema import halide_semantics
+#from sema.halide_sema import halide_semantics
+from sema.halide_decomposed import halide_decomposed  as halide_semantics
+from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles
 
 # Uncomment below line to keep intermediate racket files
 # keep_temporary_files()
 
 # Parse the dictionay into a list of DSLInstruction types
-hvx_dsl_list = parse_dict(hvx_semantics)
-halide_dsl_list = parse_dict(halide_semantics)
+hvx_dsl_list = parse_dict_with_bounded(hvx_semantics)
+halide_dsl_list = parse_dict_with_bounded(halide_semantics)
+hvx_swizzle_dsl_list = parse_dict_with_bounded(hvx_swizzles)
 
 
 hvx_expr_str = sys.argv[2]
@@ -36,8 +39,8 @@ print(hvx_expr_ctx.emit_context_expr_string())
 print("hvx Context concrete name: ", hvx_expr_ctx.name)
 print(halide_expr_ctx.emit_context_expr_string())
 
-synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list,
-                                          output_dsl_list = halide_dsl_list,
+synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list + hvx_swizzle_dsl_list,
+                                          output_dsl_list = halide_dsl_list+ hvx_swizzle_dsl_list,
                                           # Force all source expression to be used in the left hand side (i.e. src expression)
                                           force_contains_all_regs = True,
                                           use_any_reg = False
@@ -51,11 +54,8 @@ output_sizes = [pow(2,i) for i in range(16)]
 
 for output_size in output_sizes:
 
-    src_expression_hvx = get_valid_concretization(hvx_expr_ctx, output_size, hvx_dsl_list)
 
-    if src_expression_hvx is None:
-        print("No valid concretization at output size", output_size)
-        continue
+    src_expression_hvx = get_valid_concretization(hvx_expr_ctx, output_size, hvx_dsl_list+ hvx_swizzle_dsl_list)
 
     regs = get_unique_context_registers(src_expression_hvx)
 

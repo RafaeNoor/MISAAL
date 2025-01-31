@@ -7,9 +7,11 @@ from utils.CanonicalizeExpressions import CanonicalizeExpression
 from utils.ReadDSL import read_string_to_dsl
 from sema.integer_arith_sema import integer_arith_sema_dict
 from common.Types import *
+from collections import defaultdict
 import copy
 import json
 from graphlib import TopologicalSorter, CycleError
+from sema.halide_decomposed import halide_decomposed  as halide_semantics
 
 
 def create_patterns(props, combined_dsl_list):
@@ -216,12 +218,14 @@ class ContextNumericIter:
 
 
 class PatternAbstractor:
-    def __init__(self, patterns, dsl_list, examples_limit = None):
+    def __init__(self, patterns, dsl_list, examples_limit = None, target = "Halide"):
+        self.target = target
         self.patterns = patterns
         self.dsl_list = dsl_list
         self.equality_checker = CanonicalizeExpression()
         self.integer_arith_sema = parse_dict(integer_arith_sema_dict)
         self.examples_limit = examples_limit
+        self.halide_dsl_list = parse_dict(halide_semantics)
 
 
     def emit_create_param_abstract_spec(self, input_values, output_value):
@@ -231,13 +235,26 @@ class PatternAbstractor:
         return "(synthesize-param-expression {} {} {} (list {}))".format(test_cases, depth, num_src_regs - 1, " ".join([str(reg) for reg in exclude_regs]))
 
     def generate_param_expr(self, src_param_map, dst_param_map, dst_param_name, depth = 2, only_src_params = False, exclude_regs = []):
-
-
         statements = []
 
         assert dst_param_name in dst_param_map, "Expected {} in dst_param_map".format(dst_param_name)
 
         num_test_cases = len(dst_param_map[dst_param_name])
+        num_unique_test_cases = len(list(set(dst_param_map[dst_param_name])))
+
+        # Short circuit for those parameters
+        # which are always the same value
+        if num_unique_test_cases == 1:
+            return True, Integer("const", value = dst_param_map[dst_param_name][0])
+
+        # Optimize for the case where the value is always to same as a src param
+        dst_values = dst_param_map[dst_param_name]
+        for src_param_name, src_values in src_param_map.items():
+            if src_values == dst_values:
+                print("Short circuited values")
+                return True, Reg(int(src_param_name), 8, 8)
+
+
         if not self.examples_limit is None:
             num_test_cases = min(num_test_cases, self.examples_limit)
         test_cases_def = []
@@ -259,6 +276,7 @@ class PatternAbstractor:
                     values.append(dst_vals[tc])
             test_case = self.emit_create_param_abstract_spec(values, target_value)
             test_cases_def.append(test_case)
+
 
         test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
         statements.append(test_def)
@@ -293,6 +311,169 @@ class PatternAbstractor:
 
 
 
+    def generate_param_expr_general(self, param_map, param_name, depth = 2, exclude_regs = []):
+        statements = []
+
+        assert param_name in param_map, "Expected {} in param_map".format(param_name)
+
+        num_test_cases = len(param_map[param_name])
+        num_unique_test_cases = len(list(set(param_map[param_name])))
+
+        # Short circuit for those parameters
+        # which are always the same value
+        if num_unique_test_cases == 1:
+            return True, Integer("const", value = param_map[param_name][0])
+
+        if not self.examples_limit is None:
+            num_test_cases = min(num_test_cases, self.examples_limit)
+        test_cases_def = []
+
+
+        # Optimize for the case where the value is always to same as a src param
+        dst_values = param_map[param_name]
+        for other_param_name, other_values in param_map.items():
+            if other_param_name == param_name:
+                continue
+            if other_param_name < (len(exclude_regs) + 1):
+                continue
+            if other_values == dst_values:
+                print("Short circuited values general")
+                return True, Reg(int(other_param_name) - 1, 8, 8)
+
+
+        for tc in range(num_test_cases):
+            values = []
+
+            target_value = param_map[param_name][tc]
+
+            for params, p_values in param_map.items():
+                if params == param_name:
+                    continue
+                values.append(p_values[tc])
+
+            test_case = self.emit_create_param_abstract_spec(values, target_value)
+            test_cases_def.append(test_case)
+
+
+        test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
+        statements.append(test_def)
+
+        synthesis_query = self.emit_synthesize_query("param-test-cases", depth = depth, exclude_regs = exclude_regs)
+
+        synthesis_result = "(define-values (sat? expr) {})".format(synthesis_query)
+        statements.append(synthesis_result)
+
+        sat_cond = "sat?"
+        unsat_cond = "else"
+
+
+        read_out_fname = next(tempfile._get_candidate_names()) + ".temp"
+        sat_case = "(write-str-to-file (~v {}) \"{}\") (exit 0)".format("expr", read_out_fname)
+        unsat_case = "(exit 1)"
+
+        handler = emit_racket_cond([sat_cond, unsat_cond] , [sat_case, unsat_case])
+        statements.append(handler)
+
+        result = execute_racket_file(statements)
+
+        success = result.returncode == 0
+
+        simplified_expr = None
+        if success:
+            with open(read_out_fname, "r") as ReadFile:
+                simplified_expr = ReadFile.read()
+                if REMOVE_RKT_FILES:
+                    subprocess.call("rm -f {}".format(read_out_fname), shell = True)
+        return success, simplified_expr
+
+
+    def canonicalize_pattern_bucket(self, bucket):
+        for pattern in bucket:
+            pattern.src_expr = self.canonicalize_halide(pattern.src_expr)
+            pattern.target_expr = self.canonicalize_halide(pattern.target_expr)
+        return bucket
+
+
+    def canonicalize_halide(self, expr):
+        if not isinstance(expr, Context):
+            return expr
+
+        halide_dsl_list = self.halide_dsl_list
+
+
+        if 'typed:slice_vectors' in expr.name:
+            slice_vec_dsl = get_eq_class_for_ctx(expr, halide_dsl_list)
+            replace_ctx = None
+
+            for ctx in slice_vec_dsl.contexts:
+                if ctx.in_precision != 8:
+                    continue
+                if ctx.in_vectsize != expr.in_vectsize:
+                    continue
+
+                if ctx.out_vectsize != expr.out_vectsize:
+                    continue
+
+                expr_offset = int(expr.context_args[1].value)
+                ctx_offset = int(ctx.context_args[1].value)
+
+
+                if expr_offset == 0 and  ctx_offset == 0:
+                    replace_ctx = ctx
+                    break
+                elif expr_offset != 0 and ctx_offset != 0:
+                    replace_ctx = ctx
+                    break
+
+            assert replace_ctx != None
+
+
+            canon_opnd = self.canonicalize_halide(expr.context_args[0])
+
+            if expr.in_precision !=  8:
+                # Change to 8 bit version
+                replace_ctx = copy.deepcopy(replace_ctx)
+                replace_ctx.context_args[0] = canon_opnd
+                return replace_ctx
+            else:
+                expr.context_args[0] = canon_opnd
+                return expr
+
+        elif 'typed:concat_vectors' in expr.name:
+            concat_vec_dsl = get_eq_class_for_ctx(expr, halide_dsl_list)
+            replace_ctx = None
+
+            for ctx in concat_vec_dsl.contexts:
+                if ctx.in_precision != 8:
+                    continue
+                if ctx.in_vectsize != expr.in_vectsize:
+                    continue
+
+                if ctx.out_vectsize != expr.out_vectsize:
+                    continue
+
+                replace_ctx = ctx
+
+
+            assert replace_ctx != None
+            canon_opnd_0 = self.canonicalize_halide(expr.context_args[0])
+            canon_opnd_1 = self.canonicalize_halide(expr.context_args[1])
+            if expr.in_precision != 8:
+                # Change to 8 bit version
+                replace_ctx = copy.deepcopy(replace_ctx)
+                replace_ctx.context_args[0] = canon_opnd_0
+                replace_ctx.context_args[1] = canon_opnd_1
+                return replace_ctx
+            else:
+                expr.context_args[0] = canon_opnd_0
+                expr.context_args[1] = canon_opnd_1
+                return expr
+        else:
+
+            for idx, arg in enumerate(expr.context_args):
+                canon_arg = self.canonicalize_halide(arg)
+                expr.context_args[idx] = canon_arg
+            return expr
 
 
     def abstract_patterns(self, patterns, dsl_list):
@@ -318,14 +499,69 @@ class PatternAbstractor:
                 if src_expr_equal and dst_expr_equal:
                     accounted_for_patterns_idxs.append(j)
                     bucket_i.append(pat_j)
+
+                src_expr_dst_equal = self.equality_checker.isCanonical(pat_i.src_expr, pat_j.target_expr)
+                dst_expr_src_equal = self.equality_checker.isCanonical(pat_i.target_expr, pat_j.src_expr)
+
+                if src_expr_dst_equal and dst_expr_src_equal:
+                    accounted_for_patterns_idxs.append(j)
+                    pat_j.swap()
+                    bucket_i.append(pat_j)
+
             buckets.append(bucket_i)
 
 
         print("Total # patterns:", len(patterns))
         print("Total Number of buckets: ", len(buckets))
 
-        test_bucket = self.swap_patterns(buckets[0])
-        self.abstract_pattern_bucket(test_bucket, dsl_list)
+        global abstracted_patterns
+        abstracted_patterns = []
+
+        global concrete_patterns
+        concrete_patterns = 0
+
+
+        def worker(task):
+            bucket, idx = task
+            succ, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
+            global abstracted_patterns
+            global concrete_patterns
+            if not succ:
+                failed_bucket_indicies.append(idx)
+                concrete_patterns += len(bucket)
+                abstracted_patterns += bucket
+            else:
+                abstracted_patterns += new_patterns
+
+
+        POOL_SIZE = 8
+        pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
+        PARALLEL = True
+        failed_bucket_indicies = []
+        #buckets = [buckets[564]]
+        for idx, test_bucket in enumerate(buckets):
+            #test_bucket = self.swap_patterns(test_bucket)
+            if PARALLEL:
+                pool.submit(worker, (test_bucket, idx))
+            else:
+                succ, new_patterns = self.abstract_pattern_bucket(test_bucket, dsl_list)
+                if not succ:
+                    concrete_patterns += len(test_bucket)
+                    failed_bucket_indicies.append(idx)
+                    abstracted_patterns += test_bucket
+                else:
+                    abstracted_patterns += new_patterns
+        pool.shutdown(wait=True)
+        print("Total number of abstracted patterns", len(abstracted_patterns))
+        print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
+        print("Number of abstract patterns (including concrete rewrites)", len(abstracted_patterns))
+        print("Number of remaining concrete rewrites",concrete_patterns )
+
+        with open(self.target+"_failed_buckets.txt", "w+") as FailLog:
+            FailLog.write(str(failed_bucket_indicies))
+        return abstracted_patterns
+
+
 
 
     def get_expr_num_numeric_positions(self, expr):
@@ -337,7 +573,10 @@ class PatternAbstractor:
                 num_positions += self.get_expr_num_numeric_positions(arg)
             return num_positions
 
-        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer, Variable]]):
+            return 1
+
+        if isinstance(expr, Context) and expr.extensions != None and 'integer_arith' in expr.extensions:
             return 1
 
         return 0
@@ -348,6 +587,10 @@ class PatternAbstractor:
         if isinstance(expr, Context):
             positions = []
 
+            if expr.extensions != None and 'integer_arith' in expr.extensions:
+                iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
+                return [iterator]
+
             for idx, arg in enumerate(expr.context_args):
                 sub_positions = self.get_expr_numeric_positions(arg, outer_context = expr, outer_args_idx = idx)
 
@@ -356,7 +599,7 @@ class PatternAbstractor:
 
             return positions
 
-        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer]]):
+        if any([isinstance(expr, ty) for ty in [LaneSize, Precision, Integer, Variable]]):
             iterator = ContextNumericIter(outer_context, outer_args_idx, expr)
             return [iterator]
 
@@ -368,6 +611,8 @@ class PatternAbstractor:
     def set_expr_numeric_position(self, expr, position, value):
         iterators = self.get_expr_numeric_positions(expr)
 
+        print("set_expr_numeric_position")
+        print(position, iterators, len(iterators))
         assert position < len(iterators), "Out of bounds numeric parameters access"
         pos_iter = iterators[position]
 
@@ -420,22 +665,76 @@ class PatternAbstractor:
         return has_cycle
 
 
+    def peel_symbolic_parameters(self, symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel):
+
+        num_src_regs = len([key for key in src_position_map])
+        num_dst_regs = len([key for key in dst_position_map])
+
+
+        combinations = []
+        for i in range(len(src_position_map[0])):
+            empty_list = copy.deepcopy(([0] * len(nodes_to_peel)))
+            combinations.append(empty_list)
+
+        for nidx, node in enumerate(nodes_to_peel):
+            node = int(node)
+
+            concrete_values = []
+            if int(node) < num_src_regs:
+                # Belonging to src parameters
+                concrete_values = src_position_map[node]
+            else:
+                dst_index = int(node) - num_src_regs
+                concrete_values = dst_position_map[dst_index]
+            for idx in range(len(combinations)):
+                combinations[idx][nidx] = concrete_values[idx]
+        combinations = [tuple(comb) for comb in combinations]
+        print("Combination of values:", combinations)
+        combinations = list(set(combinations))
+        print("Unique Combination of values:", combinations)
+
+
+        peeled_params = [copy.deepcopy(symbolic_pattern_params) for i in range(len(combinations))]
+
+
+        for p_idx, param_version in enumerate(peeled_params):
+            for n_idx, node in enumerate(nodes_to_peel):
+                conc_val = combinations[p_idx][n_idx]
+                param_version[int(node)] = Integer("peel", value = conc_val)
+        return peeled_params
+
+
+        for node in nodes_to_peel:
+            node = int(node)
+            peeled_params_iter = []
+            for param_version in peeled_params:
+
+                param = param_version[node]
+                concrete_values = []
+                if int(node) < num_src_regs:
+                    # Belonging to src parameters
+                    concrete_values = src_position_map[node]
+                else:
+                    dst_index = int(node) - num_src_regs
+                    concrete_values = dst_position_map[dst_index]
+
+                concrete_values = list(set(concrete_values))
+
+                print("concrete_values", concrete_values)
+                for conc_val in concrete_values:
+                    param_copy = copy.deepcopy(param_version)
+                    param_copy[node] = Integer("peel", value = conc_val)
+                    peeled_params_iter.append(param_copy)
+            peeled_params = peeled_params_iter
+        return peeled_params
+
+
+
+
 
     def inline_symbolic_references(self, symbolic_pattern_params, num_src_params):
 
 
-        #for pi, expr in enumerate(symbolic_pattern_params):
-        #    updated_expression = self.increment_regs(expr, geq = pi)
-        #    symbolic_pattern_params[pi] = updated_expression
-
-
-
-        for idx, expr in enumerate(symbolic_pattern_params):
-            print("#",idx)
-            if isinstance(expr, Context):
-                print(expr.emit_context_expr_string())
-            else:
-                print(expr.get_rkt_value())
 
 
         # Now that the register indices are adjusted correctly,
@@ -461,14 +760,53 @@ class PatternAbstractor:
                 #graph[reg_name].append(expr_name)
                 graph[expr_name].append(reg_name)
 
-        print(json.dumps(graph))
         ts = TopologicalSorter(graph)
         # Perform topological sort
         topological_order = ts.static_order()
-        print("topological ordering")
         for i in topological_order:
-            print(i)
+            index = int(i)
+            sym_expr = symbolic_pattern_params[index]
 
+            if isinstance(sym_expr, Variable):
+                continue
+            elif isinstance(sym_expr, Reg):
+                reg_index = int(sym_expr.index)
+                symbolic_pattern_params[index] = symbolic_pattern_params[reg_index]
+            elif isinstance(sym_expr, Context):
+                expr_regs = get_unique_context_registers(sym_expr)
+                for reg in expr_regs:
+                    reg_index = int(reg.index)
+                    sym_expr = bind_expr_to_reg(sym_expr, reg_index, symbolic_pattern_params[reg_index])
+                symbolic_pattern_params[index] = sym_expr
+
+
+        for idx, expr in enumerate(symbolic_pattern_params):
+            print("#",idx)
+            if isinstance(expr, Context):
+                print(expr.emit_context_expr_string())
+            else:
+                print(expr.get_rkt_value())
+        return symbolic_pattern_params
+
+    def replace_parameters_with_symbolic_exprs(self, pattern_template, symbolic_params_versions, num_src_params):
+
+        patterns = []
+        for symbolic_params in symbolic_params_versions:
+
+            src_copy = copy.deepcopy(pattern_template.src_expr)
+            dst_copy = copy.deepcopy(pattern_template.target_expr)
+            for idx, param in enumerate(symbolic_params):
+
+                if idx < num_src_params:
+                    print("Set SRC")
+                    self.set_expr_numeric_position(src_copy, idx, param)
+                else:
+                    print("Set DST")
+                    dst_idx = idx - num_src_params
+                    self.set_expr_numeric_position(dst_copy, dst_idx, param)
+            pattern = Pattern(src_copy, dst_copy, src_dsl_list = pattern_template.src_dsl_list,target_dsl_list =  pattern_template.target_dsl_list, name = pattern_template.name, src_language = pattern_template.src_language, target_language = pattern_template.target_language, bidirectional = pattern_template.bidirectional)
+            patterns.append(pattern)
+        return patterns
 
 
     def swap_patterns(self, bucket):
@@ -479,9 +817,12 @@ class PatternAbstractor:
     def abstract_pattern_bucket(self, bucket, dsl_list):
         assert len(bucket) != 0, "Expecting at-least one pattern to abstract"
 
+        bucket = self.canonicalize_pattern_bucket(bucket)
+
         template_expr_src = copy.deepcopy(bucket[0].src_expr)
         template_expr_dst = copy.deepcopy(bucket[0].target_expr)
 
+        nodes_to_peel = []
 
         print(template_expr_src.emit_context_expr_string())
         print(template_expr_dst.emit_context_expr_string())
@@ -537,10 +878,6 @@ class PatternAbstractor:
         num_src_params = len(symbolic_pattern_params)
         num_dst_params = len([key for key in dst_position_map])
 
-        # To avoid circular definitions for dst parameters, maintain
-        # a list of cant use registers
-        cant_use_regs = { k + num_src_params : [] for k in dst_position_map }
-
         graph = {str(k) : [] for k in src_position_map}
         for idx, key in enumerate(dst_position_map):
             absolute_index = idx + num_src_params
@@ -555,25 +892,15 @@ class PatternAbstractor:
 
             absolute_index = key + num_src_params
             node_name = str(absolute_index)
-            #exclude_regs = cant_use_regs[absolute_index]
 
             exclude_regs = []
-            for reg_idx in range(num_src_params + num_dst_params):
-                if reg_idx == absolute_index:
-                    continue
-                if not self.should_exclude_reg(graph, absolute_index, reg_idx):
-                    continue
-
-                if reg_idx < absolute_index:
-                    exclude_regs.append(reg_idx)
-                else:
-                    exclude_regs.append(reg_idx-1)
 
 
             print("=*"*40)
             print("Testing Dst Key:", key, "absolute index:", absolute_index)
             print("Exclude regs:", exclude_regs)
 
+            # TODO replace these calls into generate_param_expr calls
 
             success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = True, exclude_regs = exclude_regs, depth = 2)
 
@@ -582,13 +909,13 @@ class PatternAbstractor:
                 success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 2)
 
             # Extend to include other dst expression parameters as well
-            if not success:
-                success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 3)
+            #if not success:
+            #    success, expr = self.generate_param_expr(src_position_map, dst_position_map, key, only_src_params = False, exclude_regs = exclude_regs, depth = 3)
 
             if success:
                 print("Success for key", key)
                 print(expr)
-                parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema)
+                parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema) if isinstance(expr, str) else expr
                 # Increment before storing
                 # First adjust the references to 'regs' to reflect ordering according
                 # to the actual position iterators. Recall, that for each position,
@@ -605,27 +932,154 @@ class PatternAbstractor:
                     print(parsed_expression.get_rkt_value())
                 symbolic_pattern_params.append(parsed_expression)
 
-
-
                 expr_regs = get_unique_context_registers(parsed_expression)
 
                 for reg in expr_regs:
-                    #if int(reg.index) in cant_use_regs:
-                    #    cant_use_regs[int(reg.index)].append(absolute_index)
                     graph[node_name].append(str(reg.index))
 
             else:
                 print("Unable to synthesize for key", key)
-                return False, None
+                symbolic_pattern_params.append(Reg(absolute_index, 8,8))
+                nodes_to_peel.append(absolute_index)
+                #return False, None
+
+        # Once all dst params have been synthesized, to ensure a pattern remains bidirectional
+        # we must check that the symbol appears on both sides of the pattern. Therefore, verify that
+        # the src parameter
+
+        position_map = copy.deepcopy(src_position_map)
+        for dst_param_name, values in dst_position_map.items():
+            dst_param_index = int(dst_param_name) + num_src_params
+            position_map[dst_param_index] = values
 
 
-        symbolic_pattern_params = self.inline_symbolic_references(symbolic_pattern_params, num_src_params)
+        for src_param_name in src_position_map:
+            src_param_index = int(src_param_name)
+            accounted = False
+            for dst_expr in symbolic_pattern_params[num_src_params:]:
+                expr_regs = get_unique_context_registers(dst_expr)
+                expr_reg_indices = [int(reg.index) for reg in expr_regs]
+                accounted = accounted or (src_param_index in expr_reg_indices)
+            if not accounted:
+                print("NEED TO LEGALIZE SRC FOR ", src_param_name)
+                # exclude regs is num_src_params - 1 since one register of the src will not be included in the query any-ways
+                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2, exclude_regs = [v for v in position_map if v < num_src_params - 1])
+
+                if not success:
+                    print("Unable to synthesize for src key", src_param_name)
+                    nodes_to_peel.append(src_param_index)
+                    #return False, None
+
+                print(expr)
+                parsed_expression = read_string_to_dsl(expr, self.integer_arith_sema) if isinstance(expr, str) else expr
+                parsed_expression = self.increment_regs(parsed_expression, geq = src_param_index)
+                if isinstance(parsed_expression, Reg):
+                    print("Reg", parsed_expression.index)
+                symbolic_pattern_params[src_param_index] = parsed_expression
+
+
+
+        print("Graph after param synthesis")
+        print(json.dumps(graph))
+        print(self.find_node_in_most_cycles(graph), "is part of most cycles")
+
+
+        # The graph containing cycle implies circular definitions for the abstracted pattern. We break these
+        # cycles by 'peeling' out nodes in the graph and replacing them with the constant values they take in the
+        # concretely derived rewrites. We repeat this until the graph contains no cycles. We use a greedy algorithm
+        # to identify the node which is part of the most cycles and 'peel' that.
+
+        peeled_graph = copy.deepcopy(graph)
+
+        print("Pre Peel", nodes_to_peel)
+
+        for to_peel in nodes_to_peel:
+            peeled_graph.pop(to_peel, None)
+            for node in peeled_graph:
+                peeled_graph[node] = [value for value in peeled_graph[node] if value != to_peel]
+
+        while self.graph_has_cycle(peeled_graph):
+            to_peel, count = self.find_node_in_most_cycles(peeled_graph)
+            nodes_to_peel.append(to_peel)
+            peeled_graph.pop(to_peel, None)
+            for node in peeled_graph:
+                peeled_graph[node] = [value for value in peeled_graph[node] if value != to_peel]
+
+        print("To Peel!:", nodes_to_peel)
+
+        # Peel out nodes creating possibly multiple versions of parameterizations
+        updated_symbolic_params = self.peel_symbolic_parameters(symbolic_pattern_params, src_position_map, dst_position_map, nodes_to_peel)
+        updated_symbolic_params = [self.inline_symbolic_references(params, num_src_params) for params in updated_symbolic_params]
+        print(len(updated_symbolic_params))
+
+
+        abstract_patterns = self.replace_parameters_with_symbolic_exprs(bucket[0], updated_symbolic_params, num_src_params)
+
+        for idx, abs_pat in enumerate(abstract_patterns):
+            print("Abstract pattern", idx)
+            abs_pat.print_pattern()
+        return True, abstract_patterns
 
 
 
 
 
 
+
+
+
+
+
+
+
+    def find_cycles(self, graph):
+        """
+        Function to find all cycles in a directed graph using DFS.
+        Returns a list of cycles, where each cycle is a list of nodes.
+        """
+        def dfs(node, path, visited, all_cycles):
+            if node in path:  # Found a cycle
+                cycle_index = path.index(node)
+                cycle = path[cycle_index:]  # Extract the cycle from the path
+                all_cycles.append(cycle)
+                return
+
+            if node in visited:  # Skip already processed nodes
+                return
+
+            visited.add(node)
+            path.append(node)
+
+            # Recursively visit each neighbor
+            for neighbor in graph.get(node, []):
+                dfs(neighbor, path, visited, all_cycles)
+
+            path.pop()  # Backtrack
+
+        all_cycles = []
+        visited = set()
+        for node in graph:
+            if node not in visited:
+                dfs(node, [], visited, all_cycles)
+
+        return all_cycles
+
+    # Code obtained by ChatGPT!
+    def find_node_in_most_cycles(self, graph):
+        # Find all cycles in the graph
+        cycles = self.find_cycles(graph)
+
+        # Dictionary to count how many times each node appears in a cycle
+        node_cycle_count = {}
+
+        for cycle in cycles:
+            for node in cycle:
+                node_cycle_count[node] = node_cycle_count.get(node, 0) + 1
+
+        # Find the node that appears in the most cycles
+        most_cycles_node = max(node_cycle_count, key=node_cycle_count.get, default=None)
+
+        return most_cycles_node, node_cycle_count.get(most_cycles_node, 0)
 
 
 

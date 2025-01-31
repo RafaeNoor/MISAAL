@@ -1,13 +1,8 @@
 {
     "hexagon_V6_vmpabus_128B": [
         "typed:unsigned-vec-widen-mul",
-        "typed:signed-vec-sat-add",
-        "typed:unsigned-vec-mul",
+        "typed:signed-vec-widen-mul",
         "typed:cast-uint-extend",
-        "typed:signed-vec-sat-sub",
-        "typed:vec-sub",
-        "typed:signed-vec-mul",
-        "typed:vec-shl",
         "typed:cast-int-extend",
         "typed:vec-add",
         "typed:xBroadcast"
@@ -261,9 +256,9 @@
         "typed:signed-vec-sat-add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint-truncate",
+        "typed:cast-uint-extend",
         "typed:slice_vectors",
-        "typed:cast-int-truncate",
+        "typed:cast-int-extend",
         "typed:vec-add"
     ],
     "hexagon_V6_vmpyieoh_128B": [
@@ -311,20 +306,14 @@
         "typed:vec-add"
     ],
     "hexagon_V6_vasruhubrndsat_128B": [
-        "typed:unsigned-vec-sat-add",
-        "typed:signed-vec-sat-add",
         "typed:signed-vec-shr",
         "typed:vec-saturate",
-        "typed:cast-uint-extend",
-        "typed:vec-sub",
-        "typed:vec-bwnot",
-        "typed:signed-vector_reduce_add",
+        "typed:cast-uint-truncate",
         "typed:unsigned-vec-shr",
         "typed:unsigned-vec-rounding_shift_right",
-        "typed:slice_vectors",
         "typed:signed-vec-rounding_shift_right",
-        "typed:cast-int-extend",
-        "typed:vec-add"
+        "typed:xBroadcast",
+        "typed:concat_vectors"
     ],
     "hexagon_V6_vmpyiewuh_128B": [
         "typed:signed-vec-widen-mul",
@@ -426,11 +415,7 @@
         "typed:xBroadcast", 
         "typed:unsigned-vec-sat-add",
         "typed:signed-vec-shr",
-        "typed:unsigned-vec-rounding_shift_right",
-        "typed:unsigned-vec-rounding_mul_shift_right",
-        "typed:unsigned-vec-min",
-        "typed:vec-add",
-        "typed:unsigned-vec-max"
+        "typed:vec-add"
     ],
     "hexagon_V6_vaddubh_acc_128B": [
         "typed:cast-uint-extend",
@@ -660,6 +645,10 @@
     ], 
     "hexagon_V6_vabsdiffh_128B": [
         "typed:unsigned-vec-absd"
+    ], 
+    "hexagon_V6_vpackwuh_sat_128B": [
+        "typed:vec-saturate",
+        "typed:slice_vectors"
     ]
 
 }
