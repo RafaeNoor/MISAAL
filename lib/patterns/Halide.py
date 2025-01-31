@@ -9,7 +9,7 @@ import json
 import pickle
 
 
-from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel, PatternAbstractor
 
 halide_dsl_list = parse_dict(halide_semantics)
 
@@ -33,14 +33,23 @@ for tf in test_files:
         props.append(json.load(ReadFile))
 
 pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
 
 Halide_patterns = []
 
-if os.path.exists(pickle_file_name):
+
+if os.path.exists(abstract_pickle_file_name):
+    with open(abstract_pickle_file_name, "rb") as handle:
+        Halide_patterns = pickle.load(handle)
+elif os.path.exists(pickle_file_name):
     with open(pickle_file_name, "rb") as handle:
         Halide_patterns = pickle.load(handle)
     print("Found existing pattern pickle file", pickle_file_name)
     print("Read {} patterns".format(len(Halide_patterns)))
+    abstractor = PatternAbstractor(Halide_patterns, halide_dsl_list, examples_limit = None)
+    abstracted_patterns = abstractor.abstract_patterns(Halide_patterns, halide_dsl_list)
+    with open(abstract_pickle_file_name, "wb") as handle:
+        pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
     parsed_patterns = create_patterns(props, combined_dsl_list)
     Halide_patterns =  parsed_patterns

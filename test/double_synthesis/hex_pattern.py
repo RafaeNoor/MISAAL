@@ -111,10 +111,17 @@ def test_rule(hvx_expr_str, halide_expr_str):
     return False
 
 
+
+halide_expr_str = sys.argv[1]
+hvx_expr_str = sys.argv[2]
+
+result = test_rule(hvx_expr_str, halide_expr_str)
+print(result)
+
+sys.exit(0)
 summary = []
 for idx,(hvx_str, halide_str, expected_result) in enumerate(tests):
     result =test_rule(hvx_str, halide_str)
-
     summary.append(result == expected_result)
 
 for idx,s in enumerate(summary):

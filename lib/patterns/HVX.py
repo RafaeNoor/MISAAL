@@ -11,7 +11,7 @@ import os
 import json
 import pickle
 
-from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel, PatternAbstractor
 from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
 
 halide_dsl_list = parse_dict(halide_semantics)
@@ -41,6 +41,8 @@ test_files = [
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_scalar_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_acc_hvx-enumerate-absd_intermediate_results.py",
     "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_sat_hvx-enumerate_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_asrh_acc_hvx_intermediate_results.py",
+    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_interleave_2_hvx_intermediate_results.py",
 ]
 
 props = [
@@ -49,16 +51,28 @@ props = [
 
 
 pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
+abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx_abstract.pickle"
 
 HVX_patterns = []
 
-if os.path.exists(pickle_file_name):
+if os.path.exists(abstract_pickle_file_name):
+    print("Found existing pattern pickle file", abstract_pickle_file_name)
+    with open(abstract_pickle_file_name, "rb") as handle:
+        HVX_patterns = pickle.load(handle)
+    print("Read {} patterns".format(len(HVX_patterns)))
+elif os.path.exists(pickle_file_name):
     print("Found existing pattern pickle file", pickle_file_name)
     with open(pickle_file_name, "rb") as handle:
         HVX_patterns = pickle.load(handle)
     print("Read {} patterns".format(len(HVX_patterns)))
+
+    abstractor = PatternAbstractor(HVX_patterns, combined_dsl_list, examples_limit = 16, target = "hvx")
+    abstracted_patterns = abstractor.abstract_patterns(HVX_patterns, combined_dsl_list)
+    with open(abstract_pickle_file_name, "wb") as handle:
+        pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
     for tf in test_files:
+        print(tf)
         with open(tf, "r") as ReadFile:
             props.append(json.load(ReadFile))
 
