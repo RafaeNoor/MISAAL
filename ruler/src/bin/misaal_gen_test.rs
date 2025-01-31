@@ -239,7 +239,7 @@ fn egg_misaal_validator<'a>(expr: &[MISAALLang]) -> String {
             }
             MISAALLang::HexagonV6Vasrhv128b([x, y]) => {
                 let bv_code = format!(
-                    " (hexagon_V6_vasrhv_128B {} (bv #x0000000000000000 16) {} 1024 1024 0 1024 16 1 0) ",
+                    " (hexagon_V6_vasrhv_128B {} (lit (bv #x0000000000000000 16)) {} 1024 1024 0 1024 16 1 0) ",
                     &misaal_buf[usize::from(*x)],
                     &misaal_buf[usize::from(*y)]
                 );
@@ -427,7 +427,7 @@ fn main() {
         ],
     ); */
 
-    let lang_34 = Lang::new(
+    /* let lang_34 = Lang::new(
         &["0", "1", "2", "3"],
         &["a", "b", "c", "d"],
         &[
@@ -440,19 +440,46 @@ fn main() {
                 "hexagon_V6_vminuh_128B",
             ],
         ],
+    ); */
+
+    let lang_34 = Lang::new(
+        &["0", "1", "2", "3"],
+        &["a", "b", "c", "d"],
+        &[
+            &[],
+            &[
+                "typed:vec-shl",
+                "typed:signed-vec-shr",
+                "typed:unsigned-vec-shr",
+                "hexagon_V6_vasrhv_128B",
+            ],
+        ],
     );
 
     let wkld_34_d2 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 2)
-        .plug("VAR", &Workload::new(&lang_34.vars))
-        .plug("VAL", &Workload::empty())
-        .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
-        .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
-        .filter(Filter::Canon(vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-            "d".to_string(),
-        ]));
+    .plug("VAR", &Workload::new(&lang_34.vars))
+    .plug("VAL", &Workload::new(&lang_34.vals))
+    .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
+    .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
+    .filter(Filter::Canon(vec![
+        "a".to_string(),
+        "b".to_string(),
+        "c".to_string(),
+        "d".to_string(),
+    ]));
+
+    rules_34.extend(run_workload(
+        wkld_34_d2,
+        rules_34.clone(),
+        Limits::synthesis(),
+        Limits::minimize(),
+        true,
+    ));
+
+    println!("---------- ENDING D2 WKLD ------------------");
+    println!("---- RULES for RELEVANCE SET 34 D2 ----");
+    rules_34.pretty_print();
+    println!("------------------------------------");
 
     /* let wkld_34_d2 = Workload::new(&["(bop e e)", "v"])
            .plug("e", &Workload::new(&["(bop v v)", "v"]))
@@ -472,7 +499,7 @@ fn main() {
                "d".to_string(),
            ]));
     */
-    println!("---- STARTING D2 WKLD ----");
+    /* println!("---- STARTING D2 WKLD ----");
 
     rules_34.extend(run_workload(
         wkld_34_d2,
@@ -485,7 +512,7 @@ fn main() {
     println!("---------- ENDING D2 WKLD ------------------");
     println!("---- RULES for RELEVANCE SET 34 D2 ----");
     rules_34.pretty_print();
-    println!("------------------------------------");
+    println!("------------------------------------"); */
 
     let wkld_34_d3 = iter_metric(base_lang(2), "EXPR", Metric::Depth, depth)
         .plug("VAR", &Workload::new(&lang_34.vars))

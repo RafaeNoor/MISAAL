@@ -110,7 +110,7 @@ def test_rule(hvx_expr_str, halide_expr_str):
 
 summary = []
 for idx,(hvx_str, halide_str, expected_result) in enumerate(tests):
-    result =test_rule(hvx_str, halide_str)
+    result = test_rule(hvx_str, halide_str)
 
     summary.append(result == expected_result)
 
