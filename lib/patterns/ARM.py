@@ -10,7 +10,7 @@ import os
 import json
 import pickle
 
-from patterns.PatternUtils import create_patterns, deduplicate_patterns
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, PatternAbstractor
 
 halide_dsl_list = parse_dict(halide_semantics)
 arm_dsl_list = parse_dict(arm_semantics)
@@ -40,14 +40,25 @@ props = [
 
 
 pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM_abstract.pickle"
 
 arm_patterns = []
 
-if os.path.exists(pickle_file_name):
+if os.path.exists(abstract_pickle_file_name):
+    print("Found existing pattern pickle file", abstract_pickle_file_name)
+    with open(abstract_pickle_file_name, "rb") as handle:
+        arm_patterns = pickle.load(handle)
+    print("Read {} patterns".format(len(arm_patterns)))
+elif os.path.exists(pickle_file_name):
     print("Found existing pattern pickle file", pickle_file_name)
     with open(pickle_file_name, "rb") as handle:
         arm_patterns = pickle.load(handle)
     print("Read {} patterns".format(len(arm_patterns)))
+
+    abstractor = PatternAbstractor(arm_patterns, combined_dsl_list, examples_limit = 16, target = "arm")
+    abstracted_patterns = abstractor.abstract_patterns(arm_patterns, combined_dsl_list)
+    with open(abstract_pickle_file_name, "wb") as handle:
+        pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
     print("Creating new pattern files")
     for tf in test_files:

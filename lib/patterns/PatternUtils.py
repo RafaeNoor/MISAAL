@@ -670,6 +670,9 @@ class PatternAbstractor:
         num_src_regs = len([key for key in src_position_map])
         num_dst_regs = len([key for key in dst_position_map])
 
+        if len(nodes_to_peel) == 0:
+            return [symbolic_pattern_params]
+
 
         combinations = []
         for i in range(len(src_position_map[0])):

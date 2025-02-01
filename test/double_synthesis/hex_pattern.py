@@ -80,6 +80,28 @@ for output_size in output_sizes:
 
         print("Corresponding Halide concretization:")
         print(dst_expr_str)
-        print("ENUMO_SUCC")
+        return True
+    else:
+        print("FAILURE")
+
+    return False
+
+
+
+halide_expr_str = sys.argv[1]
+hvx_expr_str = sys.argv[2]
+
+result = test_rule(hvx_expr_str, halide_expr_str)
+print(result)
+
+sys.exit(0)
+summary = []
+for idx,(hvx_str, halide_str, expected_result) in enumerate(tests):
+    result =test_rule(hvx_str, halide_str)
+    summary.append(result == expected_result)
+
+for idx,s in enumerate(summary):
+    if s:
+        print("Test",idx,"Passed!")
     else:
         print("FAILURE")
