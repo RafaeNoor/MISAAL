@@ -24,20 +24,27 @@ halide_dsl_list = parse_dict_with_bounded(halide_semantics)
 hvx_swizzle_dsl_list = parse_dict_with_bounded(hvx_swizzles)
 
 
-hvx_expr_str = sys.argv[2]
-halide_expr_str = sys.argv[1]
+
+# This pattern should fail
+fail_halide_expr_str = " (typed:unsigned-vec-shr (reg (bv #x00 8)) (reg (bv #x00 8)) 16 1024) "
+fail_hvx_expr_str = " (hexagon_V6_vlsrwv_128B (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 16))) (reg (bv #x01 8)) 1024 1024 0 1024 16 1 0) "
+
+tests_0 = (fail_hvx_expr_str, fail_halide_expr_str, False)
 
 
-#halide_expr_str = " (typed:signed-vec-shr (reg (bv #x01 8)) (reg (bv #x00 8)) 16 1024) "
-#hvx_expr_str = "(hexagon_V6_vasrhv_128B (reg (bv #x01 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 16))) (reg (bv #x00 8)) 1024 1024 0 1024 16 1 0)"
+fail_halide_expr_str_1 = " (typed:unsigned-vec-shr (reg (bv #x00 8)) (reg (bv #x01 8)) 16 1024) "
+fail_hvx_expr_str_1 = " (hexagon_V6_vlsrwv_128B (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 16))) (reg (bv #x01 8)) 1024 1024 0 1024 16 1 0) "
 
-hvx_expr_ctx = read_string_to_dsl(hvx_expr_str, hvx_dsl_list)
-halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
+tests_1 = (fail_hvx_expr_str_1, fail_halide_expr_str_1, False)
 
-print("="*5, "Pretty Printing Expressions", "="*5)
-print(hvx_expr_ctx.emit_context_expr_string())
-print("hvx Context concrete name: ", hvx_expr_ctx.name)
-print(halide_expr_ctx.emit_context_expr_string())
+
+
+fail_halide_expr_str_2 = " (typed:unsigned-vec-shr (reg (bv #x01 8)) (reg (bv #x00 8)) 16 1024) "
+fail_hvx_expr_str_2 = " (hexagon_V6_vlsrwv_128B (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 (bitvector 16))) (reg (bv #x01 8)) 1024 1024 0 1024 16 1 0) "
+
+tests_2 = (fail_hvx_expr_str_2, fail_halide_expr_str_2, True)
+
+tests = [tests_0, tests_1, tests_2]
 
 synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list + hvx_swizzle_dsl_list,
                                           output_dsl_list = halide_dsl_list+ hvx_swizzle_dsl_list,
@@ -49,40 +56,53 @@ synthesizer = DoubleGrammarSynthesisUtils(input_dsl_list = hvx_dsl_list + hvx_sw
 
 
 
+def test_rule(hvx_expr_str, halide_expr_str):
+    hvx_expr_ctx = read_string_to_dsl(hvx_expr_str, hvx_dsl_list)
+    halide_expr_ctx = read_string_to_dsl(halide_expr_str, halide_dsl_list)
+    print("=*="*20, "TEST RULE")
 
-output_sizes = [pow(2,i) for i in range(16)]
+    print("="*5, "Pretty Printing Expressions", "="*5)
+    print(hvx_expr_ctx.emit_context_expr_string())
+    print("hvx Context concrete name: ", hvx_expr_ctx.name)
+    print(halide_expr_ctx.emit_context_expr_string())
 
-for output_size in output_sizes:
+    output_sizes = [pow(2,i) for i in range(16)]
 
+    for output_size in output_sizes:
 
-    src_expression_hvx = get_valid_concretization(hvx_expr_ctx, output_size, hvx_dsl_list+ hvx_swizzle_dsl_list)
+        src_expression_hvx = get_valid_concretization(hvx_expr_ctx, output_size, hvx_dsl_list+ hvx_swizzle_dsl_list)
 
-    regs = get_unique_context_registers(src_expression_hvx)
+        if src_expression_hvx is None:
+            print("No valid concretization at output size", output_size)
+            continue
 
-
-    input_sizes = [reg.size for reg in regs]
-
-    success, src_expr_str, dst_expr_str = synthesizer.double_grammar_synthesis(src_expression_hvx,  # src expression
-                                                                               halide_expr_ctx,    # target expression
-                                                                               custom_src_output_size = output_size,
-                                                                               custom_dst_output_size = output_size,
-                                                                               custom_src_input_sizes = input_sizes,
-                                                                               custom_target_input_sizes = input_sizes
-                                                                               )
+        regs = get_unique_context_registers(src_expression_hvx)
 
 
+        input_sizes = [reg.size for reg in regs]
+
+        success, src_expr_str, dst_expr_str = synthesizer.double_grammar_synthesis(src_expression_hvx,  # src expression
+                                                                                   halide_expr_ctx,    # target expression
+                                                                                   custom_src_output_size = output_size,
+                                                                                   custom_dst_output_size = output_size,
+                                                                                   custom_src_input_sizes = input_sizes,
+                                                                                   custom_target_input_sizes = input_sizes
+                                                                                   )
 
 
-    if success:
-        print("SUCCESS at output size {}!".format(output_size))
-        print("Corresponding hvx concretization:")
-        print(src_expr_str)
 
-        print("Corresponding Halide concretization:")
-        print(dst_expr_str)
-        return True
-    else:
-        print("FAILURE")
+
+        if success:
+            print("ENUMO_SUCC")
+            print("SUCCESS at output size {}!".format(output_size))
+            print("Corresponding hvx concretization:")
+            print(src_expr_str)
+
+            print("Corresponding Halide concretization:")
+            print(dst_expr_str)
+            return True
+        else:
+            print("FAILURE")
 
     return False
 
@@ -104,4 +124,6 @@ for idx,s in enumerate(summary):
     if s:
         print("Test",idx,"Passed!")
     else:
-        print("FAILURE")
+        print("Test",idx,"Failed!")
+
+
