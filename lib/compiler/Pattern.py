@@ -6,6 +6,7 @@ from  common.Instructions import Context
 from utils.ReadDSL import read_string_to_dsl
 from utils.EggLogUtils import is_birewrite_valid
 from utils.DSLInstructionUtils import *
+from sema.integer_arith_sema import integer_arith_sema_dict
 import subprocess
 import os
 import tempfile
@@ -20,10 +21,14 @@ class Pattern:
         self.src_dsl_list = src_dsl_list
         self.target_dsl_list = target_dsl_list
         self.name = name
+        self.integer_arith_sema = parse_dict(integer_arith_sema_dict)
 
         self.src_language = src_language
         self.target_language = target_language
         self.bidirectional = bidirectional
+
+    def get_pattern_depth(self):
+        return max(get_expr_depth(self.src_expr), get_expr_depth(self.target_expr))
 
     def swap(self):
         src_expr = self.src_expr
@@ -44,13 +49,15 @@ class Pattern:
 
 
     def get_pattern_eq_classes(self):
-        dsl_list = self.src_dsl_list + self.target_dsl_list
+        self.integer_arith_sema = parse_dict(integer_arith_sema_dict)
+        dsl_list = self.src_dsl_list + self.target_dsl_list + self.integer_arith_sema
         expr_names = get_ctx_expr_dsl_names(self.src_expr, dsl_list)
         expr_names += get_ctx_expr_dsl_names(self.target_expr, dsl_list)
         return list(set(expr_names))
 
     def does_pattern_contain_eq_class(self, dsl_list_names):
-        dsl_list = self.src_dsl_list + self.target_dsl_list
+        self.integer_arith_sema = parse_dict(integer_arith_sema_dict)
+        dsl_list = self.src_dsl_list + self.target_dsl_list + self.integer_arith_sema
         expr_names = get_ctx_expr_dsl_names(self.src_expr, dsl_list)
         expr_names += get_ctx_expr_dsl_names(self.target_expr, dsl_list)
         expr_names =  list(set(expr_names))

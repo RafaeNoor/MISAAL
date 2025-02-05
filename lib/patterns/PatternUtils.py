@@ -523,15 +523,31 @@ class PatternAbstractor:
 
         def worker(task):
             bucket, idx = task
-            succ, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
             global abstracted_patterns
             global concrete_patterns
-            if not succ:
-                failed_bucket_indicies.append(idx)
+
+            # Forward pattern
+            succ_forward, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
+            if not succ_forward:
+                failed_bucket_indicies.append(("forward",idx))
                 concrete_patterns += len(bucket)
                 abstracted_patterns += bucket
             else:
                 abstracted_patterns += new_patterns
+
+
+            # Backward pattern
+
+            swapped_bucket = self.swap_patterns(bucket)
+            succ_backward, new_patterns = self.abstract_pattern_bucket(swapped_bucket, dsl_list)
+
+            if not succ_backward:
+                failed_bucket_indicies.append(("backward",idx))
+                concrete_patterns += len(bucket)
+                abstracted_patterns += bucket
+            else:
+                abstracted_patterns += new_patterns
+
 
 
         POOL_SIZE = 8
@@ -544,13 +560,7 @@ class PatternAbstractor:
             if PARALLEL:
                 pool.submit(worker, (test_bucket, idx))
             else:
-                succ, new_patterns = self.abstract_pattern_bucket(test_bucket, dsl_list)
-                if not succ:
-                    concrete_patterns += len(test_bucket)
-                    failed_bucket_indicies.append(idx)
-                    abstracted_patterns += test_bucket
-                else:
-                    abstracted_patterns += new_patterns
+                worker((test_bucket, idx))
         pool.shutdown(wait=True)
         print("Total number of abstracted patterns", len(abstracted_patterns))
         print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
@@ -807,7 +817,7 @@ class PatternAbstractor:
                     print("Set DST")
                     dst_idx = idx - num_src_params
                     self.set_expr_numeric_position(dst_copy, dst_idx, param)
-            pattern = Pattern(src_copy, dst_copy, src_dsl_list = pattern_template.src_dsl_list,target_dsl_list =  pattern_template.target_dsl_list, name = pattern_template.name, src_language = pattern_template.src_language, target_language = pattern_template.target_language, bidirectional = pattern_template.bidirectional)
+            pattern = Pattern(src_copy, dst_copy, src_dsl_list = pattern_template.src_dsl_list,target_dsl_list =  pattern_template.target_dsl_list, name = pattern_template.name, src_language = pattern_template.src_language, target_language = pattern_template.target_language, bidirectional = False)
             patterns.append(pattern)
         return patterns
 
@@ -966,7 +976,7 @@ class PatternAbstractor:
             if not accounted:
                 print("NEED TO LEGALIZE SRC FOR ", src_param_name)
                 # exclude regs is num_src_params - 1 since one register of the src will not be included in the query any-ways
-                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 2, exclude_regs = [v for v in position_map if v < num_src_params - 1])
+                success, expr = self.generate_param_expr_general(position_map, src_param_index, depth = 1, exclude_regs = [v for v in position_map if v < num_src_params - 1])
 
                 if not success:
                     print("Unable to synthesize for src key", src_param_name)

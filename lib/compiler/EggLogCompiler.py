@@ -1,7 +1,9 @@
 from compiler.Compiler import *
+from utils.ConcretizeUtils import get_valid_concretization
 from utils.DSLInstructionUtils import *
 from utils.EggLogUtils import *
 import os
+import sys
 import copy
 import subprocess as sb
 import psutil
@@ -137,6 +139,26 @@ class EggLogCompiler(CompilerBase):
         egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
         return egg_log_desc
 
+    def emit_swizzle_movement_pattern_matching_based_compiler(self, expr, swizzle_cost = 1):
+        egglog_decls = emit_egg_datatypes_two_dsl(self.src_dsl_list, self.target_dsl_list, input_cost = self.input_cost, output_cost = self.output_cost, swizzle_cost = swizzle_cost )
+
+        test_patterns = self.get_swizzle_movement_only_patterns(self.patterns)
+        print("# Swizzle only patterns:", len(test_patterns))
+
+        egglog_patterns = []
+        for pattern in test_patterns:
+            rewrite = emit_rewrite_expr(pattern.src_expr, pattern.target_expr, bidirectional = pattern.bidirectional)
+            egglog_patterns.append(rewrite)
+
+
+        # Read in axioms file:
+        with open(self.axioms_file, "r") as AxiomFile:
+            axioms = AxiomFile.read()
+
+
+        egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
+        return egg_log_desc
+
     def get_swizzle_only_patterns(self, patterns):
         swizzle_only_patterns = []
 
@@ -151,6 +173,38 @@ class EggLogCompiler(CompilerBase):
             contains_swizzle = any(["swizzle" in op for op in ops])
 
             return contains_swizzle
+
+        for pat in patterns:
+            if is_swizzle_only_pattern(pat):
+                swizzle_only_patterns.append(pat)
+        return swizzle_only_patterns
+
+    def get_swizzle_movement_only_patterns(self, patterns):
+        swizzle_only_patterns = []
+
+        def is_swizzle_only_pattern(pat):
+            src_expr = pat.src_expr
+            target_expr = pat.target_expr
+
+            src_pass = False
+
+            if isinstance(src_expr, Reg):
+                src_pass = True
+            else:
+                src_str = src_expr.emit_context_expr_string()
+                src_pass = "swizzle" in src_str
+
+            if not src_pass:
+                return False
+
+            target_pass = False
+            if isinstance(target_expr, Reg):
+                target_pass = True
+            else:
+                target_str = target_expr.emit_context_expr_string()
+                target_pass = "swizzle" in target_str
+
+            return target_pass
 
         for pat in patterns:
             if is_swizzle_only_pattern(pat):
@@ -260,13 +314,18 @@ class EggLogCompiler(CompilerBase):
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
 
-        if self.expr_contains_src_language(output_expression, "typed"):
+        recompile_iter_count = 0
+        while self.expr_contains_src_language(output_expression, "typed"):
             print("Expression contains src language, need additional eq sat")
+
             if isinstance(output_expression, Context):
                 print(output_expression.emit_context_expr_string())
+
+            if recompile_iter_count >= 3:
+                print("Exceeded recompile iter count limit")
+                sys.exit()
             output_expression = self.compile_expr(output_expression)
-        else:
-            print("Expression is fully legal in out language + swizzle")
+            recompile_iter_count +=1
 
         if expr_contains_swizzles(output_expression, self.target_dsl_list + self.src_dsl_list):
             # Emit another swizzle pass to lower swizzle expressions
@@ -335,7 +394,7 @@ class EggLogCompiler(CompilerBase):
         print("\n\n")
 
 
-    def run_swizzle_lowering_pipeline(self, expr):
+    def lower_swizzles(self, expr):
         expr_regs = get_context_registers(expr)
         expr_regs = self.get_unique_registers(expr_regs)
 
@@ -357,7 +416,7 @@ class EggLogCompiler(CompilerBase):
 
         statements.append(emit_egg_run_iter(self.run_iterations))
         statements.append(emit_egg_extract_expr(src_expr_name))
-        egg_file_name = "swizzle." + get_random_tempfile_name() + ".egg"
+        egg_file_name = "swizzle.lower" + get_random_tempfile_name() + ".egg"
 
         print("Creating swizzle egg file:\t", egg_file_name)
 
@@ -369,6 +428,101 @@ class EggLogCompiler(CompilerBase):
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
         return output_expression
+
+
+
+    def move_swizzles(self, expr):
+        expr_regs = get_context_registers(expr)
+        expr_regs = self.get_unique_registers(expr_regs)
+
+        reg_data_structures = self.convert_reg_to_compiler_datastructure(expr_regs)
+        compiler_functionality = self.emit_swizzle_movement_pattern_matching_based_compiler(expr, swizzle_cost = self.output_cost)
+
+        statements = []
+
+        statements.append(compiler_functionality)
+        statements += [defn for label, defn in reg_data_structures]
+
+        num_regs = len(reg_data_structures)
+
+        src_expr_name = "swizzleexpr"
+        print("Swizzle Expression:\n", expr.emit_context_expr_string())
+        src_expr_egg = emit_expr_to_egg(expr)
+        define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
+        statements.append(define_src_expr)
+
+        statements.append(emit_egg_run_iter(self.run_iterations))
+        statements.append(emit_egg_extract_expr(src_expr_name))
+        egg_file_name = "swizzle.move." + get_random_tempfile_name() + ".egg"
+
+        print("Creating swizzle egg file:\t", egg_file_name)
+
+        with open(egg_file_name, "w+") as EggFile:
+            EggFile.write("\n".join(statements))
+
+        final_expression_str= self.execute_egglog_file(egg_file_name)
+
+        print("EGG LOG PRODUCED", final_expression_str)
+        output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
+        return output_expression
+
+    def run_swizzle_lowering_pipeline(self, expr):
+        output_expression = self.move_swizzles(expr)
+        output_expression = self.lower_swizzles(expr)
+
+        return output_expression
+
+
+
+
+def is_pattern_valid_egg(dsl_list, pattern, egg_pkg_path):
+    compiler =  EggLogCompiler([pattern], src_dsl_list = dsl_list, target_dsl_list = [], egg_pkg_path = egg_pkg_path)
+
+    input_expr = None
+
+    for i in range(1, 12):
+        output_size = pow(2, i)
+        input_expr = get_valid_concretization(pattern.src_expr, output_size, dsl_list)
+
+        if not input_expr is None:
+            break
+
+
+    statements = []
+    egg_content = compiler.emit_pattern_matching_based_compiler(input_expr)
+    statements.append(egg_content)
+
+    expr_regs = get_context_registers(input_expr)
+    expr_regs = compiler.get_unique_registers(expr_regs)
+    reg_data_structures = compiler.convert_reg_to_compiler_datastructure(expr_regs)
+
+    statements += [defn for label, defn in reg_data_structures]
+
+    src_expr_name = "test"
+    src_expr_egg = emit_expr_to_egg(input_expr)
+    define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
+    statements.append(define_src_expr)
+
+    statements.append(emit_egg_run_iter(compiler.run_iterations))
+    statements.append(emit_egg_extract_expr(src_expr_name))
+
+
+
+    egg_fname = get_random_tempfile_name()+".egg"
+
+    with open(egg_fname, "w+") as EggFile:
+        EggFile.write(" ".join(statements))
+
+    cmd = [compiler.egglog_bin, egg_fname]
+    return_code = sb.run(" ".join(cmd), shell = True)
+
+    cmd = ["rm", egg_fname]
+    #sb.run(" ".join(cmd), shell = True)
+
+    print("Return code", return_code )
+
+    return return_code.returncode == 0
+
 
 
 
