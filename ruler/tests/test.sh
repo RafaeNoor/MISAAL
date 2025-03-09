@@ -31,4 +31,4 @@
 #                        (verify (assert (bveq i (hexagon_V6_vshuffh_128B (hexagon_V6_vdealb_128B i 1024 1024 0 512 8 0 512 8 2 64 8 2 8 0) 1024 16 0 16 8 16 8 0))))'                        
 #
 
-rm -f misaal_out.txt tests/misaal_exprs/misaal_log.expr && nohup time cargo run --package ruler misaal_test_gen &> misaal_out.txt
+rm -f misaal_out.txt tests/misaal_exprs/misaal_log.expr nohup.out && nohup time cargo run --package ruler misaal_test_gen &> misaal_out.txt

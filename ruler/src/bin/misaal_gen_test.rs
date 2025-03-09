@@ -20,7 +20,9 @@ use env_logger::filter;
 use ruler::{
     enumo::{Filter, Metric, Ruleset, Workload},
     logger,
-    recipe_utils::{base_lang, iter_metric, recursive_rules, run_workload, Lang},
+    recipe_utils::{
+        base_lang, iter_metric, recursive_rules, run_fast_forwarding_misaal, run_workload, Lang,
+    },
     Limits,
 };
 
@@ -78,6 +80,19 @@ impl SynthLanguage for MISAALLang {
                 | MISAALLang::Typed_unsigned_vec_div(_)
                 | MISAALLang::Typed_unsigned_vec_shr(_)
         )
+    }
+
+    fn is_fast_forwarding() -> bool {
+        true
+    }
+
+    fn get_exploratory_rules() -> Ruleset<Self> {
+        Ruleset::new(&[
+            "(typed:unsigned-vec-min ?b ?a) ==> (hexagon_V6_vminuh_128B ?b ?a)",
+            "(typed:unsigned-vec-min ?b ?a) ==> (hexagon_V6_vminuh_128B ?a ?b)",
+            "(typed:signed-vec-min ?b ?a) ==> (hexagon_V6_vminuh_128B ?a ?b)",
+            "(typed:signed-vec-min ?b ?a) ==> (hexagon_V6_vminuh_128B ?b ?a)",
+        ])
     }
 
     fn is_hvx_allowed_op(&self) -> bool {
@@ -390,12 +405,6 @@ fn egg_misaal_validator<'a>(expr: &[MISAALLang]) -> String {
                 misaal_buf.push(bv_code);
             }
 
-            /* MISAALLang::Var(v) => match v.as_str() {
-                "a" => misaal_buf.push("(reg (bv #x01 8)) ".to_string()),
-                "b" => misaal_buf.push("(reg (bv #x00 8)) ".to_string()),
-                "c" => misaal_buf.push("(reg (bv #x02 8)) ".to_string()),
-                _ => misaal_buf.push("(reg (bv #x03 8)) ".to_string()),
-            }, */
             MISAALLang::Var(v) => {
                 misaal_buf.push(format!(
                     "(reg (bv #x0{:?} 8)) ",
@@ -413,6 +422,12 @@ fn main() {
     let depth = 3;
 
     let mut rules_34: Ruleset<MISAALLang> = Ruleset::default();
+
+    let limits = Limits {
+        iter: 3,
+        node: 2000000,
+        match_: 200_000,
+    };
 
     /* let lang_34 = Lang::new(
         &["0", "1", "2", "3"],
@@ -552,7 +567,7 @@ fn main() {
             "d".to_string(),
         ])); */
 
-        let wkld_34_a4 = iter_metric(base_lang(2), "EXPR", Metric::Atoms, 4)
+    let wkld_34_a4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 4)
         .plug("VAR", &Workload::new(&lang_34.vars))
         .plug("VAL", &Workload::empty())
         .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
@@ -564,45 +579,47 @@ fn main() {
             "d".to_string(),
         ]));
 
-        println!("---- STARTING A4 WKLD ----");
-
-        rules_34.extend(run_workload(
-            wkld_34_a4,
-            rules_34.clone(),
-            Limits::synthesis(),
-            Limits::minimize(),
-            true,
-        ));
-    
-        println!("---------- ENDING A4 WKLD ------------------");
-        println!("---- RULES for RELEVANCE SET 34 D4 ----");
-        rules_34.pretty_print();
-        println!("------------------------------------");
-    
-        
-    
-    // let wkld_34_d4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 4)
-    let wkld_34_a8 = iter_metric(base_lang(2), "EXPR", Metric::Atoms, 8)
-    .plug("VAR", &Workload::new(&lang_34.vars))
-    .plug("VAL", &Workload::empty())
-    .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
-    .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
-    .filter(Filter::Canon(vec![
-        "a".to_string(),
-        "b".to_string(),
-        "c".to_string(),
-        "d".to_string(),
-    ]));
-
-    println!("---- STARTING A8 WKLD ----");
+    println!("---- STARTING A4 WKLD ----");
 
     rules_34.extend(run_workload(
-        wkld_34_a8,
+        wkld_34_d4,
         rules_34.clone(),
         Limits::synthesis(),
         Limits::minimize(),
         true,
     ));
+
+    println!("---------- ENDING A4 WKLD ------------------");
+    println!("---- RULES for RELEVANCE SET 34 D4 ----");
+    rules_34.pretty_print();
+    println!("------------------------------------");
+
+    // let wkld_34_d4 = iter_metric(base_lang(2), "EXPR", Metric::Depth, 4)
+    let wkld_34_a8 = iter_metric(base_lang(2), "EXPR", Metric::Atoms, 8)
+        .plug("VAR", &Workload::new(&lang_34.vars))
+        .plug("VAL", &Workload::empty())
+        .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
+        .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
+        .filter(Filter::Canon(vec![
+            "a".to_string(),
+            "b".to_string(),
+            "c".to_string(),
+            "d".to_string(),
+        ]));
+
+    println!("---- STARTING A8 WKLD ----");
+
+    /* rules_34.extend(run_workload(
+        wkld_34_a8,
+        rules_34.clone(),
+        Limits::synthesis(),
+        Limits::minimize(),
+        true,
+    )); */
+
+    let rules_8 = run_fast_forwarding_misaal(wkld_34_a8.clone(), rules_34.clone(), limits, limits);
+
+    rules_34.extend(rules_8.clone());
 
     println!("---------- ENDING A8 WKLD ------------------");
     println!("---- RULES for RELEVANCE SET 34 A8 ----");
@@ -610,16 +627,16 @@ fn main() {
     println!("------------------------------------");
 
     let wkld_34_a16 = iter_metric(base_lang(2), "EXPR", Metric::Atoms, 16)
-    .plug("VAR", &Workload::new(&lang_34.vars))
-    .plug("VAL", &Workload::empty())
-    .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
-    .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
-    .filter(Filter::Canon(vec![
-        "a".to_string(),
-        "b".to_string(),
-        "c".to_string(),
-        "d".to_string(),
-    ]));
+        .plug("VAR", &Workload::new(&lang_34.vars))
+        .plug("VAL", &Workload::empty())
+        .plug("OP1", &Workload::new(&lang_34.ops[0].clone()))
+        .plug("OP2", &Workload::new(&lang_34.ops[1].clone()))
+        .filter(Filter::Canon(vec![
+            "a".to_string(),
+            "b".to_string(),
+            "c".to_string(),
+            "d".to_string(),
+        ]));
 
     println!("---- STARTING A16 WKLD ----");
 
