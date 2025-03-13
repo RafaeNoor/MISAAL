@@ -1,4 +1,5 @@
 from common.Types import *
+import sys
 import random
 from common.Instructions import *
 from  utils.DSLInstructionUtils import *
@@ -183,7 +184,8 @@ class EqClassExpandGenerator:
         if len(layer_ctx['clauses']) == 0:
             definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, self.emit_choose_lit("0", layer_ctx['output_size']))
         else:
-            definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, "\n".join(layer_ctx['clauses']))
+            definition = "(define ({}) \n(choose* \n{}\n)\n)".format(layer_name, "\n".join(layer_ctx['clauses']#+ [self.emit_choose_lit("0", layer_ctx['output_size'])]
+                                                                                           ))
         return definition
 
     def visit_reg_layer(self, ctx, parent_name,  layer_idx, output_size):
@@ -202,7 +204,7 @@ class EqClassExpandGenerator:
         self.set_layer_context_visited(current_layer_name)
         return current_layer_name
 
-    def visit_expr(self, ctx, parent_name, layer_idx, output_size):
+    def visit_expr(self, ctx, parent_name, layer_idx, output_size, required_root_name = None):
         if isinstance(ctx, Reg):
             return self.visit_reg_layer(ctx, parent_name, layer_idx, output_size)
         eq_class = self.get_eq_class(ctx.dsl_name)
@@ -215,6 +217,9 @@ class EqClassExpandGenerator:
 
         feasible_ctxs = []
         for e_ctx in eq_class.contexts:
+
+            if not required_root_name is None and e_ctx.name != required_root_name:
+                continue
             if e_ctx.out_vectsize == output_size:
                 feasible_ctxs.append(e_ctx)
 
@@ -238,10 +243,10 @@ class EqClassExpandGenerator:
 
 
 
-    def emit_grammar(self, ref_expr, prefix = ""):
+    def emit_grammar(self, ref_expr, prefix = "", required_root_name = None):
         self.prefix = prefix
         self.cleanup_state()
-        output_expr_name = self.visit_expr(ref_expr, "output", 0, self.output_bitwidth)
+        output_expr_name = self.visit_expr(ref_expr, "output", 0, self.output_bitwidth, required_root_name = required_root_name)
 
 
         #print("First state of layer contexts")
