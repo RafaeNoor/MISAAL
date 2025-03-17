@@ -51,15 +51,17 @@ props = [
 
 
 pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
-abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx_abstract.pickle"
+#abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx_abstract.pickle"
+abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
 
 HVX_patterns = []
 
 if os.path.exists(abstract_pickle_file_name):
-    print("Found existing pattern pickle file", abstract_pickle_file_name)
+    print("Found existing abstract pattern pickle file", abstract_pickle_file_name)
     with open(abstract_pickle_file_name, "rb") as handle:
         HVX_patterns = pickle.load(handle)
     print("Read {} patterns".format(len(HVX_patterns)))
+
 elif os.path.exists(pickle_file_name):
     print("Found existing pattern pickle file", pickle_file_name)
     with open(pickle_file_name, "rb") as handle:

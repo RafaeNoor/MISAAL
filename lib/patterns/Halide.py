@@ -1,4 +1,5 @@
 from compiler.HydrideCompiler import HydrideCompiler
+from utils.egg_config import EGG_PKG_PATH
 from compiler.Pattern import Pattern, parse_pattern_from_string
 #from sema.halide_sema import halide_semantics
 from sema.halide_decomposed import halide_decomposed as  halide_semantics
@@ -33,7 +34,8 @@ for tf in test_files:
         props.append(json.load(ReadFile))
 
 pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
-abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
+#abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
 
 Halide_patterns = []
 
@@ -41,6 +43,8 @@ Halide_patterns = []
 if os.path.exists(abstract_pickle_file_name):
     with open(abstract_pickle_file_name, "rb") as handle:
         Halide_patterns = pickle.load(handle)
+    print("Found existing pattern pickle file", pickle_file_name)
+    print("Read {} patterns".format(len(Halide_patterns)))
 elif os.path.exists(pickle_file_name):
     with open(pickle_file_name, "rb") as handle:
         Halide_patterns = pickle.load(handle)
@@ -48,6 +52,7 @@ elif os.path.exists(pickle_file_name):
     print("Read {} patterns".format(len(Halide_patterns)))
     abstractor = PatternAbstractor(Halide_patterns, halide_dsl_list, examples_limit = None)
     abstracted_patterns = abstractor.abstract_patterns(Halide_patterns, halide_dsl_list)
+
     with open(abstract_pickle_file_name, "wb") as handle:
         pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
