@@ -1980,7 +1980,154 @@ halide_folded = {
         '" ) "',
     ]
 },
+"typed-folded:vec-reduce_add": {
+    "target_instructions": {
+        "typed-folded:vec-reduce_add-p8-s16": {
+            "in_vectsize": 16,
+            "out_vectsize": 8,
+            "lanesize": 8,
+            "in_precision": 8,
+            "out_precision": 8,
+            "in_vectsize_index": 3,
+            "out_vectsize_index": None,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 2,
+            "arg_permute_map": [],
+            "Signedness": None,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "2",
+                "SYMBOLIC_BV_16",
+                "8",
+                "16"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:vec-reduce_add reduce-factor v1 iprec isize ) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%outer (reverse (range 0 isize (* iprec reduce-factor)))]) "',
+        '" (apply "',
+        '" bvadd "',
+        '" (for/list ([%iter (reverse (range 0 reduce-factor 1))]) "',
+        '" (define %step (* iprec %iter)) "',
+        '" (define %low-offset (+ %outer %step)) "',
+        '" (define %lastidx (- iprec 1)) "',
+        '" (define %high-idx (+ %low-offset %lastidx)) "',
+        '" (define %slice (extract %high-idx %low-offset v1)) "',
+        '" %slice "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
 
 
+
+"typed-folded:broadcast": {
+    "target_instructions": {
+        "typed-folded:broadcast-p16-s1024": {
+            "in_vectsize": 16,
+            "out_vectsize": 1024,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 1 ,
+            "out_vectsize_index": None,
+            "lanesize_index": 1,
+            "in_precision_index": 1,
+            "out_precision_index": 1,
+            "arg_permute_map": [],
+            "Signedness": None,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_16",
+                "16",
+                "64"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:broadcast %v1 iprec factor) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 factor 1))]) "',
+        '" %v1 "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
+
+
+"typed-folded:slice_vector": {
+    "target_instructions": {
+        "typed-folded:slice_vector-p8-s1024_b0_s1_l64": {
+            "in_vectsize": 1024,
+            "out_vectsize": 512,
+            "lanesize": 8,
+            "in_precision": 8,
+            "out_precision": 8,
+            "in_vectsize_index": 2 ,
+            "out_vectsize_index": None,
+            "lanesize_index": 1,
+            "in_precision_index": 1,
+            "out_precision_index": 1,
+            "arg_permute_map": [],
+            "Signedness": None,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_1024",
+                "8",
+                "1024",
+                "0",
+                "1",
+                "64"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:slice_vectors %v1 iprec %isize base stride len) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 len 1))]) "',
+        '" (define %offset-from-base (* iprec stride)) "',
+        '" (define %elem-idx (+ base %iter)) "',
+        '" (define %offset-to-base (* %elem-idx iprec)) "',
+        '" (define %offset (+ %offset-to-base %offset-from-base)) "',
+        '" (define %lastidx (- iprec 1)) "',
+        '" (define %high (+ %offset %lastidx)) "',
+        '" (define %slice (extract %high %offset %v1)) "',
+        '" %slice "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
 }
 
