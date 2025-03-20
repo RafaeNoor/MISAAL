@@ -421,6 +421,12 @@ class RepairRelavanceV4(RepairRelavanceV3):
         return True
 
 
+    def rosette_flatten_list(self, expr):
+        if not isinstance(expr, list):
+            return expr
+
+        tokens = [self.rosette_flatten_list(arg) for arg in expr]
+        return "({})".format(" ".join(tokens))
 
     def handle_profile_bv_expr(self, label, expr, extract_labels, is_extract = False):
         stmt = ""
@@ -432,6 +438,8 @@ class RepairRelavanceV4(RepairRelavanceV3):
             arg =  brackets[3]
             if isinstance(arg, list) and arg[0] == 'bv':
                 arg = "({})".format(" ".join(arg))
+            elif isinstance(arg,list):
+                arg = self.rosette_flatten_list(arg)
             stmt = "(printf \"(define reg_{} (extract ~a ~a ~a))\\n\"  {} {} \"{}\")".format(extract_labels.index(label), hi, lo, arg)
         else:
             stmt = "(printf \"(define ({}) {} )\\n\")".format(label, expr)
@@ -514,6 +522,17 @@ class RepairRelavanceV4(RepairRelavanceV3):
                     inlined_terms = []
 
                     for term in expr:
+                        if isinstance(term, list) and term[0] == 'bv':
+                            print(term)
+                            mapped_items = [term[0], term[1]]
+                            mapped_bv = [expr_map[t] if t in expr_map else t for t in term[2]]
+                            mapped_items.append('({})'.format(" ".join(mapped_bv)))
+                            print("MAPPED ITEMS: ", mapped_items)
+                            inlined_terms.append("({})".format(" ".join(mapped_items)))
+                            print("INLINED:", inlined_terms[-1])
+
+                            continue
+
                         if term in expr_map:
                             inlined_terms.append(expr_map[term])
                         else:

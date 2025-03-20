@@ -113,3 +113,12 @@
               )
             )
   )
+
+
+
+(define (bool-to-bv b) 
+  (cond 
+    [b (bv 1 1)]
+    [else (bv 0 1)]
+    )
+  )
