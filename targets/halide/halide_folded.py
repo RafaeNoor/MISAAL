@@ -666,6 +666,85 @@ halide_folded = {
             '" ) "',
         ]
     },
+    "typed-folded:vec-ge": {
+        "target_instructions": {
+            "typed-folded:vec-ge-signed-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 4,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 1,
+                "in_vectsize_index": 3,
+                "out_vectsize_index": None,
+                "lanesize_index": 2,
+                "in_precision_index": 2,
+                "out_precision_index": 2,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "1"
+                ]
+            },
+
+            "typed-folded:vec-ge-unsigned-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 4,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 1,
+                "in_vectsize_index": 3,
+                "out_vectsize_index": None,
+                "lanesize_index": 2,
+                "in_precision_index": 2,
+                "out_precision_index": 2,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "0"
+                ]
+            },
+
+        },
+        "semantics": [
+            '" (define (typed-folded:vec-ge v1 v2 iprec isize sign) "',
+            '" (define dst "',
+            '" (apply "',
+            '" concat "',
+            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+            '" (define %lastidx1 (- iprec 1)) "',
+            '" (define %high (+ %lastidx1 %iter)) "',
+            '" (define slice_v1 (extract %high %iter v1)) "',
+            '" (define %lastidx2 (- iprec 1)) "',
+            '" (define %high2 (+ %lastidx2 %iter)) "',
+            '" (define slice_v2 (extract %high2 %iter v2)) "',
+            '" (define %bool (bvge slice_v1 slice_v2 sign)) "',
+            '" (define %result (bool-to-bv %bool))"',
+            '" %result "',
+            '" ) "',
+            '" ) "',
+            '" ) "',
+            '" dst "',
+            '" ) "',
+        ]
+    },
     "typed-folded:vec-le": {
         "target_instructions": {
             "typed-folded:vec-le-signed-p16-s64": {
@@ -747,6 +826,85 @@ halide_folded = {
     },
 
 
+    "typed-folded:vec-gt": {
+        "target_instructions": {
+            "typed-folded:vec-gt-signed-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 4,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 1,
+                "in_vectsize_index": 3,
+                "out_vectsize_index": None,
+                "lanesize_index": 2,
+                "in_precision_index": 2,
+                "out_precision_index": 2,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "1"
+                ]
+            },
+
+            "typed-folded:vec-gt-unsigned-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 4,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 1,
+                "in_vectsize_index": 3,
+                "out_vectsize_index": None,
+                "lanesize_index": 2,
+                "in_precision_index": 2,
+                "out_precision_index": 2,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "0"
+                ]
+            },
+
+        },
+        "semantics": [
+            '" (define (typed-folded:vec-gt v1 v2 iprec isize sign) "',
+            '" (define dst "',
+            '" (apply "',
+            '" concat "',
+            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+            '" (define %lastidx1 (- iprec 1)) "',
+            '" (define %high (+ %lastidx1 %iter)) "',
+            '" (define slice_v1 (extract %high %iter v1)) "',
+            '" (define %lastidx2 (- iprec 1)) "',
+            '" (define %high2 (+ %lastidx2 %iter)) "',
+            '" (define slice_v2 (extract %high2 %iter v2)) "',
+            '" (define %bool (bvgt slice_v1 slice_v2 sign)) "',
+            '" (define %result (bool-to-bv %bool))"',
+            '" %result "',
+            '" ) "',
+            '" ) "',
+            '" ) "',
+            '" dst "',
+            '" ) "',
+        ]
+    },
     "typed-folded:vec-lt": {
         "target_instructions": {
             "typed-folded:vec-lt-signed-p16-s64": {
@@ -911,167 +1069,167 @@ halide_folded = {
     },
 
 
-    "typed-folded:vec-widen-mul": {
-        "target_instructions": {
-            "typed-folded:vec-widen-mul-signed-p16-s64": {
-                "in_vectsize": 64,
-                "out_vectsize": 128,
-                "lanesize": 16,
-                "in_precision": 16,
-                "out_precision": 32,
-                "in_vectsize_index": 3,
-                "out_vectsize_index": None,
-                "lanesize_index": 2,
-                "in_precision_index": 2,
-                "out_precision_index": 4,
-                "arg_permute_map": [],
-                "Signedness": 1,
-                "Cost": "[]",
-                "SIMD": "False",
-                "Extensions": [
-                    ""
-                ],
-                "args": [
-                    "SYMBOLIC_BV_64",
-                    "SYMBOLIC_BV_64",
-                    "16",
-                    "64",
-                    "32",
-                    "1"
-                ]
-            },
-
-            "typed-folded:vec-widen-mul-unsigned-p16-s64": {
-                "in_vectsize": 64,
-                "out_vectsize": 128,
-                "lanesize": 16,
-                "in_precision": 16,
-                "out_precision": 32,
-                "in_vectsize_index": 3,
-                "out_vectsize_index": None,
-                "lanesize_index": 2,
-                "in_precision_index": 2,
-                "out_precision_index": 4,
-                "arg_permute_map": [],
-                "Signedness": 0,
-                "Cost": "[]",
-                "SIMD": "False",
-                "Extensions": [
-                    ""
-                ],
-                "args": [
-                    "SYMBOLIC_BV_64",
-                    "SYMBOLIC_BV_64",
-                    "16",
-                    "64",
-                    "32",
-                    "0"
-                ]
-            },
+"typed-folded:vec-widen-mul": {
+    "target_instructions": {
+        "typed-folded:vec-widen-mul-signed-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 128,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 32,
+            "in_vectsize_index": 3,
+            "out_vectsize_index": None,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 4,
+            "arg_permute_map": [],
+            "Signedness": 1,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "64",
+                "32",
+                "1"
+            ]
         },
-        "semantics": [
-            '" (define (typed-folded:vec-widen-mul v1 v2 iprec isize widenprec sign) "',
-            '" (define dst "',
-            '" (apply "',
-            '" concat "',
-            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
-            '" (define %lastidx1 (- iprec 1)) "',
-            '" (define %high (+ %lastidx1 %iter)) "',
-            '" (define slice_v1 (extract %high %iter v1)) "',
-            '" (define %widen_slice_v1 (bvsizeext slice_v1 widenprec sign)) "',
-            '" (define %lastidx2 (- iprec 1)) "',
-            '" (define %high2 (+ %lastidx2 %iter)) "',
-            '" (define slice_v2 (extract %high2 %iter v2)) "',
-            '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
-            '" (define %prod (bvmul %widen_slice_v1 %widen_slice_v1)) "',
-            '" %prod "',
-            '" ) "',
-            '" ) "',
-            '" ) "',
-            '" dst "',
-            '" ) "',
-        ]
-    },
 
-    "typed-folded:vec-absd": {
-        "target_instructions": {
-            "typed-folded:vec-absd-signed-p16-s64": {
-                "in_vectsize": 64,
-                "out_vectsize": 64,
-                "lanesize": 16,
-                "in_precision": 16,
-                "out_precision": 16,
-                "in_vectsize_index": 3,
-                "out_vectsize_index": None,
-                "lanesize_index": 2,
-                "in_precision_index": 2,
-                "out_precision_index": 2,
-                "arg_permute_map": [],
-                "Signedness": 1,
-                "Cost": "[]",
-                "SIMD": "False",
-                "Extensions": [
-                    ""
-                ],
-                "args": [
-                    "SYMBOLIC_BV_64",
-                    "SYMBOLIC_BV_64",
-                    "16",
-                    "64",
-                    "1"
-                ]
-            },
-
-            "typed-folded:vec-absd-unsigned-p16-s64": {
-                "in_vectsize": 64,
-                "out_vectsize": 64,
-                "lanesize": 16,
-                "in_precision": 16,
-                "out_precision": 16,
-                "in_vectsize_index": 3,
-                "out_vectsize_index": None,
-                "lanesize_index": 2,
-                "in_precision_index": 2,
-                "out_precision_index": 2,
-                "arg_permute_map": [],
-                "Signedness": 0,
-                "Cost": "[]",
-                "SIMD": "False",
-                "Extensions": [
-                    ""
-                ],
-                "args": [
-                    "SYMBOLIC_BV_64",
-                    "SYMBOLIC_BV_64",
-                    "16",
-                    "64",
-                    "0"
-                ]
-            },
+        "typed-folded:vec-widen-mul-unsigned-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 128,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 32,
+            "in_vectsize_index": 3,
+            "out_vectsize_index": None,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 4,
+            "arg_permute_map": [],
+            "Signedness": 0,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "64",
+                "32",
+                "0"
+            ]
         },
-        "semantics": [
-            '" (define (typed-folded:vec-absd v1 v2 iprec isize sign) "',
-            '" (define dst "',
-            '" (apply "',
-            '" concat "',
-            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
-            '" (define %lastidx1 (- iprec 1)) "',
-            '" (define %high (+ %lastidx1 %iter)) "',
-            '" (define slice_v1 (extract %high %iter v1)) "',
-            '" (define %lastidx2 (- iprec 1)) "',
-            '" (define %high2 (+ %lastidx2 %iter)) "',
-            '" (define slice_v2 (extract %high2 %iter v2)) "',
-            '" (define max-v1-v2 (bvmax slice_v1 slice_v2 sign)) "',
-            '" (define min-v1-v2 (bvmin slice_v1 slice_v2 sign)) "',
-            '" (define %diff (bvsub max-v1-v2 min-v1-v2)) "',
-            '" %diff "',
-            '" ) "',
-            '" ) "',
-            '" ) "',
-            '" dst "',
-            '" ) "',
-        ]
     },
+    "semantics": [
+        '" (define (typed-folded:vec-widen-mul v1 v2 iprec isize widenprec sign) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+        '" (define %lastidx1 (- iprec 1)) "',
+        '" (define %high (+ %lastidx1 %iter)) "',
+        '" (define slice_v1 (extract %high %iter v1)) "',
+        '" (define %widen_slice_v1 (bvsizeext slice_v1 widenprec sign)) "',
+        '" (define %lastidx2 (- iprec 1)) "',
+        '" (define %high2 (+ %lastidx2 %iter)) "',
+        '" (define slice_v2 (extract %high2 %iter v2)) "',
+        '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
+        '" (define %prod (bvmul %widen_slice_v1 %widen_slice_v1)) "',
+        '" %prod "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
+
+"typed-folded:vec-absd": {
+    "target_instructions": {
+        "typed-folded:vec-absd-signed-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 3,
+            "out_vectsize_index": None,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 2,
+            "arg_permute_map": [],
+            "Signedness": 1,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "64",
+                "1"
+            ]
+        },
+
+        "typed-folded:vec-absd-unsigned-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 3,
+            "out_vectsize_index": None,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 2,
+            "arg_permute_map": [],
+            "Signedness": 0,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "64",
+                "0"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:vec-absd v1 v2 iprec isize sign) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+        '" (define %lastidx1 (- iprec 1)) "',
+        '" (define %high (+ %lastidx1 %iter)) "',
+        '" (define slice_v1 (extract %high %iter v1)) "',
+        '" (define %lastidx2 (- iprec 1)) "',
+        '" (define %high2 (+ %lastidx2 %iter)) "',
+        '" (define slice_v2 (extract %high2 %iter v2)) "',
+        '" (define max-v1-v2 (bvmax slice_v1 slice_v2 sign)) "',
+        '" (define min-v1-v2 (bvmin slice_v1 slice_v2 sign)) "',
+        '" (define %diff (bvsub max-v1-v2 min-v1-v2)) "',
+        '" %diff "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
 
 "typed-folded:vec-shr": {
     "target_instructions": {
@@ -1636,5 +1794,193 @@ halide_folded = {
 
     ]
 },
+"typed-folded:vec-rounding_shift_right": {
+    "target_instructions": {
+        "typed-folded:vec-rounding_shift_right-signed-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 4,
+            "out_vectsize_index": 4,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 2,
+            "arg_permute_map": [],
+            "Signedness": 1,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "32",
+                "64",
+                "1"
+            ]
+        },
+
+        "typed-folded:vec-rounding_shift_right-unsigned-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 4,
+            "out_vectsize_index": 4,
+            "lanesize_index": 2,
+            "in_precision_index": 2,
+            "out_precision_index": 2,
+            "arg_permute_map": [],
+            "Signedness": 0,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "32",
+                "64",
+                "0"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:vec-rounding_shift_right v1 v2 iprec widenprec isize sign) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+        '" (define %lastidx1 (- iprec 1)) "',
+        '" (define %high (+ %lastidx1 %iter)) "',
+        '" (define slice_v1 (extract %high %iter v1)) "',
+        '" (define %widen_slice_v1 (bvsizeext slice_v1 widenprec sign)) "',
+        '" (define %lastidx2 (- iprec 1)) "',
+        '" (define %high2 (+ %lastidx2 %iter)) "',
+        '" (define slice_v2 (extract %high2 %iter v2)) "',
+        '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
+        '" (define %max-b-0 (bvmax slice_v2 (bv 0 (bitvector iprec)) sign)) "',
+        '" (define %lshift (bvshl (bv 1 (bitvector iprec)) %max-b-0 )) "',
+        '" (define %half (bvdiv %lshift (bv 2 (bitvector iprec)) sign)) "',
+        '" (define %widen_half_v2 (bvsizeext %half widenprec sign)) "',
+        '" (define %sum (bvadd %widen_slice_v1 %widen_half_v2)) "',
+        '" (define %rshift (bvshr %sum %widen_slice_v2 sign)) "',
+        '" (define %narrow (bvsaturate %rshift widenprec iprec sign)) "',
+        '" %narrow "',
+        '"  "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
+
+"typed-folded:vec-rounding_mul_shift_right": {
+    "target_instructions": {
+        "typed-folded:vec-rounding_mul_shift_right-signed-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 5,
+            "out_vectsize_index": 5,
+            "lanesize_index": 3,
+            "in_precision_index": 3,
+            "out_precision_index": 3,
+            "arg_permute_map": [],
+            "Signedness": 1,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "32",
+                "64",
+                "1"
+            ]
+        },
+
+        "typed-folded:vec-rounding_mul_shift_right-unsigned-p16-s64": {
+            "in_vectsize": 64,
+            "out_vectsize": 64,
+            "lanesize": 16,
+            "in_precision": 16,
+            "out_precision": 16,
+            "in_vectsize_index": 5,
+            "out_vectsize_index": 5,
+            "lanesize_index": 3,
+            "in_precision_index": 3,
+            "out_precision_index": 3,
+            "arg_permute_map": [],
+            "Signedness": 0,
+            "Cost": "[]",
+            "SIMD": "False",
+            "Extensions": [
+                ""
+            ],
+            "args": [
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "SYMBOLIC_BV_64",
+                "16",
+                "32",
+                "64",
+                "0"
+            ]
+        },
+    },
+    "semantics": [
+        '" (define (typed-folded:vec-rounding_mul_shift_right v1 v2 v3 iprec widenprec isize sign) "',
+        '" (define dst "',
+        '" (apply "',
+        '" concat "',
+        '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+        '" (define %lastidx1 (- iprec 1)) "',
+        '" (define %high (+ %lastidx1 %iter)) "',
+        '" (define slice_v1 (extract %high %iter v1)) "',
+        '" (define %widen_slice_v1 (bvsizeext slice_v1 widenprec sign)) "',
+        '" (define %lastidx2 (- iprec 1)) "',
+        '" (define %high2 (+ %lastidx2 %iter)) "',
+        '" (define slice_v2 (extract %high2 %iter v2)) "',
+        '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
+        '" (define %lastidx3 (- iprec 1)) "',
+        '" (define %high3 (+ %lastidx3 %iter)) "',
+        '" (define slice_v3 (extract %high3 %iter v3)) "',
+        '" (define %widen_slice_v3 (bvsizeext slice_v3 widenprec sign)) "',
+        '" (define %widen-mul-a-b (bvmul %widen_slice_v1 %widen_slice_v2)) "',
+        '" (define %max-q-0 (bvmax %widen_slice_v3 (bv 0 (bitvector widenprec)) sign)) "',
+        '" (define %lshift (bvshl (bv 1 (bitvector widenprec)) %max-q-0 )) "',
+        '" (define %half (bvdiv %lshift (bv 2 (bitvector widenprec)) sign)) "',
+        '" (define %widen_half_v3 (bvsizeext %half (* widenprec 2) sign)) "',
+        '" (define %double-widen-mul-a-b (bvsizeext %widen-mul-a-b (* widenprec 2) sign)) "',
+        '" (define %sum (bvadd %double-widen-mul-a-b %widen_half_v3)) "',
+        '" (define %double-widen-v3 (bvsizeext %widen_slice_v3 (* widenprec 2) sign)) "',
+        '" (define %rshift (bvshr %sum %double-widen-v3 sign)) "',
+        '" (define %narrow (bvsaturate %rshift (* widenprec 2) widenprec sign)) "',
+        '" (define %double-narrow (bvsaturate %narrow widenprec iprec sign)) "',
+        '" %double-narrow "',
+        '" ) "',
+        '" ) "',
+        '" ) "',
+        '" dst "',
+        '" ) "',
+    ]
+},
+
+
 }
 
