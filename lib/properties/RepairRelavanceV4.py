@@ -195,6 +195,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
     def prepare_candidate_generator(self, candidate_prep, use_max_args = True):
         input_dsl_inst = candidate_prep[0]
+        output_dsl_inst = candidate_prep[1]
         arg_id = self.get_repair_context_index(input_dsl_inst, use_max_args = use_max_args)
         modified_sema = self.get_instrumented_semantics(input_dsl_inst, arg_id)
         print(modified_sema)
@@ -285,15 +286,21 @@ class RepairRelavanceV4(RepairRelavanceV3):
 
 
 
-        output_dsl_inst = candidate_prep[1]
         input_signedness = src_ctx.signedness
-        target_dsl = self.get_grammar_relevant_dsl(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst)
+
+        target_dsl = [output_dsl_inst]
+        if depth != 1:
+            target_dsl = self.get_grammar_relevant_dsl(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst)
 
 
-        statements.append(self.contains_reg_def.emit_contains([input_dsl_inst] ,self.struct_def))
+        #statements.append(self.contains_reg_def.emit_contains([input_dsl_inst] ,self.struct_def))
 
+        print("Output precision for enumeration:", out_precision)
         # Output size must be the output precision since we're testing on one lane
         enumerate_target_program = create_exhaustive_expressions_generator(target_dsl, depth, use_eq_class = True, output_size = out_precision)
+
+        print("TARGET DSL", target_dsl)
+        #enumerate_target_program = create_exhaustive_expressions_generator_v2(target_dsl, depth, output_size = out_precision, max_leaves = 4)
 
         def invoke_ref_custom(interpreter_name, invoke_ref_name = "invoke-spec"):
             invoke_ref_def = self.invoke_ref(out_precision, output_size, invoke_name = invoke_ref_name, interpreter_name = interpreter_name, index = 0, is_lane_func = False, num_regs = src_regs_count)
