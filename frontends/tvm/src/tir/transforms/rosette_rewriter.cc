@@ -110,7 +110,7 @@ namespace tir {
     DEFINE_REWRITE_OP(Broadcast);
 
     PrimExpr RosetteRewriter::result(DataType result_dtype){
-        return Call(result_dtype, builtin::call_extern(), args);
+        return Call(result_dtype, builtin::call_pure_extern(), args);
     }
 
 }  // namespace tir

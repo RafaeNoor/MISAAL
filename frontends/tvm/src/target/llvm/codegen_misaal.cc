@@ -43,6 +43,20 @@ namespace codegen {
 
 class CodeGenMISAAL final : public CodeGenCPU {
  public:
+  /*!
+   * \brief Initialize the code generator with given context
+   * \param module_name The name of the module.
+   * \param tm Target machine model
+   * \param ctx The context.
+   * \param system_lib_prefix If the value is not NullOpt, insert system lib registration.
+   *                          The value corresponds to the prefix of the system lib symbols.
+   * \param dynamic_lookup Whether dynamically lookup runtime function
+   *                       or use the runtime function table passed by caller.
+   * \param target_c_runtime If true, generate a module to be executed by the C runtime. In practice
+   *                       this option influences whether global ctors are used.
+   */
+  void Init(const std::string& module_name, LLVMTarget* llvm_target,
+                    Optional<String> system_lib_prefix, bool dynamic_lookup, bool target_c_runtime) override;
   // llvm::Value* VisitExpr_(const VarNode* op) override;
   // llvm::Value* VisitExpr_(const CastNode* op) override;
   // llvm::Value* VisitExpr_(const IntImmNode* op) override;
@@ -75,100 +89,15 @@ class CodeGenMISAAL final : public CodeGenCPU {
  private:
 };
 
-// llvm::Value* CodeGenMISAAL::VisitExpr_(const AddNode* op){
-//   llvm::Value* a_val = MakeValue(op->a);
-//   llvm::Value* b_val = MakeValue(op->b);
+void CodeGenMISAAL::Init(const std::string& module_name, LLVMTarget* llvm_target,
+                  Optional<String> system_lib_prefix, bool dynamic_lookup, bool target_c_runtime){
+                    CodeGenCPU::Init(module_name, llvm_target, system_lib_prefix, dynamic_lookup, target_c_runtime);
 
-//   if (op->dtype.is_vector()){
-//     std::cerr << "( add "; 
-//     std::cerr << std::endl;
-//     a_val->dump(); 
-//     std::cerr << std::endl;
-//     b_val->print(llvm::errs()); 
-//     std::cerr << std::endl;
-//     std::cerr << ")\n" ; 
-//   }
-
-//   return CodeGenCPU::CreateAdd(op->dtype, a_val, b_val);
-// }
-
-// llvm::Value* CodeGenMISAAL::VisitExpr_(const VarNode* op){
-//   if (op->dtype.is_vector()){
-//     std::cerr << "Visiting var: " << op->name_hint << std::endl;
-//   }
-
-//   return CodeGenCPU::VisitExpr_(op);
-// }
-
-// VISIT_EXPR(VarNode);
-// VISIT_EXPR(CastNode);
-// VISIT_EXPR(IntImmNode);
-// VISIT_EXPR(FloatImmNode);
-// VISIT_EXPR(StringImmNode);
-// VISIT_EXPR(AddNode);
-// VISIT_EXPR(SubNode);
-// VISIT_EXPR(MulNode);
-// VISIT_EXPR(DivNode);
-// VISIT_EXPR(ModNode);
-// VISIT_EXPR(MinNode);
-// VISIT_EXPR(MaxNode);
-// VISIT_EXPR(LTNode);
-// VISIT_EXPR(LENode);
-// VISIT_EXPR(GTNode);
-// VISIT_EXPR(GENode);
-// VISIT_EXPR(EQNode);
-// VISIT_EXPR(NENode);
-// VISIT_EXPR(AndNode);
-// VISIT_EXPR(OrNode);
-// VISIT_EXPR(NotNode);
-// VISIT_EXPR(SelectNode);
-// VISIT_EXPR(LetNode);
-// VISIT_EXPR(BufferLoadNode);
-// VISIT_EXPR(CallNode);
-// VISIT_EXPR(RampNode);
-// VISIT_EXPR(ShuffleNode);
-// VISIT_EXPR(BroadcastNode);
-
-
-// llvm::Value* CodeGenMISAAL::VisitExpr_(const VarNode* op){
-//   if (op->dtype.is_vector()){
-//     std::cerr << "Op: " << op->dtype << std::endl;
-//   }
-//   return CodeGenCPU::VisitExpr_(op);
-// }
-// llvm::Value* CodeGenMISAAL::CreateAdd(DataType t, llvm::Value* a, llvm::Value* b) { 
-//   if (t.is_int()) {                                                               
-//     if (t.bits() >= 32) {                                                         
-//       return builder_->CreateNSWAdd(a, b);                                        
-//     } else {                                                                      
-//       return builder_->CreateAdd(a, b);                                           
-//     }                                                                             
-//   } else if (t.is_uint()) {                                                       
-//     if (t.bits() >= 32) {                                                         
-//       return builder_->CreateNUWAdd(a, b);                                        
-//     } else {                                                                      
-//       return builder_->CreateAdd(a, b);                                           
-//     }                                                                             
-//   } else {                                                                        
-//     ICHECK(t.is_float());                                                         
-//     return builder_->CreateFAdd(a, b);                                            
-//   }                                                                               
-// }                                                                                 
-
-// llvm::Value* CodeGenMISAAL::VisitExpr_(const AddNode* op){
-//   std::cerr << "Visiting addnode" << std::endl;
-//   std::cerr << op->dtype << std::endl;
-//   std::cerr << op->a.dtype() << std::endl;
-//   std::cerr << op->b.dtype() << std::endl;
-//   llvm::Value* left_val = MakeValue(op->a);
-//   llvm::Value* right_val = MakeValue(op->b);
-//   std::cerr << "Left llvm val: ";
-//   left_val->print(llvm::errs());
-//   std::cerr << "Right llvm val: ";
-//   right_val->print(llvm::errs());
-//   std::cerr << std::endl;
-//   return CreateAdd(op->dtype, left_val, right_val);
-// }
+                    // Import code generated by misaal
+                    tvm::transform::PassContext pass_ctx = tvm::transform::PassContext::Current();
+                    Optional<String> misaal_ll_path = pass_ctx->GetConfig("misaal_ll_path", String(""));
+                    HandleImport(misaal_ll_path.value());
+                  }
 
 TVM_REGISTER_GLOBAL("tvm.codegen.llvm.misaal")
     .set_body([](const TVMArgs& targs, TVMRetValue* rv) {
