@@ -542,6 +542,11 @@ SOURCE_FILES = \
   RemoveDeadAllocations.cpp \
   RemoveExternLoops.cpp \
   RemoveUndef.cpp \
+  VectorInfo.cpp \
+  HydrideCodeGen.cpp \
+  DistributeVec.cpp \
+  misaal.cpp \
+  Rosette.cpp \
   Schedule.cpp \
   ScheduleFunctions.cpp \
   SelectGPUAPI.cpp \
@@ -747,6 +752,11 @@ HEADER_FILES = \
   RemoveUndef.h \
   runtime/HalideBuffer.h \
   runtime/HalideRuntime.h \
+  VectorInfo.cpp \
+  HydrideCodeGen.h \
+  DistributeVec.h \
+  misaal.h \
+  Rosette.h \
   Schedule.h \
   ScheduleFunctions.h \
   Scope.h \

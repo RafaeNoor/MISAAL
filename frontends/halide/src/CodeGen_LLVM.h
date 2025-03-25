@@ -170,6 +170,7 @@ protected:
     llvm::MDNode *default_fp_math_md = nullptr;
     llvm::MDNode *strict_fp_math_md = nullptr;
     std::vector<LoweredArgument> current_function_args;
+    std::vector<llvm::CallInst *> hydride_nodes;
 
     /** The target we're generating code for */
     Halide::Target target;
@@ -183,6 +184,9 @@ protected:
 
     /** Run all of llvm's optimization passes on the module. */
     void optimize_module();
+
+    /** Add hydride_code entries to llvm module. */
+    void add_hydride_code();
 
     /** Add an entry to the symbol table, hiding previous entries with
      * the same name. Call this when new values come into scope. */
