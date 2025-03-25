@@ -65,7 +65,8 @@ HalideModel convert_onnx_model(
 std::string auto_schedule(const HalideModel &pipeline) {
     // Generate a schedule for the pipeline.
     Halide::Target tgt = Halide::get_host_target();
-    auto schedule = pipeline.rep->auto_schedule(tgt);
+    Halide::AutoschedulerParams autoscheduler_params = Halide::AutoschedulerParams("Adams2019");
+    auto schedule = pipeline.rep->apply_autoscheduler(tgt, autoscheduler_params);
     return schedule.schedule_source;
 }
 
@@ -173,7 +174,7 @@ void prepare_random_input(
     const Tensor &t = pipeline.model->tensors.at(input_name);
     std::vector<int> input_shape;
     for (int i = 0; i < t.shape.size(); ++i) {
-        const int64_t *dim = Halide::Internal::as_const_int(t.shape[i]);
+        auto dim = Halide::Internal::as_const_int(t.shape[i]);
         if (!dim) {
             // The dimension isn't fixed: use the estimated typical value instead if
             // one was provided.
@@ -344,8 +345,6 @@ std::vector<py::array> run(
     }
     Halide::Realization real(outputs);
     Halide::Target tgt = Halide::get_host_target();
-    // Don't allow LLVM to mess with the code.
-    tgt.set_feature(Halide::Target::DisableLLVMLoopOpt, true);
     // Don't create buffers larger than 2GB since we use 32bit signed indices to
     // index the data stored in them.
     tgt.set_feature(Halide::Target::LargeBuffers, false);
@@ -461,8 +460,6 @@ double benchmark(
 
     Halide::Realization real(outputs);
     Halide::Target tgt = Halide::get_host_target();
-    // Don't allow LLVM to mess with the code.
-    tgt.set_feature(Halide::Target::DisableLLVMLoopOpt, true);
     // Don't create buffers larger than 2GB since we use 32bit signed indices to
     // index the data stored in them.
     tgt.set_feature(Halide::Target::LargeBuffers, false);
@@ -532,7 +529,8 @@ void print_loop_nest(const HalideModel &pipeline) {
 }
 
 void print_lowered_statement(const HalideModel &pipeline) {
-    std::string tmp_file = std::tmpnam(nullptr);
+    Halide::Internal::TemporaryFile f("model", ".stmt");
+    std::string tmp_file = f.pathname();
     pipeline.rep->compile_to_lowered_stmt(
         tmp_file, pipeline.rep->infer_arguments());
     std::ifstream is(tmp_file);
@@ -540,7 +538,6 @@ void print_lowered_statement(const HalideModel &pipeline) {
     while (std::getline(is, line)) {
         std::cout << line << "\n";
     }
-    std::remove(tmp_file.c_str());
 }
 
 }  // namespace

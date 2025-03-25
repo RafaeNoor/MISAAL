@@ -22,6 +22,10 @@ void IRVisitor::visit(const Cast *op) {
     op->value.accept(this);
 }
 
+void IRVisitor::visit(const Reinterpret *op) {
+    op->value.accept(this);
+}
+
 void IRVisitor::visit(const Variable *) {
 }
 
@@ -261,6 +265,10 @@ void IRVisitor::visit(const Atomic *op) {
     op->body.accept(this);
 }
 
+void IRVisitor::visit(const HoistedStorage *op) {
+    op->body.accept(this);
+}
+
 void IRGraphVisitor::include(const Expr &e) {
     auto r = visited.insert(e.get());
     if (r.second) {
@@ -290,6 +298,10 @@ void IRGraphVisitor::visit(const StringImm *) {
 }
 
 void IRGraphVisitor::visit(const Cast *op) {
+    include(op->value);
+}
+
+void IRGraphVisitor::visit(const Reinterpret *op) {
     include(op->value);
 }
 
@@ -512,6 +524,10 @@ void IRGraphVisitor::visit(const VectorReduce *op) {
 }
 
 void IRGraphVisitor::visit(const Atomic *op) {
+    include(op->body);
+}
+
+void IRGraphVisitor::visit(const HoistedStorage *op) {
     include(op->body);
 }
 

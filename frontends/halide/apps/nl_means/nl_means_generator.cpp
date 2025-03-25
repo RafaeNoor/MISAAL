@@ -81,7 +81,7 @@ public:
         // Provide estimates on the output pipeline
         non_local_means.set_estimates({{0, 1536}, {0, 2560}, {0, 3}});
 
-        if (auto_schedule) {
+        if (using_autoscheduler()) {
             // nothing
         } else if (get_target().has_gpu_feature()) {
             // 22 ms on a 2060 RTX
@@ -136,9 +136,11 @@ public:
                 .parallel(ty)
                 .vectorize(x, vec);
             blur_d_y.compute_at(non_local_means, tx)
+                .hoist_storage(non_local_means, ty)
                 .reorder(y, x)
                 .vectorize(x, vec);
             d.compute_at(non_local_means, tx)
+                .hoist_storage(non_local_means, ty)
                 .vectorize(x, vec);
             non_local_means_sum.compute_at(non_local_means, x)
                 .reorder(c, x, y)

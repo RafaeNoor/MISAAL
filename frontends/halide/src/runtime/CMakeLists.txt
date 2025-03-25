@@ -1,6 +1,8 @@
-if (NOT CMAKE_GENERATOR MATCHES "Make|Ninja")
-    message(STATUS "Notice: ${CMAKE_GENERATOR} does not support depfile dependencies. Incremental builds may fail.")
-endif ()
+find_package(
+    VulkanHeaders 1.3.296 REQUIRED
+    HINTS "${Halide_SOURCE_DIR}/dependencies/vulkan"
+)
+get_target_property(VulkanHeaders_INCLUDE_DIR Vulkan::Headers INTERFACE_INCLUDE_DIRECTORIES)
 
 # Keep these lists in alphabetical order.
 set(RUNTIME_CPP
@@ -22,6 +24,9 @@ set(RUNTIME_CPP
     fake_get_symbol
     fake_thread_pool
     float16_t
+    fopen
+    fopen_lfs
+    force_include_types
     fuchsia_clock
     fuchsia_host_cpu_count
     fuchsia_yield
@@ -33,28 +38,26 @@ set(RUNTIME_CPP
     hexagon_dma_pool
     hexagon_host
     ios_io
+    linux_aarch64_cpu_features
+    linux_arm_cpu_features
     linux_clock
     linux_host_cpu_count
     linux_yield
-    matlab
-    metadata
     metal
     metal_objc_arm
     metal_objc_x86
-    mips_cpu_features
     module_aot_ref_count
     module_jit_ref_count
     msan
     msan_stubs
     opencl
-    opengl_egl_context
-    opengl_glx_context
-    openglcompute
+    osx_aarch64_cpu_features
+    osx_arm_cpu_features
     osx_clock
     osx_get_symbol
     osx_host_cpu_count
-    osx_opengl_context
     osx_yield
+    posix_aligned_alloc
     posix_allocator
     posix_clock
     posix_error_handler
@@ -81,17 +84,24 @@ set(RUNTIME_CPP
     to_string
     trace_helper
     tracing
+    vulkan
     wasm_cpu_features
+    # TODO(https://github.com/halide/Halide/issues/7248)
+    # webgpu
+    webgpu_dawn
+    webgpu_emscripten
+    windows_aarch64_cpu_features_arm
     windows_clock
     windows_cuda
-    windows_d3d12compute_x86
     windows_d3d12compute_arm
+    windows_d3d12compute_x86
     windows_get_symbol
     windows_io
     windows_opencl
     windows_profiler
     windows_threads
     windows_threads_tsan
+    windows_vulkan
     windows_yield
     write_debug_image
     x86_cpu_features
@@ -102,7 +112,6 @@ set(RUNTIME_LL
     arm
     arm_no_neon
     hvx_128
-    mips
     posix_math
     powerpc
     ptx_dev
@@ -133,8 +142,9 @@ set(RUNTIME_HEADER_FILES
     HalideRuntimeHexagonHost.h
     HalideRuntimeMetal.h
     HalideRuntimeOpenCL.h
-    HalideRuntimeOpenGLCompute.h
     HalideRuntimeQurt.h
+    HalideRuntimeVulkan.h
+    HalideRuntimeWebGPU.h
     )
 
 # Need to create an object library for this because CMake
@@ -142,6 +152,7 @@ set(RUNTIME_HEADER_FILES
 # in a different directory ONLY IF that source was created
 # by add_custom_command, as is the case in this directory.
 add_library(Halide_initmod OBJECT)
+add_library(Halide::initmod ALIAS Halide_initmod)
 
 # Note: ensure that these flags match the flags in the Makefile.
 # Note: this always uses Clang-from-LLVM for compilation, so none of these flags should need conditionalization.
@@ -157,7 +168,10 @@ set(RUNTIME_CXX_FLAGS
     -fno-threadsafe-statics
     # Necessary for using virtual functions in the runtime code.
     -fno-rtti
+    # Will generate bad code in some situations
+    -fno-jump-tables
     -Wall
+    -Wc++20-designator
     -Wcast-qual
     -Werror
     -Wignored-qualifiers
@@ -165,11 +179,17 @@ set(RUNTIME_CXX_FLAGS
     -Wno-psabi
     -Wno-unknown-warning-option
     -Wno-unused-function
+    -Wvla
     -Wsign-compare
+    -Wimplicit-fallthrough
+    -Wno-sync-alignment
+    -isystem "${VulkanHeaders_INCLUDE_DIR}"
 )
 
-option(Halide_CLANG_TIDY_BUILD "Generate fake compile jobs for runtime files when running clang-tidy." OFF)
-mark_as_advanced(Halide_CLANG_TIDY_BUILD)
+Halide_feature(
+    Halide_CLANG_TIDY_BUILD "Generate fake compile jobs for runtime files when running clang-tidy." OFF
+    ADVANCED
+)
 
 foreach (i IN LISTS RUNTIME_CPP)
     foreach (j IN ITEMS 32 64)
@@ -192,9 +212,9 @@ foreach (i IN LISTS RUNTIME_CPP)
                 endif ()
             # Windows on ARM
             elseif (i MATCHES "windows_.*_arm$")
-                if (j EQUAL 32 AND TARGET_ARM)
+                if (j EQUAL 32 AND "ARM" IN_LIST Halide_LLVM_COMPONENTS)
                     set(TARGET "arm-unknown-windows-unknown")
-                elseif (j EQUAL 64 AND TARGET_AARCH64)
+                elseif (j EQUAL 64 AND "AArch64" IN_LIST Halide_LLVM_COMPONENTS)
                     set(TARGET "aarch64-unknown-windows-unknown")
                 else ()
                     continue()
@@ -210,23 +230,35 @@ foreach (i IN LISTS RUNTIME_CPP)
                     # unfortunately, clang doesn't automatically set this flag even though the
                     # ABI is msvc on windows
                     set(fshort-wchar -fshort-wchar)
-                    set(TARGET "le64-unknown-windows-unknown")
+                    # TODO: was le64 here, not sure if this is correct or not
+                    set(TARGET "x86_64-unknown-windows-unknown")
                 endif ()
             endif()
-        # Everything else
-        else()
+        elseif (i MATCHES "webgpu")
             if (j EQUAL 32)
-                # (The 'nacl' is a red herring. This is just a generic 32-bit little-endian target.)
-                set(TARGET "le32-unknown-nacl-unknown")
+                # wasm32 will fail for some i386 builds, but i386 won't
+                set(TARGET "wasm32-unknown-unknown-unknown")
             else ()
-                # generic 64-bit code
-                set(TARGET "le64-unknown-unknown-unknown")
+                set(TARGET "wasm64-unknown-unknown-unknown")
+            endif ()
+        else()
+            # don't be fooled: these are just generic 32/64-bit targets for our purposes here
+            if (j EQUAL 32)
+                # wasm32 will fail for some i386 builds, but i386 won't
+                set(TARGET "i386-unknown-unknown-unknown")
+            else ()
+                set(TARGET "x86_64-unknown-unknown-unknown")
             endif ()
         endif ()
 
         set(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${i}.cpp")
 
-        set(RUNTIME_DEFINES -DCOMPILING_HALIDE_RUNTIME -DBITS_${j})
+        set(RUNTIME_DEFINES -DCOMPILING_HALIDE_RUNTIME -DBITS_${j}
+                            -DHALIDE_VERSION=${Halide_VERSION} 
+                            -DHALIDE_VERSION_MAJOR=${Halide_VERSION_MAJOR}
+                            -DHALIDE_VERSION_MINOR=${Halide_VERSION_MINOR}
+                            -DHALIDE_VERSION_PATCH=${Halide_VERSION_PATCH})
+
         set(RUNTIME_DEFINES_debug -g -DDEBUG_RUNTIME ${RUNTIME_DEFINES})
 
         foreach (SUFFIX IN ITEMS "" "_debug")
@@ -236,28 +268,7 @@ foreach (i IN LISTS RUNTIME_CPP)
             set(INITMOD "_initmod_${i}_${j}${SUFFIX}.cpp")
             set(SYMBOL "halide_internal_initmod_${i}_${j}${SUFFIX}")
 
-            set(clang_flags ${RUNTIME_CXX_FLAGS} ${fpic} ${fshort-wchar} ${RUNTIME_DEFINES${SUFFIX}} -m${j} -target ${TARGET} -emit-llvm -S)
-
-            set(ll_path "${LL}")
-            if (CMAKE_GENERATOR MATCHES "Ninja")
-                if (POLICY CMP0116)
-                    # CMake 3.20+ does the right thing here and transforms the depfiles for us
-                    list(APPEND clang_flags -MD -MF "${basename}.d")
-                    set(dep_args DEPFILE "${basename}.d")
-                else()
-                    # Dep-files are subtle and require clang to run using *just* the right
-                    # relative paths to the build root, NOT the Halide build root. This is
-                    # a perfect storm of bad behavior from CMake <3.20, Ninja, and Clang.
-                    file(RELATIVE_PATH ll_path "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/${LL}")
-                    file(TO_NATIVE_PATH "${ll_path}" ll_path)
-                    list(APPEND clang_flags -MD -MF "$<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}/${basename}.d>")
-                    set(dep_args
-                        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-                        DEPFILE "${CMAKE_CURRENT_BINARY_DIR}/${basename}.d")
-                endif()
-            elseif (CMAKE_GENERATOR MATCHES "Make")
-                set(dep_args IMPLICIT_DEPENDS CXX "${SOURCE}")
-            endif ()
+            set(clang_flags ${RUNTIME_CXX_FLAGS} ${fpic} ${fshort-wchar} ${RUNTIME_DEFINES${SUFFIX}} -m${j} -target ${TARGET} -emit-llvm -S -MD -MF "${basename}.d")
 
             if (Halide_CLANG_TIDY_BUILD)
                 # Create a 'fake' entry just so that clang-tidy will see a C++ compilation command
@@ -268,14 +279,14 @@ foreach (i IN LISTS RUNTIME_CPP)
                 target_compile_definitions(${basename} PRIVATE ${RUNTIME_DEFINES})
             else()
                 add_custom_command(OUTPUT "${LL}"
-                                   COMMAND clang ${clang_flags} -o "${ll_path}" "$<SHELL_PATH:${SOURCE}>"
+                                   COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} ${CMAKE_C_COMPILER_LAUNCHER} $<TARGET_FILE:clang> ${clang_flags} -o "${LL}" "$<SHELL_PATH:${SOURCE}>"
                                    DEPENDS "${SOURCE}"
-                                   ${dep_args}
+                                   DEPFILE "${basename}.d"
                                    VERBATIM)
             endif()
 
             add_custom_command(OUTPUT "${BC}"
-                               COMMAND llvm-as "${LL}" -o "${BC}"
+                               COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:llvm-as> "${LL}" -o "${BC}"
                                DEPENDS "${LL}"
                                VERBATIM)
 
@@ -295,31 +306,14 @@ foreach (i IN LISTS RUNTIME_LL)
     set(BC "initmod.${i}.bc")
     set(INITMOD "_initmod_${i}.cpp")
 
-    # For LLVM14+, we must add elementtype() annotations to some of our LLVM IR;
-    # earlier versions either don't understand that keyword at all, or don't support
-    # the uses we have for it. Rather than forking these sources, for now we'll just
-    # edit the files at build time to remove the offending uses. Note that `sed` and friends aren't
-    # an option for CMake builds (since they must support Windows environments without
-    # such tooling).
-    #
-    # (This may well need attention in the future, depending on how the LLVM opaque-pointers work proceeeds;
-    # see https://llvm.org/docs/OpaquePointers.html)
-
     set(LL_TRANSFORMED "${LL}.transformed.ll")
-    if (LLVM_PACKAGE_VERSION VERSION_LESS 14.0.0)
-        add_custom_command(OUTPUT "${LL_TRANSFORMED}"
-                           COMMAND regexp_replace "elementtype\\(i[0-9]+\\)" "" < "$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/${LL}>" > "${LL_TRANSFORMED}"
-                           DEPENDS "${LL}" regexp_replace
-                           VERBATIM)
-    else ()
-        add_custom_command(OUTPUT "${LL_TRANSFORMED}"
-                           COMMAND ${CMAKE_COMMAND} -E copy "$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/${LL}>" "${LL_TRANSFORMED}"
-                           DEPENDS "${LL}"
-                           VERBATIM)
-    endif ()
+    add_custom_command(OUTPUT "${LL_TRANSFORMED}"
+                       COMMAND ${CMAKE_COMMAND} -E copy "$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/${LL}>" "${LL_TRANSFORMED}"
+                       DEPENDS "${LL}"
+                       VERBATIM)
 
     add_custom_command(OUTPUT "${BC}"
-                       COMMAND llvm-as "${LL_TRANSFORMED}" -o "${BC}"
+                       COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:llvm-as> "${LL_TRANSFORMED}" -o "${BC}"
                        DEPENDS "${LL_TRANSFORMED}"
                        VERBATIM)
     add_custom_command(OUTPUT "${INITMOD}"
@@ -329,16 +323,16 @@ foreach (i IN LISTS RUNTIME_LL)
     target_sources(Halide_initmod PRIVATE ${INITMOD})
 endforeach ()
 
-#foreach (i IN LISTS RUNTIME_BC)
-#    set(INITMOD "_initmod_ptx_${i}.cpp")
-#    set(RT_BC "${CMAKE_CURRENT_SOURCE_DIR}/nvidia_libdevice_bitcode/libdevice.${i}.10.bc")
-#
-#    add_custom_command(OUTPUT "${INITMOD}"
-#                       COMMAND binary2cpp "halide_internal_initmod_ptx_${i}_ll" < "$<SHELL_PATH:${RT_BC}>" > "${INITMOD}"
-#                       DEPENDS binary2cpp "${RT_BC}"
-#                       VERBATIM)
-#    target_sources(Halide_initmod PRIVATE ${INITMOD})
-#endforeach ()
+foreach (i IN LISTS RUNTIME_BC)
+    set(INITMOD "_initmod_ptx_${i}.cpp")
+    set(RT_BC "${CMAKE_CURRENT_SOURCE_DIR}/nvidia_libdevice_bitcode/libdevice.${i}.10.bc")
+
+    add_custom_command(OUTPUT "${INITMOD}"
+                       COMMAND binary2cpp "halide_internal_initmod_ptx_${i}_ll" < "$<SHELL_PATH:${RT_BC}>" > "${INITMOD}"
+                       DEPENDS binary2cpp "${RT_BC}"
+                       VERBATIM)
+    target_sources(Halide_initmod PRIVATE ${INITMOD})
+endforeach ()
 
 add_custom_command(OUTPUT "_initmod_inlined_c.cpp"
                    COMMAND binary2cpp "halide_internal_initmod_inlined_c" < "$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/halide_buffer_t.cpp>" > "_initmod_inlined_c.cpp"
@@ -353,8 +347,6 @@ foreach (i IN LISTS RUNTIME_HEADER_FILES)
                        DEPENDS "${i}" binary2cpp
                        VERBATIM)
     target_sources(Halide_initmod PRIVATE "_initmod_${SYM_NAME}.cpp")
-
-    configure_file(${i} "${Halide_BINARY_DIR}/include/${i}" COPYONLY)
 endforeach ()
 
 ##
@@ -363,6 +355,18 @@ endforeach ()
 
 add_library(Halide_Runtime INTERFACE)
 add_library(Halide::Runtime ALIAS Halide_Runtime)
-target_include_directories(Halide_Runtime INTERFACE $<BUILD_INTERFACE:${Halide_BINARY_DIR}/include>)
 set_target_properties(Halide_Runtime PROPERTIES EXPORT_NAME Runtime)
 
+target_sources(Halide_Runtime
+               INTERFACE
+               FILE_SET HEADERS
+               FILES ${RUNTIME_HEADER_FILES})
+
+Halide_feature(
+    Halide_BUILD_HEXAGON_REMOTE_RUNTIME "Build the hexagon remote runtime for offloading to Hexagon (HVX)" OFF
+    DEPENDS NOT Halide_CLANG_TIDY_BUILD
+    ADVANCED
+)
+if (Halide_BUILD_HEXAGON_REMOTE_RUNTIME)
+  add_subdirectory(hexagon_remote)
+endif ()

@@ -3,29 +3,16 @@
 namespace Halide {
 namespace Internal {
 
-Expr Simplify::visit(const Add *op, ExprInfo *bounds) {
-    ExprInfo a_bounds, b_bounds;
-    Expr a = mutate(op->a, &a_bounds);
-    Expr b = mutate(op->b, &b_bounds);
+Expr Simplify::visit(const Add *op, ExprInfo *info) {
+    ExprInfo a_info, b_info;
+    Expr a = mutate(op->a, &a_info);
+    Expr b = mutate(op->b, &b_info);
 
-    if (bounds && no_overflow_int(op->type)) {
-        bounds->min_defined = a_bounds.min_defined && b_bounds.min_defined;
-        bounds->max_defined = a_bounds.max_defined && b_bounds.max_defined;
-        if (add_would_overflow(64, a_bounds.min, b_bounds.min)) {
-            bounds->min_defined = false;
-            bounds->min = 0;
-        } else {
-            bounds->min = a_bounds.min + b_bounds.min;
-        }
-        if (add_would_overflow(64, a_bounds.max, b_bounds.max)) {
-            bounds->max_defined = false;
-            bounds->max = 0;
-        } else {
-            bounds->max = a_bounds.max + b_bounds.max;
-        }
-
-        bounds->alignment = a_bounds.alignment + b_bounds.alignment;
-        bounds->trim_bounds_using_alignment();
+    if (info) {
+        info->bounds = a_info.bounds + b_info.bounds;
+        info->alignment = a_info.alignment + b_info.alignment;
+        info->trim_bounds_using_alignment();
+        info->cast_to(op->type);
     }
 
     if (may_simplify(op->type)) {
@@ -33,7 +20,7 @@ Expr Simplify::visit(const Add *op, ExprInfo *bounds) {
         // Order commutative operations by node type
         if (should_commute(a, b)) {
             std::swap(a, b);
-            std::swap(a_bounds, b_bounds);
+            std::swap(a_info, b_info);
         }
 
         auto rewrite = IRMatcher::rewriter(IRMatcher::add(a, b), op->type);
@@ -121,15 +108,21 @@ Expr Simplify::visit(const Add *op, ExprInfo *bounds) {
              rewrite(y*x + y*z, y*(x + z)) ||
              rewrite(x*c0 + y*c1, (x + y*fold(c1/c0)) * c0, c1 % c0 == 0) ||
              rewrite(x*c0 + y*c1, (x*fold(c0/c1) + y) * c1, c0 % c1 == 0) ||
+
+             // Hoist shuffles. The Shuffle visitor wants to sink
+             // extract_elements to the leaves, and those count as degenerate
+             // slices, so only hoist shuffles that grab more than one lane.
+             rewrite(slice(x, c0, c1, c2) + slice(y, c0, c1, c2), slice(x + y, c0, c1, c2), c2 > 1 && lanes_of(x) == lanes_of(y)) ||
+             rewrite(slice(x, c0, c1, c2) + (z + slice(y, c0, c1, c2)), slice(x + y, c0, c1, c2) + z, c2 > 1 && lanes_of(x) == lanes_of(y)) ||
+             rewrite(slice(x, c0, c1, c2) + (slice(y, c0, c1, c2) + z), slice(x + y, c0, c1, c2) + z, c2 > 1 && lanes_of(x) == lanes_of(y)) ||
+             rewrite(slice(x, c0, c1, c2) + (z - slice(y, c0, c1, c2)), slice(x - y, c0, c1, c2) + z, c2 > 1 && lanes_of(x) == lanes_of(y)) ||
+             rewrite(slice(x, c0, c1, c2) + (slice(y, c0, c1, c2) - z), slice(x + y, c0, c1, c2) - z, c2 > 1 && lanes_of(x) == lanes_of(y)) ||
+
              (no_overflow(op->type) &&
               (rewrite(x + x*y, x * (y + 1)) ||
                rewrite(x + y*x, (y + 1) * x) ||
                rewrite(x*y + x, x * (y + 1)) ||
                rewrite(y*x + x, (y + 1) * x, !is_const(x)) ||
-               rewrite((x + c0)/c1 + c2, (x + fold(c0 + c1*c2))/c1, c1 != 0) ||
-               rewrite((x + (y + c0)/c1) + c2, x + (y + fold(c0 + c1*c2))/c1, c1 != 0) ||
-               rewrite(((y + c0)/c1 + x) + c2, x + (y + fold(c0 + c1*c2))/c1, c1 != 0) ||
-               rewrite((c0 - x)/c1 + c2, (fold(c0 + c1*c2) - x)/c1, c0 != 0 && c1 != 0) || // When c0 is zero, this would fight another rule
                rewrite(x + (x + y)/c0, (fold(c0 + 1)*x + y)/c0, c0 != 0) ||
                rewrite(x + (y + x)/c0, (fold(c0 + 1)*x + y)/c0, c0 != 0) ||
                rewrite(x + (y - x)/c0, (fold(c0 - 1)*x + y)/c0, c0 != 0) ||
@@ -193,21 +186,9 @@ Expr Simplify::visit(const Add *op, ExprInfo *bounds) {
                rewrite(x + (y + (c0 - x)/c1)*c1, y * c1 - ((c0 - x) % c1) + c0, c1 > 0) ||
 
                false)))) {
-            return mutate(rewrite.result, bounds);
+            return mutate(rewrite.result, info);
         }
         // clang-format on
-
-        const Shuffle *shuffle_a = a.as<Shuffle>();
-        const Shuffle *shuffle_b = b.as<Shuffle>();
-        if (shuffle_a && shuffle_b &&
-            shuffle_a->is_slice() &&
-            shuffle_b->is_slice()) {
-            if (a.same_as(op->a) && b.same_as(op->b)) {
-                return hoist_slice_vector<Add>(op);
-            } else {
-                return hoist_slice_vector<Add>(Add::make(a, b));
-            }
-        }
     }
 
     if (a.same_as(op->a) && b.same_as(op->b)) {

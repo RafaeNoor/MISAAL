@@ -1,6 +1,7 @@
 #include "Halide.h"
 #include "gpu_object_lifetime_tracker.h"
 
+#include <cstdlib>
 #include <iostream>
 
 using namespace Halide;
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < 256; i++) {
             if (result(i) != i) {
                 std::cout << "Error! " << result(i) << " != " << i << "\n";
-                return -1;
+                return 1;
             }
         }
     }
@@ -49,7 +50,8 @@ int main(int argc, char *argv[]) {
 
     int ret = tracker.validate_gpu_object_lifetime(true /* allow_globals */, true /* allow_none */, 1 /* max_globals */);
     if (ret != 0) {
-        return ret;
+        fprintf(stderr, "validate_gpu_object_lifetime() failed\n");
+        return 1;
     }
 
     printf("Success!\n");

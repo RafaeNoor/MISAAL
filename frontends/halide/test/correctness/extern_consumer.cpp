@@ -5,15 +5,9 @@
 
 using namespace Halide;
 
-#ifdef _WIN32
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
-
-extern "C" DLLEXPORT int dump_to_file(halide_buffer_t *input, const char *filename,
-                                      int desired_min, int desired_extent,
-                                      halide_buffer_t *) {
+extern "C" HALIDE_EXPORT_SYMBOL int dump_to_file(halide_buffer_t *input, const char *filename,
+                                                 int desired_min, int desired_extent,
+                                                 halide_buffer_t *) {
     // Note the final output buffer argument is unused.
     if (input->is_bounds_query()) {
         // Request some range of the input buffer
@@ -102,7 +96,7 @@ int main(int argc, char **argv) {
     sink.realize();
 
     if (!check_result())
-        return -1;
+        return 1;
 
     // Test ImageParam ExternFuncArgument via passed in image.
     Buffer<int32_t> buf = source.realize({10});
@@ -120,7 +114,7 @@ int main(int argc, char **argv) {
     sink2.realize();
 
     if (!check_result())
-        return -1;
+        return 1;
 
     printf("Success!\n");
     return 0;

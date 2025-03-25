@@ -66,8 +66,8 @@ public:
             new_body.same_as(body)) {
             return orig;
         } else {
-            for (auto it = frames.rbegin(); it != frames.rend(); it++) {
-                new_body = T::make(it->op->name, it->new_value, new_body);
+            for (const auto &frame : reverse_view(frames)) {
+                new_body = T::make(frame.op->name, frame.new_value, new_body);
             }
             return new_body;
         }
@@ -93,7 +93,7 @@ public:
             new_body.same_as(op->body)) {
             return op;
         } else {
-            return For::make(op->name, new_min, new_extent, op->for_type, op->device_api, new_body);
+            return For::make(op->name, new_min, new_extent, op->for_type, op->partition_policy, op->device_api, new_body);
         }
     }
 };

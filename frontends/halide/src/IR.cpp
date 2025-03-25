@@ -20,6 +20,22 @@ Expr Cast::make(Type t, Expr v) {
     return node;
 }
 
+Expr Reinterpret::make(Type t, Expr v) {
+    user_assert(v.defined()) << "reinterpret of undefined Expr\n";
+    int from_bits = v.type().bits() * v.type().lanes();
+    int to_bits = t.bits() * t.lanes();
+    user_assert(from_bits == to_bits)
+        << "Reinterpret cast from type " << v.type()
+        << " which has " << from_bits
+        << " bits, to type " << t
+        << " which has " << to_bits << " bits\n";
+
+    Reinterpret *node = new Reinterpret;
+    node->type = t;
+    node->value = std::move(v);
+    return node;
+}
+
 Expr Add::make(Expr a, Expr b) {
     internal_assert(a.defined()) << "Add of undefined\n";
     internal_assert(b.defined()) << "Add of undefined\n";
@@ -220,9 +236,8 @@ Expr Select::make(Expr condition, Expr true_value, Expr false_value) {
     internal_assert(false_value.defined()) << "Select of undefined\n";
     internal_assert(condition.type().is_bool()) << "First argument to Select is not a bool: " << condition.type() << "\n";
     internal_assert(false_value.type() == true_value.type()) << "Select of mismatched types\n";
-    internal_assert(condition.type().is_scalar() ||
-                    condition.type().lanes() == true_value.type().lanes())
-        << "In Select, vector lanes of condition must either be 1, or equal to vector lanes of arguments\n";
+    internal_assert(condition.type().lanes() == true_value.type().lanes())
+        << "In Select, vector lanes of condition must be equal to vector lanes of arguments\n";
 
     Select *node = new Select;
     node->type = true_value.type();
@@ -326,7 +341,11 @@ Stmt ProducerConsumer::make_consume(const std::string &name, Stmt body) {
     return ProducerConsumer::make(name, false, std::move(body));
 }
 
-Stmt For::make(const std::string &name, Expr min, Expr extent, ForType for_type, DeviceAPI device_api, Stmt body) {
+Stmt For::make(const std::string &name,
+               Expr min, Expr extent,
+               ForType for_type, Partition partition_policy,
+               DeviceAPI device_api,
+               Stmt body) {
     internal_assert(min.defined()) << "For of undefined\n";
     internal_assert(extent.defined()) << "For of undefined\n";
     internal_assert(min.type() == Int(32)) << "For with non-integer min\n";
@@ -338,6 +357,7 @@ Stmt For::make(const std::string &name, Expr min, Expr extent, ForType for_type,
     node->min = std::move(min);
     node->extent = std::move(extent);
     node->for_type = for_type;
+    node->partition_policy = partition_policy;
     node->device_api = device_api;
     node->body = std::move(body);
     return node;
@@ -393,7 +413,7 @@ Stmt Provide::make(const std::string &name, const std::vector<Expr> &values, con
 Stmt Allocate::make(const std::string &name, Type type, MemoryType memory_type,
                     const std::vector<Expr> &extents,
                     Expr condition, Stmt body,
-                    Expr new_expr, const std::string &free_function) {
+                    Expr new_expr, const std::string &free_function, int padding) {
     for (const auto &extent : extents) {
         internal_assert(extent.defined()) << "Allocate of undefined extent\n";
         internal_assert(extent.type().is_scalar() == 1) << "Allocate of vector extent\n";
@@ -401,6 +421,8 @@ Stmt Allocate::make(const std::string &name, Type type, MemoryType memory_type,
     internal_assert(body.defined()) << "Allocate of undefined\n";
     internal_assert(condition.defined()) << "Allocate with undefined condition\n";
     internal_assert(condition.type().is_bool()) << "Allocate condition is not boolean\n";
+    internal_assert(!(new_expr.defined() && padding))
+        << "Allocate nodes with custom new expressions may not have padding\n";
 
     Allocate *node = new Allocate;
     node->name = name;
@@ -410,6 +432,7 @@ Stmt Allocate::make(const std::string &name, Type type, MemoryType memory_type,
     node->new_expr = std::move(new_expr);
     node->free_function = free_function;
     node->condition = std::move(condition);
+    node->padding = padding;
     node->body = std::move(body);
     return node;
 }
@@ -555,6 +578,8 @@ Stmt IfThenElse::make(Expr condition, Stmt then_case, Stmt else_case) {
     internal_assert(condition.defined() && then_case.defined()) << "IfThenElse of undefined\n";
     // else_case may be null.
 
+    internal_assert(condition.type().is_scalar()) << "IfThenElse with vector condition\n";
+
     IfThenElse *node = new IfThenElse;
     node->condition = std::move(condition);
     node->then_case = std::move(then_case);
@@ -595,12 +620,14 @@ const char *const intrinsic_op_names[] = {
     "bundle",
     "call_cached_indirect_function",
     "cast_mask",
+    "concat_bits",
     "count_leading_zeros",
     "count_trailing_zeros",
     "debug_to_file",
     "declare_box_touched",
     "div_round_to_zero",
     "dynamic_shuffle",
+    "extract_bits",
     "extract_mask_element",
     "get_user_context",
     "gpu_thread_barrier",
@@ -625,38 +652,50 @@ const char *const intrinsic_op_names[] = {
     "mux",
     "popcount",
     "prefetch",
+    "profiling_enable_instance_marker",
     "promise_clamped",
     "random",
     "register_destructor",
-    "reinterpret",
     "require",
     "require_mask",
     "return_second",
     "rewrite_buffer",
+    "round",
     "rounding_halving_add",
-    "rounding_halving_sub",
     "rounding_mul_shift_right",
     "rounding_shift_left",
     "rounding_shift_right",
     "saturating_add",
     "saturating_sub",
+    "saturating_cast",
     "scatter_gather",
     "select_mask",
     "shift_left",
     "shift_right",
     "signed_integer_overflow",
     "size_of_halide_buffer_t",
+    "skip_stages_marker",
+    "sliding_window_marker",
     "sorted_avg",
     "strict_float",
     "stringify",
+    "target_arch_is",
+    "target_bits",
+    "target_has_feature",
+    "target_natural_vector_size",
+    "target_os_is",
     "undef",
     "unreachable",
     "unsafe_promise_clamped",
+    "widen_right_add",
+    "widen_right_mul",
+    "widen_right_sub",
     "widening_add",
     "widening_mul",
     "widening_shift_left",
     "widening_shift_right",
     "widening_sub",
+    "get_runtime_vscale",
 };
 
 static_assert(sizeof(intrinsic_op_names) / sizeof(intrinsic_op_names[0]) == Call::IntrinsicOpCount,
@@ -887,6 +926,15 @@ Stmt Atomic::make(const std::string &producer_name,
     return node;
 }
 
+Stmt HoistedStorage::make(const std::string &name,
+                          Stmt body) {
+    internal_assert(body.defined()) << "HoistedStorage must have a body statement.\n";
+    HoistedStorage *node = new HoistedStorage;
+    node->name = name;
+    node->body = std::move(body);
+    return node;
+}
+
 Expr VectorReduce::make(VectorReduce::Operator op,
                         Expr vec,
                         int lanes) {
@@ -969,6 +1017,10 @@ void ExprNode<StringImm>::accept(IRVisitor *v) const {
 template<>
 void ExprNode<Cast>::accept(IRVisitor *v) const {
     v->visit((const Cast *)this);
+}
+template<>
+void ExprNode<Reinterpret>::accept(IRVisitor *v) const {
+    v->visit((const Reinterpret *)this);
 }
 template<>
 void ExprNode<Variable>::accept(IRVisitor *v) const {
@@ -1134,6 +1186,10 @@ template<>
 void StmtNode<Atomic>::accept(IRVisitor *v) const {
     v->visit((const Atomic *)this);
 }
+template<>
+void StmtNode<HoistedStorage>::accept(IRVisitor *v) const {
+    v->visit((const HoistedStorage *)this);
+}
 
 template<>
 Expr ExprNode<IntImm>::mutate_expr(IRMutator *v) const {
@@ -1154,6 +1210,10 @@ Expr ExprNode<StringImm>::mutate_expr(IRMutator *v) const {
 template<>
 Expr ExprNode<Cast>::mutate_expr(IRMutator *v) const {
     return v->visit((const Cast *)this);
+}
+template<>
+Expr ExprNode<Reinterpret>::mutate_expr(IRMutator *v) const {
+    return v->visit((const Reinterpret *)this);
 }
 template<>
 Expr ExprNode<Variable>::mutate_expr(IRMutator *v) const {
@@ -1319,6 +1379,10 @@ Stmt StmtNode<Fork>::mutate_stmt(IRMutator *v) const {
 template<>
 Stmt StmtNode<Atomic>::mutate_stmt(IRMutator *v) const {
     return v->visit((const Atomic *)this);
+}
+template<>
+Stmt StmtNode<HoistedStorage>::mutate_stmt(IRMutator *v) const {
+    return v->visit((const HoistedStorage *)this);
 }
 
 Call::ConstString Call::buffer_get_dimensions = "_halide_buffer_get_dimensions";

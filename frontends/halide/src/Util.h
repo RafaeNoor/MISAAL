@@ -13,10 +13,12 @@
 /** \file
  * Various utility functions used internally Halide. */
 
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <functional>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -43,6 +45,32 @@
 #define HALIDE_NO_USER_CODE_INLINE
 #else
 #define HALIDE_NO_USER_CODE_INLINE HALIDE_NEVER_INLINE
+#endif
+
+// Clang uses __has_feature() for sanitizers...
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define HALIDE_INTERNAL_USING_ASAN
+#endif
+#if __has_feature(memory_sanitizer)
+#define HALIDE_INTERNAL_USING_MSAN
+#endif
+#if __has_feature(thread_sanitizer)
+#define HALIDE_INTERNAL_USING_TSAN
+#endif
+#if __has_feature(coverage_sanitizer)
+#define HALIDE_INTERNAL_USING_COVSAN
+#endif
+#if __has_feature(undefined_behavior_sanitizer)
+#define HALIDE_INTERNAL_USING_UBSAN
+#endif
+#endif
+
+// ...but GCC/MSVC don't like __has_feature, so handle them separately.
+// (Only AddressSanitizer for now, not sure if any others are well-supported
+// outside of Clang.
+#if defined(__SANITIZE_ADDRESS__) && !defined(HALIDE_INTERNAL_USING_ASAN)
+#define HALIDE_INTERNAL_USING_ASAN
 #endif
 
 namespace Halide {
@@ -111,11 +139,6 @@ DstType reinterpret_bits(const SrcType &src) {
     return dst;
 }
 
-/** Make a unique name for an object based on the name of the stack
- * variable passed in. If introspection isn't working or there are no
- * debug symbols, just uses unique_name with the given prefix. */
-std::string make_entity_name(void *stack_ptr, const std::string &type, char prefix);
-
 /** Get value of an environment variable. Returns its value
  * is defined in the environment. If the var is not defined, an empty string
  * is returned.
@@ -158,6 +181,29 @@ std::string replace_all(const std::string &str, const std::string &find, const s
 
 /** Split the source string using 'delim' as the divider. */
 std::vector<std::string> split_string(const std::string &source, const std::string &delim);
+
+/** Join the source vector using 'delim' as the divider. */
+template<typename T>
+std::string join_strings(const std::vector<T> &sources, const std::string &delim) {
+    size_t sz = 0;
+    if (!sources.empty()) {
+        sz += delim.size() * (sources.size() - 1);
+    }
+    for (const auto &s : sources) {
+        sz += s.size();
+    }
+    std::string result;
+    result.reserve(sz);
+    bool need_delim = false;
+    for (const auto &s : sources) {
+        if (need_delim) {
+            result += delim;
+        }
+        result += s;
+        need_delim = true;
+    }
+    return result;
+}
 
 /** Perform a left fold of a vector. Returns a default-constructed
  * vector element if the vector is empty. Similar to std::accumulate
@@ -208,8 +254,8 @@ struct all_are_convertible : meta_and<std::is_convertible<Args, To>...> {};
 /** Returns base name and fills in namespaces, outermost one first in vector. */
 std::string extract_namespaces(const std::string &name, std::vector<std::string> &namespaces);
 
-/** Overload that returns base name only */
-std::string extract_namespaces(const std::string &name);
+/** Like extract_namespaces(), but strip and discard the namespaces, returning base name only */
+std::string strip_namespaces(const std::string &name);
 
 struct FileStat {
     uint64_t file_size;
@@ -322,6 +368,15 @@ bool sub_would_overflow(int bits, int64_t a, int64_t b);
 bool mul_would_overflow(int bits, int64_t a, int64_t b);
 // @}
 
+/** Routines to perform arithmetic on signed types without triggering signed
+ * overflow. If overflow would occur, sets result to zero, and returns
+ * false. Otherwise set result to the correct value, and returns true. */
+// @{
+HALIDE_MUST_USE_RESULT bool add_with_overflow(int bits, int64_t a, int64_t b, int64_t *result);
+HALIDE_MUST_USE_RESULT bool sub_with_overflow(int bits, int64_t a, int64_t b, int64_t *result);
+HALIDE_MUST_USE_RESULT bool mul_with_overflow(int bits, int64_t a, int64_t b, int64_t *result);
+// @}
+
 /** Helper class for saving/restoring variable values on the stack, to allow
  * for early-exit that preserves correctness */
 template<typename T>
@@ -370,14 +425,13 @@ void halide_toc_impl(const char *file, int line);
 // regarding 'bool' in some compliation configurations.
 template<typename TO>
 struct StaticCast {
-    template<typename FROM, typename TO2 = TO, typename std::enable_if<!std::is_same<TO2, bool>::value>::type * = nullptr>
-    inline constexpr static TO2 value(const FROM &from) {
-        return static_cast<TO2>(from);
-    }
-
-    template<typename FROM, typename TO2 = TO, typename std::enable_if<std::is_same<TO2, bool>::value>::type * = nullptr>
-    inline constexpr static TO2 value(const FROM &from) {
-        return from != 0;
+    template<typename FROM>
+    constexpr static TO value(const FROM &from) {
+        if constexpr (std::is_same<TO, bool>::value) {
+            return from != 0;
+        } else {
+            return static_cast<TO>(from);
+        }
     }
 };
 
@@ -386,21 +440,47 @@ struct StaticCast {
 // or dropping of fractional parts).
 template<typename TO>
 struct IsRoundtrippable {
-    template<typename FROM, typename TO2 = TO, typename std::enable_if<!std::is_convertible<FROM, TO>::value>::type * = nullptr>
-    inline constexpr static bool value(const FROM &from) {
-        return false;
-    }
-
-    template<typename FROM, typename TO2 = TO, typename std::enable_if<std::is_convertible<FROM, TO>::value && std::is_arithmetic<TO>::value && std::is_arithmetic<FROM>::value && !std::is_same<TO, FROM>::value>::type * = nullptr>
-    inline constexpr static bool value(const FROM &from) {
-        return StaticCast<FROM>::value(StaticCast<TO>::value(from)) == from;
-    }
-
-    template<typename FROM, typename TO2 = TO, typename std::enable_if<std::is_convertible<FROM, TO>::value && !(std::is_arithmetic<TO>::value && std::is_arithmetic<FROM>::value && !std::is_same<TO, FROM>::value)>::type * = nullptr>
-    inline constexpr static bool value(const FROM &from) {
-        return true;
+    template<typename FROM>
+    constexpr static bool value(const FROM &from) {
+        if constexpr (std::is_convertible<FROM, TO>::value) {
+            if constexpr (std::is_arithmetic<TO>::value &&
+                          std::is_arithmetic<FROM>::value &&
+                          !std::is_same<TO, FROM>::value) {
+                const TO to = static_cast<TO>(from);
+                const FROM roundtripped = static_cast<FROM>(to);
+                return roundtripped == from;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 };
+
+template<typename T>
+struct reverse_adaptor {
+    T &range;
+};
+
+template<typename T>
+auto begin(reverse_adaptor<T> i) {
+    return std::rbegin(i.range);
+}
+
+template<typename T>
+auto end(reverse_adaptor<T> i) {
+    return std::rend(i.range);
+}
+
+/**
+ * Reverse-order adaptor for range-based for-loops.
+ * TODO: Replace with std::ranges::reverse_view when upgrading to C++20.
+ */
+template<typename T>
+reverse_adaptor<T> reverse_view(T &&range) {
+    return {range};
+}
 
 /** Emit a version of a string that is a valid identifier in C (. is replaced with _)
  * If prefix_underscore is true (the default), an underscore will be prepended if the
@@ -471,6 +551,16 @@ int popcount64(uint64_t x);
 int clz64(uint64_t x);
 int ctz64(uint64_t x);
 // @}
+
+/** Return an integer 2^n, for some n,  which is >= x. Argument x must be > 0. */
+inline int64_t next_power_of_two(int64_t x) {
+    return static_cast<int64_t>(1) << static_cast<int64_t>(std::ceil(std::log2(x)));
+}
+
+template<typename T>
+inline T align_up(T x, int n) {
+    return (x + n - 1) / n * n;
+}
 
 }  // namespace Internal
 }  // namespace Halide

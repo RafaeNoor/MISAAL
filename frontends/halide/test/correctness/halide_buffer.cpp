@@ -6,6 +6,22 @@
 
 using namespace Halide::Runtime;
 
+static void *my_malloced_addr = nullptr;
+static int my_malloc_count = 0;
+static void *my_freed_addr = nullptr;
+static int my_free_count = 0;
+void *my_malloc(size_t size) {
+    void *ptr = malloc(size);
+    my_malloced_addr = ptr;
+    my_malloc_count++;
+    return ptr;
+}
+void my_free(void *ptr) {
+    my_freed_addr = ptr;
+    my_free_count++;
+    free(ptr);
+}
+
 template<typename T1, typename T2>
 void check_equal_shape(const Buffer<T1> &a, const Buffer<T2> &b) {
     if (a.dimensions() != b.dimensions()) abort();
@@ -221,6 +237,34 @@ int main(int argc, char **argv) {
     }
 
     {
+        Buffer<float> a(100, 80, 3);
+        a.for_each_element([&](int x, int y, int c) {
+            a(x, y, c) = x + 100.0f * y + 100000.0f * c;
+        });
+        Buffer<float> b(a);
+
+        // Check that Buffer<T> will autoconvert to Buffer<const T>&
+        const auto check_equal_non_const_ref = [](Buffer<const float> &a, Buffer<const float> &b) {
+            check_equal(a, b);
+        };
+        check_equal_non_const_ref(a, b);
+
+        // Check that Buffer<T> will autoconvert to Buffer<void>&
+        const auto check_equal_non_const_void_ref = [](Buffer<void> &a, Buffer<void> &b) {
+            check_equal(a.as<float>(), b.as<float>());
+        };
+        check_equal_non_const_void_ref(a, b);
+
+        // Check that Buffer<const T> will autoconvert to Buffer<const void>&
+        const auto check_equal_const_void_ref = [](Buffer<const void> &a, Buffer<const void> &b) {
+            check_equal(a.as<const float>(), b.as<const float>());
+        };
+        Buffer<const float> ac = a;
+        Buffer<const float> bc = b;
+        check_equal_const_void_ref(ac, bc);
+    }
+
+    {
         // Check lifting a function over scalars to a function over entire buffers.
         const int W = 5, H = 4, C = 3;
         Buffer<float> a(W, H, C);
@@ -237,7 +281,7 @@ int main(int argc, char **argv) {
 
         if (counter != W * H * C) {
             printf("for_each_value didn't hit every element\n");
-            return -1;
+            return 1;
         }
 
         a.for_each_element([&](int x, int y, int c) {
@@ -485,6 +529,23 @@ int main(int argc, char **argv) {
         assert(b.dim(1).stride() == b2.dim(1).stride());
         assert(b.dim(2).stride() == b2.dim(2).stride());
         assert(b.dim(3).stride() == b2.dim(3).stride());
+    }
+
+    {
+        // Test setting default allocate and deallocate functions.
+        Buffer<>::set_default_allocate_fn(my_malloc);
+        Buffer<>::set_default_deallocate_fn(my_free);
+
+        assert(my_malloc_count == 0);
+        assert(my_free_count == 0);
+        auto b = Buffer<uint8_t, 2>(5, 4).fill(1);
+        assert(my_malloced_addr != nullptr && my_malloced_addr < b.data());
+        assert(my_malloc_count == 1);
+        assert(my_free_count == 0);
+        b.deallocate();
+        assert(my_malloc_count == 1);
+        assert(my_free_count == 1);
+        assert(my_malloced_addr == my_freed_addr);
     }
 
     printf("Success!\n");

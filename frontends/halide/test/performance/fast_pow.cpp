@@ -6,21 +6,21 @@
 using namespace Halide;
 using namespace Halide::Tools;
 
-#ifdef _WIN32
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
-
 // powf() is a macro in some environments, so always wrap it
-extern "C" DLLEXPORT float pow_ref(float x, float y) {
+extern "C" HALIDE_EXPORT_SYMBOL float pow_ref(float x, float y) {
     return powf(x, y);
 }
 HalideExtern_2(float, pow_ref, float, float);
 
 int main(int argc, char **argv) {
-    Target target = get_jit_target_from_environment();
-    if (target.arch == Target::WebAssembly) {
+    Target host = get_host_target();
+    Target hl_target = get_target_from_environment();
+    Target hl_jit_target = get_jit_target_from_environment();
+    printf("host is:          %s\n", host.to_string().c_str());
+    printf("HL_TARGET is:     %s\n", hl_target.to_string().c_str());
+    printf("HL_JIT_TARGET is: %s\n", hl_jit_target.to_string().c_str());
+
+    if (hl_jit_target.arch == Target::WebAssembly) {
         printf("[SKIP] Performance tests are meaningless and/or misleading under WebAssembly interpreter.\n");
         return 0;
     }
@@ -81,22 +81,22 @@ int main(int argc, char **argv) {
 
     if (fast_err() > 0.000001) {
         printf("Error for pow too large\n");
-        return -1;
+        return 1;
     }
 
     if (faster_err() > 0.0001) {
         printf("Error for fast_pow too large\n");
-        return -1;
+        return 1;
     }
 
     if (t1 < t2) {
         printf("powf is faster than Halide's pow\n");
-        return -1;
+        return 1;
     }
 
     if (t2 * 1.5 < t3) {
         printf("pow is more than 1.5x faster than fast_pow\n");
-        return -1;
+        return 1;
     }
 
     printf("Success!\n");

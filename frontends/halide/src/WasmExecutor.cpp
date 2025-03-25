@@ -23,18 +23,18 @@
 #include "Target.h"
 
 #if WITH_WABT
-#include "wabt-src/src/binary-reader.h"
-#include "wabt-src/src/cast.h"
-#include "wabt-src/src/common.h"
-#include "wabt-src/src/error-formatter.h"
-#include "wabt-src/src/error.h"
-#include "wabt-src/src/feature.h"
-#include "wabt-src/src/interp/binary-reader-interp.h"
-#include "wabt-src/src/interp/interp-util.h"
-#include "wabt-src/src/interp/interp.h"
-#include "wabt-src/src/interp/istream.h"
-#include "wabt-src/src/result.h"
-#include "wabt-src/src/stream.h"
+#include "wabt/binary-reader.h"
+#include "wabt/cast.h"
+#include "wabt/common.h"
+#include "wabt/error-formatter.h"
+#include "wabt/error.h"
+#include "wabt/feature.h"
+#include "wabt/interp/binary-reader-interp.h"
+#include "wabt/interp/interp-util.h"
+#include "wabt/interp/interp.h"
+#include "wabt/interp/istream.h"
+#include "wabt/result.h"
+#include "wabt/stream.h"
 #endif
 
 // clang-format off
@@ -44,6 +44,10 @@
 #include "libplatform/libplatform.h"
 #endif  // WITH_V8
 // clang-format on
+
+#if WITH_WABT || WITH_V8
+LLD_HAS_DRIVER(wasm)
+#endif
 
 namespace Halide {
 namespace Internal {
@@ -78,7 +82,7 @@ struct debug_sink {
     debug_sink() = default;
 
     template<typename T>
-    inline debug_sink &operator<<(T &&x) {
+    debug_sink &operator<<(T &&x) {
         return *this;
     }
 };
@@ -94,11 +98,6 @@ struct debug_sink {
 // ---------------------
 // BDMalloc
 // ---------------------
-
-template<typename T>
-inline T align_up(T p, int alignment = 32) {
-    return (p + alignment - 1) & ~(alignment - 1);
-}
 
 // Debugging our Malloc is extremely noisy and usually undesired
 
@@ -164,7 +163,7 @@ public:
 
         // alignment and min-block-size are the same for our purposes here.
         constexpr uint32_t kAlignment = 32;
-        const uint32_t size = std::max(align_up((uint32_t)requested_size, kAlignment), kAlignment);
+        const uint32_t size = std::max(align_up(requested_size, kAlignment), kAlignment);
 
         constexpr uint32_t kMaxAllocSize = 0x7fffffff;
         internal_assert(size <= kMaxAllocSize);
@@ -312,7 +311,7 @@ std::vector<char> compile_to_wasm(const Module &module, const std::string &fn_na
         stack_size += cg->get_requested_alloca_total();
     }
 
-    stack_size = align_up(stack_size);
+    stack_size = align_up(stack_size, 32);
     wdebug(1) << "Requesting stack size of " << stack_size << "\n";
 
     std::unique_ptr<llvm::Module> llvm_module =
@@ -335,6 +334,7 @@ std::vector<char> compile_to_wasm(const Module &module, const std::string &fn_na
 
     std::string lld_arg_strs[] = {
         "HalideJITLinker",
+        "-flavor", "wasm",
         // For debugging purposes:
         // "--verbose",
         // "-error-limit=0",
@@ -360,17 +360,20 @@ std::vector<char> compile_to_wasm(const Module &module, const std::string &fn_na
     // Note that we must restore it before using internal_error (and also on the non-error path).
     auto old_abort_handler = std::signal(SIGABRT, SIG_DFL);
 
-#if LLVM_VERSION >= 140
-    if (!lld::wasm::link(lld_args, llvm::outs(), llvm::errs(), /*canExitEarly*/ false, /*disableOutput*/ false)) {
+    llvm::ArrayRef<const char *> args(lld_args, lld_args + c);
+    auto r = lld::lldMain(args, llvm::outs(), llvm::errs(), {{lld::Wasm, &lld::wasm::link}});
+    // TODO: https://reviews.llvm.org/D119049 suggests that you should call exitLld()
+    // if canRunAgain is false, but doing do fails with SIGABRT rather than exit(1), which
+    // breaks our error tests. For now, just following the old practice.
+    //
+    // if (!r.canRunAgain) {
+    //     std::cerr << "lld::wasm::link failed catastrophically, exiting with: " << r.retCode << "\n";
+    //     lld::exitLld(r.retCode);  // Exit now, can't re-execute again.
+    // }
+    if (r.retCode != 0) {
         std::signal(SIGABRT, old_abort_handler);
-        internal_error << "lld::wasm::link failed\n";
+        internal_error << "lld::wasm::link failed with: " << r.retCode << "\n";
     }
-#else
-    if (!lld::wasm::link(lld_args, /*CanExitEarly*/ false, llvm::outs(), llvm::errs())) {
-        std::signal(SIGABRT, old_abort_handler);
-        internal_error << "lld::wasm::link failed\n";
-    }
-#endif
 
     std::signal(SIGABRT, old_abort_handler);
 
@@ -678,7 +681,7 @@ wasm32_ptr_t hostbuf_to_wasmbuf(WabtContext &wabt_context, const halide_buffer_t
     const size_t dims_size_in_bytes = sizeof(halide_dimension_t) * src->dimensions;
     const size_t dims_offset = sizeof(wasm_halide_buffer_t);
     const size_t mem_needed_base = sizeof(wasm_halide_buffer_t) + dims_size_in_bytes;
-    const size_t host_offset = align_up(mem_needed_base);
+    const size_t host_offset = align_up(mem_needed_base, 32);
     const size_t host_size_in_bytes = src->size_in_bytes();
     const size_t mem_needed = host_offset + host_size_in_bytes;
 
@@ -819,7 +822,7 @@ void copy_hostbuf_to_existing_wasmbuf(WabtContext &wabt_context, const halide_bu
 
 template<typename T>
 struct LoadValue {
-    inline wabt::interp::Value operator()(const void *src) {
+    wabt::interp::Value operator()(const void *src) {
         const T val = *(const T *)(src);
         return wabt::interp::Value::Make(val);
     }
@@ -864,7 +867,7 @@ inline wabt::interp::Value load_value(const T &val) {
 
 template<typename T>
 struct StoreValue {
-    inline void operator()(const wabt::interp::Value &src, void *dst) {
+    void operator()(const wabt::interp::Value &src, void *dst) {
         *(T *)dst = src.Get<T>();
     }
 };
@@ -1278,14 +1281,12 @@ wabt::interp::HostFunc::Ptr make_extern_callback(wabt::interp::Store &store,
 
 wabt::Features calc_features(const Target &target) {
     wabt::Features f;
-    if (target.has_feature(Target::WasmSignExt)) {
+    if (!target.has_feature(Target::WasmMvpOnly)) {
         f.enable_sign_extension();
+        f.enable_sat_float_to_int();
     }
     if (target.has_feature(Target::WasmSimd128)) {
         f.enable_simd();
-    }
-    if (target.has_feature(Target::WasmSatFloatToInt)) {
-        f.enable_sat_float_to_int();
     }
     return f;
 }
@@ -1585,7 +1586,7 @@ wasm32_ptr_t hostbuf_to_wasmbuf(const Local<Context> &context, const halide_buff
     const size_t dims_size_in_bytes = sizeof(halide_dimension_t) * src->dimensions;
     const size_t dims_offset = sizeof(wasm_halide_buffer_t);
     const size_t mem_needed_base = sizeof(wasm_halide_buffer_t) + dims_size_in_bytes;
-    const size_t host_offset = align_up(mem_needed_base);
+    const size_t host_offset = align_up(mem_needed_base, 32);
     const size_t host_size_in_bytes = src->size_in_bytes();
     const size_t mem_needed = host_offset + host_size_in_bytes;
 
@@ -1719,21 +1720,6 @@ void copy_hostbuf_to_existing_wasmbuf(const Local<Context> &context, const halid
     dump_wasmbuf(context, dst_ptr, "dst_post");
 }
 
-JITUserContext *check_jit_user_context(JITUserContext *jit_user_context) {
-    user_assert(!jit_user_context->handlers.custom_malloc &&
-                !jit_user_context->handlers.custom_free)
-        << "The WebAssembly JIT cannot support set_custom_allocator()";
-    user_assert(!jit_user_context->handlers.custom_do_task)
-        << "The WebAssembly JIT cannot support set_custom_do_task()";
-    user_assert(!jit_user_context->handlers.custom_do_par_for)
-        << "The WebAssembly JIT cannot support set_custom_do_par_for()";
-    user_assert(!jit_user_context->handlers.custom_get_symbol &&
-                !jit_user_context->handlers.custom_load_library &&
-                !jit_user_context->handlers.custom_get_library_symbol)
-        << "The WebAssembly JIT cannot support custom_get_symbol, custom_load_library, or custom_get_library_symbol.";
-    return jit_user_context;
-}
-
 // Some internal code can call halide_error(null, ...), so this needs to be resilient to that.
 // Callers must expect null and not crash.
 JITUserContext *get_jit_user_context(const Local<Context> &context, const Local<Value> &arg) {
@@ -1842,7 +1828,9 @@ void wasm_jit_malloc_callback(const v8::FunctionCallbackInfo<v8::Value> &args) {
 
     size_t size = args[0]->Int32Value(context).ToChecked() + kExtraMallocSlop;
     wasm32_ptr_t p = v8_WasmMemoryObject_malloc(context, size);
-    if (p) { p += kExtraMallocSlop; }
+    if (p) {
+        p += kExtraMallocSlop;
+    }
     args.GetReturnValue().Set(load_scalar(context, p));
 }
 
@@ -1851,7 +1839,9 @@ void wasm_jit_free_callback(const v8::FunctionCallbackInfo<v8::Value> &args) {
     HandleScope scope(isolate);
     Local<Context> context = isolate->GetCurrentContext();
     wasm32_ptr_t p = args[0]->Int32Value(context).ToChecked();
-    if (p) { p -= kExtraMallocSlop; }
+    if (p) {
+        p -= kExtraMallocSlop;
+    }
     v8_WasmMemoryObject_free(context, p);
 }
 
@@ -2116,7 +2106,7 @@ void add_extern_callbacks(const Local<Context> &context,
             continue;
         }
 
-        TrampolineFn trampoline_fn;
+        TrampolineFn trampoline_fn = nullptr;
         std::vector<ExternArgType> arg_types;
         if (!build_extern_arg_types(fn_name, jit_externs, trampolines, trampoline_fn, arg_types)) {
             internal_error << "Missing fn_name " << fn_name;
@@ -2143,8 +2133,6 @@ void add_extern_callbacks(const Local<Context> &context,
 }
 
 #endif  // WITH_V8
-
-}  // namespace
 
 // clang-format off
 
@@ -2237,6 +2225,8 @@ const HostCallbackMap &get_host_callback_map() {
     return m;
 }
 
+}  // namespace
+
 #undef DEFINE_CALLBACK
 #undef DEFINE_POSIX_MATH_CALLBACK
 #undef DEFINE_POSIX_MATH_CALLBACK2
@@ -2280,7 +2270,7 @@ struct WasmModuleContents {
         const std::map<std::string, Halide::JITExtern> &jit_externs,
         const std::vector<JITModule> &extern_deps);
 
-    int run(const void **args);
+    int run(const void *const *args);
 
     ~WasmModuleContents() = default;
 };
@@ -2309,6 +2299,7 @@ WasmModuleContents::WasmModuleContents(
 
 #if WITH_WABT
     user_assert(!target.has_feature(Target::WasmThreads)) << "wasm_threads requires Emscripten (or a similar compiler); it will never be supported under JIT.";
+    user_assert(!target.has_feature(Target::WebGPU)) << "wasm_webgpu requires Emscripten (or a similar compiler); it will never be supported under JIT.";
 
     // Compile halide into wasm bytecode.
     std::vector<char> final_wasm = compile_to_wasm(halide_module, fn_name);
@@ -2517,7 +2508,7 @@ WasmModuleContents::WasmModuleContents(
 #endif
 }
 
-int WasmModuleContents::run(const void **args) {
+int WasmModuleContents::run(const void *const *args) {
 #if WITH_WABT
     const auto &module_desc = module->desc();
 
@@ -2642,7 +2633,7 @@ int WasmModuleContents::run(const void **args) {
         } else {
             if (arg.name == "__user_context") {
                 js_args.push_back(load_scalar(context, kMagicJitUserContextValue));
-                JITUserContext *jit_user_context = check_jit_user_context(*(JITUserContext **)const_cast<void *>(arg_ptr));
+                JITUserContext *jit_user_context = *(JITUserContext **)const_cast<void *>(arg_ptr);
                 context->SetAlignedPointerInEmbedderData(kJitUserContext, jit_user_context);
             } else {
                 js_args.push_back(load_scalar(context, arg.type, arg_ptr));
@@ -2726,7 +2717,7 @@ WasmModule WasmModule::compile(
 }
 
 /** Run generated previously compiled wasm code with a set of arguments. */
-int WasmModule::run(const void **args) {
+int WasmModule::run(const void *const *args) {
     internal_assert(contents.defined());
     return contents->run(args);
 }

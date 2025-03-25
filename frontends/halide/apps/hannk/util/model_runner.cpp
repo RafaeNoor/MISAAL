@@ -410,7 +410,7 @@ ModelRunner::RunResult ModelRunner::run_in_hannk(const std::vector<char> &buffer
     if (!interpreter.prepare()) {
         std::cerr << "hannk::Interpreter::prepare() failed\n";
         // TODO: probably better form to return an error here, but for now, this is fine.
-        exit(-1);
+        exit(1);
     }
 
     // Fill in the inputs with pseudorandom data (save the seeds for later).
@@ -636,7 +636,7 @@ void ModelRunner::run(const std::string &filename) {
                     std::cout << ',' << RunNames[i] << "_matches_tflite";
                 }
             }
-            std::cout << '\n';
+            std::cout << "\n";
         }
     }
 
@@ -724,7 +724,7 @@ void ModelRunner::run(const std::string &filename) {
     }
 
     if (csv_output) {
-        std::cout << '\n';
+        std::cout << "\n";
     }
 }
 

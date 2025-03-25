@@ -14,6 +14,10 @@ void halide_print(JITUserContext *user_context, const char *str) {
 }
 
 int main(int argc, char **argv) {
+#ifdef WITH_SERIALIZATION_JIT_ROUNDTRIP_TESTING
+    printf("[SKIP] Serialization won't preserve GPU buffers, skipping.\n");
+    return 0;
+#endif
 
     Target target = get_jit_target_from_environment();
 
@@ -67,7 +71,8 @@ int main(int argc, char **argv) {
         if (tracker.validate_gpu_object_lifetime(true /* allow_globals */,
                                                  true /* allow_none */,
                                                  1 /* max_globals */)) {
-            return -1;
+            fprintf(stderr, "validate_gpu_object_lifetime() failed\n");
+            return 1;
         }
     }
 

@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <memory>
 #include <set>
 #include <utility>
 
@@ -127,8 +126,8 @@ Stmt substitute_in(const string &name, const Expr &value, bool calls, bool provi
 
 class AddPredicates : public IRGraphMutator {
     const Expr &cond;
-    bool calls;
-    bool provides;
+    const Function &func;
+    ApplySplitResult::Type type;
 
     using IRMutator::visit;
 
@@ -136,7 +135,13 @@ class AddPredicates : public IRGraphMutator {
         auto [args, changed_args] = mutate_with_changes(p->args);
         auto [values, changed_values] = mutate_with_changes(p->values);
         Expr predicate = mutate(p->predicate);
-        if (provides) {
+        if (type == ApplySplitResult::BlendProvides) {
+            int idx = 0;
+            for (Expr &v : values) {
+                v = select(cond, v, Call::make(func, args, idx++));
+            }
+            return Provide::make(p->name, values, args, predicate);
+        } else if (type == ApplySplitResult::PredicateProvides) {
             return Provide::make(p->name, values, args, predicate && cond);
         } else if (changed_args || changed_values || !predicate.same_as(p->predicate)) {
             return Provide::make(p->name, values, args, predicate);
@@ -147,20 +152,20 @@ class AddPredicates : public IRGraphMutator {
 
     Expr visit(const Call *op) override {
         Expr result = IRMutator::visit(op);
-        if (calls && op->call_type == Call::Halide) {
+        if (type == ApplySplitResult::PredicateCalls && op->call_type == Call::Halide) {
             result = Call::make(op->type, Call::if_then_else, {cond, result}, Call::PureIntrinsic);
         }
         return result;
     }
 
 public:
-    AddPredicates(const Expr &cond, bool calls, bool provides)
-        : cond(cond), calls(calls), provides(provides) {
+    AddPredicates(const Expr &cond, const Function &func, ApplySplitResult::Type type)
+        : cond(cond), func(func), type(type) {
     }
 };
 
-Stmt add_predicates(const Expr &cond, bool calls, bool provides, const Stmt &s) {
-    return AddPredicates(cond, calls, provides).mutate(s);
+Stmt add_predicates(const Expr &cond, const Function &func, ApplySplitResult::Type type, const Stmt &s) {
+    return AddPredicates(cond, func, type).mutate(s);
 }
 
 // Build a loop nest about a provide node using a schedule
@@ -169,8 +174,7 @@ Stmt build_loop_nest(
     const string &prefix,
     int start_fuse,
     const Function &func,
-    const Definition &def,
-    bool is_update) {
+    const Definition &def) {
     const auto &dims = func.args();
     const auto &func_s = func.schedule();
     const auto &stage_s = def.schedule();
@@ -215,28 +219,34 @@ Stmt build_loop_nest(
         user_assert(predicated_vars.count(split.old_var) == 0)
             << "Cannot split a loop variable resulting from a split using PredicateLoads or PredicateStores.";
 
-        vector<ApplySplitResult> splits_result = apply_split(split, is_update, prefix, dim_extent_alignment);
+        vector<ApplySplitResult> splits_result = apply_split(split, prefix, dim_extent_alignment);
 
         // To ensure we substitute all indices used in call or provide,
         // we need to substitute all lets in, so we correctly guard x in
         // an example like let a = 2*x in a + f[a].
         stmt = substitute_in_all_lets(stmt);
         for (const auto &res : splits_result) {
-            if (res.is_substitution()) {
+            switch (res.type) {
+            case ApplySplitResult::Substitution:
                 stmt = graph_substitute(res.name, res.value, stmt);
-            } else if (res.is_substitution_in_calls()) {
+                break;
+            case ApplySplitResult::SubstitutionInCalls:
                 stmt = substitute_in(res.name, res.value, true, false, stmt);
-            } else if (res.is_substitution_in_provides()) {
+                break;
+            case ApplySplitResult::SubstitutionInProvides:
                 stmt = substitute_in(res.name, res.value, false, true, stmt);
-            } else if (res.is_predicate_calls()) {
-                stmt = add_predicates(res.value, true, false, stmt);
-            } else if (res.is_predicate_provides()) {
-                stmt = add_predicates(res.value, false, true, stmt);
-            } else if (res.is_let()) {
+                break;
+            case ApplySplitResult::BlendProvides:
+            case ApplySplitResult::PredicateCalls:
+            case ApplySplitResult::PredicateProvides:
+                stmt = add_predicates(res.value, func, res.type, stmt);
+                break;
+            case ApplySplitResult::LetStmt:
                 stmt = LetStmt::make(res.name, res.value, stmt);
-            } else {
-                internal_assert(res.is_predicate());
+                break;
+            case ApplySplitResult::Predicate:
                 stmt = IfThenElse::make(res.value, stmt, Stmt());
+                break;
             }
         }
         stmt = common_subexpression_elimination(stmt);
@@ -248,7 +258,7 @@ Stmt build_loop_nest(
     // This is not a generic loop invariant code motion step.
     // In particular there are dangling references to bound
     // variables that are not defined yet, so we can't rely
-    // the loop invariant code motion pass.
+    // on the loop invariant code motion pass.
 
     // All containing lets and fors. Outermost first.
     vector<Container> nest;
@@ -279,7 +289,7 @@ Stmt build_loop_nest(
     // Add appropriate predicates on the fused loop vars to ensure we don't
     // go out of bounds. Ignore the __outermost dims since it's going to be
     // removed later anyway. These have to be added as outermost as possible as
-    // some let stmts (e.g. the rebase let stmt) might depend on this vars;
+    // some let stmts (e.g. the rebase let stmt) might depend on these vars;
     // otherwise, this may mess up the bounds_touched computation.
     int n_predicates_inner = 0;
     for (int i = start_fuse; (i >= 0) && (i < (int)stage_s.dims().size() - 1); ++i) {
@@ -330,7 +340,7 @@ Stmt build_loop_nest(
     }
 
     // Sort the predicate guards for the fused loops so they are as far outwards
-    // as possible. IfInnner should not be reordered to outside of a for loop.
+    // as possible. IfInner should not be reordered to outside a for loop.
     for (int i = (int)nest.size() - n_predicates_inner - n_predicates;
          i < (int)nest.size() - n_predicates;
          i++) {
@@ -386,28 +396,26 @@ Stmt build_loop_nest(
     }
 
     // Rewrap the statement in the containing lets and fors.
-    for (int i = (int)nest.size() - 1; i >= 0; i--) {
-        if (nest[i].type == Container::Let) {
-            internal_assert(nest[i].value.defined());
-            stmt = LetStmt::make(nest[i].name, nest[i].value, stmt);
-        } else if ((nest[i].type == Container::If) || (nest[i].type == Container::IfInner)) {
-            internal_assert(nest[i].value.defined());
-            stmt = IfThenElse::make(nest[i].value, stmt, Stmt());
+    for (const auto &container : reverse_view(nest)) {
+        if (container.type == Container::Let) {
+            internal_assert(container.value.defined());
+            stmt = LetStmt::make(container.name, container.value, stmt);
+        } else if ((container.type == Container::If) || (container.type == Container::IfInner)) {
+            internal_assert(container.value.defined());
+            stmt = IfThenElse::make(container.value, stmt, Stmt());
         } else {
-            internal_assert(nest[i].type == Container::For);
-            const Dim &dim = stage_s.dims()[nest[i].dim_idx];
-            Expr min = Variable::make(Int(32), nest[i].name + ".loop_min");
-            Expr extent = Variable::make(Int(32), nest[i].name + ".loop_extent");
-            stmt = For::make(nest[i].name, min, extent, dim.for_type, dim.device_api, stmt);
+            internal_assert(container.type == Container::For);
+            const Dim &dim = stage_s.dims()[container.dim_idx];
+            Expr min = Variable::make(Int(32), container.name + ".loop_min");
+            Expr extent = Variable::make(Int(32), container.name + ".loop_extent");
+            stmt = For::make(container.name, min, extent, dim.for_type, dim.partition_policy, dim.device_api, stmt);
         }
     }
 
     // Define the bounds on the split dimensions using the bounds
     // on the function args. If it is a purify, we should use the bounds
     // from the dims instead.
-    for (size_t i = splits.size(); i > 0; i--) {
-        const Split &split = splits[i - 1];
-
+    for (const Split &split : reverse_view(splits)) {
         vector<std::pair<string, Expr>> let_stmts = compute_loop_bounds_after_split(split, prefix);
         for (const auto &let_stmt : let_stmts) {
             stmt = LetStmt::make(let_stmt.first, let_stmt.second, stmt);
@@ -498,7 +506,7 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
     }
 
     // Default schedule/values if there is no specialization
-    Stmt stmt = build_loop_nest(body, prefix, start_fuse, func, def, is_update);
+    Stmt stmt = build_loop_nest(body, prefix, start_fuse, func, def);
     stmt = inject_placeholder_prefetch(stmt, env, prefix, def.schedule().prefetches());
 
     // Make any specialized copies
@@ -509,7 +517,7 @@ Stmt build_provide_loop_nest(const map<string, Function> &env,
             Stmt then_case = build_provide_loop_nest(env, prefix, func, s.definition, start_fuse, is_update);
             stmt = IfThenElse::make(s.condition, then_case, stmt);
         } else {
-            internal_assert(equal(s.condition, const_true()));
+            internal_assert(is_const_one(s.condition));
             // specialize_fail() should only be possible on the final specialization
             internal_assert(i == specializations.size());
             Expr specialize_fail_error =
@@ -842,7 +850,7 @@ Stmt build_extern_produce(const map<string, Function> &env, Function f, const Ta
 
     Definition f_def_no_pred = f.definition().get_copy();
     f_def_no_pred.predicate() = const_true();
-    return build_loop_nest(check, f.name() + ".s0.", -1, f, f_def_no_pred, false);
+    return build_loop_nest(check, f.name() + ".s0.", -1, f, f_def_no_pred);
 }
 
 // A schedule may include explicit bounds on some dimension. This
@@ -901,9 +909,9 @@ class IsUsedInStmt : public IRVisitor {
     }
 
 public:
-    bool result;
+    bool result = false;
     explicit IsUsedInStmt(const Function &f)
-        : func(f.name()), result(false) {
+        : func(f.name()) {
     }
 };
 
@@ -925,10 +933,10 @@ class IsRealizedInStmt : public IRVisitor {
     }
 
 public:
-    bool result;
+    bool result = false;
 
     explicit IsRealizedInStmt(const Function &f)
-        : func(f.name()), result(false) {
+        : func(f.name()) {
     }
 };
 
@@ -942,11 +950,11 @@ bool function_is_already_realized_in_stmt(const Function &f, const Stmt &s) {
 class InjectStmt : public IRMutator {
 public:
     const Stmt &injected_stmt;
-    bool found_level;
+    bool found_level = false;
     const LoopLevel &level;
 
     InjectStmt(const Stmt &s, const LoopLevel &level)
-        : injected_stmt(s), found_level(false), level(level) {
+        : injected_stmt(s), level(level) {
     }
 
 private:
@@ -967,6 +975,7 @@ private:
                              for_loop->min,
                              for_loop->extent,
                              for_loop->for_type,
+                             for_loop->partition_policy,
                              for_loop->device_api,
                              body);
         }
@@ -1015,71 +1024,15 @@ private:
     }
 };
 
-class SubstituteFusedBounds : public IRMutator {
-public:
-    const map<string, Expr> &replacements;
-    explicit SubstituteFusedBounds(const map<string, Expr> &r)
-        : replacements(r) {
-    }
-
-private:
-    using IRMutator::visit;
-
-    Stmt visit(const For *op) override {
-        const auto *min_var = op->min.as<Variable>();
-        const auto *extent_var = op->extent.as<Variable>();
-        if (min_var && extent_var) {
-            Expr min_val, extent_val;
-            {
-                const auto &it = replacements.find(min_var->name);
-                if (it != replacements.end()) {
-                    min_val = it->second;
-                }
-            }
-            {
-                const auto &it = replacements.find(extent_var->name);
-                if (it != replacements.end()) {
-                    extent_val = it->second;
-                }
-            }
-            if (!min_val.defined() || !extent_val.defined()) {
-                return IRMutator::visit(op);
-            }
-
-            Stmt body = mutate(op->body);
-
-            size_t last_dot = op->name.rfind('.');
-            internal_assert(last_dot != string::npos);
-            string new_var = op->name.substr(0, last_dot) + ".fused." + op->name.substr(last_dot + 1);
-
-            ForType for_type = op->for_type;
-            DeviceAPI device_api = op->device_api;
-            if (is_const_one(extent_val)) {
-                // This is the child loop of a fused group. The real loop of the
-                // fused group is the loop of the parent function of the fused
-                // group. This child loop is just a scheduling point, and should
-                // never be a device transition, so we rewrite it to be a simple
-                // serial loop of extent 1."
-                for_type = ForType::Serial;
-                device_api = DeviceAPI::None;
-            }
-
-            Stmt stmt = For::make(new_var, Variable::make(Int(32), new_var + ".loop_min"),
-                                  Variable::make(Int(32), new_var + ".loop_extent"),
-                                  for_type, device_api, body);
-
-            // Add let stmts defining the bound of the renamed for-loop.
-            stmt = LetStmt::make(new_var + ".loop_min", min_val, stmt);
-            stmt = LetStmt::make(new_var + ".loop_max", simplify(min_val + extent_val - 1), stmt);
-            stmt = LetStmt::make(new_var + ".loop_extent", extent_val, stmt);
-            // Replace any reference to the old loop name with the new one.
-            stmt = substitute(op->name, Variable::make(Int(32), new_var), stmt);
-            return stmt;
-        } else {
-            return IRMutator::visit(op);
-        }
-    }
-};
+// Rename a loop var in a compute_with cluster to include '.fused.', to
+// disambiguate its bounds from the original loop bounds. The '.fused.' token is
+// injected somewhere that's not going to change the results of var_name_match,
+// so that it's unchanged as a scheduling point.
+string fused_name(const string &var) {
+    size_t last_dot = var.rfind('.');
+    internal_assert(last_dot != string::npos);
+    return var.substr(0, last_dot) + ".fused." + var.substr(last_dot + 1);
+}
 
 // The bounds of every loop exist in 'replacements' should be replaced. The
 // loop is also renamed by adding '.fused' in the original name before the
@@ -1087,9 +1040,110 @@ private:
 Stmt substitute_fused_bounds(Stmt s, const map<string, Expr> &replacements) {
     if (!s.defined() || replacements.empty()) {
         return s;
-    } else {
-        return SubstituteFusedBounds(replacements).mutate(s);
     }
+
+    class SubstituteFusedBounds : public IRMutator {
+        const map<string, Expr> &replacements;
+
+        using IRMutator::visit;
+
+        Stmt visit(const For *op) override {
+            const auto *min_var = op->min.as<Variable>();
+            const auto *extent_var = op->extent.as<Variable>();
+            if (min_var && extent_var) {
+                Expr min_val, extent_val;
+                {
+                    const auto &it = replacements.find(min_var->name);
+                    if (it != replacements.end()) {
+                        min_val = it->second;
+                    }
+                }
+                {
+                    const auto &it = replacements.find(extent_var->name);
+                    if (it != replacements.end()) {
+                        extent_val = it->second;
+                    }
+                }
+                if (!min_val.defined() || !extent_val.defined()) {
+                    return IRMutator::visit(op);
+                }
+
+                Stmt body = mutate(op->body);
+
+                string new_var = fused_name(op->name);
+
+                ForType for_type = op->for_type;
+                DeviceAPI device_api = op->device_api;
+                if (is_const_one(extent_val)) {
+                    // This is the child loop of a fused group. The real loop of the
+                    // fused group is the loop of the parent function of the fused
+                    // group. This child loop is just a scheduling point, and should
+                    // never be a device transition, so we rewrite it to be a simple
+                    // serial loop of extent 1."
+                    for_type = ForType::Serial;
+                    device_api = DeviceAPI::None;
+                }
+
+                Stmt stmt = For::make(new_var, Variable::make(Int(32), new_var + ".loop_min"),
+                                      Variable::make(Int(32), new_var + ".loop_extent"),
+                                      for_type, op->partition_policy, device_api, body);
+
+                // Add let stmts defining the bound of the renamed for-loop.
+                stmt = LetStmt::make(new_var + ".loop_min", min_val, stmt);
+                stmt = LetStmt::make(new_var + ".loop_max", simplify(min_val + extent_val - 1), stmt);
+                stmt = LetStmt::make(new_var + ".loop_extent", extent_val, stmt);
+                // Replace any reference to the old loop name with the new one.
+                stmt = substitute(op->name, Variable::make(Int(32), new_var), stmt);
+                return stmt;
+            } else {
+                return IRMutator::visit(op);
+            }
+        }
+
+    public:
+        explicit SubstituteFusedBounds(const map<string, Expr> &r)
+            : replacements(r) {
+        }
+    } subs(replacements);
+
+    return subs.mutate(s);
+}
+
+// Add letstmts inside each parent loop that define the corresponding child loop
+// vars as equal to it. Bounds inference might need a child loop var.
+Stmt add_loop_var_aliases(Stmt s, const map<string, set<string>> &loop_var_aliases) {
+    if (!s.defined() || loop_var_aliases.empty()) {
+        return s;
+    }
+
+    class AddLoopVarAliases : public IRMutator {
+        const map<string, set<string>> &loop_var_aliases;
+
+        using IRMutator::visit;
+
+        Stmt visit(const For *op) override {
+            auto it = loop_var_aliases.find(op->name);
+            if (it == loop_var_aliases.end()) {
+                return IRMutator::visit(op);
+            }
+
+            Expr var = Variable::make(Int(32), op->name);
+            Stmt body = mutate(op->body);
+            for (const string &alias : it->second) {
+                body = LetStmt::make(alias, var, body);
+            }
+
+            return For::make(op->name, op->min, op->extent, op->for_type,
+                             op->partition_policy, op->device_api, std::move(body));
+        }
+
+    public:
+        explicit AddLoopVarAliases(const map<string, set<string>> &a)
+            : loop_var_aliases(a) {
+        }
+    } add_aliases(loop_var_aliases);
+
+    return add_aliases.mutate(s);
 }
 
 // Shift the iteration domain of a loop nest by some factor.
@@ -1107,7 +1161,7 @@ class ShiftLoopNest : public IRMutator {
             internal_assert(op);
             Expr adjusted = Variable::make(Int(32), op->name) + iter->second;
             Stmt body = substitute(op->name, adjusted, op->body);
-            stmt = For::make(op->name, op->min, op->extent, op->for_type, op->device_api, body);
+            stmt = For::make(op->name, op->min, op->extent, op->for_type, op->partition_policy, op->device_api, body);
         }
         return stmt;
     }
@@ -1158,10 +1212,14 @@ public:
     bool found_store_level() const {
         return _found_store_levels_for_funcs.size() == funcs.size();
     }
+    bool found_hoist_storage_level() const {
+        return _found_hoist_storage_levels_for_funcs.size() == funcs.size();
+    }
 
 protected:
     bool _found_compute_level{};
     std::set<string> _found_store_levels_for_funcs;
+    std::set<string> _found_hoist_storage_levels_for_funcs;
 
     using IRMutator::visit;
 
@@ -1222,6 +1280,7 @@ protected:
             Stmt stmt = build_realize(build_pipeline_group(for_loop), funcs[0], is_output_list[0]);
             _found_compute_level = true;
             _found_store_levels_for_funcs.insert(funcs[0].name());
+            _found_hoist_storage_levels_for_funcs.insert(funcs[0].name());
             return stmt;
         }
 
@@ -1241,15 +1300,24 @@ protected:
                     _found_store_levels_for_funcs.insert(funcs[i].name());
                 }
             }
+            for (size_t i = 0; i < funcs.size(); i++) {
+                if (funcs[i].schedule().hoist_storage_level().match(for_loop->name)) {
+                    debug(3) << "Found hoist storage level for " << funcs[i].name() << " at " << for_loop->name << "\n";
+                    if (funcs[i].schedule().hoist_storage_level() != funcs[i].schedule().store_level()) {
+                        body = HoistedStorage::make(funcs[i].name(), body);
+                    } else {
+                    }
+                    _found_hoist_storage_levels_for_funcs.insert(funcs[i].name());
+                }
+            }
         }
 
         // Reinstate the let/if statements
-        for (size_t i = containers.size(); i > 0; i--) {
-            auto p = containers[i - 1];
-            if (p.first.empty()) {
-                body = IfThenElse::make(p.second, body);
+        for (const auto &[var, value] : reverse_view(containers)) {
+            if (var.empty()) {
+                body = IfThenElse::make(value, body);
             } else {
-                body = LetStmt::make(p.first, p.second, body);
+                body = LetStmt::make(var, value, body);
             }
         }
 
@@ -1271,6 +1339,7 @@ protected:
                              for_loop->min,
                              for_loop->extent,
                              for_loop->for_type,
+                             for_loop->partition_policy,
                              for_loop->device_api,
                              body);
         }
@@ -1290,6 +1359,7 @@ protected:
             Stmt stmt = build_realize(build_pipeline_group(provide_op), funcs[0], is_output_list[0]);
             _found_compute_level = true;
             _found_store_levels_for_funcs.insert(funcs[0].name());
+            _found_hoist_storage_levels_for_funcs.insert(funcs[0].name());
             return stmt;
         }
 
@@ -1345,11 +1415,7 @@ private:
 
         // This is also the point at which we inject explicit bounds
         // for this realization.
-        if (target.has_feature(Target::NoAsserts)) {
-            return s;
-        } else {
-            return inject_explicit_bounds(s, func);
-        }
+        return inject_explicit_bounds(s, func);
     }
 
     Stmt build_realize_function_from_group(Stmt s, int func_index) {
@@ -1441,7 +1507,9 @@ private:
     }
 
     Stmt build_produce_definition(const Function &f, const string &prefix, const Definition &def, bool is_update,
-                                  map<string, Expr> &replacements, vector<pair<string, Expr>> &add_lets) {
+                                  map<string, Expr> &replacements,
+                                  vector<pair<string, Expr>> &add_lets,
+                                  map<string, set<string>> &aliases) {
         const vector<Dim> &dims = def.schedule().dims();  // From inner to outer
         const LoopLevel &fuse_level = def.schedule().fuse_level().level;
 
@@ -1480,6 +1548,10 @@ private:
                 replacements.emplace(var + ".loop_extent", make_const(Int(32), 1));
                 replacements.emplace(var + ".loop_min", val);
                 replacements.emplace(var + ".loop_max", val);
+
+                string var_fused = fused_name(var_orig);
+                aliases[var_fused].emplace(std::move(var_orig));
+                aliases[var_fused].emplace(std::move(var));
             }
         }
 
@@ -1531,17 +1603,16 @@ private:
 
     // Replace the bounds of the parent fused loop (i.e. the first one to be
     // realized in the group) with union of the bounds of the fused group.
-    Stmt replace_parent_bound_with_union_bound(const Function &f, Stmt produce, const map<string, Expr> &bounds) {
-        string prefix = f.name() + ".s0";
-        const Definition &def = f.definition();
+    Stmt replace_parent_bound_with_union_bound(const string &func, int stage,
+                                               const Definition &def, Stmt produce,
+                                               const map<string, Expr> &bounds,
+                                               map<string, Expr> &replacements) {
 
-        if (!def.defined()) {
+        if (def.schedule().fused_pairs().empty()) {
             return produce;
         }
 
         const vector<Dim> &dims = def.schedule().dims();  // From inner to outer
-
-        map<string, Expr> replacements;
 
         vector<FusedPair> dependence = collect_all_dependence(def);
 
@@ -1563,6 +1634,8 @@ private:
                 // the parent, e.g. y.yi and yi.
                 int dim2_idx = (int)(dims_2.size() - (dims.size() - i));
                 internal_assert(dim2_idx < (int)dims_2.size());
+                string var_1 = func + ".s" + std::to_string(stage) +
+                               "." + dims[i].var;
 
                 string var_2 = pair.func_2 + ".s" + std::to_string(pair.stage_2) +
                                "." + dims_2[dim2_idx].var;
@@ -1573,7 +1646,6 @@ private:
                 Expr max_2 = bounds.find(var_2 + ".loop_max")->second;
                 Expr extent_2 = bounds.find(var_2 + ".loop_extent")->second;
 
-                string var_1 = prefix + "." + dims[i].var;
                 internal_assert(bounds.count(var_1 + ".loop_min"));
                 internal_assert(bounds.count(var_1 + ".loop_max"));
                 internal_assert(bounds.count(var_1 + ".loop_extent"));
@@ -1597,8 +1669,26 @@ private:
             }
         }
 
-        // Now, replace the bounds of the parent fused loops with the union bounds.
+        // Now, replace the bounds of the parent fused loops with the union
+        // bounds.
+        for (const auto &spec : def.specializations()) {
+            produce = replace_parent_bound_with_union_bound(func, stage, spec.definition, produce, bounds, replacements);
+        }
+
+        return produce;
+    }
+
+    Stmt replace_parent_bound_with_union_bound(const Function &f, Stmt produce,
+                                               const map<string, Expr> &bounds) {
+        map<string, Expr> replacements;
+
+        int stage = 0;
+        produce = replace_parent_bound_with_union_bound(f.name(), stage++, f.definition(), produce, bounds, replacements);
+        for (const Definition &def : f.updates()) {
+            produce = replace_parent_bound_with_union_bound(f.name(), stage++, def, produce, bounds, replacements);
+        }
         produce = substitute_fused_bounds(produce, replacements);
+
         return produce;
     }
 
@@ -1729,37 +1819,37 @@ private:
         Stmt producer;
         map<string, Expr> replacements;
         vector<pair<string, Expr>> add_lets;
+        map<string, set<string>> aliases;
 
         for (const auto &func_stage : stage_order) {
             const auto &f = func_stage.first;
 
             if (f.has_extern_definition() && (func_stage.second == 0)) {
-                const Stmt &produceDef = Internal::build_extern_produce(env, f, target);
-                producer = inject_stmt(producer, produceDef, LoopLevel::inlined().lock());
+                const Stmt &produce_def = Internal::build_extern_produce(env, f, target);
+                producer = inject_stmt(producer, produce_def, LoopLevel::inlined().lock());
                 continue;
             }
 
             string def_prefix = f.name() + ".s" + std::to_string(func_stage.second) + ".";
             const auto &def = (func_stage.second == 0) ? f.definition() : f.updates()[func_stage.second - 1];
 
-            const Stmt &produceDef = build_produce_definition(f, def_prefix, def, func_stage.second > 0,
-                                                              replacements, add_lets);
-            producer = inject_stmt(producer, produceDef, def.schedule().fuse_level().level);
+            const Stmt &produce_def = build_produce_definition(f, def_prefix, def, func_stage.second > 0,
+                                                               replacements, add_lets, aliases);
+            producer = inject_stmt(producer, produce_def, def.schedule().fuse_level().level);
         }
 
         internal_assert(producer.defined());
 
         // Rewrap the loop in the containing lets.
-        for (size_t i = add_lets.size(); i > 0; --i) {
-            const auto &b = add_lets[i - 1];
-            producer = LetStmt::make(b.first, b.second, producer);
+        for (const auto &[var, value] : reverse_view(add_lets)) {
+            producer = LetStmt::make(var, value, producer);
         }
 
         // The original bounds of the loop nests (without any loop-fusion)
         auto bounds = CollectBounds::collect_bounds(producer);
 
         // Compute the shift factors based on the alignment strategies
-        // starting from the the parent (root loop) to the children. The root
+        // starting from the parent (root loop) to the children. The root
         // loop bounds should remain unchanged.
         map<string, Expr> shifts;
         for (auto i = funcs.size(); i-- > 0;) {
@@ -1780,7 +1870,13 @@ private:
 
         // Replace the bounds of parent fused loop with union of bounds of
         // the fused loops.
+        Function group_parent = funcs.back();
         producer = replace_parent_bound_with_union_bound(funcs.back(), producer, bounds);
+
+        // Define the old loop var names as equal to the corresponding parent
+        // fused loop var. Bounds inference might refer directly to the original
+        // loop vars.
+        producer = add_loop_var_aliases(producer, aliases);
 
         // Add the producer nodes.
         for (const auto &i : funcs) {
@@ -1807,14 +1903,14 @@ private:
 class ComputeLegalSchedules : public IRVisitor {
 public:
     struct Site {
-        bool is_parallel;
+        bool is_parallel, is_gpu_block;
         LoopLevel loop_level;
     };
     vector<Site> sites_allowed;
-    bool found;
+    bool found = false;
 
     ComputeLegalSchedules(Function f, const map<string, Function> &env)
-        : found(false), func(std::move(f)), env(env) {
+        : func(std::move(f)), env(env) {
     }
 
 private:
@@ -1826,8 +1922,6 @@ private:
     const map<string, Function> &env;
 
     void visit(const For *f) override {
-        f->min.accept(this);
-        f->extent.accept(this);
         size_t first_dot = f->name.find('.');
         size_t last_dot = f->name.rfind('.');
         internal_assert(first_dot != string::npos && last_dot != string::npos);
@@ -1845,9 +1939,13 @@ private:
         // Since we are now in the lowering phase, we expect all LoopLevels to be locked;
         // thus any new ones we synthesize we must explicitly lock.
         loop_level.lock();
-        Site s = {f->is_parallel(), loop_level};
-        sites.push_back(s);
+        const bool is_gpu_block = (f->for_type == ForType::GPUBlock);
+        sites.push_back({f->is_parallel(), is_gpu_block, loop_level});
+
+        f->min.accept(this);
+        f->extent.accept(this);
         f->body.accept(this);
+
         sites.pop_back();
     }
 
@@ -2137,14 +2235,25 @@ bool validate_schedule(Function f, const Stmt &s, const Target &target, bool is_
         // (@abadams comments: "I acknowledge that this is gross and should be refactored.")
 
         // (Note that the splits are ordered, so a single reverse-pass catches all these cases.)
-        for (auto split = s.splits().rbegin(); split != s.splits().rend(); split++) {
-            if (split->is_split() && (parallel_vars.count(split->outer) || parallel_vars.count(split->inner))) {
-                parallel_vars.insert(split->old_var);
-            } else if (split->is_fuse() && parallel_vars.count(split->old_var)) {
-                parallel_vars.insert(split->inner);
-                parallel_vars.insert(split->outer);
-            } else if ((split->is_rename() || split->is_purify()) && parallel_vars.count(split->outer)) {
-                parallel_vars.insert(split->old_var);
+        for (const auto &split : reverse_view(s.splits())) {
+            switch (split.split_type) {
+            case Split::SplitVar:
+                if (parallel_vars.count(split.outer) || parallel_vars.count(split.inner)) {
+                    parallel_vars.insert(split.old_var);
+                }
+                break;
+            case Split::FuseVars:
+                if (parallel_vars.count(split.old_var)) {
+                    parallel_vars.insert(split.inner);
+                    parallel_vars.insert(split.outer);
+                }
+                break;
+            case Split::RenameVar:
+            case Split::PurifyRVar:
+                if (parallel_vars.count(split.outer)) {
+                    parallel_vars.insert(split.old_var);
+                }
+                break;
             }
         }
 
@@ -2177,6 +2286,7 @@ bool validate_schedule(Function f, const Stmt &s, const Target &target, bool is_
 
     LoopLevel store_at = f.schedule().store_level();
     LoopLevel compute_at = f.schedule().compute_level();
+    LoopLevel hoist_storage_at = f.schedule().hoist_storage_level();
 
     // Outputs must be compute_root and store_root. They're really
     // store_in_user_code, but store_root is close enough.
@@ -2198,48 +2308,82 @@ bool validate_schedule(Function f, const Stmt &s, const Target &target, bool is_
         return false;
     }
 
+    if (compute_at.is_inlined()) {
+        if (store_at.is_root()) {
+            user_error << "Func \"" << f.name() << "\" is scheduled store_root(), but is inlined. Funcs that use store_root must also call compute_root or compute_at.\n";
+        } else if (!store_at.is_inlined()) {
+            user_error << "Func \"" << f.name() << "\" is scheduled store_at(), but is inlined. Funcs that use store_at must also call compute_at.\n";
+        }
+
+        if (hoist_storage_at.is_root()) {
+            user_error << "Func \"" << f.name() << "\" is scheduled hoist_storage_root(), but is inlined. Funcs that use hoist_storage_root must also call compute_root or compute_at.\n";
+        } else if (!hoist_storage_at.is_inlined()) {
+            user_error << "Func \"" << f.name() << "\" is scheduled hoist_storage(), but is inlined. Funcs that use hoist_storage_root must also call compute_at.\n";
+        }
+    }
     // Check if the schedule of the inlined function is legal. Since only
     // pure function can be inlined, we only need to call the validator on
     // pure function. An inlined Halide Func with multiple stages technically
     // will get lowered into compute_at innermost and thus can be treated
     // similarly as a non-inlined Func.
-    if (store_at.is_inlined() && compute_at.is_inlined()) {
+    if (store_at.is_inlined() && compute_at.is_inlined() && hoist_storage_at.is_inlined()) {
         if (f.is_pure()) {
             validate_schedule_inlined_function(f);
         }
         return true;
     }
 
-    bool store_at_ok = false, compute_at_ok = false;
-    const vector<ComputeLegalSchedules::Site> &sites = legal.sites_allowed;
-    size_t store_idx = 0, compute_idx = 0;
+    if (f.schedule().ring_buffer().defined() && store_at == hoist_storage_at) {
+        user_error << "Func \"" << f.name() << "\" is scheduled with ring_buffer(), but has matching store_at and hoist_storage levels. Add an explicit hoist_storage directive to the schedule to fix the issue.\n";
+    }
+
+    vector<ComputeLegalSchedules::Site> &sites = legal.sites_allowed;
+    int store_idx = -1, compute_idx = -1, hoist_storage_idx = -1;
     for (size_t i = 0; i < sites.size(); i++) {
-        if (sites[i].loop_level.match(store_at)) {
-            store_at_ok = true;
+        if (sites[i].loop_level.match(hoist_storage_at)) {
+            hoist_storage_idx = i;
+        }
+        if (sites[i].loop_level.match(store_at) && hoist_storage_idx >= 0) {
             store_idx = i;
         }
-        if (sites[i].loop_level.match(compute_at)) {
-            compute_at_ok = store_at_ok;
+        if (sites[i].loop_level.match(compute_at) && store_idx >= 0 && hoist_storage_idx >= 0) {
             compute_idx = i;
         }
     }
 
-    // Check there isn't a parallel loop between the compute_at and the store_at
     std::ostringstream err;
 
-    if (store_at_ok && compute_at_ok) {
-        for (size_t i = store_idx + 1; i <= compute_idx; i++) {
+    const auto all_ok = [&]() {
+        return store_idx >= 0 && compute_idx >= 0 && hoist_storage_idx >= 0;
+    };
+
+    // Check there isn't a parallel loop between the compute_at and the store_at
+    if (all_ok()) {
+        for (int i = store_idx + 1; i <= compute_idx; i++) {
             if (sites[i].is_parallel) {
                 err << "Func \"" << f.name()
-                    << "\" is stored outside the parallel loop over "
+                    << "\" is stored outside the parallel/vectorized/gpu_block loop over "
                     << sites[i].loop_level.to_string()
                     << " but computed within it. This is a potential race condition.\n";
-                store_at_ok = compute_at_ok = false;
+                store_idx = compute_idx = hoist_storage_idx = -1;
             }
         }
     }
 
-    if (!store_at_ok || !compute_at_ok) {
+    // Check there isn't a parallel loop between the compute_at and the hoist_storage_at
+    if (all_ok()) {
+        for (int i = hoist_storage_idx + 1; i <= compute_idx; i++) {
+            if (sites[i].is_parallel) {
+                err << "Func \"" << f.name()
+                    << "\" storage is hoisted outside the parallel/vectorized/gpu_block loop over "
+                    << sites[i].loop_level.to_string()
+                    << " but computed within it. This is a potential race condition.\n";
+                store_idx = compute_idx = hoist_storage_idx = -1;
+            }
+        }
+    }
+
+    if (!all_ok()) {
         err << "Func \"" << f.name() << "\" is computed at the following invalid location:\n"
             << "  " << schedule_to_source(f, store_at, compute_at) << "\n"
             << "Legal locations for this function are:\n";
@@ -2369,9 +2513,18 @@ void validate_fused_groups_schedule(const vector<vector<string>> &fused_groups, 
 
             validate_fused_group_schedule_helper(
                 iter->first, 0, iter->second.definition(), env);
-            for (size_t i = 0; i < iter->second.updates().size(); ++i) {
+            for (const auto &s : iter->second.definition().specializations()) {
                 validate_fused_group_schedule_helper(
-                    iter->first, i + 1, iter->second.updates()[i], env);
+                    iter->first, 0, s.definition, env);
+            }
+            for (size_t i = 0; i < iter->second.updates().size(); ++i) {
+                const auto &update_stage = iter->second.updates()[i];
+                validate_fused_group_schedule_helper(
+                    iter->first, i + 1, update_stage, env);
+                for (const auto &s : update_stage.specializations()) {
+                    validate_fused_group_schedule_helper(
+                        iter->first, i + 1, s.definition, env);
+                }
             }
         }
     }
@@ -2410,7 +2563,9 @@ bool group_should_be_inlined(const vector<Function> &funcs) {
 
 }  // namespace
 
-std::ostream &operator<<(std::ostream &out, const std::vector<Function> &v) {
+// We want this to have internal linkage, but putting it in an anonymous
+// namespace doesn't work due to two-phase lookup peculiarities.
+static std::ostream &operator<<(std::ostream &out, const std::vector<Function> &v) {  // NOLINT
     out << "{ ";
     for (size_t i = 0; i < v.size(); ++i) {
         out << v[i].name();
@@ -2428,14 +2583,13 @@ Stmt schedule_functions(const vector<Function> &outputs,
                         const Target &target,
                         bool &any_memoized) {
     string root_var = LoopLevel::root().lock().to_string();
-    Stmt s = For::make(root_var, 0, 1, ForType::Serial, DeviceAPI::Host, Evaluate::make(0));
+    Stmt s = For::make(root_var, 0, 1, ForType::Serial, Partition::Never, DeviceAPI::Host, Evaluate::make(0));
 
     any_memoized = false;
 
     validate_fused_groups_schedule(fused_groups, env);
 
-    for (size_t i = fused_groups.size(); i > 0; --i) {
-        const vector<string> &group = fused_groups[i - 1];
+    for (const auto &group : reverse_view(fused_groups)) {
         vector<Function> funcs;
         vector<bool> is_output_list;
 
@@ -2471,7 +2625,7 @@ Stmt schedule_functions(const vector<Function> &outputs,
             debug(1) << "Injecting realization of " << funcs << "\n";
             InjectFunctionRealization injector(funcs, is_output_list, target, env);
             s = injector.mutate(s);
-            internal_assert(injector.found_store_level() && injector.found_compute_level());
+            internal_assert(injector.found_store_level() && injector.found_compute_level() && injector.found_hoist_storage_level());
         }
 
         debug(2) << s << "\n";

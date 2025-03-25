@@ -21,12 +21,12 @@ int main(int argc, char **argv) {
     f.jit_handlers().custom_error = &halide_error;
     error_occurred = false;
 
-    Realization r(x_out, sin_x_out);
+    Realization r({x_out, sin_x_out});
     f.realize(r);
 
     if (!error_occurred) {
         printf("There should have been an error\n");
-        return -1;
+        return 1;
     }
 
     printf("Success!\n");

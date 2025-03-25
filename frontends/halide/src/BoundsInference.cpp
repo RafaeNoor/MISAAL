@@ -1,5 +1,6 @@
 #include "BoundsInference.h"
 #include "Bounds.h"
+#include "CSE.h"
 #include "ExprUsesVar.h"
 #include "ExternFuncArgument.h"
 #include "Function.h"
@@ -7,6 +8,7 @@
 #include "IRMutator.h"
 #include "IROperator.h"
 #include "Inline.h"
+#include "Qualify.h"
 #include "Scope.h"
 #include "Simplify.h"
 
@@ -199,6 +201,52 @@ bool is_fused_with_others(const vector<vector<Function>> &fused_groups,
     return false;
 }
 
+// An inliner that can inline an entire set of functions at once. The inliner in
+// Inline.h only handles with one function at a time.
+class Inliner : public IRMutator {
+public:
+    std::set<Function, Function::Compare> to_inline;
+
+    Expr do_inlining(const Expr &e) {
+        return common_subexpression_elimination(mutate(e));
+    }
+
+protected:
+    std::map<Function, std::map<int, Expr>, Function::Compare> qualified_bodies;
+
+    Expr get_qualified_body(const Function &f, int idx) {
+        auto it = qualified_bodies.find(f);
+        if (it != qualified_bodies.end()) {
+            auto it2 = it->second.find(idx);
+            if (it2 != it->second.end()) {
+                return it2->second;
+            }
+        }
+        Expr e = qualify(f.name() + ".", f.values()[idx]);
+        e = do_inlining(e);
+        qualified_bodies[f][idx] = e;
+        return e;
+    }
+
+    Expr visit(const Call *op) override {
+        if (op->func.defined()) {
+            Function f(op->func);
+            if (to_inline.count(f)) {
+                auto args = mutate(op->args);
+                Expr body = get_qualified_body(f, op->value_index);
+                const vector<string> &func_args = f.args();
+                for (size_t i = 0; i < args.size(); i++) {
+                    body = Let::make(f.name() + "." + func_args[i], args[i], body);
+                }
+                return body;
+            }
+        }
+        return IRMutator::visit(op);
+    }
+
+    using IRMutator::visit;
+};
+
 class BoundsInference : public IRMutator {
 public:
     const vector<Function> &funcs;
@@ -211,6 +259,8 @@ public:
     const FuncValueBounds &func_bounds;
     set<string> in_pipeline, inner_productions, has_extern_consumer;
     const Target target;
+
+    Inliner inliner;
 
     struct CondValue {
         Expr cond;  // Condition on params only (can't depend on loop variable)
@@ -231,6 +281,7 @@ public:
         set<ReductionVariable, ReductionVariable::Compare> rvars;
         string stage_prefix;
         size_t fused_group_index;
+        Inliner *inliner;
 
         // Computed expressions on the left and right-hand sides.
         // Note that a function definition might have different LHS or reduction domain
@@ -270,17 +321,16 @@ public:
                                                   {likely(predicates[i]), cond_val},
                                                   Internal::Call::PureIntrinsic);
                         }
-                        result[i].push_back(CondValue(const_true(), cond_val));
+                        result[i].emplace_back(const_true(), cond_val);
                     } else {
-                        result[i].push_back(CondValue(const_true(), val));
+                        result[i].emplace_back(const_true(), val);
                     }
                 }
             }
 
-            const vector<Specialization> &specializations = def.specializations();
-            for (size_t i = specializations.size(); i > 0; i--) {
-                Expr s_cond = specializations[i - 1].condition;
-                const Definition &s_def = specializations[i - 1].definition;
+            for (const auto &s : reverse_view(def.specializations())) {
+                const Expr s_cond = s.condition;
+                const Definition &s_def = s.definition;
 
                 // Else case (i.e. specialization condition is false)
                 for (auto &vec : result) {
@@ -657,7 +707,7 @@ public:
             vector<pair<Expr, int>> buffers_to_annotate;
             for (const auto &arg : args) {
                 if (arg.is_expr()) {
-                    bounds_inference_args.push_back(arg.expr);
+                    bounds_inference_args.push_back(inliner->do_inlining(arg.expr));
                 } else if (arg.is_func()) {
                     Function input(arg.func);
                     for (int k = 0; k < input.outputs(); k++) {
@@ -827,6 +877,7 @@ public:
                 f[i].schedule().compute_level().is_inlined() &&
                 f[i].can_be_inlined()) {
                 inlined[i] = true;
+                inliner.to_inline.insert(f[i]);
             } else {
                 inlined[i] = false;
             }
@@ -848,6 +899,7 @@ public:
             s.fused_group_index = find_fused_group_index(s.func, fused_groups);
             s.compute_exprs();
             s.stage_prefix = s.name + ".s0.";
+            s.inliner = &inliner;
             stages.push_back(s);
 
             for (size_t j = 0; j < f[i].updates().size(); j++) {
@@ -858,16 +910,11 @@ public:
             }
         }
 
-        // Do any pure inlining (TODO: This is currently slow)
-        for (size_t i = f.size(); i > 0; i--) {
-            Function func = f[i - 1];
-            if (inlined[i - 1]) {
-                for (auto &s : stages) {
-                    for (auto &cond_val : s.exprs) {
-                        internal_assert(cond_val.value.defined());
-                        cond_val.value = inline_function(cond_val.value, func);
-                    }
-                }
+        // Do any pure inlining
+        for (auto &s : stages) {
+            for (auto &cond_val : s.exprs) {
+                internal_assert(cond_val.value.defined());
+                cond_val.value = inliner.do_inlining(cond_val.value);
             }
         }
 
@@ -965,11 +1012,11 @@ public:
                     }
 
                     // Dump out the region required of each stage for debugging.
-
                     /*
                     debug(0) << "Box required of " << producer.name
                              << " by " << consumer.name
-                             << " stage " << consumer.stage << ":\n";
+                             << " stage " << consumer.stage << ":\n"
+                             << " used: " << b.used << "\n";
                     for (size_t k = 0; k < b.size(); k++) {
                         debug(0) << "  " << b[k].min << " ... " << b[k].max << "\n";
                     }
@@ -1104,7 +1151,7 @@ public:
         map<string, Function> stage_name_to_func;
 
         if (producing >= 0) {
-            fused_group.insert(make_pair(f.name(), stage_index));
+            fused_group.emplace(f.name(), stage_index);
         }
 
         if (!no_pipelines && producing >= 0 && !f.has_extern_definition()) {
@@ -1116,12 +1163,12 @@ public:
                 if (!((pair.func_1 == stages[producing].name) && ((int)pair.stage_1 == stage_index)) && is_fused_with_others(fused_groups, fused_pairs_in_groups,
                                                                                                                              f, stage_index,
                                                                                                                              pair.func_1, pair.stage_1, var)) {
-                    fused_group.insert(make_pair(pair.func_1, pair.stage_1));
+                    fused_group.emplace(pair.func_1, pair.stage_1);
                 }
                 if (!((pair.func_2 == stages[producing].name) && ((int)pair.stage_2 == stage_index)) && is_fused_with_others(fused_groups, fused_pairs_in_groups,
                                                                                                                              f, stage_index,
                                                                                                                              pair.func_2, pair.stage_2, var)) {
-                    fused_group.insert(make_pair(pair.func_2, pair.stage_2));
+                    fused_group.emplace(pair.func_2, pair.stage_2);
                 }
             }
 
@@ -1261,16 +1308,15 @@ public:
                                  old_inner_productions.end());
 
         // Rewrap the let/if statements
-        for (size_t i = wrappers.size(); i > 0; i--) {
-            const auto &p = wrappers[i - 1];
-            if (p.first.empty()) {
-                body = IfThenElse::make(p.second, body);
+        for (const auto &[var, value] : reverse_view(wrappers)) {
+            if (var.empty()) {
+                body = IfThenElse::make(value, body);
             } else {
-                body = LetStmt::make(p.first, p.second, body);
+                body = LetStmt::make(var, value, body);
             }
         }
 
-        return For::make(op->name, op->min, op->extent, op->for_type, op->device_api, body);
+        return For::make(op->name, op->min, op->extent, op->for_type, op->partition_policy, op->device_api, body);
     }
 
     Scope<> let_vars_in_scope;
@@ -1335,13 +1381,25 @@ Stmt bounds_inference(Stmt s,
         fused_pairs_in_groups.push_back(pairs);
     }
 
+    // Add a note in the IR for where the outermost dynamic-stage skipping
+    // checks should go. These are injected in a later pass.
+    Expr marker = Call::make(Int(32), Call::skip_stages_marker, {}, Call::Intrinsic);
+    s = Block::make(Evaluate::make(marker), s);
+
+    if (target.has_feature(Target::Profile) || target.has_feature(Target::ProfileByTimer)) {
+        // Add a note in the IR for what profiling should cover, so that it doesn't
+        // include bounds queries as pipeline executions.
+        marker = Call::make(Int(32), Call::profiling_enable_instance_marker, {}, Call::Intrinsic);
+        s = Block::make(Evaluate::make(marker), s);
+    }
+
     // Add a note in the IR for where assertions on input images
     // should go. Those are handled by a later lowering pass.
-    Expr marker = Call::make(Int(32), Call::add_image_checks_marker, {}, Call::Intrinsic);
+    marker = Call::make(Int(32), Call::add_image_checks_marker, {}, Call::Intrinsic);
     s = Block::make(Evaluate::make(marker), s);
 
     // Add a synthetic outermost loop to act as 'root'.
-    s = For::make("<outermost>", 0, 1, ForType::Serial, DeviceAPI::None, s);
+    s = For::make("<outermost>", 0, 1, ForType::Serial, Partition::Never, DeviceAPI::None, s);
 
     s = BoundsInference(funcs, fused_func_groups, fused_pairs_in_groups,
                         outputs, func_bounds, target)

@@ -1,5 +1,6 @@
 #include "Halide.h"
 #include "halide_benchmark.h"
+#include "halide_thread_pool.h"
 
 using namespace Halide;
 
@@ -23,7 +24,18 @@ int main(int argc, char **argv) {
         printf("[SKIP] Allocation cache not yet implemented for D3D12Compute.\n");
         return 0;
     }
-
+    if (target.has_feature(Target::Vulkan) && ((target.os == Target::IOS) || target.os == Target::OSX)) {
+        printf("[SKIP] Skipping test for Vulkan on iOS/OSX (MoltenVK only allows 30 buffers to be allocated)!\n");
+        return 0;
+    }
+    if (target.has_feature(Target::Vulkan) && (target.os == Target::Windows)) {
+        printf("[SKIP] Skipping test for Vulkan on Windows ... fails unless run on its own!\n");
+        return 0;
+    }
+    if (target.has_feature(Target::WebGPU)) {
+        printf("[SKIP] Allocation cache not yet implemented for WebGPU.\n");
+        return 0;
+    }
     const int N = 30;
     Var x, y, xi, yi;
 
@@ -125,28 +137,23 @@ int main(int argc, char **argv) {
     };
 
     // First run them serially (compilation of a Func isn't thread-safe).
-    //test1(true);
-    //test2(true);
-    //test3(true);
-    //return 0;
+    // test1(true);
+    // test2(true);
+    // test3(true);
+    // return 0;
 
     // Now run all at the same time to check for concurrency issues.
 
-    // FIXME: Skipping OpenGLCompute, which has concurrency
-    // issues. Probably due to using the GL context on the wrong
-    // thread.
-    if (!target.has_feature(Target::OpenGLCompute)) {
-        Halide::Internal::ThreadPool<void> pool(1);
-        std::vector<std::future<void>> futures;
-        futures.emplace_back(pool.async(test1, true));
-        futures.emplace_back(pool.async(test1, true));
-        futures.emplace_back(pool.async(test2, true));
-        futures.emplace_back(pool.async(test2, true));
-        futures.emplace_back(pool.async(test3, true));
-        futures.emplace_back(pool.async(test3, true));
-        for (auto &f : futures) {
-            f.get();
-        }
+    Halide::Tools::ThreadPool<void> pool(1);
+    std::vector<std::future<void>> futures;
+    futures.emplace_back(pool.async(test1, true));
+    futures.emplace_back(pool.async(test1, true));
+    futures.emplace_back(pool.async(test2, true));
+    futures.emplace_back(pool.async(test2, true));
+    futures.emplace_back(pool.async(test3, true));
+    futures.emplace_back(pool.async(test3, true));
+    for (auto &f : futures) {
+        f.get();
     }
 
     // Now benchmark with and without, (just informational, as this isn't a performance test)
@@ -155,13 +162,11 @@ int main(int argc, char **argv) {
         test2(true, false);
         test3(true, false);
     });
-
     double t2 = Tools::benchmark([&]() {
         test1(false, false);
         test2(false, false);
         test3(false, false);
     });
-
     printf("Runtime with cache: %f\n"
            "Without cache: %f\n",
            t1, t2);

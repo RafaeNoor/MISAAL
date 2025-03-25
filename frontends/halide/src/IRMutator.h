@@ -56,6 +56,7 @@ protected:
     virtual Expr visit(const FloatImm *);
     virtual Expr visit(const StringImm *);
     virtual Expr visit(const Cast *);
+    virtual Expr visit(const Reinterpret *);
     virtual Expr visit(const Variable *);
     virtual Expr visit(const Add *);
     virtual Expr visit(const Sub *);
@@ -98,6 +99,7 @@ protected:
     virtual Stmt visit(const Acquire *);
     virtual Stmt visit(const Fork *);
     virtual Stmt visit(const Atomic *);
+    virtual Stmt visit(const HoistedStorage *);
 };
 
 /** A mutator that caches and reapplies previously-done mutations, so
@@ -126,8 +128,8 @@ std::pair<Region, bool> mutate_region(Mutator *mutator, const Region &bounds, Ar
     for (size_t i = 0; i < bounds.size(); i++) {
         Expr old_min = bounds[i].min;
         Expr old_extent = bounds[i].extent;
-        Expr new_min = mutator->mutate(old_min, std::forward<Args>(args)...);
-        Expr new_extent = mutator->mutate(old_extent, std::forward<Args>(args)...);
+        Expr new_min = mutator->mutate(old_min, args...);
+        Expr new_extent = mutator->mutate(old_extent, args...);
         if (!new_min.same_as(old_min)) {
             bounds_changed = true;
         }

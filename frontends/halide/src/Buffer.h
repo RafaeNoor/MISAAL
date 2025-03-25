@@ -8,7 +8,9 @@
 
 namespace Halide {
 
-template<typename T = void, int Dims = Halide::Runtime::AnyDims>
+constexpr int AnyDims = Halide::Runtime::AnyDims;  // -1
+
+template<typename T = void, int Dims = AnyDims>
 class Buffer;
 
 struct JITUserContext;
@@ -153,7 +155,7 @@ class Buffer {
     }
 
 public:
-    static constexpr int AnyDims = Halide::Runtime::AnyDims;
+    static constexpr int AnyDims = Halide::AnyDims;
     static_assert(Dims == AnyDims || Dims >= 0);
 
     typedef T ElemType;
@@ -194,7 +196,7 @@ public:
         : contents(new Internal::BufferContents) {
         contents->buf = std::move(buf);
         if (name.empty()) {
-            contents->name = Internal::make_entity_name(this, "Halide:.*:Buffer<.*>", 'b');
+            contents->name = Internal::unique_name('b');
         } else {
             contents->name = name;
         }
@@ -392,18 +394,18 @@ public:
     // @}
 
     // We forward numerous methods from the underlying Buffer
-#define HALIDE_BUFFER_FORWARD_CONST(method)                                                                                           \
-    template<typename... Args>                                                                                                        \
-    auto method(Args &&...args) const->decltype(std::declval<const Runtime::Buffer<T, Dims>>().method(std::forward<Args>(args)...)) { \
-        user_assert(defined()) << "Undefined buffer calling const method " #method "\n";                                              \
-        return get()->method(std::forward<Args>(args)...);                                                                            \
+#define HALIDE_BUFFER_FORWARD_CONST(method)                                                                                             \
+    template<typename... Args>                                                                                                          \
+    auto method(Args &&...args) const -> decltype(std::declval<const Runtime::Buffer<T, Dims>>().method(std::forward<Args>(args)...)) { \
+        user_assert(defined()) << "Undefined buffer calling const method " #method "\n";                                                \
+        return get()->method(std::forward<Args>(args)...);                                                                              \
     }
 
-#define HALIDE_BUFFER_FORWARD(method)                                                                                     \
-    template<typename... Args>                                                                                            \
-    auto method(Args &&...args)->decltype(std::declval<Runtime::Buffer<T, Dims>>().method(std::forward<Args>(args)...)) { \
-        user_assert(defined()) << "Undefined buffer calling method " #method "\n";                                        \
-        return get()->method(std::forward<Args>(args)...);                                                                \
+#define HALIDE_BUFFER_FORWARD(method)                                                                                       \
+    template<typename... Args>                                                                                              \
+    auto method(Args &&...args) -> decltype(std::declval<Runtime::Buffer<T, Dims>>().method(std::forward<Args>(args)...)) { \
+        user_assert(defined()) << "Undefined buffer calling method " #method "\n";                                          \
+        return get()->method(std::forward<Args>(args)...);                                                                  \
     }
 
 // This is a weird-looking but effective workaround for a deficiency in "perfect forwarding":
@@ -416,10 +418,10 @@ public:
 // and forward it as is, we can just use ... to allow an arbitrary number of commas,
 // then use __VA_ARGS__ to forward the mess as-is, and while it looks horrible, it
 // works.
-#define HALIDE_BUFFER_FORWARD_INITIALIZER_LIST(method, ...)                                                  \
-    inline auto method(const __VA_ARGS__ &a)->decltype(std::declval<Runtime::Buffer<T, Dims>>().method(a)) { \
-        user_assert(defined()) << "Undefined buffer calling method " #method "\n";                           \
-        return get()->method(a);                                                                             \
+#define HALIDE_BUFFER_FORWARD_INITIALIZER_LIST(method, ...)                                                    \
+    inline auto method(const __VA_ARGS__ &a) -> decltype(std::declval<Runtime::Buffer<T, Dims>>().method(a)) { \
+        user_assert(defined()) << "Undefined buffer calling method " #method "\n";                             \
+        return get()->method(a);                                                                               \
     }
 
     /** Does the same thing as the equivalent Halide::Runtime::Buffer method */
@@ -573,16 +575,19 @@ public:
     }
     // @}
 
-    /** Make an Expr that loads from this concrete buffer at a computed coordinate. */
+    /** Make an Expr that loads from this concrete buffer at a computed
+     * coordinate. Returned Expr is const so that it's not possible to
+     * accidentally treat a buffer like a Func and try to assign an Expr to a
+     * given symbolic coordinate. */
     // @{
     template<typename... Args>
-    Expr operator()(const Expr &first, Args... rest) const {
+    const Expr operator()(const Expr &first, Args... rest) const {  // NOLINT
         std::vector<Expr> args = {first, rest...};
         return (*this)(args);
     }
 
     template<typename... Args>
-    Expr operator()(const std::vector<Expr> &args) const {
+    const Expr operator()(const std::vector<Expr> &args) const {  // NOLINT
         return buffer_accessor(Buffer<>(*this), args);
     }
     // @}

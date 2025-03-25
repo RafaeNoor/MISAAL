@@ -64,7 +64,7 @@ public:
         // bits, 192 bits, and 256 bits for everything.
         struct TestParams {
             const int bits;
-            ImageParam in_f;
+            std::function<Expr(Expr)> in_f;
             std::vector<std::pair<int, string>> vl_params;
             Expr f_1, f_2, f_3, u_1, i_1;
         };
@@ -77,7 +77,7 @@ public:
 
         for (auto &test_param : test_params) {  // outer loop for {fp32, fp16}
             const int bits = test_param.bits;
-            ImageParam in_f = test_param.in_f;
+            auto in_f = test_param.in_f;
             Expr f_1 = test_param.f_1;
             Expr f_2 = test_param.f_2;
             Expr f_3 = test_param.f_3;
@@ -256,7 +256,7 @@ private:
         suffix_map.emplace(tasks.back().name, suffix);
     }
 
-    void compile_and_check(Func error, const string &op, const string &name, int vector_width, std::ostringstream &error_msg) override {
+    void compile_and_check(Func error, const string &op, const string &name, int vector_width, const std::vector<Argument> &arg_types, std::ostringstream &error_msg) override {
         std::string fn_name = "test_" + name;
         std::string file_name = output_directory + fn_name;
 
@@ -315,65 +315,11 @@ private:
 }  // namespace
 
 int main(int argc, char **argv) {
-    Target host = get_host_target();
-    Target hl_target = get_target_from_environment();
-    Target jit_target = get_jit_target_from_environment();
-    printf("host is:      %s\n", host.to_string().c_str());
-    printf("HL_TARGET is: %s\n", hl_target.to_string().c_str());
-    printf("HL_JIT_TARGET is: %s\n", jit_target.to_string().c_str());
-
-    // Only for 64bit target with fp16 feature
-    if (!(hl_target.arch == Target::ARM && hl_target.bits == 64 && hl_target.has_feature(Target::ARMFp16))) {
-        printf("[SKIP] To run this test, set HL_TARGET=arm-64-<os>-arm_fp16. \n");
-        return 0;
-    }
-    // Create Test Object
-    // Use smaller dimension than default(768, 128) to avoid fp16 overflow in reduction test case
-    SimdOpCheck test(hl_target, 384, 32);
-
-    if (!test.can_run_code()) {
-        printf("[WARN] To run verification of realization, set HL_JIT_TARGET=arm-64-<os>-arm_fp16. \n");
-    }
-
-    if (argc > 1) {
-        test.filter = argv[1];
-        test.set_num_threads(1);
-    }
-
-    if (getenv("HL_SIMD_OP_CHECK_FILTER")) {
-        test.filter = getenv("HL_SIMD_OP_CHECK_FILTER");
-    }
-
-    // TODO: multithreading here is the cause of https://github.com/halide/Halide/issues/3669;
-    // the fundamental issue is that we make one set of ImageParams to construct many
-    // Exprs, then realize those Exprs on arbitrary threads; it is known that sharing
-    // one Func across multiple threads is not guaranteed to be safe, and indeed, TSAN
-    // reports data races, of which some are likely 'benign' (e.g. Function.freeze) but others
-    // are highly suspect (e.g. Function.lock_loop_levels). Since multithreading here
-    // was added just to avoid having this test be the last to finish, the expedient 'fix'
-    // for now is to remove the multithreading. A proper fix could be made by restructuring this
-    // test so that every Expr constructed for testing was guaranteed to share no Funcs
-    // (Function.deep_copy() perhaps). Of course, it would also be desirable to allow Funcs, Exprs, etc
-    // to be usable across multiple threads, but that is a major undertaking that is
-    // definitely not worthwhile for present Halide usage patterns.
-    test.set_num_threads(1);
-
-    if (argc > 2) {
-        // Don't forget: if you want to run the standard tests to a specific output
-        // directory, you'll need to invoke with the first arg enclosed
-        // in quotes (to avoid it being wildcard-expanded by the shell):
-        //
-        //    correctness_simd_op_check "*" /path/to/output
-        //
-        test.output_directory = argv[2];
-    }
-
-    bool success = test.test_all();
-
-    if (!success) {
-        return -1;
-    }
-
-    printf("Success!\n");
+    // FIXME
+    printf("[SKIP] Test is currently broken. See https://github.com/halide/Halide/issues/8083");
     return 0;
+
+    return SimdOpCheckTest::main<SimdOpCheck>(
+        argc, argv,
+        {Target("arm-64-linux-arm_fp16")});
 }

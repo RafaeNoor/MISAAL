@@ -44,8 +44,6 @@ Type non_null_void_star_type() {
     return Handle(1, &t);
 }
 
-}  // namespace
-
 namespace WindowsMangling {
 
 struct PreviousDeclarations {
@@ -218,14 +216,14 @@ MangledNamePart mangle_inner_name(const Type &type, const Target &target, Previo
         result.full_name = quals + code + type.handle_type->inner_name.name + "@";
         result.with_substitutions = quals + code + prev_decls.check_and_enter_name(type.handle_type->inner_name.name);
 
-        for (size_t i = type.handle_type->enclosing_types.size(); i > 0; i--) {
-            result.full_name += type.handle_type->enclosing_types[i - 1].name + "@";
-            result.with_substitutions += prev_decls.check_and_enter_name(type.handle_type->enclosing_types[i - 1].name);
+        for (const auto &enclosing_type : reverse_view(type.handle_type->enclosing_types)) {
+            result.full_name += enclosing_type.name + "@";
+            result.with_substitutions += prev_decls.check_and_enter_name(enclosing_type.name);
         }
 
-        for (size_t i = type.handle_type->namespaces.size(); i > 0; i--) {
-            result.full_name += type.handle_type->namespaces[i - 1] + "@";
-            result.with_substitutions += prev_decls.check_and_enter_name(type.handle_type->namespaces[i - 1]);
+        for (const auto &ns : reverse_view(type.handle_type->namespaces)) {
+            result.full_name += ns + "@";
+            result.with_substitutions += prev_decls.check_and_enter_name(ns);
         }
 
         result.full_name += "@";
@@ -246,9 +244,10 @@ MangledNamePart mangle_type(const Type &type, const Target &target, PreviousDecl
             return "H";
         case 64:
             return "_J";
+        default:
+            internal_error << "Unexpected integer size: " << type.bits() << ".\n";
+            return "";
         }
-        internal_error << "Unexpected integer size: " << type.bits() << ".\n";
-        return "";
     } else if (type.is_uint()) {
         switch (type.bits()) {
         case 1:
@@ -261,9 +260,10 @@ MangledNamePart mangle_type(const Type &type, const Target &target, PreviousDecl
             return "I";
         case 64:
             return "_K";
+        default:
+            internal_error << "Unexpected unsigned integer size: " << type.bits() << "\n";
+            return "";
         }
-        internal_error << "Unexpected unsigned integer size: " << type.bits() << "\n";
-        return "";
     } else if (type.is_float()) {
         if (type.bits() == 32) {
             return "M";
@@ -288,8 +288,8 @@ std::string cplusplus_function_mangled_name(const std::string &name, const std::
     PreviousDeclarations prev_decls;
     result += prev_decls.check_and_enter_name(name);
 
-    for (size_t i = namespaces.size(); i > 0; i--) {
-        result += prev_decls.check_and_enter_name(namespaces[i - 1]);
+    for (const auto &ns : reverse_view(namespaces)) {
+        result += prev_decls.check_and_enter_name(ns);
     }
     result += "@";
 
@@ -546,9 +546,10 @@ std::string mangle_type(const Type &type, const Target &target, PrevPrefixes &pr
             } else {
                 return "l";
             }
+        default:
+            internal_error << "Unexpected integer size: " << type.bits() << ".\n";
+            return "";
         }
-        internal_error << "Unexpected integer size: " << type.bits() << ".\n";
-        return "";
     } else if (type.is_uint()) {
         switch (type.bits()) {
         case 1:
@@ -571,9 +572,10 @@ std::string mangle_type(const Type &type, const Target &target, PrevPrefixes &pr
             } else {
                 return "m";
             }
+        default:
+            internal_error << "Unexpected unsigned integer size: " << type.bits() << "\n";
+            return "";
         }
-        internal_error << "Unexpected unsigned integer size: " << type.bits() << "\n";
-        return "";
     } else if (type.is_float()) {
         if (type.bits() == 32) {
             return "f";
@@ -610,6 +612,8 @@ std::string cplusplus_function_mangled_name(const std::string &name, const std::
 }
 
 }  // namespace ItaniumABIMangling
+
+}  // namespace
 
 std::string cplusplus_function_mangled_name(const std::string &name, const std::vector<std::string> &namespaces,
                                             Type return_type, const std::vector<ExternFuncArgument> &args,

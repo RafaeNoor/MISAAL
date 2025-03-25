@@ -10,10 +10,17 @@
 #include <atomic>
 #include <cassert>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <memory>
+#include <type_traits>
 #include <vector>
+
+#ifdef __APPLE__
+#include <AvailabilityVersions.h>
+#include <TargetConditionals.h>
+#endif
 
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
@@ -38,6 +45,74 @@
 #ifndef HALIDE_RUNTIME_BUFFER_CHECK_INDICES
 #define HALIDE_RUNTIME_BUFFER_CHECK_INDICES 0
 #endif
+
+#ifndef HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT
+// Conservatively align buffer allocations to 128 bytes by default.
+// This is enough alignment for all the platforms currently in use.
+// Redefine this in your compiler settings if you desire more/less alignment.
+#define HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT 128
+#endif
+
+static_assert(((HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT & (HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT - 1)) == 0),
+              "HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT must be a power of 2.");
+
+// Unfortunately, not all C++17 runtimes support aligned_alloc
+// (it may depends on OS/SDK version); this is provided as an opt-out
+// if you are compiling on a platform that doesn't provide a (good)
+// implementation. (Note that we actually use the C11 `::aligned_alloc()`
+// rather than the C++17 `std::aligned_alloc()` because at least one platform
+// we found supports the former but not the latter.)
+#ifndef HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC
+
+// clang-format off
+#ifdef _MSC_VER
+
+    // MSVC doesn't implement aligned_alloc(), even in C++17 mode, and
+    // has stated they probably never will, so, always default it off here.
+    #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 0
+
+#elif defined(__ANDROID_API__) && __ANDROID_API__ < 28
+
+    // Android doesn't provide aligned_alloc until API 28
+    #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 0
+
+#elif defined(__APPLE__)
+
+    #if TARGET_OS_OSX && (__MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15)
+
+        // macOS doesn't provide aligned_alloc until 10.15
+        #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 0
+
+    #elif TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_14_0)
+
+        // iOS doesn't provide aligned_alloc until 14.0
+        #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 0
+
+    #else
+
+        // Assume it's ok on all other Apple targets
+        #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 1
+
+    #endif
+
+#else
+
+    #if defined(__GLIBCXX__) && !defined(_GLIBCXX_HAVE_ALIGNED_ALLOC)
+
+        // ARM GNU-A baremetal compiler doesn't provide aligned_alloc as of 12.2
+        #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 0
+
+    #else
+
+        // Not Windows, Android, or Apple: just assume it's ok
+        #define HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC 1
+
+    #endif
+
+#endif
+// clang-format on
+
+#endif  // HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC
 
 namespace Halide {
 namespace Runtime {
@@ -68,8 +143,8 @@ struct AllInts<float, Args...> : std::false_type {};
 template<typename... Args>
 struct AllInts<double, Args...> : std::false_type {};
 
-// A helper to detect if there are any zeros in a container
 namespace Internal {
+// A helper to detect if there are any zeros in a container
 template<typename Container>
 bool any_zero(const Container &c) {
     for (int i : c) {
@@ -79,6 +154,11 @@ bool any_zero(const Container &c) {
     }
     return false;
 }
+
+struct DefaultAllocatorFns {
+    static inline void *(*default_allocate_fn)(size_t) = nullptr;
+    static inline void (*default_deallocate_fn)(void *) = nullptr;
+};
 }  // namespace Internal
 
 /** A struct acting as a header for allocations owned by the Buffer
@@ -88,7 +168,7 @@ struct AllocationHeader {
     std::atomic<int> ref_count;
 
     // Note that ref_count always starts at 1
-    AllocationHeader(void (*deallocate_fn)(void *))
+    explicit AllocationHeader(void (*deallocate_fn)(void *))
         : deallocate_fn(deallocate_fn), ref_count(1) {
     }
 };
@@ -223,15 +303,21 @@ private:
     // Note that this is called "cropped" but can also encompass a slice/embed
     // operation as well.
     struct DevRefCountCropped : DeviceRefCount {
-        Buffer<T, Dims, InClassDimStorage> cropped_from;
-        DevRefCountCropped(const Buffer<T, Dims, InClassDimStorage> &cropped_from)
+        // We will only store Buffers that have a dynamic number of dimensions.
+        // Buffers that cropped or sliced from need to be first converted to
+        // one with variable size. This is required because we cannot possibly
+        // know what the actual dimensionality is of the buffer this is a
+        // crop or slice from. Since cropping a sliced buffer is also possible,
+        // no optimizations can be made for cropped buffers either.
+        Buffer<T, AnyDims> cropped_from;
+        explicit DevRefCountCropped(const Buffer<T, AnyDims> &cropped_from)
             : cropped_from(cropped_from) {
             ownership = BufferDeviceOwnership::Cropped;
         }
     };
 
     /** Setup the device ref count for a buffer to indicate it is a crop (or slice, embed, etc) of cropped_from */
-    void crop_from(const Buffer<T, Dims, InClassDimStorage> &cropped_from) {
+    void crop_from(const Buffer<T, AnyDims> &cropped_from) {
         assert(dev_ref_count == nullptr);
         dev_ref_count = new DevRefCountCropped(cropped_from);
     }
@@ -261,7 +347,7 @@ private:
                        "Call device_free explicitly if you want to drop dirty device-side data. "
                        "Call copy_to_host explicitly if you want the data copied to the host allocation "
                        "before the device allocation is freed.");
-                int result = 0;
+                int result = halide_error_code_success;
                 if (dev_ref_count && dev_ref_count->ownership == BufferDeviceOwnership::WrappedNative) {
                     result = buf.device_interface->detach_native(nullptr, &buf);
                 } else if (dev_ref_count && dev_ref_count->ownership == BufferDeviceOwnership::AllocatedDeviceAndHost) {
@@ -272,7 +358,7 @@ private:
                     result = buf.device_interface->device_free(nullptr, &buf);
                 }
                 // No reasonable way to return the error, but we can at least assert-fail in debug builds.
-                assert((result == 0) && "device_interface call returned a nonzero result in Buffer::decref()");
+                assert((result == halide_error_code_success) && "device_interface call returned a nonzero result in Buffer::decref()");
                 (void)result;
             }
             if (dev_ref_count) {
@@ -337,6 +423,7 @@ private:
             buf.dim = other.buf.dim;
             other.buf.dim = nullptr;
         }
+        other.buf = halide_buffer_t();
     }
 
     /** Initialize the shape from a halide_buffer_t. */
@@ -433,16 +520,16 @@ private:
 
     void complete_device_crop(Buffer<T, Dims, InClassDimStorage> &result_host_cropped) const {
         assert(buf.device_interface != nullptr);
-        if (buf.device_interface->device_crop(nullptr, &this->buf, &result_host_cropped.buf) == 0) {
-            const Buffer<T, Dims, InClassDimStorage> *cropped_from = this;
+        if (buf.device_interface->device_crop(nullptr, &this->buf, &result_host_cropped.buf) == halide_error_code_success) {
             // TODO: Figure out what to do if dev_ref_count is nullptr. Should incref logic run here?
             // is it possible to get to this point without incref having run at least once since
             // the device field was set? (I.e. in the internal logic of crop. incref might have been
             // called.)
             if (dev_ref_count != nullptr && dev_ref_count->ownership == BufferDeviceOwnership::Cropped) {
-                cropped_from = &((DevRefCountCropped *)dev_ref_count)->cropped_from;
+                result_host_cropped.crop_from(((DevRefCountCropped *)dev_ref_count)->cropped_from);
+            } else {
+                result_host_cropped.crop_from(*this);
             }
-            result_host_cropped.crop_from(*cropped_from);
         }
     }
 
@@ -465,17 +552,18 @@ private:
 
     void complete_device_slice(Buffer<T, AnyDims, InClassDimStorage> &result_host_sliced, int d, int pos) const {
         assert(buf.device_interface != nullptr);
-        if (buf.device_interface->device_slice(nullptr, &this->buf, d, pos, &result_host_sliced.buf) == 0) {
-            const Buffer<T, Dims, InClassDimStorage> *sliced_from = this;
+        if (buf.device_interface->device_slice(nullptr, &this->buf, d, pos, &result_host_sliced.buf) == halide_error_code_success) {
             // TODO: Figure out what to do if dev_ref_count is nullptr. Should incref logic run here?
             // is it possible to get to this point without incref having run at least once since
             // the device field was set? (I.e. in the internal logic of slice. incref might have been
             // called.)
             if (dev_ref_count != nullptr && dev_ref_count->ownership == BufferDeviceOwnership::Cropped) {
-                sliced_from = &((DevRefCountCropped *)dev_ref_count)->cropped_from;
+                // crop_from() is correct here, despite the fact that we are slicing.
+                result_host_sliced.crop_from(((DevRefCountCropped *)dev_ref_count)->cropped_from);
+            } else {
+                // crop_from() is correct here, despite the fact that we are slicing.
+                result_host_sliced.crop_from(*this);
             }
-            // crop_from() is correct here, despite the fact that we are slicing.
-            result_host_sliced.crop_from(*sliced_from);
         }
     }
 
@@ -534,7 +622,7 @@ public:
             return {min() + extent()};
         }
 
-        Dimension(const halide_dimension_t &dim)
+        explicit Dimension(const halide_dimension_t &dim)
             : d(dim) {
         }
     };
@@ -637,6 +725,13 @@ private:
     }
 
 public:
+    static void set_default_allocate_fn(void *(*allocate_fn)(size_t)) {
+        Internal::DefaultAllocatorFns::default_allocate_fn = allocate_fn;
+    }
+    static void set_default_deallocate_fn(void (*deallocate_fn)(void *)) {
+        Internal::DefaultAllocatorFns::default_deallocate_fn = deallocate_fn;
+    }
+
     /** Determine if a Buffer<T, Dims, InClassDimStorage> can be constructed from some other Buffer type.
      * If this can be determined at compile time, fail with a static assert; otherwise
      * return a boolean based on runtime typing. */
@@ -700,7 +795,6 @@ public:
         other.dev_ref_count = nullptr;
         other.alloc = nullptr;
         move_shape_from(std::forward<Buffer<T, Dims, InClassDimStorage>>(other));
-        other.buf = halide_buffer_t();
     }
 
     /** Move-construct a Buffer from a Buffer of different
@@ -715,7 +809,6 @@ public:
         other.dev_ref_count = nullptr;
         other.alloc = nullptr;
         move_shape_from(std::forward<Buffer<T2, D2, S2>>(other));
-        other.buf = halide_buffer_t();
     }
 
     /** Assign from another Buffer of possibly-different
@@ -767,7 +860,6 @@ public:
         free_shape_storage();
         buf = other.buf;
         move_shape_from(std::forward<Buffer<T2, D2, S2>>(other));
-        other.buf = halide_buffer_t();
         return *this;
     }
 
@@ -781,7 +873,6 @@ public:
         free_shape_storage();
         buf = other.buf;
         move_shape_from(std::forward<Buffer<T, Dims, InClassDimStorage>>(other));
-        other.buf = halide_buffer_t();
         return *this;
     }
 
@@ -803,25 +894,62 @@ public:
      * owned memory. */
     void allocate(void *(*allocate_fn)(size_t) = nullptr,
                   void (*deallocate_fn)(void *) = nullptr) {
-        if (!allocate_fn) {
-            allocate_fn = malloc;
-        }
-        if (!deallocate_fn) {
-            deallocate_fn = free;
-        }
-
         // Drop any existing allocation
         deallocate();
 
-        // Conservatively align images to 128 bytes. This is enough
-        // alignment for all the platforms we might use.
+        // Conservatively align images to (usually) 128 bytes. This is enough
+        // alignment for all the platforms we might use. Also ensure that the allocation
+        // is such that the logical size is an integral multiple of 128 bytes (or a bit more).
+        constexpr size_t alignment = HALIDE_RUNTIME_BUFFER_ALLOCATION_ALIGNMENT;
+
+        const auto align_up = [=](size_t value) -> size_t {
+            return (value + alignment - 1) & ~(alignment - 1);
+        };
+
         size_t size = size_in_bytes();
-        const size_t alignment = 128;
-        size = (size + alignment - 1) & ~(alignment - 1);
-        void *alloc_storage = allocate_fn(size + sizeof(AllocationHeader) + alignment - 1);
+
+#if HALIDE_RUNTIME_BUFFER_USE_ALIGNED_ALLOC
+        // Only use aligned_alloc() if no custom allocators are specified.
+        if (!allocate_fn && !deallocate_fn && !Internal::DefaultAllocatorFns::default_allocate_fn && !Internal::DefaultAllocatorFns::default_deallocate_fn) {
+            // As a practical matter, sizeof(AllocationHeader) is going to be no more than 16 bytes
+            // on any supported platform, so we will just overallocate by 'alignment'
+            // so that the user storage also starts at an aligned point. This is a bit
+            // wasteful, but probably not a big deal.
+            static_assert(sizeof(AllocationHeader) <= alignment);
+            void *alloc_storage = ::aligned_alloc(alignment, align_up(size) + alignment);
+            assert((uintptr_t)alloc_storage == align_up((uintptr_t)alloc_storage));
+            alloc = new (alloc_storage) AllocationHeader(free);
+            buf.host = (uint8_t *)((uintptr_t)alloc_storage + alignment);
+            return;
+        }
+        // else fall thru
+#endif
+        if (!allocate_fn) {
+            allocate_fn = Internal::DefaultAllocatorFns::default_allocate_fn;
+            if (!allocate_fn) {
+                allocate_fn = malloc;
+            }
+        }
+        if (!deallocate_fn) {
+            deallocate_fn = Internal::DefaultAllocatorFns::default_deallocate_fn;
+            if (!deallocate_fn) {
+                deallocate_fn = free;
+            }
+        }
+
+        static_assert(sizeof(AllocationHeader) <= alignment);
+
+        // malloc() and friends must return a pointer aligned to at least alignof(std::max_align_t);
+        // make sure this is OK for AllocationHeader, since it always goes at the start
+        static_assert(alignof(AllocationHeader) <= alignof(std::max_align_t));
+
+        const size_t requested_size = align_up(size + alignment +
+                                               std::max(0, (int)sizeof(AllocationHeader) -
+                                                               (int)sizeof(std::max_align_t)));
+        void *alloc_storage = allocate_fn(requested_size);
         alloc = new (alloc_storage) AllocationHeader(deallocate_fn);
         uint8_t *unaligned_ptr = ((uint8_t *)alloc) + sizeof(AllocationHeader);
-        buf.host = (uint8_t *)((uintptr_t)(unaligned_ptr + alignment - 1) & ~(alignment - 1));
+        buf.host = (uint8_t *)align_up((uintptr_t)unaligned_ptr);
     }
 
     /** Drop reference to any owned host or device memory, possibly
@@ -1028,8 +1156,8 @@ public:
     /** Initialize a Buffer from a pointer to the min coordinate and
      * a vector describing the shape.  Does not take ownership of the
      * data, and does not set the host_dirty flag. */
-    explicit inline Buffer(halide_type_t t, add_const_if_T_is_const<void> *data,
-                           const std::vector<halide_dimension_t> &shape)
+    explicit Buffer(halide_type_t t, add_const_if_T_is_const<void> *data,
+                    const std::vector<halide_dimension_t> &shape)
         : Buffer(t, data, (int)shape.size(), shape.data()) {
     }
 
@@ -1048,7 +1176,7 @@ public:
     /** Initialize a Buffer from a pointer to the min coordinate and
      * a vector describing the shape.  Does not take ownership of the
      * data, and does not set the host_dirty flag. */
-    explicit inline Buffer(T *data, const std::vector<halide_dimension_t> &shape)
+    explicit Buffer(T *data, const std::vector<halide_dimension_t> &shape)
         : Buffer(data, (int)shape.size(), shape.data()) {
     }
 
@@ -1137,6 +1265,35 @@ public:
     }
     // @}
 
+    /** Add some syntactic sugar to allow autoconversion from Buffer<T> to Buffer<const T>& when
+     * passing arguments */
+    template<typename T2 = T, typename = typename std::enable_if<!std::is_const<T2>::value>::type>
+    operator Buffer<typename std::add_const<T2>::type, Dims, InClassDimStorage> &() & {
+        return as_const();
+    }
+
+    /** Add some syntactic sugar to allow autoconversion from Buffer<T> to Buffer<void>& when
+     * passing arguments */
+    template<typename TVoid,
+             typename T2 = T,
+             typename = typename std::enable_if<std::is_same<TVoid, void>::value &&
+                                                !std::is_void<T2>::value &&
+                                                !std::is_const<T2>::value>::type>
+    operator Buffer<TVoid, Dims, InClassDimStorage> &() & {
+        return as<TVoid, Dims>();
+    }
+
+    /** Add some syntactic sugar to allow autoconversion from Buffer<const T> to Buffer<const void>& when
+     * passing arguments */
+    template<typename TVoid,
+             typename T2 = T,
+             typename = typename std::enable_if<std::is_same<TVoid, void>::value &&
+                                                !std::is_void<T2>::value &&
+                                                std::is_const<T2>::value>::type>
+    operator Buffer<const TVoid, Dims, InClassDimStorage> &() & {
+        return as<const TVoid, Dims>();
+    }
+
     /** Conventional names for the first three dimensions. */
     // @{
     int width() const {
@@ -1171,9 +1328,12 @@ public:
 
     /** Make a new image which is a deep copy of this image. Use crop
      * or slice followed by copy to make a copy of only a portion of
-     * the image. The new image uses the same memory layout as the
-     * original, with holes compacted away. Note that the returned
-     * Buffer is always of a non-const type T (ie:
+     * the image. The new image has the same nesting order of dimensions
+     * (e.g. channels innermost), but resets the strides to the default
+     * (each stride is the product of the extents of the inner dimensions).
+     * Note that this means any strides of zero get broadcast into a non-zero stride.
+     *
+     * Note that the returned Buffer is always of a non-const type T (ie:
      *
      *     Buffer<const T>.copy() -> Buffer<T> rather than Buffer<const T>
      *
@@ -1232,7 +1392,7 @@ public:
      *     my_func(input.alias(), output);
      * }\endcode
      */
-    inline Buffer<T, Dims, InClassDimStorage> alias() const {
+    Buffer<T, Dims, InClassDimStorage> alias() const {
         return *this;
     }
 
@@ -1275,23 +1435,23 @@ public:
         // into a static dispatch to the right-sized copy.)
         if (T_is_void ? (type().bytes() == 1) : (sizeof(not_void_T) == 1)) {
             using MemType = uint8_t;
-            auto &typed_dst = (Buffer<MemType, Dims, InClassDimStorage> &)dst;
-            auto &typed_src = (Buffer<const MemType, D2, S2> &)src;
+            auto &typed_dst = reinterpret_cast<Buffer<MemType, Dims, InClassDimStorage> &>(dst);
+            auto &typed_src = reinterpret_cast<Buffer<const MemType, D2, S2> &>(src);
             typed_dst.for_each_value([&](MemType &dst, MemType src) { dst = src; }, typed_src);
         } else if (T_is_void ? (type().bytes() == 2) : (sizeof(not_void_T) == 2)) {
             using MemType = uint16_t;
-            auto &typed_dst = (Buffer<MemType, Dims, InClassDimStorage> &)dst;
-            auto &typed_src = (Buffer<const MemType, D2, S2> &)src;
+            auto &typed_dst = reinterpret_cast<Buffer<MemType, Dims, InClassDimStorage> &>(dst);
+            auto &typed_src = reinterpret_cast<Buffer<const MemType, D2, S2> &>(src);
             typed_dst.for_each_value([&](MemType &dst, MemType src) { dst = src; }, typed_src);
         } else if (T_is_void ? (type().bytes() == 4) : (sizeof(not_void_T) == 4)) {
             using MemType = uint32_t;
-            auto &typed_dst = (Buffer<MemType, Dims, InClassDimStorage> &)dst;
-            auto &typed_src = (Buffer<const MemType, D2, S2> &)src;
+            auto &typed_dst = reinterpret_cast<Buffer<MemType, Dims, InClassDimStorage> &>(dst);
+            auto &typed_src = reinterpret_cast<Buffer<const MemType, D2, S2> &>(src);
             typed_dst.for_each_value([&](MemType &dst, MemType src) { dst = src; }, typed_src);
         } else if (T_is_void ? (type().bytes() == 8) : (sizeof(not_void_T) == 8)) {
             using MemType = uint64_t;
-            auto &typed_dst = (Buffer<MemType, Dims, InClassDimStorage> &)dst;
-            auto &typed_src = (Buffer<const MemType, D2, S2> &)src;
+            auto &typed_dst = reinterpret_cast<Buffer<MemType, Dims, InClassDimStorage> &>(dst);
+            auto &typed_src = reinterpret_cast<Buffer<const MemType, D2, S2> &>(src);
             typed_dst.for_each_value([&](MemType &dst, MemType src) { dst = src; }, typed_src);
         } else {
             assert(false && "type().bytes() must be 1, 2, 4, or 8");
@@ -1547,7 +1707,7 @@ public:
     }
 
     /** Slice a buffer in-place at the dimension's minimum. */
-    inline void slice(int d) {
+    void slice(int d) {
         slice(d, dim(d).min());
     }
 
@@ -1652,14 +1812,14 @@ public:
         if (device_dirty()) {
             return buf.device_interface->copy_to_host(ctx, &buf);
         }
-        return 0;
+        return halide_error_code_success;
     }
 
     int copy_to_device(const struct halide_device_interface_t *device_interface, void *ctx = nullptr) {
         if (host_dirty()) {
             return device_interface->copy_to_device(ctx, &buf, device_interface);
         }
-        return 0;
+        return halide_error_code_success;
     }
 
     int device_malloc(const struct halide_device_interface_t *device_interface, void *ctx = nullptr) {
@@ -1678,7 +1838,7 @@ public:
                    "Don't call device_free on Halide buffers that you have copied or "
                    "passed by value.");
         }
-        int ret = 0;
+        int ret = halide_error_code_success;
         if (buf.device_interface) {
             ret = buf.device_interface->device_free(ctx, &buf);
         }
@@ -1710,7 +1870,7 @@ public:
                "allocation. Freeing it could create dangling references. "
                "Don't call device_detach_native on Halide buffers that you "
                "have copied or passed by value.");
-        int ret = 0;
+        int ret = halide_error_code_success;
         if (buf.device_interface) {
             ret = buf.device_interface->detach_native(ctx, &buf);
         }
@@ -1735,7 +1895,7 @@ public:
                    "Don't call device_and_host_free on Halide buffers that you have copied or "
                    "passed by value.");
         }
-        int ret = 0;
+        int ret = halide_error_code_success;
         if (buf.device_interface) {
             ret = buf.device_interface->device_and_host_free(ctx, &buf);
         }
@@ -2067,9 +2227,13 @@ private:
         }
     }
 
+    // Return pair is <new_dimensions, innermost_strides_are_one>
     template<int N>
-    HALIDE_NEVER_INLINE static bool for_each_value_prep(for_each_value_task_dim<N> *t,
-                                                        const halide_buffer_t **buffers) {
+    HALIDE_NEVER_INLINE static std::pair<int, bool> for_each_value_prep(for_each_value_task_dim<N> *t,
+                                                                        const halide_buffer_t **buffers) {
+        const int dimensions = buffers[0]->dimensions;
+        assert(dimensions > 0);
+
         // Check the buffers all have clean host allocations
         for (int i = 0; i < N; i++) {
             if (buffers[i]->device) {
@@ -2082,8 +2246,6 @@ private:
                        "Buffer passed to for_each_value has no host or device allocation");
             }
         }
-
-        const int dimensions = buffers[0]->dimensions;
 
         // Extract the strides in all the dimensions
         for (int i = 0; i < dimensions; i++) {
@@ -2114,42 +2276,47 @@ private:
             }
             if (flat) {
                 t[i - 1].extent *= t[i].extent;
-                for (int j = i; j < d; j++) {
+                for (int j = i; j < d - 1; j++) {
                     t[j] = t[j + 1];
                 }
                 i--;
                 d--;
-                t[d].extent = 1;
             }
         }
 
+        // Note that we assert() that dimensions > 0 above
+        // (our one-and-only caller will only call us that way)
+        // so the unchecked access to t[0] should be safe.
         bool innermost_strides_are_one = true;
-        if (dimensions > 0) {
-            for (int i = 0; i < N; i++) {
-                innermost_strides_are_one &= (t[0].stride[i] == 1);
-            }
+        for (int i = 0; i < N; i++) {
+            innermost_strides_are_one &= (t[0].stride[i] == 1);
         }
 
-        return innermost_strides_are_one;
+        return {d, innermost_strides_are_one};
     }
 
     template<typename Fn, typename... Args, int N = sizeof...(Args) + 1>
     void for_each_value_impl(Fn &&f, Args &&...other_buffers) const {
         if (dimensions() > 0) {
+            const size_t alloc_size = dimensions() * sizeof(for_each_value_task_dim<N>);
             Buffer<>::for_each_value_task_dim<N> *t =
-                (Buffer<>::for_each_value_task_dim<N> *)HALIDE_ALLOCA((dimensions() + 1) * sizeof(for_each_value_task_dim<N>));
+                (Buffer<>::for_each_value_task_dim<N> *)HALIDE_ALLOCA(alloc_size);
             // Move the preparatory code into a non-templated helper to
             // save code size.
             const halide_buffer_t *buffers[] = {&buf, (&other_buffers.buf)...};
-            bool innermost_strides_are_one = Buffer<>::for_each_value_prep(t, buffers);
-
-            Buffer<>::for_each_value_helper(f, dimensions() - 1,
-                                            innermost_strides_are_one,
-                                            t,
-                                            data(), (other_buffers.data())...);
-        } else {
-            f(*data(), (*other_buffers.data())...);
+            auto [new_dims, innermost_strides_are_one] = Buffer<>::for_each_value_prep(t, buffers);
+            if (new_dims > 0) {
+                Buffer<>::for_each_value_helper(f, new_dims - 1,
+                                                innermost_strides_are_one,
+                                                t,
+                                                data(), (other_buffers.data())...);
+                return;
+            }
+            // else fall thru
         }
+
+        // zero-dimensional case
+        f(*data(), (*other_buffers.data())...);
     }
     // @}
 
@@ -2286,7 +2453,11 @@ private:
     template<typename Fn,
              typename = decltype(std::declval<Fn>()((const int *)nullptr))>
     static void for_each_element(int, int dims, const for_each_element_task_dim *t, Fn &&f, int check = 0) {
-        int *pos = (int *)HALIDE_ALLOCA(dims * sizeof(int));
+        const int size = dims * sizeof(int);
+        int *pos = (int *)HALIDE_ALLOCA(size);
+        // At least one version of GCC will (incorrectly) report that pos "may be used uninitialized".
+        // Add this memset to silence it.
+        memset(pos, 0, size);
         for_each_element_array(dims - 1, t, std::forward<Fn>(f), pos);
     }
 

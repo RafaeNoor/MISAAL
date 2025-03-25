@@ -59,6 +59,18 @@ private:
         }
     }
 
+    Expr visit(const Reinterpret *op) override {
+        Expr value = mutate(op->value);
+        if (!value.defined()) {
+            return Expr();
+        }
+        if (value.same_as(op->value)) {
+            return op;
+        } else {
+            return Reinterpret::make(op->type, std::move(value));
+        }
+    }
+
     Expr visit(const Add *op) override {
         return mutate_binary_operator(op);
     }
@@ -252,15 +264,15 @@ private:
         result = mutate(result);
 
         if (result.defined()) {
-            for (auto it = frames.rbegin(); it != frames.rend(); it++) {
-                if (!it->new_value.defined()) {
+            for (const auto &frame : reverse_view(frames)) {
+                if (!frame.new_value.defined()) {
                     continue;
                 }
-                predicate = substitute(it->op->name, it->new_value, predicate);
-                if (it->new_value.same_as(it->op->value) && result.same_as(it->op->body)) {
-                    result = it->op;
+                predicate = substitute(frame.op->name, frame.new_value, predicate);
+                if (frame.new_value.same_as(frame.op->value) && result.same_as(frame.op->body)) {
+                    result = frame.op;
                 } else {
-                    result = T::make(it->op->name, std::move(it->new_value), result);
+                    result = T::make(frame.op->name, std::move(frame.new_value), result);
                 }
             }
         }
@@ -324,7 +336,7 @@ private:
             body.same_as(op->body)) {
             return op;
         } else {
-            return For::make(op->name, min, extent, op->for_type, op->device_api, body);
+            return For::make(op->name, min, extent, op->for_type, op->partition_policy, op->device_api, body);
         }
     }
 
@@ -460,7 +472,8 @@ private:
             return op;
         } else {
             return Allocate::make(op->name, op->type, op->memory_type,
-                                  new_extents, condition, body, new_expr, op->free_function);
+                                  new_extents, condition, body, new_expr,
+                                  op->free_function, op->padding);
         }
     }
 
@@ -527,13 +540,12 @@ private:
 
         result = mutate(result);
 
-        for (auto it = frames.rbegin(); it != frames.rend(); it++) {
-            op = it->first;
-            Stmt new_first = std::move(it->second);
+        for (const auto &[block, stmt] : reverse_view(frames)) {
+            Stmt new_first = stmt;
             if (!result.defined()) {
                 result = new_first;
-            } else if (new_first.same_as(op->first) && result.same_as(op->rest)) {
-                result = op;
+            } else if (new_first.same_as(block->first) && result.same_as(block->rest)) {
+                result = block;
             } else {
                 result = Block::make(new_first, result);
             }

@@ -64,6 +64,13 @@ void signal_handler(int signum) {
 }  // namespace
 
 int main(int argc, char **argv) {
+#ifdef HALIDE_INTERNAL_USING_ASAN
+    // ASAN also needs to intercept the SIGSEGV signal handler;
+    // we could probably make these work together, but it's
+    // also probably not worth the effort.
+    printf("[SKIP] tracing_stack does not run under ASAN.\n");
+    return 0;
+#endif
 
     signal(SIGSEGV, signal_handler);
     signal(SIGBUS, signal_handler);
@@ -89,7 +96,7 @@ int main(int argc, char **argv) {
     h.realize({100, 100});
 
     printf("The code should not have reached this print statement.\n");
-    return -1;
+    return 1;
 }
 
 #else

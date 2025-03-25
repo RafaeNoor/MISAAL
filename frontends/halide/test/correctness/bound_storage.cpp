@@ -12,12 +12,7 @@ private:
     Internal::Stmt visit(const Internal::Allocate *op) override {
         int total_size = 1;
         for (const auto &e : op->extents) {
-            const auto *size = Internal::as_const_int(e);
-            if (size) {
-                total_size = total_size * (*size);
-            } else {
-                total_size = 0;
-            }
+            total_size *= Internal::as_const_int(e).value_or(0);
         }
         // Trim of the suffix.
         std::string name = op->name.substr(0, op->name.find("$"));
@@ -43,7 +38,7 @@ int main(int argc, char **argv) {
         Module m = g.compile_to_module({});
         if (s.allocation_size["f"] != fixed_alloc_size) {
             std::cerr << "Allocation size for f doesn't match one which was set explicitly \n";
-            return -1;
+            return 1;
         }
 
         // Also check that output is correct.
@@ -54,7 +49,7 @@ int main(int argc, char **argv) {
                 if (im(x, y) != correct) {
                     printf("im(%d, %d) = %d instead of %d\n",
                            x, y, im(x, y), correct);
-                    return -1;
+                    return 1;
                 }
             }
         }
@@ -78,12 +73,12 @@ int main(int argc, char **argv) {
         Module m = g.compile_to_module({});
         if (s.allocation_size["f"] != fixed_alloc_size_f) {
             std::cerr << "Allocation size for f doesn't match one which was set explicitly \n";
-            return -1;
+            return 1;
         }
 
         if (s.allocation_size["h"] != fixed_alloc_size_h * fixed_alloc_size_h) {
             std::cerr << "Allocation size for h doesn't match one which was set explicitly \n";
-            return -1;
+            return 1;
         }
 
         // Also check that output is correct.
@@ -94,7 +89,7 @@ int main(int argc, char **argv) {
                 if (im(x, y) != correct) {
                     printf("im(%d, %d) = %d instead of %d\n",
                            x, y, im(x, y), correct);
-                    return -1;
+                    return 1;
                 }
             }
         }
@@ -122,7 +117,7 @@ int main(int argc, char **argv) {
                 if (im(x, y) != correct) {
                     printf("im(%d, %d) = %d instead of %d\n",
                            x, y, im(x, y), correct);
-                    return -1;
+                    return 1;
                 }
             }
         }

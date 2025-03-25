@@ -13,11 +13,6 @@ IMAGES ?= ../images
 UNAME ?= $(shell uname)
 SHELL = bash
 PYTHON ?= python3
-
-# TODO(srj): the python bindings need to be put into the distrib folders;
-# this is a hopefully-temporary workaround (https://github.com/halide/Halide/issues/4368)
-HALIDE_PYTHON_BINDINGS_PATH ?= $(realpath ../../bin/python3_bindings)
-
 BIN_DIR ?= bin
 
 # Most build outputs go into $(BIN)/$(HL_TARGET)/$(HL_TARGET)/, so that you can vary the test
@@ -72,7 +67,7 @@ SANITIZER_FLAGS += -fsanitize=address
 endif
 
 CFLAGS += $(OPTIMIZE) -I $(HALIDE_DISTRIB_PATH)/include/ -I $(HALIDE_DISTRIB_PATH)/tools/ -I $(HALIDE_DISTRIB_PATH)/apps/support/
-CXXFLAGS += $(OPTIMIZE) -std=c++17 -I $(HALIDE_DISTRIB_PATH)/include/ -I $(HALIDE_DISTRIB_PATH)/tools/ $(SANITIZER_FLAGS) -Wall -Wno-unused-function -Wcast-qual -Wignored-qualifiers -Wno-comment -Wsign-compare -Wno-unknown-warning-option -Wno-psabi
+CXXFLAGS += $(OPTIMIZE) -std=c++17 -I $(HALIDE_DISTRIB_PATH)/include/ -I $(HALIDE_DISTRIB_PATH)/tools/ $(SANITIZER_FLAGS) -Wall -Werror -Wno-unused-function -Wcast-qual -Wignored-qualifiers -Wno-comment -Wsign-compare -Wno-unknown-warning-option -Wno-psabi
 
 CXX_VERSION = $(shell $(CXX) --version | head -n1)
 ifneq (,$(findstring clang,$(CXX_VERSION)))
@@ -102,6 +97,11 @@ SHARED_EXT=dylib
 else
 SHARED_EXT=so
 endif
+
+# We want to build Halide plugins as .so on all posixy systems, including OSX.
+# This is called out as a named var to make it clear that the use
+# is deliberate, not an accident.
+PLUGIN_EXT=so
 
 # We expect $ANDROID_NDK_ROOT to be defined by an env var.
 # We require at least NDK r19b or later.
@@ -142,7 +142,7 @@ AR-host-cuda ?= $(AR)
 AR-host-metal ?= $(AR)
 AR-host-hvx ?= $(AR)
 AR-hexagon-32-qurt-hvx ?= ar
-AR-arm-64-android ?= ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${ANDROID_NDK_HOST_PLATFORM}-x86_64/bin/aarch64-linux-android-ar
+AR-arm-64-android ?= ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${ANDROID_NDK_HOST_PLATFORM}-x86_64/bin/llvm-ar
 AR-arm-64-android-arm_dot_prod ?= $(AR-arm-64-android)
 AR-arm-32-android ?= ${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${ANDROID_NDK_HOST_PLATFORM}-x86_64/bin/armv7a-linux-androideabi-ar
 AR-arm-64-profile-android ?= $(AR-arm-64-android)
@@ -180,9 +180,9 @@ LIBHALIDE_LDFLAGS_STATIC ?= $(LIB_HALIDE_STATIC) $(LDFLAGS)
 # Autoschedulers. Mullapudi2016 is currently the default, because it's fast.
 AUTOSCHEDULER ?= mullapudi2016
 ifneq ($(AUTOSCHEDULER),)
-LIB_AUTOSCHEDULER ?= $(HALIDE_DISTRIB_PATH)/lib/libautoschedule_$(AUTOSCHEDULER).$(SHARED_EXT)
+LIB_AUTOSCHEDULER ?= $(HALIDE_DISTRIB_PATH)/lib/libautoschedule_$(AUTOSCHEDULER).$(PLUGIN_EXT)
 ifeq ($(UNAME), Darwin)
-LIBHALIDE_LDFLAGS +=  -Wl,-force_load $(HALIDE_DISTRIB_PATH)/lib/libautoschedule_$(AUTOSCHEDULER).$(SHARED_EXT)
+LIBHALIDE_LDFLAGS +=  -Wl,-force_load $(HALIDE_DISTRIB_PATH)/lib/libautoschedule_$(AUTOSCHEDULER).$(PLUGIN_EXT)
 else
 LIBHALIDE_LDFLAGS +=  -Wl,--no-as-needed -lautoschedule_$(AUTOSCHEDULER) -Wl,--as-needed
 endif

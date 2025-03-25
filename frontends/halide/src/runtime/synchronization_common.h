@@ -27,6 +27,8 @@
  *       be doable.
  */
 
+#include "runtime_atomics.h"
+
 // Copied from tsan_interface.h
 #ifndef TSAN_ANNOTATIONS
 #define TSAN_ANNOTATIONS 0
@@ -86,143 +88,6 @@ ALWAYS_INLINE void if_tsan_pre_signal(void *) {
 }
 ALWAYS_INLINE void if_tsan_post_signal(void *) {
 }
-#endif
-
-#ifdef BITS_32
-ALWAYS_INLINE uintptr_t atomic_and_fetch_release(uintptr_t *addr, uintptr_t val) {
-    return __sync_and_and_fetch(addr, val);
-}
-
-template<typename T>
-ALWAYS_INLINE T atomic_fetch_add_acquire_release(T *addr, T val) {
-    return __sync_fetch_and_add(addr, val);
-}
-
-template<typename T>
-ALWAYS_INLINE bool cas_strong_sequentially_consistent_helper(T *addr, T *expected, T *desired) {
-    T oldval = *expected;
-    T gotval = __sync_val_compare_and_swap(addr, oldval, *desired);
-    *expected = gotval;
-    return oldval == gotval;
-}
-
-ALWAYS_INLINE bool atomic_cas_strong_release_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return cas_strong_sequentially_consistent_helper(addr, expected, desired);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_release_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return cas_strong_sequentially_consistent_helper(addr, expected, desired);
-}
-
-template<typename T>
-ALWAYS_INLINE bool atomic_cas_weak_relacq_relaxed(T *addr, T *expected, T *desired) {
-    return cas_strong_sequentially_consistent_helper(addr, expected, desired);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_relaxed_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return cas_strong_sequentially_consistent_helper(addr, expected, desired);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_acquire_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return cas_strong_sequentially_consistent_helper(addr, expected, desired);
-}
-
-ALWAYS_INLINE uintptr_t atomic_fetch_and_release(uintptr_t *addr, uintptr_t val) {
-    return __sync_fetch_and_and(addr, val);
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_load_relaxed(T *addr, T *val) {
-    *val = *addr;
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_load_acquire(T *addr, T *val) {
-    __sync_synchronize();
-    *val = *addr;
-}
-
-ALWAYS_INLINE uintptr_t atomic_or_fetch_relaxed(uintptr_t *addr, uintptr_t val) {
-    return __sync_or_and_fetch(addr, val);
-}
-
-ALWAYS_INLINE void atomic_store_relaxed(uintptr_t *addr, uintptr_t *val) {
-    *addr = *val;
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_store_release(T *addr, T *val) {
-    *addr = *val;
-    __sync_synchronize();
-}
-
-ALWAYS_INLINE void atomic_thread_fence_acquire() {
-    __sync_synchronize();
-}
-
-#else
-
-ALWAYS_INLINE uintptr_t atomic_and_fetch_release(uintptr_t *addr, uintptr_t val) {
-    return __atomic_and_fetch(addr, val, __ATOMIC_RELEASE);
-}
-
-template<typename T>
-ALWAYS_INLINE T atomic_fetch_add_acquire_release(T *addr, T val) {
-    return __atomic_fetch_add(addr, val, __ATOMIC_ACQ_REL);
-}
-
-ALWAYS_INLINE bool atomic_cas_strong_release_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return __atomic_compare_exchange(addr, expected, desired, false, __ATOMIC_RELEASE, __ATOMIC_RELAXED);
-}
-
-template<typename T>
-ALWAYS_INLINE bool atomic_cas_weak_relacq_relaxed(T *addr, T *expected, T *desired) {
-    return __atomic_compare_exchange(addr, expected, desired, true, __ATOMIC_ACQ_REL, __ATOMIC_RELAXED);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_release_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return __atomic_compare_exchange(addr, expected, desired, true, __ATOMIC_RELEASE, __ATOMIC_RELAXED);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_relaxed_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return __atomic_compare_exchange(addr, expected, desired, true, __ATOMIC_RELAXED, __ATOMIC_RELAXED);
-}
-
-ALWAYS_INLINE bool atomic_cas_weak_acquire_relaxed(uintptr_t *addr, uintptr_t *expected, uintptr_t *desired) {
-    return __atomic_compare_exchange(addr, expected, desired, true, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);
-}
-
-ALWAYS_INLINE uintptr_t atomic_fetch_and_release(uintptr_t *addr, uintptr_t val) {
-    return __atomic_fetch_and(addr, val, __ATOMIC_RELEASE);
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_load_relaxed(T *addr, T *val) {
-    __atomic_load(addr, val, __ATOMIC_RELAXED);
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_load_acquire(T *addr, T *val) {
-    __atomic_load(addr, val, __ATOMIC_ACQUIRE);
-}
-
-ALWAYS_INLINE uintptr_t atomic_or_fetch_relaxed(uintptr_t *addr, uintptr_t val) {
-    return __atomic_or_fetch(addr, val, __ATOMIC_RELAXED);
-}
-
-ALWAYS_INLINE void atomic_store_relaxed(uintptr_t *addr, uintptr_t *val) {
-    __atomic_store(addr, val, __ATOMIC_RELAXED);
-}
-
-template<typename T>
-ALWAYS_INLINE void atomic_store_release(T *addr, T *val) {
-    __atomic_store(addr, val, __ATOMIC_RELEASE);
-}
-
-ALWAYS_INLINE void atomic_thread_fence_acquire() {
-    __atomic_thread_fence(__ATOMIC_ACQUIRE);
-}
-
 #endif
 
 }  // namespace
@@ -738,7 +603,7 @@ WEAK int parking_control::unpark_requeue(uintptr_t addr_from, uintptr_t addr_to,
 struct mutex_parking_control final : public parking_control {
     uintptr_t *const lock_state;
 
-    ALWAYS_INLINE mutex_parking_control(uintptr_t *lock_state)
+    ALWAYS_INLINE explicit mutex_parking_control(uintptr_t *lock_state)
         : lock_state(lock_state) {
     }
 
@@ -969,6 +834,7 @@ public:
 
     ALWAYS_INLINE void broadcast() {
         if_tsan_pre_signal(this);
+
         uintptr_t val;
         atomic_load_relaxed(&state, &val);
         if (val == 0) {
@@ -981,6 +847,7 @@ public:
     }
 
     ALWAYS_INLINE void wait(fast_mutex *mutex) {
+        // Go to sleep until signaled
         wait_parking_control control(&state, mutex);
         uintptr_t result = control.park((uintptr_t)this);
         if (result != (uintptr_t)mutex) {
@@ -1043,7 +910,7 @@ struct halide_mutex_array {
     struct halide_mutex *array;
 };
 
-WEAK halide_mutex_array *halide_mutex_array_create(int sz) {
+WEAK halide_mutex_array *halide_mutex_array_create(uint64_t sz) {
     // TODO: If sz is huge, we should probably hash it down to something smaller
     // in the accessors below. Check for deadlocks before doing so.
     halide_mutex_array *array = (halide_mutex_array *)halide_malloc(
@@ -1071,11 +938,11 @@ WEAK void halide_mutex_array_destroy(void *user_context, void *array) {
 
 WEAK int halide_mutex_array_lock(struct halide_mutex_array *array, int entry) {
     halide_mutex_lock(&array->array[entry]);
-    return 0;
+    return halide_error_code_success;
 }
 
 WEAK int halide_mutex_array_unlock(struct halide_mutex_array *array, int entry) {
     halide_mutex_unlock(&array->array[entry]);
-    return 0;
+    return halide_error_code_success;
 }
 }

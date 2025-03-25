@@ -41,7 +41,10 @@ std::ostream &operator<<(std::ostream &stream, const DeviceAPI &);
 std::ostream &operator<<(std::ostream &stream, const MemoryType &);
 
 /** Emit a halide tail strategy in human-readable form */
-std::ostream &operator<<(std::ostream &stream, const TailStrategy &t);
+std::ostream &operator<<(std::ostream &stream, const TailStrategy &);
+
+/** Emit a halide loop partitioning policy in human-readable form */
+std::ostream &operator<<(std::ostream &stream, const Partition &);
 
 /** Emit a halide LoopLevel in human-readable form */
 std::ostream &operator<<(std::ostream &stream, const LoopLevel &);
@@ -55,6 +58,14 @@ namespace Internal {
 struct AssociativePattern;
 struct AssociativeOp;
 class Closure;
+struct Interval;
+struct ConstantInterval;
+struct ModulusRemainder;
+enum class IRNodeType;
+
+/** Emit a halide node type on an output stream (such as std::cout) in
+ * human-readable form */
+std::ostream &operator<<(std::ostream &stream, IRNodeType);
 
 /** Emit a halide associative pattern on an output stream (such as std::cout)
  * in a human-readable form */
@@ -87,8 +98,17 @@ std::ostream &operator<<(std::ostream &stream, const LinkageType &);
 /** Emit a halide dimension type in human-readable format */
 std::ostream &operator<<(std::ostream &stream, const DimType &);
 
-/** Emit a Closure in human-readable format */
+/** Emit a Closure in human-readable form */
 std::ostream &operator<<(std::ostream &out, const Closure &c);
+
+/** Emit an Interval in human-readable form */
+std::ostream &operator<<(std::ostream &out, const Interval &c);
+
+/** Emit a ConstantInterval in human-readable form */
+std::ostream &operator<<(std::ostream &out, const ConstantInterval &c);
+
+/** Emit a ModulusRemainder in human-readable form */
+std::ostream &operator<<(std::ostream &out, const ModulusRemainder &c);
 
 struct Indentation {
     int indent;
@@ -114,6 +134,9 @@ public:
     /** emit a statement on the output stream */
     void print(const Stmt &);
 
+    /** emit a statement summary on the output stream */
+    void print_summary(const Stmt &);
+
     /** emit a comma delimited list of exprs, without any leading or
      * trailing punctuation. */
     void print_list(const std::vector<Expr> &exprs);
@@ -137,6 +160,10 @@ protected:
      * surrounding set of parens. */
     bool implicit_parens = false;
 
+    /** Print only a summary of a statement, with sub-statements replaced by
+     * ellipses (...). */
+    bool is_summary = false;
+
     /** Either emits "(" or "", depending on the value of implicit_parens */
     void open();
 
@@ -150,11 +177,15 @@ protected:
     /** A helper for printing a chain of lets with line breaks */
     void print_lets(const Let *let);
 
+    /** A helper for printing a braced statement */
+    void print_braced_stmt(const Stmt &, int extra_indent = 2);
+
     void visit(const IntImm *) override;
     void visit(const UIntImm *) override;
     void visit(const FloatImm *) override;
     void visit(const StringImm *) override;
     void visit(const Cast *) override;
+    void visit(const Reinterpret *) override;
     void visit(const Variable *) override;
     void visit(const Add *) override;
     void visit(const Sub *) override;
@@ -196,7 +227,15 @@ protected:
     void visit(const VectorReduce *) override;
     void visit(const Prefetch *) override;
     void visit(const Atomic *) override;
+    void visit(const HoistedStorage *) override;
 };
+
+/** Debugging helpers for LLDB */
+/// @{
+std::string lldb_string(const Expr &);
+std::string lldb_string(const Internal::BaseExprNode *);
+std::string lldb_string(const Stmt &);
+/// @}
 
 }  // namespace Internal
 }  // namespace Halide

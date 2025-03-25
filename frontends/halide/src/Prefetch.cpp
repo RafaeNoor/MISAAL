@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <map>
 #include <string>
 #include <utility>
@@ -87,10 +86,9 @@ private:
     using IRMutator::visit;
 
     Box get_buffer_bounds(const string &name, int dims) {
-        if (buffer_bounds.contains(name)) {
-            const Box &b = buffer_bounds.ref(name);
-            internal_assert((int)b.size() == dims);
-            return b;
+        if (const Box *b = buffer_bounds.find(name)) {
+            internal_assert((int)b->size() == dims);
+            return *b;
         }
 
         // It is an external buffer.
@@ -156,7 +154,7 @@ private:
             Region new_bounds;
             for (size_t i = 0; i < prefetch_box.size(); i++) {
                 Expr extent = prefetch_box[i].max - prefetch_box[i].min + 1;
-                new_bounds.push_back(Range(simplify(prefetch_box[i].min), simplify(extent)));
+                new_bounds.emplace_back(simplify(prefetch_box[i].min), simplify(extent));
             }
             Expr condition = op->condition;
             if (prefetch_box.maybe_unused()) {
@@ -220,8 +218,7 @@ private:
             // If there are multiple prefetches of the same Func or ImageParam,
             // use the most recent one
             set<string> seen;
-            for (int i = prefetch_list.size() - 1; i >= 0; --i) {
-                const PrefetchDirective &p = prefetch_list[i];
+            for (const PrefetchDirective &p : reverse_view(prefetch_list)) {
                 if (!ends_with(op->name, "." + p.at) || (seen.find(p.name) != seen.end())) {
                     continue;
                 }
@@ -233,9 +230,9 @@ private:
                 // Note that it is not good enough to just prepend use 'prefix + from', as there may be splits involved, e.g.,
                 // prefix = g.s0, from = xo, but the var we seek is actually g.s0.x.xo (because 'g' was split at x).
                 string from_var;
-                for (int j = (int)loop_nest.size() - 1; j >= 0; --j) {
-                    if (starts_with(loop_nest[j], prefix) && ends_with(loop_nest[j], "." + p.from)) {
-                        from_var = loop_nest[j];
+                for (const auto &var : reverse_view(loop_nest)) {
+                    if (starts_with(var, prefix) && ends_with(var, "." + p.from)) {
+                        from_var = var;
                         debug(5) << "Prefetch from " << p.from << " -> from_var " << from_var << "\n";
                         break;
                     }
@@ -249,7 +246,7 @@ private:
 
         Stmt stmt;
         if (!body.same_as(op->body)) {
-            stmt = For::make(op->name, op->min, op->extent, op->for_type, op->device_api, std::move(body));
+            stmt = For::make(op->name, op->min, op->extent, op->for_type, op->partition_policy, op->device_api, std::move(body));
         } else {
             stmt = op;
         }
@@ -304,7 +301,7 @@ class ReducePrefetchDimension : public IRMutator {
             stmt = Evaluate::make(Call::make(prefetch->type, Call::prefetch, args, Call::Intrinsic));
             for (size_t i = 0; i < index_names.size(); ++i) {
                 stmt = For::make(index_names[i], 0, prefetch->args[(i + max_dim) * 2 + 2],
-                                 ForType::Serial, DeviceAPI::None, stmt);
+                                 ForType::Serial, Partition::Auto, DeviceAPI::None, stmt);
             }
             debug(5) << "\nReduce prefetch to " << max_dim << " dim:\n"
                      << "Before:\n"
@@ -375,7 +372,7 @@ class SplitPrefetch : public IRMutator {
             stmt = Evaluate::make(Call::make(prefetch->type, Call::prefetch, args, Call::Intrinsic));
             for (size_t i = 0; i < index_names.size(); ++i) {
                 stmt = For::make(index_names[i], 0, extents[i],
-                                 ForType::Serial, DeviceAPI::None, stmt);
+                                 ForType::Serial, Partition::Auto, DeviceAPI::None, stmt);
             }
             debug(5) << "\nSplit prefetch to max of " << max_byte_size << " bytes:\n"
                      << "Before:\n"

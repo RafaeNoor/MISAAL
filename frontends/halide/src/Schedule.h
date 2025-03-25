@@ -13,6 +13,7 @@
 #include "DeviceAPI.h"
 #include "Expr.h"
 #include "FunctionPtr.h"
+#include "LoopPartitioningDirective.h"
 #include "Parameter.h"
 #include "PrefetchDirective.h"
 
@@ -99,6 +100,32 @@ enum class TailStrategy {
      * instead of a multiple of the split factor as with RoundUp. */
     ShiftInwards,
 
+    /** Equivalent to ShiftInwards, but protects values that would be
+     * re-evaluated by loading the memory location that would be stored to,
+     * modifying only the elements not contained within the overlap, and then
+     * storing the blended result.
+     *
+     * This tail strategy is useful when you want to use ShiftInwards to
+     * vectorize without a scalar tail, but are scheduling a stage where that
+     * isn't legal (e.g. an update definition).
+     *
+     * Because this is a read - modify - write, this tail strategy cannot be
+     * used on any dimension the stage is parallelized over as it would cause a
+     * race condition.
+     */
+    ShiftInwardsAndBlend,
+
+    /** Equivalent to RoundUp, but protected values that would be written beyond
+     * the end by loading the memory location that would be stored to,
+     * modifying only the elements within the region being computed, and then
+     * storing the blended result.
+     *
+     * This tail strategy is useful when vectorizing an update to some sub-region
+     * of a larger Func. As with ShiftInwardsAndBlend, it can't be combined with
+     * parallelism.
+     */
+    RoundUpAndBlend,
+
     /** For pure definitions use ShiftInwards. For pure vars in
      * update definitions use RoundUp. For RVars in update
      * definitions use GuardWithIf. */
@@ -179,8 +206,6 @@ class LoopLevel {
     explicit LoopLevel(Internal::IntrusivePtr<Internal::LoopLevelContents> c)
         : contents(std::move(c)) {
     }
-    LoopLevel(const std::string &func_name, const std::string &var_name,
-              bool is_rvar, int stage_index, bool locked = false);
 
 public:
     /** Return the index of the function stage associated with this loop level.
@@ -196,6 +221,10 @@ public:
     /** Construct an undefined LoopLevel. Calling any method on an undefined
      * LoopLevel (other than set()) will assert. */
     LoopLevel();
+
+    /** For deserialization only. */
+    LoopLevel(const std::string &func_name, const std::string &var_name,
+              bool is_rvar, int stage_index, bool locked = false);
 
     /** Construct a special LoopLevel value that implies
      * that a function should be inlined away. */
@@ -232,6 +261,21 @@ public:
     // Test if a loop level is 'root', which describes the site
     // outside of all for loops.
     bool is_root() const;
+
+    // For serialization only. Do not use in other cases.
+    int get_stage_index() const;
+
+    // For serialization only. Do not use in other cases.
+    std::string func_name() const;
+
+    // For serialization only. Do not use in other cases.
+    std::string var_name() const;
+
+    // For serialization only. Do not use in other cases.
+    bool is_rvar() const;
+
+    // For serialization only. Do not use in other cases.
+    bool locked() const;
 
     // Return a string of the form func.var -- note that this is safe
     // to call for root or inline LoopLevels, but asserts if !defined().
@@ -282,8 +326,8 @@ struct Split {
     std::string old_var, outer, inner;
     Expr factor;
     bool exact;  // Is it required that the factor divides the extent
-        // of the old var. True for splits of RVars. Forces
-        // tail strategy to be GuardWithIf.
+                 // of the old var. True for splits of RVars. Forces
+                 // tail strategy to be GuardWithIf.
     TailStrategy tail;
 
     enum SplitType { SplitVar = 0,
@@ -304,19 +348,6 @@ struct Split {
     // If split_type is Fuse, then this does the opposite of a
     // split, it joins the outer and inner into the old_var.
     SplitType split_type;
-
-    bool is_rename() const {
-        return split_type == RenameVar;
-    }
-    bool is_split() const {
-        return split_type == SplitVar;
-    }
-    bool is_fuse() const {
-        return split_type == FuseVars;
-    }
-    bool is_purify() const {
-        return split_type == PurifyRVar;
-    }
 };
 
 /** Each Dim below has a dim_type, which tells you what
@@ -423,6 +454,9 @@ struct Dim {
     /** The DimType tells us what transformations are legal on this
      * loop (see the DimType enum above). */
     DimType dim_type;
+
+    /** The strategy for loop partitioning. */
+    Partition partition_policy;
 
     /** Can this loop be evaluated in any order (including in
      * parallel)? Equivalently, are there no data hazards between
@@ -577,6 +611,9 @@ public:
     bool &async();
     bool async() const;
 
+    Expr &ring_buffer();
+    Expr &ring_buffer() const;
+
     /** The list and order of dimensions used to store this
      * function. The first dimension in the vector corresponds to the
      * innermost dimension for storage (i.e. which dimension is
@@ -627,8 +664,10 @@ public:
     // @{
     const LoopLevel &store_level() const;
     const LoopLevel &compute_level() const;
+    const LoopLevel &hoist_storage_level() const;
     LoopLevel &store_level();
     LoopLevel &compute_level();
+    LoopLevel &hoist_storage_level();
     // @}
 
     /** Pass an IRVisitor through to all Exprs referenced in the
@@ -652,6 +691,10 @@ public:
     }
     StageSchedule(const StageSchedule &other) = default;
     StageSchedule();
+    StageSchedule(const std::vector<ReductionVariable> &rvars, const std::vector<Split> &splits,
+                  const std::vector<Dim> &dims, const std::vector<PrefetchDirective> &prefetches,
+                  const FuseLoopLevel &fuse_level, const std::vector<FusedPair> &fused_pairs,
+                  bool touched, bool allow_race_conditions, bool atomic, bool override_atomic_associativity_test);
 
     /** Return a copy of this StageSchedule. */
     StageSchedule get_copy() const;

@@ -86,7 +86,6 @@ bool test(int w, bool div, bool round_to_zero) {
         h.vectorize(x);
     }
     Target t = get_jit_target_from_environment();
-    t.set_feature(Target::DisableLLVMLoopOpt);
     f.compile_jit(t);
     g.compile_jit(t);
     h.compile_jit(t);
@@ -167,7 +166,7 @@ int main(int argc, char **argv) {
     }
 
     if (!success) {
-        return -1;
+        return 1;
     }
 
     printf("Success!\n");

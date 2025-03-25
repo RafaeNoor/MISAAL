@@ -7,7 +7,6 @@
 #include "Util.h"
 #include "Debug.h"
 #include "Error.h"
-#include "Introspection.h"
 #include <atomic>
 #include <chrono>
 #include <fstream>
@@ -273,22 +272,6 @@ string replace_all(const string &str, const string &find, const string &replace)
     return result;
 }
 
-string make_entity_name(void *stack_ptr, const string &type, char prefix) {
-    string name = Introspection::get_variable_name(stack_ptr, type);
-
-    if (name.empty()) {
-        return unique_name(prefix);
-    } else {
-        // Halide names may not contain '.'
-        for (char &c : name) {
-            if (c == '.') {
-                c = ':';
-            }
-        }
-        return unique_name(name);
-    }
-}
-
 std::vector<std::string> split_string(const std::string &source, const std::string &delim) {
     std::vector<std::string> elements;
     size_t start = 0;
@@ -313,7 +296,7 @@ std::string extract_namespaces(const std::string &name, std::vector<std::string>
     return result;
 }
 
-std::string extract_namespaces(const std::string &name) {
+std::string strip_namespaces(const std::string &name) {
     std::vector<std::string> unused;
     return extract_namespaces(name, unused);
 }
@@ -522,11 +505,53 @@ bool add_would_overflow(int bits, int64_t a, int64_t b) {
             (b < 0 && a < min_val - b));   // (a + b) < min_val, rewritten to avoid overflow
 }
 
+bool add_with_overflow(int bits, int64_t a, int64_t b, int64_t *result) {
+#ifndef _MSC_VER
+    if (bits == 64) {
+        static_assert(sizeof(long long) == sizeof(int64_t));
+        bool flag = __builtin_saddll_overflow(a, b, (long long *)result);
+        if (flag) {
+            // Overflowed 64 bits
+            *result = 0;
+        }
+        return !flag;
+    }
+#endif
+    if (add_would_overflow(bits, a, b)) {
+        *result = 0;
+        return false;
+    } else {
+        *result = a + b;
+        return true;
+    }
+}
+
 bool sub_would_overflow(int bits, int64_t a, int64_t b) {
     int64_t max_val = 0x7fffffffffffffffLL >> (64 - bits);
     int64_t min_val = -max_val - 1;
     return ((b < 0 && a > max_val + b) ||  // (a - b) > max_val, rewritten to avoid overflow
             (b > 0 && a < min_val + b));   // (a - b) < min_val, rewritten to avoid overflow
+}
+
+bool sub_with_overflow(int bits, int64_t a, int64_t b, int64_t *result) {
+#ifndef _MSC_VER
+    if (bits == 64) {
+        static_assert(sizeof(long long) == sizeof(int64_t));
+        bool flag = __builtin_ssubll_overflow(a, b, (long long *)result);
+        if (flag) {
+            // Overflowed 64 bits
+            *result = 0;
+        }
+        return !flag;
+    }
+#endif
+    if (sub_would_overflow(bits, a, b)) {
+        *result = 0;
+        return false;
+    } else {
+        *result = a - b;
+        return true;
+    }
 }
 
 bool mul_would_overflow(int bits, int64_t a, int64_t b) {
@@ -548,13 +573,38 @@ bool mul_would_overflow(int bits, int64_t a, int64_t b) {
     }
 }
 
+bool mul_with_overflow(int bits, int64_t a, int64_t b, int64_t *result) {
+#ifndef _MSC_VER
+    if (bits == 64) {
+        static_assert(sizeof(long long) == sizeof(int64_t));
+        bool flag = __builtin_smulll_overflow(a, b, (long long *)result);
+        if (flag) {
+            // Overflowed 64 bits
+            *result = 0;
+        }
+        return !flag;
+    }
+#endif
+    if (mul_would_overflow(bits, a, b)) {
+        *result = 0;
+        return false;
+    } else {
+        *result = a * b;
+        return true;
+    }
+}
+
 struct TickStackEntry {
     std::chrono::time_point<std::chrono::high_resolution_clock> time;
     string file;
     int line;
 };
 
-static vector<TickStackEntry> tick_stack;
+namespace {
+
+thread_local vector<TickStackEntry> tick_stack;
+
+}  // namespace
 
 void halide_tic_impl(const char *file, int line) {
     string f = file;
@@ -661,6 +711,19 @@ size_t get_compiler_stack_size() {
 
 namespace Internal {
 
+#if defined(HALIDE_INTERNAL_USING_ASAN) || defined(__ANDROID__)
+// If we are compiling under ASAN,  we will get a zillion warnings about
+// ASAN not supporting makecontext/swapcontext and the possibility of
+// false positives.
+//
+// If we are building for Android, well, it apparently doesn't provide
+// makecontext() / swapcontext(), despite being posixy
+#define MAKECONTEXT_OK 0
+#else
+#define MAKECONTEXT_OK 1
+#endif
+
+#if MAKECONTEXT_OK
 namespace {
 // We can't reliably pass arguments through makecontext, because
 // the calling convention involves an invalid function pointer
@@ -668,6 +731,7 @@ namespace {
 // platforms, so we use a thread local to pass arguments.
 thread_local void *run_with_large_stack_arg = nullptr;
 }  // namespace
+#endif
 
 void run_with_large_stack(const std::function<void()> &action) {
     if (stack_size.size == 0) {
@@ -677,7 +741,6 @@ void run_with_large_stack(const std::function<void()> &action) {
     }
 
 #if _WIN32
-
     // Only exists for its address, which is used to compute remaining stack space.
     ULONG_PTR approx_stack_pos;
 
@@ -718,6 +781,11 @@ void run_with_large_stack(const std::function<void()> &action) {
     }
 #else
     // On posixy systems we have makecontext / swapcontext
+
+#if !MAKECONTEXT_OK
+    action();
+    return;
+#else
 
 #ifdef HALIDE_WITH_EXCEPTIONS
     struct Args {
@@ -783,13 +851,22 @@ void run_with_large_stack(const std::function<void()> &action) {
     }
 #endif
 
+#endif  // not ADDRESS_SANITIZER
+
 #endif
 }
 
 // Portable bit-counting methods
 int popcount64(uint64_t x) {
 #ifdef _MSC_VER
-#if defined(_WIN64)
+#if defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64_EC)
+    int popcnt = 0;
+    while (x) {
+        x &= x - 1;
+        popcnt++;
+    }
+    return popcnt;
+#elif defined(_WIN64)
     return __popcnt64(x);
 #else
     return __popcnt((uint32_t)(x >> 32)) + __popcnt((uint32_t)(x & 0xffffffff));

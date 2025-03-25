@@ -10,6 +10,8 @@
 #include "HalideRuntimeOpenCL.h"
 #elif defined(TEST_METAL)
 #include "HalideRuntimeMetal.h"
+#elif defined(TEST_VULKAN)
+#include "HalideRuntimeVulkan.h"
 #endif
 
 #include "gpu_object_lifetime.h"
@@ -34,7 +36,12 @@ int main(int argc, char **argv) {
     printf("TEST_OPENCL enabled for gpu_object_lifetime testing...\n");
 #elif defined(TEST_METAL)
     printf("TEST_METAL enabled for gpu_object_lifetime testing...\n");
+#elif defined(TEST_VULKAN)
+    printf("TEST_VULKAN enabled for gpu_object_lifetime testing...\n");
 #else
+    // TODO: we can't support WebGPU here (yet) because our WebGPU runtime doesn't
+    // (yet) support halide_webgpu_wrap_native(); when it does, we should be able
+    // to add it here.
     printf("[SKIP] No GPU features enabled for gpu_object_lifetime testing!\n");
     return 0;
 #endif
@@ -56,7 +63,7 @@ int main(int argc, char **argv) {
             for (int x = 0; x < output.width(); x++) {
                 if (output(x) != x) {
                     printf("Error! (explicit copy back %d): %d != %d\n", wrap_memory, output(x), x);
-                    return -1;
+                    return 1;
                 }
             }
         }
@@ -73,7 +80,7 @@ int main(int argc, char **argv) {
             for (int x = 0; x < output.width(); x++) {
                 if (output(x) != x) {
                     printf("Error! (explicit copy back, no device free %d): %d != %d\n", wrap_memory, output(x), x);
-                    return -1;
+                    return 1;
                 }
             }
         }
@@ -142,7 +149,7 @@ int main(int argc, char **argv) {
                 for (int x = 0; x < output.width(); x++) {
                     if (output(x) != wrap_test(x)) {
                         printf("Error! (wrap native test %d): %d != %d\n", i, output(x), wrap_test(x));
-                        return -1;
+                        return 1;
                     }
                 }
                 if (i == 1) {
@@ -166,7 +173,7 @@ int main(int argc, char **argv) {
             int result = halide_device_free(nullptr, &raw_buf);
             if (result != 0) {
                 printf("Error! halide_device_free() returned: %d\n", result);
-                return -1;
+                return 1;
             }
         }
 
@@ -196,7 +203,7 @@ int main(int argc, char **argv) {
                 for (int x = 0; x < output.width(); x++) {
                     if (output(x) != output2(x)) {
                         printf("Error! (device and host allocation test): %d != %d\n", output(x), output2(x));
-                        return -1;
+                        return 1;
                     }
                 }
             }
@@ -208,12 +215,15 @@ int main(int argc, char **argv) {
         halide_device_release(nullptr, halide_opencl_device_interface());
 #elif defined(TEST_METAL)
         halide_device_release(nullptr, halide_metal_device_interface());
+#elif defined(TEST_VULKAN)
+        halide_device_release(nullptr, halide_vulkan_device_interface());
 #endif
     }
 
     int ret = tracker.validate_gpu_object_lifetime(false /* allow_globals */, true /* allow_none */, 2 /* max_globals */);
     if (ret != 0) {
-        return ret;
+        fprintf(stderr, "validate_gpu_object_lifetime() failed\n");
+        return 1;
     }
 
     printf("Success!\n");

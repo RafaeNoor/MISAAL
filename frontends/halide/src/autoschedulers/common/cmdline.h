@@ -189,7 +189,7 @@ inline std::string readable_typename<int>() {
 #ifdef HALIDE_WITH_EXCEPTIONS
 class cmdline_error : public std::exception {
 public:
-    cmdline_error(const std::string &msg)
+    explicit cmdline_error(const std::string &msg)
         : msg(msg) {
     }
     ~cmdline_error() throw() override = default;
@@ -484,12 +484,12 @@ public:
             return false;
         }
 
-        if (buf.length() > 0) {
+        if (!buf.empty()) {
             args.push_back(buf);
         }
 
         for (auto &arg : args) {
-            std::cout << "\"" << arg << "\"" << std::endl;
+            std::cout << "\"" << arg << "\"\n";
         }
 
         return parse(args);
@@ -520,7 +520,7 @@ public:
 
         std::map<char, std::string> lookup;
         for (auto &option : options) {
-            if (option.first.length() == 0) {
+            if (option.first.empty()) {
                 continue;
             }
             char initial = option.second->short_name();
@@ -635,7 +635,7 @@ public:
     std::string error_full() const {
         std::ostringstream oss;
         for (const auto &error : errors) {
-            oss << error << std::endl;
+            oss << error << "\n";
         }
         return oss.str();
     }
@@ -649,8 +649,8 @@ public:
             }
         }
 
-        oss << "[options] ... " << ftr << std::endl;
-        oss << "options:" << std::endl;
+        oss << "[options] ... " << ftr << "\n";
+        oss << "options:\n";
 
         size_t max_width = 0;
         for (const auto &o : ordered) {
@@ -667,7 +667,7 @@ public:
             for (size_t j = o->name().length(); j < max_width + 4; j++) {
                 oss << ' ';
             }
-            oss << o->description() << std::endl;
+            oss << o->description() << "\n";
         }
         return oss.str();
     }
@@ -680,7 +680,7 @@ private:
         }
 
         if (!ok) {
-            std::cerr << error() << std::endl
+            std::cerr << error() << "\n"
                       << usage();
             exit(1);
         }
@@ -730,7 +730,7 @@ private:
         option_without_value(const std::string &name,
                              char short_name,
                              const std::string &desc)
-            : nam(name), snam(short_name), desc(desc), has(false) {
+            : nam(name), snam(short_name), desc(desc) {
         }
         ~option_without_value() override = default;
 
@@ -779,7 +779,7 @@ private:
         std::string nam;
         char snam;
         std::string desc;
-        bool has;
+        bool has = false;
     };
 
     template<class T>
@@ -790,7 +790,7 @@ private:
                           bool need,
                           const T &def,
                           const std::string &desc)
-            : nam(name), snam(short_name), need(need), has(false), def(def), actual(def) {
+            : nam(name), snam(short_name), need(need), def(def), actual(def) {
             this->desc = full_description(desc);
         }
         ~option_with_value() override = default;
@@ -813,7 +813,7 @@ private:
                 actual = read(value);
                 has = true;
             } catch (const std::exception &e) {
-                std::cout << "Exception was caught: " << e.what() << std::endl;
+                std::cout << "Exception was caught: " << e.what() << "\n";
                 return false;
             }
             return true;
@@ -868,7 +868,7 @@ private:
         bool need;
         std::string desc;
 
-        bool has;
+        bool has = false;
         T def;
         T actual;
     };

@@ -4,12 +4,6 @@
 
 using namespace Halide;
 
-#ifdef _WIN32
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
-
 enum class Backend {
     CPU,
     CPUVectorize,
@@ -1008,7 +1002,7 @@ void test_all(const Backend &backend) {
     }
 }
 
-extern "C" DLLEXPORT int extern_func(int x) {
+extern "C" HALIDE_EXPORT_SYMBOL int extern_func(int x) {
     return x + 1;
 }
 HalideExtern_1(int, extern_func, int);
@@ -1060,7 +1054,7 @@ void test_extern_func(const Backend &backend) {
     }
 }
 
-extern "C" DLLEXPORT int expensive(int x) {
+extern "C" HALIDE_EXPORT_SYMBOL int expensive(int x) {
     float f = 3.0f;
     for (int i = 0; i < (1 << 10); i++) {
         f = sqrtf(sinf(cosf(f)));
@@ -1190,21 +1184,22 @@ void test_async_tuple(const Backend &backend) {
 }
 
 int main(int argc, char **argv) {
-    if (get_jit_target_from_environment().arch == Target::WebAssembly) {
+    const Target t = get_jit_target_from_environment();
+    if (t.arch == Target::WebAssembly) {
         printf("[SKIP] Skipping test for WebAssembly as it does not support atomics yet.\n");
         return 0;
     }
 
+    if (t.os == Target::Windows && t.has_feature(Target::CUDA)) {
+        printf("[SKIP] Skipping test for Windows + CUDA because of unexplained sporadic failures (https://github.com/halide/Halide/issues/7423).\n");
+        return 0;
+    }
+
     Target target = get_jit_target_from_environment();
-// Most of the schedules used in this test are terrible for large
-// thread count machines, due to massive amounts of
-// contention. We'll just set the thread count to 4. Unfortunately
-// there's no JIT api for this yet.
-#ifdef _WIN32
-    _putenv_s("HL_NUM_THREADS", "4");
-#else
-    setenv("HL_NUM_THREADS", "4", 1);
-#endif
+    // Most of the schedules used in this test are terrible for large
+    // thread count machines, due to massive amounts of
+    // contention. We'll just set the thread count to 4.
+    Halide::Internal::JITSharedRuntime::set_num_threads(4);
     test_all<uint8_t>(Backend::CPU);
     test_all<uint8_t>(Backend::CPUVectorize);
     test_all<int8_t>(Backend::CPU);

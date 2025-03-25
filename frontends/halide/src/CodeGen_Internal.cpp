@@ -6,7 +6,6 @@
 #include "IntegerDivisionTable.h"
 #include "LLVM_Headers.h"
 #include "Simplify.h"
-#include "Simplify_Internal.h"
 #include "runtime/constants.h"
 
 namespace Halide {
@@ -16,55 +15,12 @@ using std::string;
 
 using namespace llvm;
 
-llvm::Type *llvm_type_of(LLVMContext *c, Halide::Type t) {
-    if (t.lanes() == 1) {
-        if (t.is_float() && !t.is_bfloat()) {
-            switch (t.bits()) {
-            case 16:
-                return llvm::Type::getHalfTy(*c);
-            case 32:
-                return llvm::Type::getFloatTy(*c);
-            case 64:
-                return llvm::Type::getDoubleTy(*c);
-            default:
-                internal_error << "There is no llvm type matching this floating-point bit width: " << t << "\n";
-                return nullptr;
-            }
-        } else if (t.is_handle()) {
-            return llvm::Type::getInt8PtrTy(*c);
-        } else {
-            return llvm::Type::getIntNTy(*c, t.bits());
-        }
-    } else {
-        llvm::Type *element_type = llvm_type_of(c, t.element_of());
-        return get_vector_type(element_type, t.lanes());
-    }
-}
-
-int get_vector_num_elements(llvm::Type *t) {
-    if (t->isVectorTy()) {
-        auto *vt = dyn_cast<llvm::FixedVectorType>(t);
-        internal_assert(vt) << "Called get_vector_num_elements on a scalable vector type\n";
-        return vt->getNumElements();
-    } else {
-        return 1;
-    }
-}
-
 llvm::Type *get_vector_element_type(llvm::Type *t) {
     if (t->isVectorTy()) {
         return dyn_cast<llvm::VectorType>(t)->getElementType();
     } else {
         return t;
     }
-}
-
-llvm::ElementCount element_count(int e) {
-    return llvm::ElementCount::getFixed(e);
-}
-
-llvm::Type *get_vector_type(llvm::Type *t, int n) {
-    return VectorType::get(t, element_count(n));
 }
 
 // Returns true if the given function name is one of the Halide runtime
@@ -84,6 +40,7 @@ bool function_takes_user_context(const std::string &name) {
         "halide_device_malloc",
         "halide_device_and_host_malloc",
         "halide_device_sync",
+        "halide_device_sync_global",
         "halide_do_par_for",
         "halide_do_loop_task",
         "halide_do_task",
@@ -94,8 +51,8 @@ bool function_takes_user_context(const std::string &name) {
         "halide_print",
         "halide_profiler_memory_allocate",
         "halide_profiler_memory_free",
-        "halide_profiler_pipeline_start",
-        "halide_profiler_pipeline_end",
+        "halide_profiler_instance_start",
+        "halide_profiler_instance_end",
         "halide_profiler_stack_peak_update",
         "halide_spawn_thread",
         "halide_device_release",
@@ -107,9 +64,10 @@ bool function_takes_user_context(const std::string &name) {
         "halide_memoization_cache_release",
         "halide_cuda_run",
         "halide_opencl_run",
-        "halide_openglcompute_run",
         "halide_metal_run",
         "halide_d3d12compute_run",
+        "halide_vulkan_run",
+        "halide_webgpu_run",
         "halide_msan_annotate_buffer_is_initialized_as_destructor",
         "halide_msan_annotate_buffer_is_initialized",
         "halide_msan_annotate_memory_is_initialized",
@@ -118,6 +76,7 @@ bool function_takes_user_context(const std::string &name) {
         "halide_hexagon_initialize_kernels",
         "halide_hexagon_run",
         "halide_hexagon_device_release",
+        "halide_hexagon_get_module_state",
         "halide_hexagon_power_hvx_on",
         "halide_hexagon_power_hvx_on_mode",
         "halide_hexagon_power_hvx_on_perf",
@@ -130,9 +89,10 @@ bool function_takes_user_context(const std::string &name) {
         "halide_vtcm_free",
         "halide_cuda_initialize_kernels",
         "halide_opencl_initialize_kernels",
-        "halide_openglcompute_initialize_kernels",
         "halide_metal_initialize_kernels",
         "halide_d3d12compute_initialize_kernels",
+        "halide_vulkan_initialize_kernels",
+        "halide_webgpu_initialize_kernels",
         "halide_get_gpu_device",
         "_halide_buffer_crop",
         "_halide_buffer_retire_crop_after_extern_stage",
@@ -156,25 +116,23 @@ bool can_allocation_fit_on_stack(int64_t size) {
 Expr lower_int_uint_div(const Expr &a, const Expr &b, bool round_to_zero) {
     // Detect if it's a small int division
     internal_assert(a.type() == b.type());
-    const int64_t *const_int_divisor = as_const_int(b);
-    const uint64_t *const_uint_divisor = as_const_uint(b);
+    auto const_int_divisor = as_const_int(b);
+    auto const_uint_divisor = as_const_uint(b);
 
     Type t = a.type();
     internal_assert(!t.is_float())
         << "lower_int_uint_div is not meant to handle floating-point case.\n";
 
-    int shift_amount;
-    if (is_const_power_of_two_integer(b, &shift_amount) &&
-        (t.is_int() || t.is_uint())) {
+    if (auto shift_amount = is_const_power_of_two_integer(b)) {
         if (round_to_zero) {
             Expr result = a;
             // Normally a right-shift isn't right for division rounding to
             // zero. It does the wrong thing for negative values. Add a fudge so
             // that a right-shift becomes correct.
             result += (result >> (t.bits() - 1)) & (b - 1);
-            return result >> shift_amount;
+            return result >> *shift_amount;
         } else {
-            return a >> make_const(UInt(a.type().bits()), shift_amount);
+            return a >> make_const(UInt(a.type().bits()), *shift_amount);
         }
     } else if (const_int_divisor &&
                t.is_int() &&
@@ -216,7 +174,12 @@ Expr lower_int_uint_div(const Expr &a, const Expr &b, bool round_to_zero) {
         Type num_as_uint_t = num.type().with_code(Type::UInt);
         Expr sign = cast(num_as_uint_t, num >> make_const(UInt(t.bits()), t.bits() - 1));
 
-        if (!round_to_zero) {
+        // If the numerator is negative, we want to either flip the bits (when
+        // rounding to negative infinity), or negate the numerator (when
+        // rounding to zero).
+        if (round_to_zero) {
+            num = abs(num);
+        } else {
             // Flip the numerator bits if the mask is high.
             num = cast(num_as_uint_t, num);
             num = num ^ sign;
@@ -224,15 +187,14 @@ Expr lower_int_uint_div(const Expr &a, const Expr &b, bool round_to_zero) {
 
         // Multiply and keep the high half of the
         // result, and then apply the shift.
+        internal_assert(num.type().can_represent(multiplier));
         Expr mult = make_const(num.type(), multiplier);
         num = mul_shift_right(num, mult, shift + num.type().bits());
 
+        // Maybe flip the bits back or negate again.
+        num = cast(a.type(), num ^ sign);
         if (round_to_zero) {
-            // Add one if the numerator was negative
             num -= sign;
-        } else {
-            // Maybe flip the bits back again.
-            num = cast(a.type(), num ^ sign);
         }
 
         return num;
@@ -298,15 +260,14 @@ Expr lower_int_uint_div(const Expr &a, const Expr &b, bool round_to_zero) {
 
 Expr lower_int_uint_mod(const Expr &a, const Expr &b) {
     // Detect if it's a small int modulus
-    const int64_t *const_int_divisor = as_const_int(b);
-    const uint64_t *const_uint_divisor = as_const_uint(b);
+    auto const_int_divisor = as_const_int(b);
+    auto const_uint_divisor = as_const_uint(b);
 
     Type t = a.type();
     internal_assert(!t.is_float())
         << "lower_int_uint_div is not meant to handle floating-point case.\n";
 
-    int bits;
-    if (is_const_power_of_two_integer(b, &bits)) {
+    if (is_const_power_of_two_integer(b)) {
         return a & simplify(b - 1);
     } else if (const_int_divisor &&
                t.is_int() &&
@@ -328,8 +289,9 @@ Expr lower_int_uint_mod(const Expr &a, const Expr &b) {
     }
 }
 
+namespace {
 std::pair<Expr, Expr> unsigned_long_div_mod_round_to_zero(Expr &num, const Expr &den,
-                                                          const uint64_t *upper_bound) {
+                                                          std::optional<uint64_t> upper_bound) {
     internal_assert(num.type() == den.type());
     internal_assert(num.type().is_uint());
     Type ty = num.type();
@@ -365,9 +327,10 @@ std::pair<Expr, Expr> unsigned_long_div_mod_round_to_zero(Expr &num, const Expr 
     }
     return {q, r};
 }
+}  // namespace
 
 std::pair<Expr, Expr> long_div_mod_round_to_zero(const Expr &num, const Expr &den,
-                                                 const uint64_t *max_abs) {
+                                                 std::optional<uint64_t> max_abs) {
     debug(1) << "Using long div: (num: " << num << "); (den: " << den << ")\n";
     internal_assert(num.type() == den.type());
     Expr abs_num = (num.type().is_int()) ? abs(num) : num;
@@ -510,8 +473,7 @@ Expr lower_euclidean_mod(Expr a, Expr b) {
 
 Expr lower_signed_shift_left(const Expr &a, const Expr &b) {
     internal_assert(b.type().is_int());
-    const int64_t *const_int_b = as_const_int(b);
-    if (const_int_b) {
+    if (auto const_int_b = as_const_int(b)) {
         Expr val;
         const uint64_t b_unsigned = std::abs(*const_int_b);
         if (*const_int_b >= 0) {
@@ -531,8 +493,7 @@ Expr lower_signed_shift_left(const Expr &a, const Expr &b) {
 
 Expr lower_signed_shift_right(const Expr &a, const Expr &b) {
     internal_assert(b.type().is_int());
-    const int64_t *const_int_b = as_const_int(b);
-    if (const_int_b) {
+    if (auto const_int_b = as_const_int(b)) {
         Expr val;
         const uint64_t b_unsigned = std::abs(*const_int_b);
         if (*const_int_b >= 0) {
@@ -554,6 +515,9 @@ Expr lower_mux(const Call *mux) {
     internal_assert(mux->args.size() >= 2);
     Expr equiv = mux->args.back();
     Expr index = mux->args[0];
+    if (const Broadcast *b = index.as<Broadcast>()) {
+        index = b->value;
+    }
     int num_vals = (int)mux->args.size() - 1;
     for (int i = num_vals - 1; i >= 0; i--) {
         equiv = select(index == make_const(index.type(), i), mux->args[i + 1], equiv);
@@ -561,47 +525,80 @@ Expr lower_mux(const Call *mux) {
     return equiv;
 }
 
-bool get_md_bool(llvm::Metadata *value, bool &result) {
+// An implementation of rounding to nearest integer with ties to even to use for
+// Halide::round. Written to avoid all use of c standard library functions so
+// that it's cleanly vectorizable and a safe fallback on all platforms.
+Expr lower_round_to_nearest_ties_to_even(const Expr &x) {
+    Type bits_type = x.type().with_code(halide_type_uint);
+    Type int_type = x.type().with_code(halide_type_int);
+
+    // Make one half with the same sign as x
+    Expr sign_bit = reinterpret(bits_type, x) & (cast(bits_type, 1) << (x.type().bits() - 1));
+    Expr one_half = reinterpret(bits_type, cast(x.type(), 0.5f)) | sign_bit;
+    Expr just_under_one_half = reinterpret(x.type(), one_half - 1);
+    one_half = reinterpret(x.type(), one_half);
+    // Do the same for the constant one.
+    Expr one = reinterpret(bits_type, cast(x.type(), 1)) | sign_bit;
+    // Round to nearest, with ties going towards zero
+    Expr ix = cast(int_type, x + just_under_one_half);
+    Expr a = cast(x.type(), ix);
+    // Get the residual
+    Expr diff = a - x;
+    // Make a mask of all ones if the result is odd
+    Expr odd = -cast(bits_type, ix & 1);
+    // Make a mask of all ones if the result was a tie
+    Expr tie = select(diff == one_half, cast(bits_type, -1), cast(bits_type, 0));
+    // If it was a tie, and the result is odd, we should have rounded in the
+    // other direction.
+    Expr correction = reinterpret(x.type(), odd & tie & one);
+    return common_subexpression_elimination(a - correction);
+}
+
+namespace {
+std::optional<int64_t> get_md_int(llvm::Metadata *value) {
     if (!value) {
-        return false;
+        return std::nullopt;
     }
     llvm::ConstantAsMetadata *cam = llvm::cast<llvm::ConstantAsMetadata>(value);
     if (!cam) {
-        return false;
+        return std::nullopt;
     }
     llvm::ConstantInt *c = llvm::cast<llvm::ConstantInt>(cam->getValue());
     if (!c) {
-        return false;
+        return std::nullopt;
     }
-    result = !c->isZero();
-    return true;
+    return c->getSExtValue();
 }
 
-bool get_md_string(llvm::Metadata *value, std::string &result) {
+std::optional<bool> get_md_bool(llvm::Metadata *value) {
+    if (auto r = get_md_int(value)) {
+        return *r != 0;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<std::string> get_md_string(llvm::Metadata *value) {
     if (!value) {
-        result = "";
-        return false;
+        return std::nullopt;
     }
     llvm::MDString *c = llvm::dyn_cast<llvm::MDString>(value);
     if (c) {
-        result = c->getString().str();
-        return true;
+        return c->getString().str();
     }
-    return false;
+    return std::nullopt;
 }
+}  // namespace
 
-void get_target_options(const llvm::Module &module, llvm::TargetOptions &options, std::string &mcpu, std::string &mattrs) {
-    bool use_soft_float_abi = false;
-    get_md_bool(module.getModuleFlag("halide_use_soft_float_abi"), use_soft_float_abi);
-    get_md_string(module.getModuleFlag("halide_mcpu"), mcpu);
-    get_md_string(module.getModuleFlag("halide_mattrs"), mattrs);
-    std::string mabi;
-    get_md_string(module.getModuleFlag("halide_mabi"), mabi);
-    bool use_pic = true;
-    get_md_bool(module.getModuleFlag("halide_use_pic"), use_pic);
+void get_target_options(const llvm::Module &module, llvm::TargetOptions &options) {
+    bool use_soft_float_abi =
+        get_md_bool(module.getModuleFlag("halide_use_soft_float_abi")).value_or(false);
+    std::string mabi =
+        get_md_string(module.getModuleFlag("halide_mabi")).value_or(std::string{});
 
-    bool per_instruction_fast_math_flags = false;
-    get_md_bool(module.getModuleFlag("halide_per_instruction_fast_math_flags"), per_instruction_fast_math_flags);
+    // FIXME: can this be migrated into `set_function_attributes_from_halide_target_options()`?
+    bool per_instruction_fast_math_flags =
+        get_md_bool(module.getModuleFlag("halide_per_instruction_fast_math_flags")).value_or(false);
 
     options = llvm::TargetOptions();
     options.AllowFPOpFusion = per_instruction_fast_math_flags ? llvm::FPOpFusion::Strict : llvm::FPOpFusion::Fast;
@@ -611,16 +608,15 @@ void get_target_options(const llvm::Module &module, llvm::TargetOptions &options
     options.HonorSignDependentRoundingFPMathOption = !per_instruction_fast_math_flags;
     options.NoZerosInBSS = false;
     options.GuaranteedTailCallOpt = false;
-#if LLVM_VERSION >= 130
-    // nothing
-#else
-    options.StackAlignmentOverride = 0;
-#endif
     options.FunctionSections = true;
     options.UseInitArray = true;
     options.FloatABIType =
         use_soft_float_abi ? llvm::FloatABI::Soft : llvm::FloatABI::Hard;
+#if LLVM_VERSION >= 190
+    options.MCOptions.X86RelaxRelocations = false;
+#else
     options.RelaxELFRelocations = false;
+#endif
     options.MCOptions.ABIName = mabi;
 }
 
@@ -629,24 +625,22 @@ void clone_target_options(const llvm::Module &from, llvm::Module &to) {
 
     llvm::LLVMContext &context = to.getContext();
 
-    bool use_soft_float_abi = false;
-    if (get_md_bool(from.getModuleFlag("halide_use_soft_float_abi"), use_soft_float_abi)) {
-        to.addModuleFlag(llvm::Module::Warning, "halide_use_soft_float_abi", use_soft_float_abi ? 1 : 0);
+    // Clone bool metadata
+    for (const char *s : {"halide_use_soft_float_abi",
+                          "halide_use_pic"}) {
+        if (auto md = get_md_bool(from.getModuleFlag(s))) {
+            to.addModuleFlag(llvm::Module::Warning, s, *md ? 1 : 0);
+        }
     }
 
-    std::string mcpu;
-    if (get_md_string(from.getModuleFlag("halide_mcpu"), mcpu)) {
-        to.addModuleFlag(llvm::Module::Warning, "halide_mcpu", llvm::MDString::get(context, mcpu));
-    }
+    // Clone string metadata
+    for (const char *s : {"halide_mcpu_target",
+                          "halide_mcpu_tune",
+                          "halide_mattrs"}) {
 
-    std::string mattrs;
-    if (get_md_string(from.getModuleFlag("halide_mattrs"), mattrs)) {
-        to.addModuleFlag(llvm::Module::Warning, "halide_mattrs", llvm::MDString::get(context, mattrs));
-    }
-
-    bool use_pic = true;
-    if (get_md_bool(from.getModuleFlag("halide_use_pic"), use_pic)) {
-        to.addModuleFlag(llvm::Module::Warning, "halide_use_pic", use_pic ? 1 : 0);
+        if (auto md = get_md_string(from.getModuleFlag(s))) {
+            to.addModuleFlag(llvm::Module::Warning, s, llvm::MDString::get(context, *md));
+        }
     }
 }
 
@@ -662,40 +656,78 @@ std::unique_ptr<llvm::TargetMachine> make_target_machine(const llvm::Module &mod
     internal_assert(llvm_target) << "Could not create LLVM target for " << triple.str() << "\n";
 
     llvm::TargetOptions options;
-    std::string mcpu = "";
-    std::string mattrs = "";
-    get_target_options(module, options, mcpu, mattrs);
+    get_target_options(module, options);
 
-    bool use_pic = true;
-    get_md_bool(module.getModuleFlag("halide_use_pic"), use_pic);
+    bool use_pic =
+        get_md_bool(module.getModuleFlag("halide_use_pic")).value_or(true);
 
-    bool use_large_code_model = false;
-    get_md_bool(module.getModuleFlag("halide_use_large_code_model"), use_large_code_model);
+    bool use_large_code_model =
+        get_md_bool(module.getModuleFlag("halide_use_large_code_model")).value_or(false);
+
+#if LLVM_VERSION >= 180
+    const auto opt_level = llvm::CodeGenOptLevel::Aggressive;
+#else
+    const auto opt_level = llvm::CodeGenOpt::Aggressive;
+#endif
+
+    // Get module mcpu_target and mattrs.
+    std::string mcpu_target =
+        get_md_string(module.getModuleFlag("halide_mcpu_target")).value_or(std::string{});
+    std::string mattrs =
+        get_md_string(module.getModuleFlag("halide_mattrs")).value_or(std::string{});
 
     auto *tm = llvm_target->createTargetMachine(module.getTargetTriple(),
-                                                mcpu, mattrs,
+                                                mcpu_target,
+                                                mattrs,
                                                 options,
                                                 use_pic ? llvm::Reloc::PIC_ : llvm::Reloc::Static,
                                                 use_large_code_model ? llvm::CodeModel::Large : llvm::CodeModel::Small,
-                                                llvm::CodeGenOpt::Aggressive);
+                                                opt_level);
     return std::unique_ptr<llvm::TargetMachine>(tm);
 }
 
-void set_function_attributes_for_target(llvm::Function *fn, const Target &t) {
+void set_function_attributes_from_halide_target_options(llvm::Function &fn) {
+    llvm::Module &module = *fn.getParent();
+
+    std::string mcpu_target =
+        get_md_string(module.getModuleFlag("halide_mcpu_target")).value_or(std::string{});
+    std::string mcpu_tune =
+        get_md_string(module.getModuleFlag("halide_mcpu_tune")).value_or(std::string{});
+    std::string mattrs =
+        get_md_string(module.getModuleFlag("halide_mattrs")).value_or(std::string{});
+    int64_t vscale_range =
+        get_md_int(module.getModuleFlag("halide_effective_vscale")).value_or(0);
+
+    fn.addFnAttr("target-cpu", mcpu_target);
+    fn.addFnAttr("tune-cpu", mcpu_tune);
+    fn.addFnAttr("target-features", mattrs);
+
+    // Halide-generated IR is not exception-safe.
+    // No exception should unwind out of Halide functions.
+    // No exception should be thrown within Halide functions.
+    // All functions called by the Halide function must not unwind.
+    fn.setDoesNotThrow();
+
+    // Side-effect-free loops are undefined.
+    // But asserts and external calls *might* abort.
+    fn.setMustProgress();
+
     // Turn off approximate reciprocals for division. It's too
     // inaccurate even for us.
-    fn->addFnAttr("reciprocal-estimates", "none");
+    fn.addFnAttr("reciprocal-estimates", "none");
+
+    // If a fixed vscale is asserted, add it as an attribute on the function.
+    if (vscale_range != 0) {
+        fn.addFnAttr(llvm::Attribute::getWithVScaleRangeArgs(
+            module.getContext(), vscale_range, vscale_range));
+    }
 }
 
 void embed_bitcode(llvm::Module *M, const string &halide_command) {
     // Save llvm.compiler.used and remote it.
     SmallVector<Constant *, 2> used_array;
-#if LLVM_VERSION >= 130
     SmallVector<GlobalValue *, 4> used_globals;
-#else
-    SmallPtrSet<GlobalValue *, 4> used_globals;
-#endif
-    llvm::Type *used_element_type = llvm::Type::getInt8Ty(M->getContext())->getPointerTo(0);
+    llvm::Type *used_element_type = PointerType::get(llvm::Type::getInt8Ty(M->getContext()), 0);
     GlobalVariable *used = collectUsedGlobalVariables(*M, used_globals, true);
     for (auto *GV : used_globals) {
         if (GV->getName() != "llvm.embedded.module" &&
@@ -763,6 +795,35 @@ void embed_bitcode(llvm::Module *M, const string &halide_command) {
             llvm::ConstantArray::get(ATy, used_array), "llvm.compiler.used");
         new_used->setSection("llvm.metadata");
     }
+}
+
+Expr lower_concat_bits(const Call *op) {
+    internal_assert(op->is_intrinsic(Call::concat_bits));
+    internal_assert(!op->args.empty());
+
+    Expr result = make_zero(op->type);
+    int shift = 0;
+    for (const Expr &e : op->args) {
+        result = result | (cast(result.type(), e) << shift);
+        shift += e.type().bits();
+    }
+    return result;
+}
+
+Expr lower_extract_bits(const Call *op) {
+    Expr e = op->args[0];
+    // Do a shift-and-cast as a uint, which will zero-fill any out-of-range
+    // bits for us.
+    if (!e.type().is_uint()) {
+        e = reinterpret(e.type().with_code(halide_type_uint), e);
+    }
+    e = e >> op->args[1];
+    e = cast(op->type.with_code(halide_type_uint), e);
+    if (op->type != e.type()) {
+        e = reinterpret(op->type, e);
+    }
+    e = simplify(e);
+    return e;
 }
 
 }  // namespace Internal

@@ -1,5 +1,6 @@
 #include "Halide.h"
 #include "check_call_graphs.h"
+#include "test_sharding.h"
 
 #include <cstdio>
 #include <map>
@@ -70,7 +71,7 @@ int my_trace(JITUserContext *user_context, const halide_trace_event_t *e) {
         if (iter != stores.end()) {
             const Bound &b = iter->second;
             if (!check_coordinates(b, e->coordinates, e->dimensions, e->type.lanes, "store", fname)) {
-                exit(-1);
+                exit(1);
             }
         }
         stores_total++;
@@ -80,7 +81,7 @@ int my_trace(JITUserContext *user_context, const halide_trace_event_t *e) {
         if (iter != loads.end()) {
             const Bound &b = iter->second;
             if (!check_coordinates(b, e->coordinates, e->dimensions, e->type.lanes, "load", fname)) {
-                exit(-1);
+                exit(1);
             }
         }
         loads_total++;
@@ -138,7 +139,7 @@ int split_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -193,7 +194,7 @@ int fuse_test() {
         return im_ref(x, y, z);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -277,7 +278,7 @@ int multiple_fuse_group_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -333,14 +334,14 @@ int multiple_outputs_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -415,7 +416,7 @@ int fuse_compute_at_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -472,7 +473,7 @@ int double_split_fuse_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -613,7 +614,7 @@ int rgb_yuv420_test() {
             too_many_memops = true;
         }
         if (too_many_memops) {
-            return -1;
+            return 1;
         }
     }
 
@@ -621,21 +622,21 @@ int rgb_yuv420_test() {
         return y_im_ref(x, y);
     };
     if (check_image(y_im, y_func)) {
-        return -1;
+        return 1;
     }
 
     auto u_func = [u_im_ref](int x, int y) {
         return u_im_ref(x, y);
     };
     if (check_image(u_im, u_func)) {
-        return -1;
+        return 1;
     }
 
     auto v_func = [v_im_ref](int x, int y) {
         return v_im_ref(x, y);
     };
     if (check_image(v_im, v_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -695,7 +696,7 @@ int vectorize_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -757,7 +758,7 @@ int some_are_skipped_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -801,7 +802,7 @@ int multiple_outputs_on_gpu_test() {
 
         g.compute_with(f, x, LoopAlignStrategy::AlignEnd);
 
-        Realization r(f_im, g_im);
+        Realization r({f_im, g_im});
         Pipeline({f, g}).realize(r);
         r[0].copy_to_host();
         r[1].copy_to_host();
@@ -811,14 +812,14 @@ int multiple_outputs_on_gpu_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -897,21 +898,21 @@ int mixed_tile_factor_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     auto h_func = [h_im_ref](int x, int y) {
         return h_im_ref(x, y);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -995,21 +996,21 @@ int multi_tile_mixed_tile_factor_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     auto h_func = [h_im_ref](int x, int y) {
         return h_im_ref(x, y);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1086,21 +1087,21 @@ int only_some_are_tiled_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     auto h_func = [h_im_ref](int x, int y) {
         return h_im_ref(x, y);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1158,7 +1159,7 @@ int with_specialization_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -1223,14 +1224,14 @@ int nested_compute_with_test() {
         return g1_im_ref(x, y);
     };
     if (check_image(g1_im, g1_func)) {
-        return -1;
+        return 1;
     }
 
     auto g2_func = [g2_im_ref](int x, int y) {
         return g2_im_ref(x, y);
     };
     if (check_image(g2_im, g2_func)) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -1294,14 +1295,14 @@ int update_stage_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1367,14 +1368,14 @@ int update_stage2_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1440,14 +1441,14 @@ int update_stage3_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1513,14 +1514,14 @@ int update_stage_pairwise_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1591,14 +1592,14 @@ int update_stage_pairwise_zigzag_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1678,21 +1679,21 @@ int update_stage_diagonal_test() {
         return f_im_ref(x, y);
     };
     if (check_image(f_im, f_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     auto h_func = [h_im_ref](int x, int y) {
         return h_im_ref(x, y);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1727,7 +1728,7 @@ int update_stage_rfactor_test() {
     const int reference = 9900;
     if (result(0) != reference) {
         printf("Wrong result: expected %d, got %d\n", reference, result(0));
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1819,7 +1820,7 @@ int vectorize_inlined_test() {
         }
 
         if (too_many_memops) {
-            return -1;
+            return 1;
         }
     }
 
@@ -1827,14 +1828,14 @@ int vectorize_inlined_test() {
         return h_im_ref(x, y, c);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1896,14 +1897,14 @@ int mismatching_splits_test() {
         return h_im_ref(x, y, z);
     };
     if (check_image(h_im, h_func)) {
-        return -1;
+        return 1;
     }
 
     auto g_func = [g_im_ref](int x, int y) {
         return g_im_ref(x, y);
     };
     if (check_image(g_im, g_func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -1980,7 +1981,7 @@ int different_arg_num_compute_at_test() {
             too_many_memops = true;
         }
         if (too_many_memops) {
-            return -1;
+            return 1;
         }
     }
 
@@ -1988,13 +1989,13 @@ int different_arg_num_compute_at_test() {
         return buffer_a_ref(x, y, c);
     };
     if (check_image(buffer_a, buffer_a_func)) {
-        return -1;
+        return 1;
     }
 
     for (int i = 0; i < buffer_b.width(); i++) {
         if (buffer_b(i) != buffer_b_ref(i)) {
             printf("Mismatch %d %d %d\n", i, buffer_b(i), buffer_b_ref(i));
-            return -1;
+            return 1;
         }
     }
 
@@ -2023,7 +2024,7 @@ int store_at_different_levels_test() {
             if (out(x, y) != correct) {
                 printf("out(%d, %d) = %d instead of %d\n",
                        x, y, out(x, y), correct);
-                return -1;
+                return 1;
             }
         }
     }
@@ -2095,7 +2096,7 @@ int rvar_bounds_test() {
         Stmt visit(const Allocate *op) override {
             if ((op->name == "input_c") && (op->constant_allocation_size() != 64)) {
                 printf("Expected allocation size for input_c is 64, but is %d instead\n", op->constant_allocation_size());
-                exit(-1);
+                exit(1);
             }
             return IRMutator::visit(op);
         }
@@ -2110,7 +2111,7 @@ int rvar_bounds_test() {
     Buffer<int16_t> result = total_sum.realize();
 
     if (result() != 8192) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -2187,171 +2188,162 @@ int two_compute_at_test() {
         if (o1(x) != val) {
             printf("o1(%d) = %d instead of %d\n",
                    x, o1(x), val);
-            return -1;
+            return 1;
         }
         if (o2(x) != 2 * val) {
             printf("o2(%d) = %d instead of %d\n",
                    x, o2(x), 2 * val);
-            return -1;
+            return 1;
         }
         if (o3(x) != x + 2) {
             printf("o2(%d) = %d instead of %d\n",
                    x, o3(x), x + 2);
-            return -1;
+            return 1;
         }
     }
+    return 0;
+}
+
+// Test for the issue described in https://github.com/halide/Halide/issues/8149.
+int child_var_dependent_bounds_test() {
+    Func f{"f"}, g{"g"};
+    Var x{"x"}, y{"y"};
+    RDom r(0, 10, "r");
+
+    Func f_inter{"f_inter"}, g_inter{"g_inter"};
+
+    f_inter(x, y) = x;
+    f_inter(x, y) += 1;
+    f(x) = x;
+    f(x) += f_inter(x, r);
+
+    g_inter(x, y) = x;
+    g_inter(x, y) += 1;
+    g(x) = x;
+    g(x) += g_inter(x, r);
+
+    f_inter.compute_at(f, r);
+    g_inter.compute_at(f, r);
+    g.update().compute_with(f.update(), r);
+    f.update().unscheduled();
+
+    Pipeline p({f, g});
+
+    p.compile_jit();
+    Buffer<int> f_buf(10), g_buf(10);
+
+    f_buf.set_min(2);
+    p.realize({f_buf, g_buf});
+    f_buf.set_min(0);
+
+    for (int i = 0; i < 10; i++) {
+        int correct_f = 10 + 11 * (i + 2);
+        int correct_g = 10 + 11 * i;
+        if (f_buf(i) != correct_f) {
+            printf("f(%d) = %d instead of %d\n", i, f_buf(i), correct_f);
+        }
+        if (g_buf(i) != correct_g) {
+            printf("g(%d) = %d instead of %d\n", i, g_buf(i), correct_f);
+        }
+    }
+
+    return 0;
+}
+
+int overlapping_updates_test() {
+    Func f{"f"}, g{"g"};
+    Var x{"x"};
+
+    f(x) = 0;
+    f(x) += x;
+    g(x) = 0;
+    g(x) += x;
+
+    g.update().compute_with(f.update(), x);
+    f.update().unscheduled();
+
+    Pipeline p({f, g});
+
+    p.compile_jit();
+    Buffer<int> f_buf(10), g_buf(10);
+
+    f_buf.set_min(2);
+    p.realize({f_buf, g_buf});
+    f_buf.set_min(0);
+
+    for (int i = 0; i < 10; i++) {
+        int correct_f = i + 2;
+        int correct_g = i;
+        if (f_buf(i) != correct_f) {
+            printf("f(%d) = %d instead of %d\n", i, f_buf(i), correct_f);
+            return 1;
+        }
+        if (g_buf(i) != correct_g) {
+            printf("g(%d) = %d instead of %d\n", i, g_buf(i), correct_f);
+            return 1;
+        }
+    }
+
     return 0;
 }
 
 }  // namespace
 
 int main(int argc, char **argv) {
-    printf("Running split reorder test\n");
-    if (split_test() != 0) {
-        return -1;
-    }
+    struct Task {
+        std::string desc;
+        std::function<int()> fn;
+    };
 
-    printf("Running fuse test\n");
-    if (fuse_test() != 0) {
-        return -1;
-    }
+    std::vector<Task> tasks = {
+        {"split reorder test", split_test},
+        {"fuse test", fuse_test},
+        {"multiple fuse group test", multiple_fuse_group_test},
+        {"multiple outputs test", multiple_outputs_test},
+        {"double split fuse test", double_split_fuse_test},
+        {"vectorize test", vectorize_test},
+        //
+        // Note: we are deprecating skipping parts of a fused group in favor of
+        //       cloning funcs in particular stages via a new (clone_)in overload.
+        // TODO: remove this code when the new clone_in is implemented.
+        //
+        // {"some are skipped test", some_are_skipped_test},
+        {"rgb to yuv420 test", rgb_yuv420_test},
+        {"with specialization test", with_specialization_test},
+        {"fuse compute at test", fuse_compute_at_test},
+        {"nested compute with test", nested_compute_with_test},
+        {"mixed tile factor test", mixed_tile_factor_test},
+        // NOTE: disabled because it generates OOB (see #4751 for discussion).
+        // {"only some are tiled test", only_some_are_tiled_test},
+        {"multiple outputs on gpu test", multiple_outputs_on_gpu_test},
+        {"multi tile mixed tile factor test", multi_tile_mixed_tile_factor_test},
+        {"update stage test", update_stage_test},
+        {"update stage2 test", update_stage2_test},
+        {"update stage3 test", update_stage3_test},
+        {"update stage pairwise test", update_stage_pairwise_test},
+        // I think this should work, but there is an overzealous check somewhere.
+        // {"update stage pairwise zigzag test", update_stage_pairwise_zigzag_test},
+        {"update stage diagonal test", update_stage_diagonal_test},
+        {"update stage rfactor test", update_stage_rfactor_test},
+        {"vectorize inlined test", vectorize_inlined_test},
+        {"mismatching splits test", mismatching_splits_test},
+        {"different arg number compute_at test", different_arg_num_compute_at_test},
+        {"store_at different levels test", store_at_different_levels_test},
+        {"rvar bounds test", rvar_bounds_test},
+        {"two compute at test", two_compute_at_test},
+        {"overlapping updates test", overlapping_updates_test},
+        {"child var dependent bounds test", child_var_dependent_bounds_test},
+    };
 
-    printf("Running multiple fuse group test\n");
-    if (multiple_fuse_group_test() != 0) {
-        return -1;
-    }
-
-    printf("Running multiple outputs test\n");
-    if (multiple_outputs_test() != 0) {
-        return -1;
-    }
-
-    printf("Running double split fuse test\n");
-    if (double_split_fuse_test() != 0) {
-        return -1;
-    }
-
-    printf("Running vectorize test\n");
-    if (vectorize_test() != 0) {
-        return -1;
-    }
-
-    /*
-     * Note: we are deprecating skipping parts of a fused group in favor of
-     *       cloning funcs in particular stages via a new (clone_)in overload.
-     * TODO: remove this code when the new clone_in is implemented.
-     */
-    //    printf("Running some are skipped test\n");
-    //    if (some_are_skipped_test() != 0) {
-    //        return -1;
-    //    }
-
-    printf("Running rgb to yuv420 test\n");
-    if (rgb_yuv420_test() != 0) {
-        return -1;
-    }
-
-    printf("Running with specialization test\n");
-    if (with_specialization_test() != 0) {
-        return -1;
-    }
-
-    printf("Running fuse compute at test\n");
-    if (fuse_compute_at_test() != 0) {
-        return -1;
-    }
-
-    printf("Running nested compute with test\n");
-    if (nested_compute_with_test() != 0) {
-        return -1;
-    }
-
-    printf("Running mixed tile factor test\n");
-    if (mixed_tile_factor_test() != 0) {
-        return -1;
-    }
-
-    // NOTE: disabled because it generates OOB (see #4751 for discussion).
-    /*
-    printf("Running only some are tiled test\n");
-    if (only_some_are_tiled_test() != 0) {
-        return -1;
-    }
-    */
-    printf("Running multiple outputs on gpu test\n");
-    if (multiple_outputs_on_gpu_test() != 0) {
-        return -1;
-    }
-
-    printf("Running multi tile mixed tile factor test\n");
-    if (multi_tile_mixed_tile_factor_test() != 0) {
-        return -1;
-    }
-
-    printf("Running update stage test\n");
-    if (update_stage_test() != 0) {
-        return -1;
-    }
-
-    printf("Running update stage2 test\n");
-    if (update_stage2_test() != 0) {
-        return -1;
-    }
-
-    printf("Running update stage3 test\n");
-    if (update_stage3_test() != 0) {
-        return -1;
-    }
-
-    printf("Running update stage pairwise test\n");
-    if (update_stage_pairwise_test() != 0) {
-        return -1;
-    }
-
-    // I think this should work, but there is an overzealous check somewhere.
-    // printf("Running update stage pairwise zigzag test\n");
-    // if (update_stage_pairwise_zigzag_test() != 0) {
-    //     return -1;
-    // }
-
-    printf("Running update stage diagonal test\n");
-    if (update_stage_diagonal_test() != 0) {
-        return -1;
-    }
-
-    printf("Running update stage rfactor test\n");
-    if (update_stage_rfactor_test() != 0) {
-        return -1;
-    }
-
-    printf("Running vectorize inlined test\n");
-    if (vectorize_inlined_test() != 0) {
-        return -1;
-    }
-
-    printf("Running mismatching splits test\n");
-    if (mismatching_splits_test() != 0) {
-        return -1;
-    }
-
-    printf("Running different arg number compute_at test\n");
-    if (different_arg_num_compute_at_test() != 0) {
-        return -1;
-    }
-
-    printf("Running store_at different levels test\n");
-    if (store_at_different_levels_test() != 0) {
-        return -1;
-    }
-
-    printf("Running rvar bounds test\n");
-    if (rvar_bounds_test() != 0) {
-        return -1;
-    }
-
-    printf("Running two_compute_at test\n");
-    if (two_compute_at_test() != 0) {
-        return -1;
+    using Sharder = Halide::Internal::Test::Sharder;
+    Sharder sharder;
+    for (size_t t = 0; t < tasks.size(); t++) {
+        if (!sharder.should_run(t)) continue;
+        const auto &task = tasks.at(t);
+        std::cout << task.desc << "\n";
+        if (task.fn() != 0) {
+            return 1;
+        }
     }
 
     printf("Success!\n");

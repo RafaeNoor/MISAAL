@@ -1,4 +1,5 @@
 #include "Deinterleave.h"
+#include "IROperator.h"
 #include "Simplify_Internal.h"
 
 namespace Halide {
@@ -6,7 +7,7 @@ namespace Internal {
 
 using std::vector;
 
-Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
+Expr Simplify::visit(const Shuffle *op, ExprInfo *info) {
     if (op->is_extract_element()) {
         int index = op->indices[0];
         internal_assert(index >= 0);
@@ -17,7 +18,7 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
                     // the same shuffle back.
                     break;
                 } else {
-                    return extract_lane(mutate(vector, bounds), index);
+                    return extract_lane(mutate(vector, info), index);
                 }
             }
             index -= vector.type().lanes();
@@ -28,93 +29,25 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
     vector<Expr> new_vectors;
     bool changed = false;
     for (const Expr &vector : op->vectors) {
-        ExprInfo v_bounds;
-        Expr new_vector = mutate(vector, &v_bounds);
+        ExprInfo v_info;
+        Expr new_vector = mutate(vector, &v_info);
         if (!vector.same_as(new_vector)) {
             changed = true;
         }
-        if (bounds) {
+        if (info) {
             if (new_vectors.empty()) {
-                *bounds = v_bounds;
+                *info = v_info;
             } else {
-                bounds->min_defined &= v_bounds.min_defined;
-                bounds->max_defined &= v_bounds.max_defined;
-                bounds->min = std::min(bounds->min, v_bounds.min);
-                bounds->max = std::max(bounds->max, v_bounds.max);
-                bounds->alignment = ModulusRemainder::unify(bounds->alignment, v_bounds.alignment);
+                info->bounds = ConstantInterval::make_union(info->bounds, v_info.bounds);
+                info->alignment = ModulusRemainder::unify(info->alignment, v_info.alignment);
             }
         }
         new_vectors.push_back(new_vector);
     }
 
-
-    // Simplify slice  contigous vectors of input into
-    // loading the specific slice indices 
-    //if (const Load *first_load = new_vectors[0].as<Load>()) {
-
-        // TODO: Add condition when target is HVX and the load is on 1024
-
-
-
-
-        /*
-        std::vector<unsigned> efficient_target_load_sizes;
-
-
-        const char* hydride_target = getenv("HYDRIDE_TARGET");
-        if(hydride_target && strcmp(hydride_target, "x86") == 0){
-            efficient_target_load_sizes.push_back(128);
-            efficient_target_load_sizes.push_back(256);
-            efficient_target_load_sizes.push_back(512);
-        }
-
-        if(hydride_target && strcmp(hydride_target, "hvx") == 0){
-            debug(1) << "================================\n\n";
-            debug(1) << "Hydride target = hvx!\n";
-            debug(1) << "================================\n\n";
-            efficient_target_load_sizes.push_back(1024);
-            efficient_target_load_sizes.push_back(2048);
-        }
-        
-
-        size_t sliced_bits = op->type.lanes() * op->type.bits();
-
-        bool simplify_load = false; 
-
-        for(unsigned size : efficient_target_load_sizes){
-            if (sliced_bits % size == 0){
-                simplify_load = true;
-            }
-        }*/
-
-
-        /*
-        if( op->is_slice() && op->slice_stride() == 1){
-            debug(1) << "Load Index: " << first_load->index << "\n";
-            debug(1) << "Index lanes: " << first_load->index.type().lanes() << "\n";
-            debug(1) << "Load Predicate: " << first_load->predicate << "\n";
-            debug(1) << "Slice stride: "<< op->slice_stride() << "\n";
-            debug(1) << "Slice begin: " << op->slice_begin() << "\n";
-            debug(1) << "Slice lanes: " << op->type.lanes() << "\n";
-            Expr sliced_index = Shuffle::make_slice(first_load->index,  op->slice_begin(), op->slice_stride(), op->type.lanes());
-            Expr sliced_predicate = Shuffle::make_slice(first_load->predicate, op->slice_begin(), op->slice_stride(), op->type.lanes());
-
-            debug(1) << "Sliced_index:" << sliced_index << "\n";
-            debug(1) << "Sliced predicate: " << sliced_predicate << "\n";
-            Expr sliced_load =  Load::make(first_load->type.with_lanes(op->type.lanes()), first_load->name, mutate(sliced_index, nullptr), first_load->image, first_load->param, mutate(sliced_predicate, nullptr), first_load->alignment);
-
-            debug(0) << "Simplified sliced load to: " << sliced_load << "\n";
-            return mutate(sliced_load, nullptr);
-        }*/
-
-        /*if(!simplify_load){
-            return op;
-        }*/
-    //}
-
     // Try to convert a load with shuffled indices into a
     // shuffle of a dense load.
-    if (const Load *first_load = new_vectors[0].as<Load>() ) {
+    if (const Load *first_load = new_vectors[0].as<Load>()) {
         vector<Expr> load_predicates;
         vector<Expr> load_indices;
         bool unpredicated = true;
@@ -152,30 +85,11 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
                 }
                 t = first_load->type;
                 t = t.with_lanes(op->indices.size());
-                debug(0) << "Converting load with shuffled indices into shuffle of a dense load" <<"\n";
                 return Load::make(t, first_load->name, shuffled_index, first_load->image,
                                   first_load->param, shuffled_predicate, alignment);
             }
         }
     }
-
-
-
-    /*
-    if (const Ramp *first_ramp = new_vectors[0].as<Ramp>()) {
-
-        if(op->is_slice() && op->slice_stride() == 1){
-            Expr slice_before = Shuffle::make_slice(op->vectors[0], op->slice_begin(), op->slice_stride(), op->type.lanes());
-            debug(1) << "Slice Before: " << slice_before << "\n"; 
-            Expr new_base = first_ramp->base + (op->slice_begin() * first_ramp->stride);
-            Expr new_stride = first_ramp -> stride;
-            int new_lanes = op->type.lanes();
-            Expr new_ramp = Ramp::make(new_base, new_stride, new_lanes);
-            debug(1) << "New Ramp: "<< new_ramp << "\n";
-            return mutate(new_ramp, nullptr);
-        }
-    }*/
-
 
     // Try to collapse a shuffle of broadcasts into a single
     // broadcast. Note that it doesn't matter what the indices
@@ -224,7 +138,7 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
                 }
             }
             if (can_collapse) {
-                return mutate(Ramp::make(r->base, r->stride / terms, r->lanes * terms), bounds);
+                return mutate(Ramp::make(r->base, r->stride / terms, r->lanes * terms), info);
             }
         }
 
@@ -266,7 +180,6 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
                 }
 
                 if (can_collapse) {
-                    debug(0) << "Make concat in can_collapse\n";
                     // It's possible the slices didn't use all of the vector, in which case we need to slice it.
                     Expr result = Shuffle::make_concat(first_shuffle->vectors);
                     if (result.type().lanes() != op->type.lanes()) {
@@ -276,7 +189,34 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
                 }
             }
         }
+
+        // Try to collapse an interleave of a series of extract_bits into a vector reinterpret.
+        if (const Call *extract = new_vectors[0].as<Call>()) {
+            if (extract->is_intrinsic(Call::extract_bits) &&
+                is_const_zero(extract->args[1])) {
+                int n = (int)new_vectors.size();
+                Expr base = extract->args[0];
+                bool can_collapse = base.type().bits() == n * op->type.bits();
+                for (int i = 1; can_collapse && i < n; i++) {
+                    const Call *c = new_vectors[i].as<Call>();
+                    if (!(c->is_intrinsic(Call::extract_bits) &&
+                          is_const(c->args[1], i * op->type.bits()) &&
+                          equal(base, c->args[0]))) {
+                        can_collapse = false;
+                    }
+                }
+                if (can_collapse) {
+                    return Reinterpret::make(op->type, base);
+                }
+            }
+        }
+
     } else if (op->is_concat()) {
+        // Bypass concat of a single vector (identity shuffle)
+        if (new_vectors.size() == 1) {
+            return new_vectors[0];
+        }
+
         // Try to collapse a concat of ramps into a single ramp.
         const Ramp *r = new_vectors[0].as<Ramp>();
         if (r) {
@@ -329,7 +269,7 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
             if (cast->type.bits() > cast->value.type().bits()) {
                 return mutate(Cast::make(cast->type.with_lanes(op->type.lanes()),
                                          Shuffle::make({cast->value}, op->indices)),
-                              bounds);
+                              info);
             }
         }
     }
@@ -364,8 +304,7 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
 
                     concat_index += v.type().lanes();
                 }
-                if (new_concat_vectors.size() < inner_shuffle->vectors.size() && new_concat_vectors.size() != 0) {
-                    debug(0) << "Make concat in new_concat_vectors\n";
+                if (new_concat_vectors.size() < inner_shuffle->vectors.size()) {
                     return Shuffle::make_slice(Shuffle::make_concat(new_concat_vectors), op->slice_begin() - new_slice_start, op->slice_stride(), op->indices.size());
                 }
             }
@@ -378,48 +317,6 @@ Expr Simplify::visit(const Shuffle *op, ExprInfo *bounds) {
         return Shuffle::make(new_vectors, op->indices);
     }
 }
-
-template<typename T>
-Expr Simplify::hoist_slice_vector(Expr e) {
-    const T *op = e.as<T>();
-    internal_assert(op);
-
-    const Shuffle *shuffle_a = op->a.template as<Shuffle>();
-    const Shuffle *shuffle_b = op->b.template as<Shuffle>();
-
-    internal_assert(shuffle_a && shuffle_b &&
-                    shuffle_a->is_slice() &&
-                    shuffle_b->is_slice());
-
-    if (shuffle_a->indices != shuffle_b->indices) {
-        return e;
-    }
-
-    const std::vector<Expr> &slices_a = shuffle_a->vectors;
-    const std::vector<Expr> &slices_b = shuffle_b->vectors;
-    if (slices_a.size() != slices_b.size()) {
-        return e;
-    }
-
-    for (size_t i = 0; i < slices_a.size(); i++) {
-        if (slices_a[i].type() != slices_b[i].type()) {
-            return e;
-        }
-    }
-
-    vector<Expr> new_slices;
-    for (size_t i = 0; i < slices_a.size(); i++) {
-        new_slices.push_back(T::make(slices_a[i], slices_b[i]));
-    }
-
-    return Shuffle::make(new_slices, shuffle_a->indices);
-}
-
-template Expr Simplify::hoist_slice_vector<Add>(Expr);
-template Expr Simplify::hoist_slice_vector<Sub>(Expr);
-template Expr Simplify::hoist_slice_vector<Mul>(Expr);
-template Expr Simplify::hoist_slice_vector<Min>(Expr);
-template Expr Simplify::hoist_slice_vector<Max>(Expr);
 
 }  // namespace Internal
 }  // namespace Halide

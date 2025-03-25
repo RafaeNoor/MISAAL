@@ -38,8 +38,8 @@ class BoundSmallAllocations : public IRMutator {
 
         result = mutate(result);
 
-        for (auto it = frames.rbegin(); it != frames.rend(); it++) {
-            result = T::make(it->op->name, it->op->value, result);
+        for (const auto &frame : reverse_view(frames)) {
+            result = T::make(frame.op->name, frame.op->value, result);
         }
 
         return result;
@@ -74,9 +74,7 @@ class BoundSmallAllocations : public IRMutator {
     }
 
     bool must_be_constant(MemoryType memory_type) const {
-        return (memory_type == MemoryType::Register ||
-                (device_api == DeviceAPI::OpenGLCompute &&
-                 memory_type == MemoryType::GPUShared));
+        return memory_type == MemoryType::Register;
     }
 
     Stmt visit(const Realize *op) override {
@@ -125,22 +123,15 @@ class BoundSmallAllocations : public IRMutator {
                 << "Allocation " << op->name << " has a dynamic size. "
                 << "Only fixed-size allocations can be stored in registers. "
                 << "Try storing on the heap or stack instead.";
-
-            user_assert(!(device_api == DeviceAPI::OpenGLCompute &&
-                          op->memory_type == MemoryType::GPUShared))
-                << "Allocation " << op->name << " has a dynamic size. "
-                << "Only fixed-size allocations can be stored in shared memory "
-                << "in OpenGL compute shaders. Try storing in MemoryType::Heap "
-                << "instead.";
         }
 
-        const int64_t *size_ptr = bound.defined() ? as_const_int(bound) : nullptr;
+        auto size_ptr = bound.defined() ? as_const_int(bound) : std::nullopt;
         int64_t size = size_ptr ? *size_ptr : 0;
 
         if (size_ptr && size == 0 && !op->new_expr.defined()) {
             // This allocation is dead
             return Allocate::make(op->name, op->type, op->memory_type, {0}, const_false(),
-                                  mutate(op->body), op->new_expr, op->free_function);
+                                  mutate(op->body), op->new_expr, op->free_function, op->padding);
         }
 
         // 128 bytes is a typical minimum allocation size in
@@ -155,7 +146,7 @@ class BoundSmallAllocations : public IRMutator {
             user_assert(size >= 0 && size < (int64_t)1 << 31)
                 << "Allocation " << op->name << " has a size greater than 2^31: " << bound << "\n";
             return Allocate::make(op->name, op->type, op->memory_type, {(int32_t)size}, op->condition,
-                                  mutate(op->body), op->new_expr, op->free_function);
+                                  mutate(op->body), op->new_expr, op->free_function, op->padding);
         } else {
             return IRMutator::visit(op);
         }

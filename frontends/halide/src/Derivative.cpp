@@ -55,6 +55,7 @@ protected:
     void visit(const FloatImm *) override;
     void visit(const StringImm *) override;
     void visit(const Cast *op) override;
+    void visit(const Reinterpret *op) override;
     void visit(const Variable *op) override;
     void visit(const Add *op) override;
     void visit(const Sub *op) override;
@@ -137,6 +138,9 @@ protected:
     }
     void visit(const Atomic *op) override {
         internal_error << "Encounter unexpected statement \"Atomic\" when differentiating.";
+    }
+    void visit(const HoistedStorage *op) override {
+        internal_error << "Encounter unexpected statement \"HoistedStorage\" when differentiating.";
     }
 
 private:
@@ -349,13 +353,12 @@ void ReverseAccumulationVisitor::propagate_adjoints(
                 expr_adjoints[output_expr] = 1.f;
             }
 
-            // Traverse the expressions in reverse order
-            for (auto it = expr_list.rbegin(); it != expr_list.rend(); it++) {
-                if (it->type().is_handle()) {
+            for (Expr &e : reverse_view(expr_list)) {
+                if (e.type().is_handle()) {
                     // Ignore pointer types
                     continue;
                 }
-                it->accept(this);
+                e.accept(this);
             }
 
             auto error = [&]() {
@@ -393,11 +396,11 @@ void ReverseAccumulationVisitor::propagate_adjoints(
                     }
                     // Now we check all previous updates, see if the left hand
                     // side arguments overlap.
-                    Box current_box = boxes[update_id];
+                    const Box &current_box = boxes[update_id];
                     for (int prev_update_id = 0; prev_update_id < update_id;
                          prev_update_id++) {
                         // Gather two boxes from current update and previous update
-                        Box prev_box = boxes[prev_update_id];
+                        const Box &prev_box = boxes[prev_update_id];
                         internal_assert(current_box.size() == prev_box.size());
                         // If any of the boxes overlap, we need to throw an error
                         if (boxes_overlap(current_box, prev_box)) {
@@ -550,8 +553,7 @@ void ReverseAccumulationVisitor::propagate_adjoints(
     }
 
     // Traverse functions from producers to consumers for reverse accumulation
-    for (int func_id = funcs.size() - 1; func_id >= 0; func_id--) {
-        const Func &func = funcs[func_id];
+    for (const auto &func : reverse_view(funcs)) {
         current_func = func;
 
         FuncKey func_key{func.name(), func.num_update_definitions() - 1};
@@ -697,14 +699,13 @@ void ReverseAccumulationVisitor::propagate_adjoints(
                     }
                 }
 
-                // Traverse the expressions in reverse order
-                for (auto it = expr_list.rbegin(); it != expr_list.rend(); it++) {
-                    if (it->type().is_handle()) {
+                for (Expr &e : reverse_view(expr_list)) {
+                    if (e.type().is_handle()) {
                         // Ignore pointer types
                         continue;
                     }
                     // Propagate adjoints
-                    it->accept(this);
+                    e.accept(this);
                 }
             }
             if (is_current_non_overwriting_scan) {
@@ -739,16 +740,13 @@ void ReverseAccumulationVisitor::propagate_adjoints(
                                    update_args, i);
                 }
 
-                int count = 0;
-                // Traverse the expressions in reverse order
-                for (auto it = expr_list.rbegin(); it != expr_list.rend(); it++) {
-                    if (it->type().is_handle()) {
+                for (Expr &e : reverse_view(expr_list)) {
+                    if (e.type().is_handle()) {
                         // Ignore pointer types
                         continue;
                     }
                     // Propagate adjoints
-                    it->accept(this);
-                    count++;
+                    e.accept(this);
                 }
             }
         }
@@ -834,6 +832,14 @@ void ReverseAccumulationVisitor::visit(const Cast *op) {
     } else {
         accumulate(op->value, make_zero(op->value.type()));
     }
+}
+
+void ReverseAccumulationVisitor::visit(const Reinterpret *op) {
+    internal_assert(expr_adjoints.find(op) != expr_adjoints.end());
+    Expr adjoint = expr_adjoints[op];
+
+    // bit manipulation -- has zero derivative.
+    accumulate(op->value, make_zero(op->type));
 }
 
 void ReverseAccumulationVisitor::visit(const Variable *op) {
@@ -1169,8 +1175,7 @@ void ReverseAccumulationVisitor::visit(const Call *op) {
             accumulate(op->args[1], adjoint);
         } else if (op->is_intrinsic(Call::undef)) {
             // do nothing
-        } else if (op->is_intrinsic(Call::reinterpret) ||
-                   op->is_intrinsic(Call::bitwise_and) ||
+        } else if (op->is_intrinsic(Call::bitwise_and) ||
                    op->is_intrinsic(Call::bitwise_not) ||
                    op->is_intrinsic(Call::bitwise_or) ||
                    op->is_intrinsic(Call::bitwise_xor) ||
@@ -1360,7 +1365,7 @@ void ReverseAccumulationVisitor::propagate_halide_function_call(
     // Prepare a set of new substitution variables for func_to_update
     vector<Var> new_args;
     new_args.reserve(func_to_update.dimensions());
-    for (int arg_id = 0; arg_id < (int)func_to_update.dimensions(); arg_id++) {
+    for (int arg_id = 0; arg_id < func_to_update.dimensions(); arg_id++) {
         new_args.emplace_back(unique_name("u" + std::to_string(arg_id)));
     }
 
@@ -1796,7 +1801,7 @@ void ReverseAccumulationVisitor::propagate_halide_function_call(
             return !rdom.defined();
         }
         int update_id = func_to_update.num_update_definitions() - 1;
-        vector<Expr> prev_lhs =
+        const vector<Expr> &prev_lhs =
             func_to_update.update_args(update_id);
         internal_assert(prev_lhs.size() == lhs.size());
         // If previous update has different left hand side, don't merge
@@ -1807,8 +1812,8 @@ void ReverseAccumulationVisitor::propagate_halide_function_call(
         }
         // If previous update has a different set of reduction variables,
         // don't merge
-        const vector<ReductionVariable> &rvars =
-            func_to_update.function().update(update_id).schedule().rvars();
+        Function func = func_to_update.function();
+        const vector<ReductionVariable> &rvars = func.update(update_id).schedule().rvars();
         if (!merged_r.defined()) {
             return rvars.empty();
         }
@@ -1940,6 +1945,15 @@ Func Derivative::operator()(const Param<> &param) const {
     return it->second;
 }
 
+Func Derivative::operator()(const std::string &name) const {
+    auto it = adjoints.find(FuncKey{name, -1});
+    if (it == adjoints.end()) {
+        Internal::debug(1) << "Could not find name: " << name << "\n";
+        return Func();
+    }
+    return it->second;
+}
+
 Derivative propagate_adjoints(const Func &output,
                               const Func &adjoint,
                               const Region &output_bounds) {
@@ -1972,7 +1986,7 @@ Derivative propagate_adjoints(const Func &output) {
     Region output_bounds;
     output_bounds.reserve(output.dimensions());
     for (int i = 0; i < output.dimensions(); i++) {
-        output_bounds.push_back({0, 0});
+        output_bounds.emplace_back(0, 0);
     }
     return propagate_adjoints(output, adjoint, output_bounds);
 }

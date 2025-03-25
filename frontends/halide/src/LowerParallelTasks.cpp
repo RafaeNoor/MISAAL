@@ -8,6 +8,7 @@
 #include "ExprUsesVar.h"
 #include "IRMutator.h"
 #include "IROperator.h"
+#include "LoopPartitioningDirective.h"
 #include "Module.h"
 #include "Param.h"
 #include "Simplify.h"
@@ -169,6 +170,7 @@ struct LowerParallelTasks : public IRMutator {
         Expr min, extent;
         Expr serial;
         std::string name;
+        Partition partition_policy;
     };
 
     using IRMutator::visit;
@@ -240,6 +242,8 @@ struct LowerParallelTasks : public IRMutator {
             const std::string closure_arg_name = unique_name("closure_arg");
             auto closure_arg = make_scalar_arg<uint8_t *>(closure_arg_name);
 
+            Type closure_function_type;
+
             std::vector<LoweredArgument> closure_args(use_parallel_for ? 3 : 5);
             closure_args[0] = make_scalar_arg<void *>("__user_context");
             if (use_parallel_for) {
@@ -247,6 +251,8 @@ struct LowerParallelTasks : public IRMutator {
                 //
                 //   typedef int (*halide_task_t)(void *user_context, int task_number, uint8_t *closure);
                 //
+                closure_function_type = type_of<halide_task_t>();
+
                 closure_args[1] = make_scalar_arg<int32_t>(t.loop_var);
                 closure_args[2] = closure_arg;
                 // closure_task_parent remains undefined here.
@@ -255,6 +261,8 @@ struct LowerParallelTasks : public IRMutator {
                 //
                 //   typedef int (*halide_loop_task_t)(void *user_context, int min, int extent, uint8_t *closure, void *task_parent);
                 //
+                closure_function_type = type_of<halide_loop_task_t>();
+
                 const std::string closure_task_parent_name = unique_name("__task_parent");
                 closure_task_parent = Variable::make(type_of<void *>(), closure_task_parent_name);
                 // We peeled off a loop. Wrap a new loop around the body
@@ -266,6 +274,7 @@ struct LowerParallelTasks : public IRMutator {
                                        Variable::make(Int(32), loop_min_name),
                                        Variable::make(Int(32), loop_extent_name),
                                        ForType::Serial,
+                                       t.partition_policy,
                                        DeviceAPI::None,
                                        t.body);
                 } else {
@@ -292,10 +301,7 @@ struct LowerParallelTasks : public IRMutator {
 
                 // TODO(zvookin): Figure out how we want to handle name mangling of closures.
                 // For now, the C++ backend makes them extern "C" so they have to be NameMangling::C.
-                LoweredFunc closure_func{new_function_name, closure_args, std::move(wrapped_body), LinkageType::External, NameMangling::C};
-                if (target.has_feature(Target::Debug)) {
-                    debug_arguments(&closure_func, target);
-                }
+                LoweredFunc closure_func{new_function_name, closure_args, std::move(wrapped_body), LinkageType::Internal, NameMangling::C};
                 closure_implementations.emplace_back(std::move(closure_func));
             }
 
@@ -305,7 +311,7 @@ struct LowerParallelTasks : public IRMutator {
             // case some joker names an intermediate Func or Var the same
             // name as the pipeline. This prefix works transparently in the
             // C++ backend.
-            Expr new_function_name_arg = Variable::make(Handle(), "::" + new_function_name);
+            Expr new_function_name_arg = Variable::make(closure_function_type, "::" + new_function_name);
             Expr closure_struct_arg = Cast::make(type_of<uint8_t *>(), closure_struct);
 
             if (use_parallel_for) {
@@ -338,7 +344,7 @@ struct LowerParallelTasks : public IRMutator {
 
         if (!tasks_array_args.empty()) {
             // Allocate task list array
-            Expr tasks_list = Call::make(Handle(), Call::make_struct, tasks_array_args, Call::PureIntrinsic);
+            Expr tasks_list = Call::make(type_of<halide_parallel_task_t *>(), Call::make_struct, tasks_array_args, Call::PureIntrinsic);
             Expr user_context = Call::make(type_of<void *>(), Call::get_user_context, {}, Call::PureIntrinsic);
             Expr task_parent = has_task_parent ? task_parents.top() : make_zero(Handle());
             result = Call::make(Int(32), "halide_do_parallel_tasks",
@@ -365,7 +371,7 @@ struct LowerParallelTasks : public IRMutator {
             const Variable *v = acquire->semaphore.as<Variable>();
             internal_assert(v);
             add_suffix(prefix, "." + v->name);
-            ParallelTask t{s, {}, "", 0, 1, const_false(), task_debug_name(prefix)};
+            ParallelTask t{s, {}, "", 0, 1, const_false(), task_debug_name(prefix), Partition::Never};
             while (acquire) {
                 t.semaphores.push_back({acquire->semaphore, acquire->count});
                 t.body = acquire->body;
@@ -374,7 +380,7 @@ struct LowerParallelTasks : public IRMutator {
             result.emplace_back(std::move(t));
         } else if (loop && loop->for_type == ForType::Parallel) {
             add_suffix(prefix, ".par_for." + loop->name);
-            ParallelTask t{loop->body, {}, loop->name, loop->min, loop->extent, const_false(), task_debug_name(prefix)};
+            ParallelTask t{loop->body, {}, loop->name, loop->min, loop->extent, const_false(), task_debug_name(prefix), loop->partition_policy};
             result.emplace_back(std::move(t));
         } else if (loop &&
                    loop->for_type == ForType::Serial &&
@@ -383,7 +389,7 @@ struct LowerParallelTasks : public IRMutator {
             const Variable *v = acquire->semaphore.as<Variable>();
             internal_assert(v);
             add_suffix(prefix, ".for." + v->name);
-            ParallelTask t{loop->body, {}, loop->name, loop->min, loop->extent, const_true(), task_debug_name(prefix)};
+            ParallelTask t{loop->body, {}, loop->name, loop->min, loop->extent, const_true(), task_debug_name(prefix), loop->partition_policy};
             while (acquire) {
                 t.semaphores.push_back({acquire->semaphore, acquire->count});
                 t.body = acquire->body;
@@ -392,7 +398,7 @@ struct LowerParallelTasks : public IRMutator {
             result.emplace_back(std::move(t));
         } else {
             add_suffix(prefix, "." + std::to_string(result.size()));
-            ParallelTask t{s, {}, "", 0, 1, const_false(), task_debug_name(prefix)};
+            ParallelTask t{s, {}, "", 0, 1, const_false(), task_debug_name(prefix), Partition::Never};
             result.emplace_back(std::move(t));
         }
     }

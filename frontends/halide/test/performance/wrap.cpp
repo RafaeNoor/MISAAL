@@ -115,7 +115,6 @@ int main(int argc, char **argv) {
         printf("[SKIP] Performance tests are meaningless and/or misleading under WebAssembly interpreter.\n");
         return 0;
     }
-
     if (!target.has_gpu_feature()) {
         printf("[SKIP] No GPU target enabled.\n");
         return 0;
@@ -158,7 +157,7 @@ int main(int argc, char **argv) {
             if (out3(x, y) != out1(x, y)) {
                 printf("wrapper(%d, %d) = %d instead of %d\n",
                        x, y, out3(x, y), out1(x, y));
-                return -1;
+                return 1;
             }
         }
     }
@@ -167,7 +166,7 @@ int main(int argc, char **argv) {
             if (out3(x, y) != out2(x, y)) {
                 printf("wrapper(%d, %d) = %d instead of %d\n",
                        x, y, out3(x, y), out2(x, y));
-                return -1;
+                return 1;
             }
         }
     }

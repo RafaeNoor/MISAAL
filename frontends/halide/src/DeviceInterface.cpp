@@ -94,14 +94,16 @@ const halide_device_interface_t *get_device_interface_for_device_api(DeviceAPI d
         name = "opencl";
     } else if (d == DeviceAPI::CUDA) {
         name = "cuda";
-    } else if (d == DeviceAPI::OpenGLCompute) {
-        name = "openglcompute";
     } else if (d == DeviceAPI::Hexagon) {
         name = "hexagon";
     } else if (d == DeviceAPI::HexagonDma) {
         name = "hexagon_dma";
     } else if (d == DeviceAPI::D3D12Compute) {
         name = "d3d12compute";
+    } else if (d == DeviceAPI::Vulkan) {
+        name = "vulkan";
+    } else if (d == DeviceAPI::WebGPU) {
+        name = "webgpu";
     } else {
         if (error_site) {
             user_error
@@ -150,14 +152,16 @@ DeviceAPI get_default_device_api_for_target(const Target &target) {
         return DeviceAPI::OpenCL;
     } else if (target.has_feature(Target::CUDA)) {
         return DeviceAPI::CUDA;
-    } else if (target.has_feature(Target::OpenGLCompute)) {
-        return DeviceAPI::OpenGLCompute;
     } else if (target.arch != Target::Hexagon && target.has_feature(Target::HVX)) {
         return DeviceAPI::Hexagon;
     } else if (target.has_feature(Target::HexagonDma)) {
         return DeviceAPI::HexagonDma;
     } else if (target.has_feature(Target::D3D12Compute)) {
         return DeviceAPI::D3D12Compute;
+    } else if (target.has_feature(Target::Vulkan)) {
+        return DeviceAPI::Vulkan;
+    } else if (target.has_feature(Target::WebGPU)) {
+        return DeviceAPI::WebGPU;
     } else {
         return DeviceAPI::Host;
     }
@@ -184,9 +188,6 @@ Expr make_device_interface_call(DeviceAPI device_api, MemoryType memory_type) {
     case DeviceAPI::Metal:
         interface_name = "halide_metal_device_interface";
         break;
-    case DeviceAPI::OpenGLCompute:
-        interface_name = "halide_openglcompute_device_interface";
-        break;
     case DeviceAPI::Hexagon:
         interface_name = "halide_hexagon_device_interface";
         break;
@@ -195,6 +196,12 @@ Expr make_device_interface_call(DeviceAPI device_api, MemoryType memory_type) {
         break;
     case DeviceAPI::D3D12Compute:
         interface_name = "halide_d3d12compute_device_interface";
+        break;
+    case DeviceAPI::Vulkan:
+        interface_name = "halide_vulkan_device_interface";
+        break;
+    case DeviceAPI::WebGPU:
+        interface_name = "halide_webgpu_device_interface";
         break;
     case DeviceAPI::Default_GPU:
         // Will be resolved later

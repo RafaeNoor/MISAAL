@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "CSE.h"
-#include "CodeGen_C.h"
+#include "CanonicalizeGPUVars.h"
 #include "CodeGen_GPU_Dev.h"
 #include "CodeGen_Internal.h"
 #include "CodeGen_OpenCL_Dev.h"
@@ -12,6 +12,7 @@
 #include "EliminateBoolVectors.h"
 #include "EmulateFloat16Math.h"
 #include "ExprUsesVar.h"
+#include "Float16.h"
 #include "IRMutator.h"
 #include "IROperator.h"
 #include "Simplify.h"
@@ -55,18 +56,19 @@ public:
     }
 
 protected:
-    class CodeGen_OpenCL_C : public CodeGen_C {
+    class CodeGen_OpenCL_C : public CodeGen_GPU_C {
     public:
         CodeGen_OpenCL_C(std::ostream &s, Target t)
-            : CodeGen_C(s, t) {
+            : CodeGen_GPU_C(s, t) {
             integer_suffix_style = IntegerSuffixStyle::OpenCL;
+            vector_declaration_style = VectorDeclarationStyle::OpenCLSyntax;
         }
         void add_kernel(Stmt stmt,
                         const std::string &name,
                         const std::vector<DeviceArgument> &args);
 
     protected:
-        using CodeGen_C::visit;
+        using CodeGen_GPU_C::visit;
         std::string print_type(Type type, AppendSpaceIfNeeded append_space = DoNotAppendSpace) override;
         std::string print_reinterpret(Type type, const Expr &e) override;
         std::string print_extern_call(const Call *op) override;
@@ -184,22 +186,18 @@ string CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::print_reinterpret(Type type, const 
 
 namespace {
 string simt_intrinsic(const string &name) {
-    if (ends_with(name, ".__thread_id_x")) {
+    if (ends_with(name, gpu_thread_name(0))) {
         return "get_local_id(0)";
-    } else if (ends_with(name, ".__thread_id_y")) {
+    } else if (ends_with(name, gpu_thread_name(1))) {
         return "get_local_id(1)";
-    } else if (ends_with(name, ".__thread_id_z")) {
+    } else if (ends_with(name, gpu_thread_name(2))) {
         return "get_local_id(2)";
-    } else if (ends_with(name, ".__thread_id_w")) {
-        return "get_local_id(3)";
-    } else if (ends_with(name, ".__block_id_x")) {
+    } else if (ends_with(name, gpu_block_name(0))) {
         return "get_group_id(0)";
-    } else if (ends_with(name, ".__block_id_y")) {
+    } else if (ends_with(name, gpu_block_name(1))) {
         return "get_group_id(1)";
-    } else if (ends_with(name, ".__block_id_z")) {
+    } else if (ends_with(name, gpu_block_name(2))) {
         return "get_group_id(2)";
-    } else if (ends_with(name, ".__block_id_w")) {
-        return "get_group_id(3)";
     }
     internal_error << "simt_intrinsic called on bad variable name: " << name << "\n";
     return "";
@@ -210,10 +208,7 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const For *loop) {
     user_assert(loop->for_type != ForType::GPULane)
         << "The OpenCL backend does not support the gpu_lanes() scheduling directive.";
 
-    if (is_gpu_var(loop->name)) {
-        internal_assert((loop->for_type == ForType::GPUBlock) ||
-                        (loop->for_type == ForType::GPUThread))
-            << "kernel loop must be either gpu block or gpu thread\n";
+    if (is_gpu(loop->for_type)) {
         internal_assert(is_const_zero(loop->min));
 
         stream << get_indent() << print_type(Int(32)) << " " << print_name(loop->name)
@@ -223,7 +218,7 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const For *loop) {
 
     } else {
         user_assert(loop->for_type != ForType::Parallel) << "Cannot use parallel loops inside OpenCL kernel\n";
-        CodeGen_C::visit(loop);
+        CodeGen_GPU_C::visit(loop);
     }
 }
 
@@ -322,7 +317,7 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Call *op) {
     } else if (op->is_intrinsic(Call::gpu_thread_barrier)) {
         internal_assert(op->args.size() == 1) << "gpu_thread_barrier() intrinsic must specify memory fence type.\n";
 
-        const auto *fence_type_ptr = as_const_int(op->args[0]);
+        auto fence_type_ptr = as_const_int(op->args[0]);
         internal_assert(fence_type_ptr) << "gpu_thread_barrier() parameter is not a constant integer.\n";
         auto fence_type = *fence_type_ptr;
 
@@ -351,7 +346,7 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Call *op) {
                 print_assignment(op->type, a0 + " >> " + a1);
             }
         } else {
-            CodeGen_C::visit(op);
+            CodeGen_GPU_C::visit(op);
         }
     } else if (op->is_intrinsic(Call::image_load)) {
         // image_load(<image name>, <buffer>, <x>, <x-extent>, <y>,
@@ -388,6 +383,9 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Call *op) {
             case 3:
                 rhs << "(int4)(" << coord[0] << idx << ", " << coord[1] << idx
                     << ", " << coord[2] << idx << ", 0)).s0";
+                break;
+            default:
+                internal_error << "Unsupported dims";
                 break;
             }
             print_assignment(op->type.with_bits(32).with_lanes(1), rhs.str());
@@ -448,19 +446,26 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Call *op) {
                 write_image << "(int4)(" << coord[0] << idx << ", " << coord[1] << idx
                             << ", " << coord[2] << idx << ", 0)";
                 break;
+            default:
+                internal_error << "Unsupported dims";
+                break;
             }
             write_image << ", (" << print_type(value_type.with_bits(32).with_lanes(4))
                         << ")(" << value << idx << ", 0, 0, 0));\n";
             //  do_indent();
             stream << write_image.str();
         }
+    } else if (op->is_intrinsic(Call::round)) {
+        // In OpenCL, rint matches our rounding semantics
+        Expr equiv = Call::make(op->type, "rint", op->args, Call::PureExtern);
+        equiv.accept(this);
     } else {
-        CodeGen_C::visit(op);
+        CodeGen_GPU_C::visit(op);
     }
 }
 
 string CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::print_extern_call(const Call *op) {
-    internal_assert(!function_takes_user_context(op->name));
+    internal_assert(!function_takes_user_context(op->name)) << op->name;
     vector<string> args(op->args.size());
     for (size_t i = 0; i < op->args.size(); i++) {
         args[i] = print_expr(op->args[i]);
@@ -474,8 +479,8 @@ string CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::print_array_access(const string &na
                                                                 const Type &type,
                                                                 const string &id_index) {
     ostringstream rhs;
-    bool type_cast_needed = !(allocations.contains(name) &&
-                              allocations.get(name).type == type);
+    const auto *alloc = allocations.find(name);
+    bool type_cast_needed = !(alloc && alloc->type == type);
 
     if (type_cast_needed) {
         rhs << "((" << get_memory_space(name) << " "
@@ -573,8 +578,8 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Store *op) {
         // For atomicAdd, we check if op->value - store[index] is independent of store.
         // The atomicAdd operations in OpenCL only supports integers so we also check that.
         bool is_atomic_add = t.is_int_or_uint() && !expr_uses_var(delta, op->name);
-        bool type_cast_needed = !(allocations.contains(op->name) &&
-                                  allocations.get(op->name).type == t);
+        const auto *alloc = allocations.find(op->name);
+        bool type_cast_needed = !(alloc && alloc->type == t);
         auto print_store_var = [&]() {
             if (type_cast_needed) {
                 stream << "(("
@@ -743,19 +748,19 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Cast *op) {
     if (op->type.is_vector()) {
         print_assignment(op->type, "convert_" + print_type(op->type) + "(" + print_expr(op->value) + ")");
     } else {
-        CodeGen_C::visit(op);
+        CodeGen_GPU_C::visit(op);
     }
 }
 
 void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Select *op) {
-    if (!op->condition.type().is_scalar()) {
+    if (op->type.is_vector()) {
         // A vector of bool was recursively introduced while
         // performing codegen. Eliminate it.
         Expr equiv = eliminate_bool_vectors(op);
         equiv.accept(this);
         return;
     }
-    CodeGen_C::visit(op);
+    CodeGen_GPU_C::visit(op);
 }
 
 void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Allocate *op) {
@@ -858,8 +863,14 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Shuffle *op) {
             }
             stream << ");\n";
         }
+    } else if (op->is_extract_element()) {
+        // OpenCL requires using .s<n> format for extracting an element
+        ostringstream rhs;
+        rhs << print_expr(op->vectors[0]);
+        rhs << ".s" << op->indices[0];
+        print_assignment(op->type, rhs.str());
     } else {
-        internal_error << "Shuffle not implemented.\n";
+        CodeGen_GPU_C::visit(op);
     }
 }
 
@@ -879,7 +890,7 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::visit(const Atomic *op) {
 
     // Issue atomic stores.
     ScopedValue<bool> old_emit_atomic_stores(emit_atomic_stores, true);
-    CodeGen_C::visit(op);
+    CodeGen_GPU_C::visit(op);
 }
 
 void CodeGen_OpenCL_Dev::add_kernel(Stmt s,
@@ -925,6 +936,13 @@ void CodeGen_OpenCL_Dev::CodeGen_OpenCL_C::add_kernel(Stmt s,
     s = eliminate_bool_vectors(s);
     debug(2) << "After eliminating bool vectors:\n"
              << s << "\n";
+
+    // We need to scalarize/de-predicate any loads/stores, since OpenCL does not
+    // support predication.
+    s = scalarize_predicated_loads_stores(s);
+
+    debug(2) << "After removing predication: \n"
+             << s;
 
     // Figure out which arguments should be passed in __constant.
     // Such arguments should be:
@@ -1117,7 +1135,6 @@ void CodeGen_OpenCL_Dev::init_module() {
                << "#define abs_f32 fabs \n"
                << "#define floor_f32 floor \n"
                << "#define ceil_f32 ceil \n"
-               << "#define round_f32 round \n"
                << "#define trunc_f32 trunc \n"
                << "#define pow_f32 pow\n"
                << "#define asin_f32 asin \n"
@@ -1136,7 +1153,7 @@ void CodeGen_OpenCL_Dev::init_module() {
 
     // There does not appear to be a reliable way to safely ignore unused
     // variables in OpenCL C. See https://github.com/halide/Halide/issues/4918.
-    src_stream << "#define halide_unused(x)\n";
+    src_stream << "#define halide_maybe_unused(x)\n";
 
     if (target.has_feature(Target::CLDoubles)) {
         src_stream << "#pragma OPENCL EXTENSION cl_khr_fp64 : enable\n"
@@ -1151,7 +1168,6 @@ void CodeGen_OpenCL_Dev::init_module() {
                    << "#define abs_f64 fabs\n"
                    << "#define floor_f64 floor\n"
                    << "#define ceil_f64 ceil\n"
-                   << "#define round_f64 round\n"
                    << "#define trunc_f64 trunc\n"
                    << "#define pow_f64 pow\n"
                    << "#define asin_f64 asin\n"
@@ -1168,11 +1184,15 @@ void CodeGen_OpenCL_Dev::init_module() {
     }
 
     if (target.has_feature(Target::CLHalf)) {
+        const uint16_t nan_f16 = float16_t::make_nan().to_bits();
+        const uint16_t neg_inf_f16 = float16_t::make_negative_infinity().to_bits();
+        const uint16_t inf_f16 = float16_t::make_infinity().to_bits();
+
         src_stream << "#pragma OPENCL EXTENSION cl_khr_fp16 : enable\n"
                    << "inline half half_from_bits(unsigned short x) {return __builtin_astype(x, half);}\n"
-                   << "inline half nan_f16() { return half_from_bits(32767); }\n"
-                   << "inline half neg_inf_f16() { return half_from_bits(31744); }\n"
-                   << "inline half inf_f16() { return half_from_bits(64512); }\n"
+                   << "inline half nan_f16() { return half_from_bits(" << nan_f16 << "); }\n"
+                   << "inline half neg_inf_f16() { return half_from_bits(" << neg_inf_f16 << "); }\n"
+                   << "inline half inf_f16() { return half_from_bits(" << inf_f16 << "); }\n"
                    << "inline bool is_nan_f16(half x) {return isnan(x); }\n"
                    << "inline bool is_inf_f16(half x) {return isinf(x); }\n"
                    << "inline bool is_finite_f16(half x) {return isfinite(x); }\n"
@@ -1184,7 +1204,6 @@ void CodeGen_OpenCL_Dev::init_module() {
                    << "#define abs_f16 fabs\n"
                    << "#define floor_f16 floor\n"
                    << "#define ceil_f16 ceil\n"
-                   << "#define round_f16 round\n"
                    << "#define trunc_f16 trunc\n"
                    << "#define pow_f16 pow\n"
                    << "#define asin_f16 asin\n"

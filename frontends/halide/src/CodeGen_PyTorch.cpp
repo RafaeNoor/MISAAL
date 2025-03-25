@@ -2,9 +2,7 @@
 
 #include "CodeGen_C.h"
 #include "CodeGen_PyTorch.h"
-#include "IROperator.h"
 #include "Module.h"
-#include "Param.h"
 #include "Util.h"
 #include "Var.h"
 
@@ -25,6 +23,7 @@ void CodeGen_PyTorch::compile(const Module &module) {
                           "Please add \"-user_context\" to the generator's target options.\n";
         }
         stream << "#include \"ATen/cuda/CUDAContext.h\"\n";
+        stream << "#include \"HalidePyTorchCudaHelpers.h\"\n";
     }
     stream << "#include \"HalideBuffer.h\"\n";
     stream << "#include \"HalidePyTorchHelpers.h\"\n";
@@ -43,6 +42,11 @@ void CodeGen_PyTorch::compile(const Module &module) {
     }
 
     for (const auto &f : module.functions()) {
+        // Don't put non-external function declarations in headers.
+        // We need to be consistent with CodeGen_C::compile.
+        if (f.linkage == LinkageType::Internal) {
+            continue;
+        }
         if (target.has_feature(Target::CUDA)) {
             compile(f, true);
         } else {
@@ -206,8 +210,8 @@ void CodeGen_PyTorch::compile(const LoweredFunc &f, bool is_cuda) {
 
     if (!namespaces.empty()) {
         stream << "\n";
-        for (size_t i = namespaces.size(); i > 0; i--) {
-            stream << "}  // namespace " << namespaces[i - 1] << "\n";
+        for (const auto &ns : reverse_view(namespaces)) {
+            stream << "}  // namespace " << ns << "\n";
         }
         stream << "\n";
     }

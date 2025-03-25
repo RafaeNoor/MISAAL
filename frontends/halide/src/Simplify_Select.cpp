@@ -3,39 +3,35 @@
 namespace Halide {
 namespace Internal {
 
-Expr Simplify::visit(const Select *op, ExprInfo *bounds) {
+Expr Simplify::visit(const Select *op, ExprInfo *info) {
 
-    ExprInfo t_bounds, f_bounds;
+    ExprInfo t_info, f_info;
     Expr condition = mutate(op->condition, nullptr);
-    Expr true_value = mutate(op->true_value, &t_bounds);
-    Expr false_value = mutate(op->false_value, &f_bounds);
+    Expr true_value = mutate(op->true_value, &t_info);
+    Expr false_value = mutate(op->false_value, &f_info);
 
-    if (bounds) {
-        bounds->min_defined = t_bounds.min_defined && f_bounds.min_defined;
-        bounds->max_defined = t_bounds.max_defined && f_bounds.max_defined;
-        bounds->min = std::min(t_bounds.min, f_bounds.min);
-        bounds->max = std::max(t_bounds.max, f_bounds.max);
-        bounds->alignment = ModulusRemainder::unify(t_bounds.alignment, f_bounds.alignment);
-        bounds->trim_bounds_using_alignment();
+    if (info) {
+        info->bounds = ConstantInterval::make_union(t_info.bounds, f_info.bounds);
+        info->alignment = ModulusRemainder::unify(t_info.alignment, f_info.alignment);
+        info->trim_bounds_using_alignment();
     }
 
     if (may_simplify(op->type)) {
-        int lanes = op->type.lanes();
         auto rewrite = IRMatcher::rewriter(IRMatcher::select(condition, true_value, false_value), op->type);
 
         // clang-format off
         if (EVAL_IN_LAMBDA
-            (rewrite(select(IRMatcher::intrin(Call::likely, true), x, y), x) ||
-             rewrite(select(IRMatcher::intrin(Call::likely, false), x, y), y) ||
-             rewrite(select(IRMatcher::intrin(Call::likely_if_innermost, true), x, y), x) ||
-             rewrite(select(IRMatcher::intrin(Call::likely_if_innermost, false), x, y), y) ||
+            (rewrite(select(IRMatcher::likely(true), x, y), x) ||
+             rewrite(select(IRMatcher::likely(false), x, y), y) ||
+             rewrite(select(IRMatcher::likely_if_innermost(true), x, y), x) ||
+             rewrite(select(IRMatcher::likely_if_innermost(false), x, y), y) ||
              rewrite(select(1, x, y), x) ||
              rewrite(select(0, x, y), y) ||
              rewrite(select(x, y, y), y) ||
-             rewrite(select(x, intrin(Call::likely, y), y), false_value) ||
-             rewrite(select(x, y, intrin(Call::likely, y)), true_value) ||
-             rewrite(select(x, intrin(Call::likely_if_innermost, y), y), false_value) ||
-             rewrite(select(x, y, intrin(Call::likely_if_innermost, y)), true_value) ||
+             rewrite(select(x, likely(y), y), false_value) ||
+             rewrite(select(x, y, likely(y)), true_value) ||
+             rewrite(select(x, likely_if_innermost(y), y), false_value) ||
+             rewrite(select(x, y, likely_if_innermost(y)), true_value) ||
              false)) {
             return rewrite.result;
         }
@@ -43,8 +39,7 @@ Expr Simplify::visit(const Select *op, ExprInfo *bounds) {
 
         // clang-format off
         if (EVAL_IN_LAMBDA
-            (rewrite(select(broadcast(x, lanes), y, z), select(x, y, z)) ||
-             rewrite(select(x != y, z, w), select(x == y, w, z)) ||
+            (rewrite(select(x != y, z, w), select(x == y, w, z)) ||
              rewrite(select(x <= y, z, w), select(y < x, w, z)) ||
              rewrite(select(x, select(y, z, w), z), select(x && !y, w, z)) ||
              rewrite(select(x, select(y, z, w), w), select(x && y, z, w)) ||
@@ -230,7 +225,7 @@ Expr Simplify::visit(const Select *op, ExprInfo *bounds) {
                rewrite(select(x, y, true), !x || y) ||
                rewrite(select(x, false, y), !x && y) ||
                rewrite(select(x, true, y), x || y))))) {
-            return mutate(rewrite.result, bounds);
+            return mutate(rewrite.result, info);
         }
         // clang-format on
     }

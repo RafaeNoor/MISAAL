@@ -39,16 +39,18 @@ void check(Expr test, Expr expected) {
 
 template<typename T>
 int64_t mul_shift_right(int64_t a, int64_t b, int q) {
-    const int64_t min_t = std::numeric_limits<T>::min();
-    const int64_t max_t = std::numeric_limits<T>::max();
-    return std::min<int64_t>(std::max<int64_t>((a * b) >> q, min_t), max_t);
+    constexpr int64_t min_t = std::numeric_limits<T>::min();
+    constexpr int64_t max_t = std::numeric_limits<T>::max();
+    using W = std::conditional_t<min_t == 0, uint64_t, int64_t>;
+    return std::min<int64_t>(std::max<int64_t>((W(a) * W(b)) >> q, min_t), max_t);
 }
 
 template<typename T>
 int64_t rounding_mul_shift_right(int64_t a, int64_t b, int q) {
     const int64_t min_t = std::numeric_limits<T>::min();
     const int64_t max_t = std::numeric_limits<T>::max();
-    return std::min<int64_t>(std::max<int64_t>((a * b + (1ll << (q - 1))) >> q, min_t), max_t);
+    using W = std::conditional_t<min_t == 0, uint64_t, int64_t>;
+    return std::min<int64_t>(std::max<int64_t>((W(a) * W(b) + (W(1) << (q - 1))) >> q, min_t), max_t);
 }
 
 template<typename T>
@@ -72,7 +74,6 @@ void check_intrinsics_over_range() {
                 {halving_add(a_expr, b_expr), (a + b) >> 1},
                 {rounding_halving_add(a_expr, b_expr), (a + b + 1) >> 1},
                 {halving_sub(a_expr, b_expr), (a - b) >> 1},
-                {rounding_halving_sub(a_expr, b_expr), (a - b + 1) >> 1},
             };
             for (const auto &p : intrinsics_with_reference_answer) {
                 Expr test = lower_intrinsics(p.first);
@@ -120,6 +121,8 @@ Expr make_leaf(Type t, const char *name) {
 }
 
 int main(int argc, char **argv) {
+    Expr i1x = make_leaf(Int(1, 4), "i1x");
+    Expr i1y = make_leaf(Int(1, 4), "i1y");
     Expr i8x = make_leaf(Int(8, 4), "i8x");
     Expr i8y = make_leaf(Int(8, 4), "i8y");
     Expr i8z = make_leaf(Int(8, 4), "i8w");
@@ -149,15 +152,18 @@ int main(int argc, char **argv) {
     // check(u32(u8x) * 256, u32(widening_shift_left(u8x, u8(8))));
 
     // Check widening arithmetic
+    check(i8(i1x) + i1y, widening_add(i1x, i1y));
     check(i16(i8x) + i8y, widening_add(i8x, i8y));
     check(u16(u8x) + u8y, widening_add(u8x, u8y));
     check(i16(u8x) + u8y, i16(widening_add(u8x, u8y)));
     check(f32(f16x) + f32(f16y), widening_add(f16x, f16y));
 
+    check(i8(i1x) - i1y, widening_sub(i1x, i1y));
     check(i16(i8x) - i8y, widening_sub(i8x, i8y));
     check(i16(u8x) - u8y, widening_sub(u8x, u8y));
     check(f32(f16x) - f32(f16y), widening_sub(f16x, f16y));
 
+    check(i8(i1x) * i1y, widening_mul(i1x, i1y));
     check(i16(i8x) * i8y, widening_mul(i8x, i8y));
     check(u16(u8x) * u8y, widening_mul(u8x, u8y));
     check(i32(i8x) * i8y, i32(widening_mul(i8x, i8y)));
@@ -222,12 +228,6 @@ int main(int argc, char **argv) {
     check(u8((widening_add(u8x, u8y) + 1) / 2), rounding_halving_add(u8x, u8y));
     check((i32x + i32y + 1) / 2, rounding_halving_add(i32x, i32y));
 
-    check(i8((i16(i8x) - i8y + 1) / 2), rounding_halving_sub(i8x, i8y));
-    check(u8((u16(u8x) - u8y + 1) / 2), rounding_halving_sub(u8x, u8y));
-    check(i8((widening_sub(i8x, i8y) + 1) / 2), rounding_halving_sub(i8x, i8y));
-    check(u8((widening_sub(u8x, u8y) + 1) / 2), rounding_halving_sub(u8x, u8y));
-    check((i32x - i32y + 1) / 2, rounding_halving_sub(i32x, i32y));
-
     // Check absd
     check(abs(i16(i8x) - i16(i8y)), u16(absd(i8x, i8y)));
     check(abs(i16(u8x) - i16(u8y)), u16(absd(u8x, u8y)));
@@ -250,10 +250,10 @@ int main(int argc, char **argv) {
     check(narrow((u32(u16x) + 15) >> 4), rounding_halving_add(u16x, u16(14)) >> u16(3));
 
     // But not if the constant can't fit in the narrower type
-    check(narrow((u16(u8x) + 500) >> 4), narrow((u16(u8x) + 500) >> 4));
+    check(narrow((u16(u8x) + 500) >> 4), narrow((widen_right_add(cast<uint16_t>(500), u8x)) >> 4));
 
     check((u64(u32x) + 8) / 16, u64(rounding_shift_right(u32x, 4)));
-    check(u16(min((u64(u32x) + 8) / 16, 65535)), u16(min(rounding_shift_right(u32x, 4), 65535)));
+    check(u16(min((u64(u32x) + 8) / 16, 65535)), u16_sat(rounding_shift_right(u32x, 4)));
 
     // And with variable shifts.
     check(i8(widening_add(i8x, (i8(1) << u8y) / 2) >> u8y), rounding_shift_right(i8x, u8y));
@@ -358,6 +358,22 @@ int main(int argc, char **argv) {
         g.vectorize(x, 8);
 
         // This used to crash with a missing symbol error
+        g.compile_jit();
+    }
+
+    // Rounding shifts by extreme values, when lowered, used to have the
+    // potential to overflow and turn into out-of-range shifts. The simplifier
+    // detected this and injected a signed_integer_overflow intrinsic, which
+    // then threw an error in codegen, even though the rounding shift calls are
+    // well-defined.
+    {
+        Func f, g;
+
+        f(x) = cast<uint8_t>(x);
+        f.compute_root();
+
+        g(x) = rounding_shift_right(x, 0) + rounding_shift_left(x, 8);
+
         g.compile_jit();
     }
 

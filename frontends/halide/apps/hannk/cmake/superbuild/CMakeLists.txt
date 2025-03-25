@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.21)
+cmake_minimum_required(VERSION 3.28)
 project(hannk_superbuild LANGUAGES NONE)
 
 ##
@@ -46,11 +46,8 @@ set(ep_opts
     SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../.."
     BUILD_ALWAYS YES
     USES_TERMINAL_CONFIGURE YES
-    USES_TERMINAL_BUILD YES)
-
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.20)
-    list(APPEND ep_opts CONFIGURE_HANDLED_BY_BUILD TRUE)
-endif ()
+    USES_TERMINAL_BUILD YES
+    CONFIGURE_HANDLED_BY_BUILD TRUE)
 
 ##
 # Define host and target builds

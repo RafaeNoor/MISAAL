@@ -1,5 +1,6 @@
 #include "Halide.h"
 #include "check_call_graphs.h"
+#include "test_sharding.h"
 
 #include <cstdio>
 #include <map>
@@ -12,7 +13,8 @@ using std::string;
 using namespace Halide;
 using namespace Halide::Internal;
 
-int simple_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int simple_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -38,7 +40,7 @@ int simple_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int> im = g.realize({80, 80});
@@ -46,13 +48,14 @@ int simple_rfactor_test(bool compile_module) {
             return (10 <= x && x <= 29) && (30 <= y && y <= 69) ? std::max(40 + x + y, 40) : 40;
         };
         if (check_image(im, func)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int reorder_split_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int reorder_split_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -83,7 +86,7 @@ int reorder_split_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int> im = g.realize({80, 80});
@@ -91,13 +94,14 @@ int reorder_split_rfactor_test(bool compile_module) {
             return ((10 <= x && x <= 29) && (20 <= y && y <= 49)) ? x - y + 1 : 1;
         };
         if (check_image(im, func)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int multi_split_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int multi_split_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -131,7 +135,7 @@ int multi_split_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int> im = g.realize({80, 80});
@@ -139,13 +143,14 @@ int multi_split_rfactor_test(bool compile_module) {
             return ((10 <= x && x <= 29) && (20 <= y && y <= 49)) ? x - y + 1 : 1;
         };
         if (check_image(im, func)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int reorder_fuse_wrapper_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int reorder_fuse_wrapper_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y"), z("z");
 
@@ -178,7 +183,7 @@ int reorder_fuse_wrapper_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int> im = g.realize({20, 20, 20});
@@ -189,13 +194,14 @@ int reorder_fuse_wrapper_rfactor_test(bool compile_module) {
                        1;
         };
         if (check_image(im, func)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int non_trivial_lhs_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int non_trivial_lhs_rfactor_test() {
     Func a("a"), b("b"), c("c");
     Var x("x"), y("y"), z("z");
 
@@ -250,7 +256,7 @@ int non_trivial_lhs_rfactor_test(bool compile_module) {
                 {c.name(), {}},
             };
             if (check_call_graphs(g, expected) != 0) {
-                return -1;
+                return 1;
             }
         } else {
             Buffer<int> im = g.realize({20, 20, 20});
@@ -258,14 +264,15 @@ int non_trivial_lhs_rfactor_test(bool compile_module) {
                 return im_ref(x, y, z);
             };
             if (check_image(im, func)) {
-                return -1;
+                return 1;
             }
         }
     }
     return 0;
 }
 
-int simple_rfactor_with_specialize_test(bool compile_module) {
+template<bool compile_module>
+int simple_rfactor_with_specialize_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -292,7 +299,7 @@ int simple_rfactor_with_specialize_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         {
@@ -302,7 +309,7 @@ int simple_rfactor_with_specialize_test(bool compile_module) {
                 return (10 <= x && x <= 29) && (30 <= y && y <= 69) ? std::min(x + y + 2, 40) : 40;
             };
             if (check_image(im, func)) {
-                return -1;
+                return 1;
             }
         }
         {
@@ -312,14 +319,15 @@ int simple_rfactor_with_specialize_test(bool compile_module) {
                 return (10 <= x && x <= 29) && (30 <= y && y <= 69) ? std::min(x + y + 2, 40) : 40;
             };
             if (check_image(im, func)) {
-                return -1;
+                return 1;
             }
         }
     }
     return 0;
 }
 
-int rdom_with_predicate_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int rdom_with_predicate_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y"), z("z");
 
@@ -347,7 +355,7 @@ int rdom_with_predicate_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int> im = g.realize({20, 20, 20});
@@ -358,13 +366,14 @@ int rdom_with_predicate_rfactor_test(bool compile_module) {
                        1;
         };
         if (check_image(im, func)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int histogram_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int histogram_rfactor_test() {
     int W = 128, H = 128;
 
     // Compute a random image and its true histogram
@@ -405,7 +414,7 @@ int histogram_rfactor_test(bool compile_module) {
 
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int32_t> histogram = g.realize({10});  // buckets 10-20 only
@@ -413,14 +422,15 @@ int histogram_rfactor_test(bool compile_module) {
             if (histogram(i - 10) != reference_hist[i]) {
                 printf("Error: bucket %d is %d instead of %d\n",
                        i, histogram(i), reference_hist[i]);
-                return -1;
+                return 1;
             }
         }
     }
     return 0;
 }
 
-int parallel_dot_product_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int parallel_dot_product_rfactor_test() {
     int size = 1024;
 
     Func f("f"), g("g"), a("a"), b("b");
@@ -470,19 +480,20 @@ int parallel_dot_product_rfactor_test(bool compile_module) {
             {b.name(), {}},
         };
         if (check_call_graphs(dot, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Buffer<int32_t> im = dot.realize();
         if (ref(0) != im(0)) {
             printf("result = %d instead of %d\n", im(0), ref(0));
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int tuple_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int tuple_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -525,7 +536,7 @@ int tuple_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Realization rn = g.realize({80, 80});
@@ -539,20 +550,21 @@ int tuple_rfactor_test(bool compile_module) {
             return ref_im1(x, y);
         };
         if (check_image(im1, func1)) {
-            return -1;
+            return 1;
         }
 
         auto func2 = [&ref_im2](int x, int y, int z) {
             return ref_im2(x, y);
         };
         if (check_image(im2, func2)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
 }
 
-int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int tuple_specialize_rdom_predicate_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y"), z("z");
 
@@ -599,7 +611,7 @@ int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         {
@@ -616,13 +628,13 @@ int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
                 return ref_im1(x, y, z);
             };
             if (check_image(im1, func1)) {
-                return -1;
+                return 1;
             }
             auto func2 = [&ref_im2](int x, int y, int z) {
                 return ref_im2(x, y, z);
             };
             if (check_image(im2, func2)) {
-                return -1;
+                return 1;
             }
         }
         {
@@ -639,13 +651,13 @@ int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
                 return ref_im1(x, y, z);
             };
             if (check_image(im1, func1)) {
-                return -1;
+                return 1;
             }
             auto func2 = [&ref_im2](int x, int y, int z) {
                 return ref_im2(x, y, z);
             };
             if (check_image(im2, func2)) {
-                return -1;
+                return 1;
             }
         }
         {
@@ -662,13 +674,13 @@ int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
                 return ref_im1(x, y, z);
             };
             if (check_image(im1, func1)) {
-                return -1;
+                return 1;
             }
             auto func2 = [&ref_im2](int x, int y, int z) {
                 return ref_im2(x, y, z);
             };
             if (check_image(im2, func2)) {
-                return -1;
+                return 1;
             }
         }
         {
@@ -685,13 +697,13 @@ int tuple_specialize_rdom_predicate_rfactor_test(bool compile_module) {
                 return ref_im1(x, y, z);
             };
             if (check_image(im1, func1)) {
-                return -1;
+                return 1;
             }
             auto func2 = [&ref_im2](int x, int y, int z) {
                 return ref_im2(x, y, z);
             };
             if (check_image(im2, func2)) {
-                return -1;
+                return 1;
             }
         }
     }
@@ -737,14 +749,14 @@ int complex_multiply_rfactor_test() {
         return ref_im1(x, y);
     };
     if (check_image(im1, func1)) {
-        return -1;
+        return 1;
     }
 
     auto func2 = [&ref_im2](int x, int y, int z) {
         return ref_im2(x, y);
     };
     if (check_image(im2, func2)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -793,21 +805,21 @@ int argmin_rfactor_test() {
         return ref_im1(x, y);
     };
     if (check_image(im1, func1)) {
-        return -1;
+        return 1;
     }
 
     auto func2 = [&ref_im2](int x, int y, int z) {
         return ref_im2(x, y);
     };
     if (check_image(im2, func2)) {
-        return -1;
+        return 1;
     }
 
     auto func3 = [&ref_im3](int x, int y, int z) {
         return ref_im3(x, y);
     };
     if (check_image(im3, func3)) {
-        return -1;
+        return 1;
     }
 
     return 0;
@@ -820,7 +832,7 @@ int allocation_bound_test_trace(JITUserContext *user_context, const halide_trace
             printf("Bounds on realization of f were supposed to be [0, 2]\n"
                    "Instead they are: [%d, %d]\n",
                    e->coordinates[0], e->coordinates[1]);
-            exit(-1);
+            exit(1);
         }
     }
     return 0;
@@ -881,13 +893,14 @@ int rfactor_tile_reorder_test() {
         return im_ref(x, y);
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
 
     return 0;
 }
 
-int tuple_partial_reduction_rfactor_test(bool compile_module) {
+template<bool compile_module>
+int tuple_partial_reduction_rfactor_test() {
     Func f("f"), g("g");
     Var x("x"), y("y");
 
@@ -930,7 +943,7 @@ int tuple_partial_reduction_rfactor_test(bool compile_module) {
             {f.name(), {}},
         };
         if (check_call_graphs(g, expected) != 0) {
-            return -1;
+            return 1;
         }
     } else {
         Realization rn = g.realize({80, 80});
@@ -944,14 +957,14 @@ int tuple_partial_reduction_rfactor_test(bool compile_module) {
             return ref_im1(x, y);
         };
         if (check_image(im1, func1)) {
-            return -1;
+            return 1;
         }
 
         auto func2 = [&ref_im2](int x, int y, int z) {
             return ref_im2(x, y);
         };
         if (check_image(im2, func2)) {
-            return -1;
+            return 1;
         }
     }
     return 0;
@@ -974,168 +987,102 @@ int self_assignment_rfactor_test() {
         return x + y;
     };
     if (check_image(im, func)) {
-        return -1;
+        return 1;
     }
+    return 0;
+}
+
+int inlined_rfactor_with_disappearing_rvar_test() {
+    ImageParam in1(Float(32), 1);
+
+    Var x("x"), r("r"), u("u");
+    RVar ro("ro"), ri("ri");
+    Func f("f"), g("g");
+    Func sum1("sum1");
+
+    RDom rdom(0, 16);
+    g(r, x) = in1(x);
+    f(x) = sum(rdom, g(rdom, x), sum1);
+
+    {
+        // Some of the autoschedulers execute code like the below, which can
+        // erase an RDom from the LHS and RHS of a Func, but not from the dims
+        // list, which confused the implementation of rfactor (see
+        // https://github.com/halide/Halide/issues/8282)
+        using namespace Halide::Internal;
+        std::vector<Function> outputs = {f.function()};
+        auto env = build_environment(outputs);
+
+        for (auto &iter : env) {
+            iter.second.lock_loop_levels();
+        }
+
+        inline_function(sum1.function(), g.function());
+    }
+
+    sum1.compute_root()
+        .update(0)
+        .split(rdom, ro, ri, 8, TailStrategy::GuardWithIf)
+        .rfactor({{ro, u}})
+        .compute_root();
+
+    // This would crash with a missing symbol error prior to #8282 being fixed.
+    f.compile_jit();
     return 0;
 }
 
 }  // namespace
 
 int main(int argc, char **argv) {
-    printf("Running self assignment rfactor test\n");
-    if (self_assignment_rfactor_test() != 0) {
-        return -1;
-    }
+    struct Task {
+        std::string desc;
+        std::function<int()> fn;
+    };
 
-    printf("Running simple rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (simple_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (simple_rfactor_test(false) != 0) {
-        return -1;
-    }
+    std::vector<Task> tasks = {
+        {"self assignment rfactor test", self_assignment_rfactor_test},
+        {"simple rfactor test: checking call graphs...", simple_rfactor_test<true>},
+        {"simple rfactor test: checking output img correctness...", simple_rfactor_test<false>},
+        {"reorder split rfactor test: checking call graphs...", reorder_split_rfactor_test<true>},
+        {"reorder split rfactor test: checking output img correctness...", reorder_split_rfactor_test<false>},
+        {"multiple split rfactor test: checking call graphs...", multi_split_rfactor_test<true>},
+        {"multiple split rfactor test: checking output img correctness...", multi_split_rfactor_test<false>},
+        {"reorder fuse wrapper rfactor test: checking call graphs...", reorder_fuse_wrapper_rfactor_test<true>},
+        {"reorder fuse wrapper rfactor test: checking output img correctness...", reorder_fuse_wrapper_rfactor_test<false>},
+        {"non trivial lhs rfactor test: checking call graphs...", non_trivial_lhs_rfactor_test<true>},
+        {"non trivial lhs rfactor test: checking output img correctness...", non_trivial_lhs_rfactor_test<false>},
+        {"simple rfactor with specialization test: checking call graphs...", simple_rfactor_with_specialize_test<true>},
+        {"simple rfactor with specialization test: checking output img correctness...", simple_rfactor_with_specialize_test<false>},
+        {"rdom with predicate rfactor test: checking call graphs...", rdom_with_predicate_rfactor_test<true>},
+        {"rdom with predicate rfactor test: checking output img correctness...", rdom_with_predicate_rfactor_test<false>},
+        {"histogram rfactor test: checking call graphs...", histogram_rfactor_test<true>},
+        {"histogram rfactor test: checking output img correctness...", histogram_rfactor_test<false>},
+        {"parallel dot product rfactor test: checking call graphs...", parallel_dot_product_rfactor_test<true>},
+        {"parallel dot product rfactor test: checking output img correctness...", parallel_dot_product_rfactor_test<false>},
+        {"tuple rfactor test: checking call graphs...", tuple_rfactor_test<true>},
+        {"tuple rfactor test: checking output img correctness...", tuple_rfactor_test<false>},
+        {"tuple specialize rdom predicate rfactor test: checking call graphs...", tuple_specialize_rdom_predicate_rfactor_test<true>},
+        {"tuple specialize rdom predicate rfactor test: checking output img correctness...", tuple_specialize_rdom_predicate_rfactor_test<false>},
+        {"parallel dot product rfactor test: checking call graphs...", parallel_dot_product_rfactor_test<true>},
+        {"parallel dot product rfactor test: checking output img correctness...", parallel_dot_product_rfactor_test<false>},
+        {"tuple partial reduction rfactor test: checking call graphs...", tuple_partial_reduction_rfactor_test<true>},
+        {"tuple partial reduction rfactor test: checking output img correctness...", tuple_partial_reduction_rfactor_test<false>},
+        {"check allocation bound test", check_allocation_bound_test},
+        {"rfactor tile reorder test: checking output img correctness...", rfactor_tile_reorder_test},
+        {"complex multiply rfactor test", complex_multiply_rfactor_test},
+        {"argmin rfactor test", argmin_rfactor_test},
+        {"inlined rfactor with disappearing rvar test", inlined_rfactor_with_disappearing_rvar_test},
+    };
 
-    printf("Running reorder split rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (reorder_split_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (reorder_split_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running multiple split rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (multi_split_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (multi_split_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running reorder fuse wrapper rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (reorder_fuse_wrapper_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (reorder_fuse_wrapper_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running non trivial lhs rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (non_trivial_lhs_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (non_trivial_lhs_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running simple rfactor with specialization test\n");
-    printf("    checking call graphs...\n");
-    if (simple_rfactor_with_specialize_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (simple_rfactor_with_specialize_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running rdom with predicate rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (rdom_with_predicate_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (rdom_with_predicate_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running histogram rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (histogram_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (histogram_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running parallel dot product rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (parallel_dot_product_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (parallel_dot_product_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running tuple rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (tuple_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (tuple_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running tuple specialize rdom predicate rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (tuple_specialize_rdom_predicate_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (tuple_specialize_rdom_predicate_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running parallel dot product rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (parallel_dot_product_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (parallel_dot_product_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running tuple partial reduction rfactor test\n");
-    printf("    checking call graphs...\n");
-    if (tuple_partial_reduction_rfactor_test(true) != 0) {
-        return -1;
-    }
-    printf("    checking output img correctness...\n");
-    if (tuple_partial_reduction_rfactor_test(false) != 0) {
-        return -1;
-    }
-
-    printf("Running check allocation bound test\n");
-    if (check_allocation_bound_test() != 0) {
-        return -1;
-    }
-
-    printf("Running rfactor tile reorder test\n");
-    printf("    checking output img correctness...\n");
-    if (rfactor_tile_reorder_test() != 0) {
-        return -1;
-    }
-
-    printf("Running complex multiply rfactor test\n");
-    if (complex_multiply_rfactor_test() != 0) {
-        return -1;
-    }
-
-    printf("Running argmin rfactor test\n");
-    if (argmin_rfactor_test() != 0) {
-        return -1;
+    using Sharder = Halide::Internal::Test::Sharder;
+    Sharder sharder;
+    for (size_t t = 0; t < tasks.size(); t++) {
+        if (!sharder.should_run(t)) continue;
+        const auto &task = tasks.at(t);
+        std::cout << task.desc << "\n";
+        if (task.fn() != 0) {
+            return 1;
+        }
     }
 
     printf("Success!\n");

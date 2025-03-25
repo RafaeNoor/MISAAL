@@ -43,6 +43,7 @@ enum {
     EF_HEXAGON_MACH_V62 = 0x62,
     EF_HEXAGON_MACH_V65 = 0x65,
     EF_HEXAGON_MACH_V66 = 0x66,
+    EF_HEXAGON_MACH_V68 = 0x68,
 };
 
 enum {
@@ -286,7 +287,7 @@ void do_reloc(char *addr, uint32_t mask, uintptr_t val, bool is_signed, bool ver
             // Pull out the subinstructions. They're the low 13
             // bits of each half-word.
             uint32_t hi = (inst >> 16) & ((1 << 13) - 1);
-            //uint32_t lo = inst & ((1 << 13) - 1);
+            // uint32_t lo = inst & ((1 << 13) - 1);
 
             // We only understand the ones where hi starts with 010
             internal_assert((hi >> 10) == 2);
@@ -363,7 +364,7 @@ void do_reloc(char *addr, uint32_t mask, uintptr_t val, bool is_signed, bool ver
                 consumed_every_bit |= ((intptr_t)val) == -1;
                 val = ((intptr_t)val) >> 1;
             } else {
-                val = ((uintptr_t)val) >> 1;
+                val = val >> 1;
             }
             consumed_every_bit |= (val == 0);
             inst |= (next_bit << i);
@@ -551,7 +552,9 @@ public:
     uint32_t flags;
 
     HexagonLinker(const Target &target) {
-        if (target.has_feature(Target::HVX_v66)) {
+        if (target.has_feature(Target::HVX_v68)) {
+            flags = Elf::EF_HEXAGON_MACH_V68;
+        } else if (target.has_feature(Target::HVX_v66)) {
             flags = Elf::EF_HEXAGON_MACH_V66;
         } else if (target.has_feature(Target::HVX_v65)) {
             flags = Elf::EF_HEXAGON_MACH_V65;
@@ -695,12 +698,6 @@ class InjectHexagonRpc : public IRMutator {
 
     Module &device_code;
 
-    Expr state_var(const std::string &name, Type type) {
-        return Let::make(name, state_var_ptr(name, type),
-                         Load::make(type_of<void *>(), name, 0,
-                                    Buffer<>(), Parameter(), const_true(), ModulusRemainder()));
-    }
-
     Expr state_var_ptr(const std::string &name, Type type) {
         Expr &buf = state_bufs[name];
         if (!buf.defined()) {
@@ -712,7 +709,7 @@ class InjectHexagonRpc : public IRMutator {
     }
 
     Expr module_state() {
-        return state_var("hexagon_module_state", type_of<void *>());
+        return Call::make(type_of<void *>(), "halide_hexagon_get_module_state", {state_var_ptr("hexagon_module_state", type_of<void *>())}, Call::Extern);
     }
 
     Expr module_state_ptr() {
@@ -749,7 +746,7 @@ class InjectHexagonRpc : public IRMutator {
         if (is_const_one(loop->extent)) {
             body = LetStmt::make(loop->name, loop->min, loop->body);
         } else {
-            body = For::make(loop->name, loop->min, loop->extent, loop->for_type,
+            body = For::make(loop->name, loop->min, loop->extent, loop->for_type, loop->partition_policy,
                              DeviceAPI::None, loop->body);
         }
 
@@ -989,7 +986,7 @@ Stmt inject_hexagon_rpc(Stmt s, const Target &host_target,
         Target::HVX_v62,
         Target::HVX_v65,
         Target::HVX_v66,
-        Target::DisableLLVMLoopOpt,
+        Target::HVX_v68,
     };
     for (Target::Feature i : shared_features) {
         if (host_target.has_feature(i)) {
