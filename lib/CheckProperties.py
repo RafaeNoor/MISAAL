@@ -40,9 +40,9 @@ from sema.hexsemantics_new import semantics as hvx_semantics
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics
 #from sema.halide_sema import halide_semantics
 from sema.halide_decomposed import halide_decomposed  as halide_semantics
+from sema.tvm_folded import tvm_folded as tvm_semantics
 #from sema.hex_swizzles import hvx_swizzles
 from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles
-
 
 #from sema.x86_swizzles import x86_swizzles
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles
@@ -51,7 +51,7 @@ from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles
 
 from sema.ARMSema import arm_semantics
 from sema.repairs_sema import repair_semantics
-from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc, HALIDE_SYNTH_DESC, HALIDE_X86_SYNTH_DESC
+from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc, HALIDE_SYNTH_DESC, HALIDE_X86_SYNTH_DESC, TVM_X86_SYNTH_DESC
 from utils.DSLInstructionUtils import get_random_tempfile_name
 
 import os
@@ -114,6 +114,7 @@ TARGET_TO_SEMA = {
     "hvx": hvx_semantics,
     "halide_hvx": halide_semantics,
     "halide": halide_semantics,
+    "tvm": tvm_semantics,
     "arm" : arm_semantics,
     "x86_swizzles":  x86_swizzles,
     "hvx_swizzles": hvx_swizzles,
@@ -126,6 +127,7 @@ TARGET_TO_SWIZZLE = {
     "hvx": hvx_swizzles,
     "halide_hvx": {},
     "halide": {},
+    "tvm": {},
     "arm" : arm_swizzles,
     "x86_swizzles":  {},
     "hvx_swizzles": {},
@@ -137,6 +139,7 @@ TARGET_TO_SWIZZLE_DMAP = {
     "arm": "arm_swizzle_derivation_map.JSON",
     "x86": "x86_swizzle_derivation_map.JSON",
     "halide" : "halide_swizzle_derivation_map.JSON",
+    "tvm" : "tvm_swizzle_derivation_map.JSON",
     "hvx_swizzles": None
 }
 
@@ -146,6 +149,7 @@ TARGET_TO_DESC = {
     "hvx": HVX_SYNTH_DESC,
     "halide": HALIDE_HVX_SYNTH_DESC,
     "halide_hvx": HALIDE_HVX_SYNTH_DESC,
+    "tvm": TVM_X86_SYNTH_DESC,
     "arm": ARM_SYNTH_DESC,
     "x86_swizzles":  X86_SYNTH_DESC,
     "hvx_swizzles": HVX_SYNTH_DESC,
@@ -162,13 +166,13 @@ commutative_path = "commutative_map.json"
 
 
 
-TARGETS = ["hvx_swizzles"]
+TARGETS = ["x86"]
 
 
 
 
 
-output_language = "hvx"
+output_language = "x86"
 output_dsl_list = parse_dict_with_bounded(TARGET_TO_SEMA[output_language])
 output_synth_desc = TARGET_TO_DESC[output_language]
 
@@ -176,7 +180,7 @@ test_properties = [EqClassEqualDepthV3Synth]
 test_properties = [EnumeratePattern]
 test_properties = [EqClassEqualDepthV4]
 #test_properties = [IdentifySwizzles]
-test_properties = [LowerSwizzles]
+test_properties = [RepairRelavanceIntermediates]
 
 
 for property in test_properties:
@@ -256,8 +260,12 @@ for property in test_properties:
 
         elif property is RepairRelavance:
             repairs_sema = parse_dict(repair_semantics)
-            halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
+
+            if target == "tvm":
+                output_dsl_list = parse_dict(tvm_semantics)
+            else:
+                output_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 4 )
 
         elif property is RepairRelavanceV2 or property is RepairRelavanceV3 :
             repair_memo_name = "RepairRelavanceV3_{}_d2_processed_results.json".format(target)
@@ -286,8 +294,9 @@ for property in test_properties:
                 repair_memo_name = None
             repair_memo_name = None
             repairs_sema = parse_dict(repair_semantics)
-            halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+            output_dsl_list = parse_dict(tvm_semantics)
+            # output_dsl_list = parse_dict(halide_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
         elif property is RepairRelavancePostProcess:
             version = "Intermediates"
             repair_memo_name = "RepairRelavance{}_{}_intermediate_results.py".format(version,target)

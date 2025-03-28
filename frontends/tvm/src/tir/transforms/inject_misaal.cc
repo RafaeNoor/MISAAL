@@ -77,6 +77,18 @@ class MisaalInjecter : public tvm::arith::IRMutatorWithAnalyzer {
         }
     }
 
+    void PrintToFile(){
+        tvm::transform::PassContext pass_ctx = tvm::transform::PassContext::Current();
+        Optional<String> file_path = pass_ctx->GetConfig("misaal_s_exp_path", Optional<String>(nullptr));
+        if (file_path){
+            std::ofstream f(file_path.value(), std::ofstream::trunc);
+            for (auto& pair : rosette_funcs_){
+                f << "==\n" << pair.first << ":\n" << pair.second << std::endl;
+            }
+            f.close();
+        }
+    }
+
     private: 
     int func_counter_ = 0;
 
@@ -101,6 +113,7 @@ Pass InjectMisaal() {
         MisaalInjecter misaal_injecter(&analyzer, target.value()->kind->name, mtriple.value());
         n->body = misaal_injecter(std::move(n->body));
         misaal_injecter.PrintGeneratedFunctions();
+        misaal_injecter.PrintToFile();
         return f;
     };
     return CreatePrimFuncPass(pass_func, 0, "misaal.InjectMisaal", {});

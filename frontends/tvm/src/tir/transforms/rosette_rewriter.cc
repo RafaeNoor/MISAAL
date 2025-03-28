@@ -20,29 +20,70 @@
 namespace tvm {
 namespace tir {
 
+    std::string RosetteRewriter::print_signed_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits, int sign){
+        return "(" + op + "\n" + a + "\n" + b + "\n" + std::to_string(bits) + "\n" + std::to_string(bits * lanes) + "\n" + std::to_string(sign) + ")";
+    }
+
     std::string RosetteRewriter::print_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits){
         return "(" + op + "\n" + a + "\n" + b + "\n" + std::to_string(bits) + "\n" + std::to_string(bits * lanes) + ")";
     }
+
+    #define REWRITE_SIGNED_BINOP(Op, RosetteOp) \
+    std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
+        DataType dtype = op->dtype; \
+        if (dtype.is_uint()){ \
+            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
+        } else if (dtype.is_int()){ \
+            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
+        } else { \
+            ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
+            exit(0); \
+            return ""; \
+        } \
+    }
+
+    // For comparison ops, use the left child dtype as the input to the s-exp
+    #define REWRITE_SIGNED_COMP_BINOP(Op, RosetteOp) \
+    std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
+        DataType dtype = op->a->dtype; \
+        if (dtype.is_uint()){ \
+            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
+        } else if (dtype.is_int()){ \
+            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
+        } else { \
+            ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
+            exit(0); \
+            return ""; \
+        } \
+    }
+
+    // For comparison ops, use the left child dtype as the input to s-exp
+    #define REWRITE_COMP_BINOP(Op, RosetteOp) \
+    std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
+        DataType dtype = op->a->dtype; \
+        return print_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits()); \
+    }
+
     #define REWRITE_BASIC_BINOP(Op, RosetteOp) \
     std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
         DataType dtype = op->dtype; \
         return print_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits()); \
     }
 
-    REWRITE_BASIC_BINOP(Add, "vec-add");
-    REWRITE_BASIC_BINOP(Sub, "vec-sub");
-    REWRITE_BASIC_BINOP(Mul, "vec-mul");
-    REWRITE_BASIC_BINOP(Div, "vec-div");
-    REWRITE_BASIC_BINOP(Mod, "vec-mod");
-    REWRITE_BASIC_BINOP(Min, "vec-min");
-    REWRITE_BASIC_BINOP(Max, "vec-max");
-    REWRITE_BASIC_BINOP(EQ, "vec-eq");
-    REWRITE_BASIC_BINOP(LT, "vec-lt");
-    REWRITE_BASIC_BINOP(NE, "vec-ne");
-    REWRITE_BASIC_BINOP(LE, "vec-le");
-    REWRITE_BASIC_BINOP(GT, "vec-gt");
-    REWRITE_BASIC_BINOP(GE, "vec-ge");
-    REWRITE_BASIC_BINOP(And, "vec-and");
+    REWRITE_SIGNED_BINOP(Add, "vec-add");
+    REWRITE_SIGNED_BINOP(Sub, "vec-sub");
+    REWRITE_SIGNED_BINOP(Mul, "vec-mul");
+    REWRITE_SIGNED_BINOP(Div, "vec-div");
+    REWRITE_SIGNED_BINOP(Mod, "vec-mod");
+    REWRITE_SIGNED_BINOP(Min, "vec-min");
+    REWRITE_SIGNED_BINOP(Max, "vec-max");
+    REWRITE_COMP_BINOP(EQ, "vec-eq");
+    REWRITE_SIGNED_COMP_BINOP(LT, "vec-lt");
+    REWRITE_COMP_BINOP(NE, "vec-ne");
+    REWRITE_SIGNED_COMP_BINOP(LE, "vec-le");
+    REWRITE_SIGNED_COMP_BINOP(GT, "vec-gt");
+    REWRITE_SIGNED_COMP_BINOP(GE, "vec-ge");
+    REWRITE_BASIC_BINOP(And, "vec-bwand");
     REWRITE_BASIC_BINOP(Or, "vec-or");
 
 
@@ -69,7 +110,7 @@ namespace tir {
 
 
     // Rewrite op if it is vectorizable, otherwise stop rewriting.
-    #define DEFINE_REWRITE_OP(Op)                                       \
+    #define DEFINE_VISIT_OP(Op)                                       \
         std::string RosetteRewriter::VisitExpr_(const Op##Node* op){    \
             if (misaal::IsVectorizable(op)){                              \
                 return Rewrite(op);                                     \
@@ -80,34 +121,34 @@ namespace tir {
             }                                                           \
         }
 
-    DEFINE_REWRITE_OP(Var);
-    DEFINE_REWRITE_OP(Cast);
-    DEFINE_REWRITE_OP(IntImm);
-    DEFINE_REWRITE_OP(FloatImm);
-    DEFINE_REWRITE_OP(StringImm);
-    DEFINE_REWRITE_OP(Sub);
-    DEFINE_REWRITE_OP(Mul);
-    DEFINE_REWRITE_OP(Div);
-    DEFINE_REWRITE_OP(Mod);
-    DEFINE_REWRITE_OP(Min);
-    DEFINE_REWRITE_OP(Max);
-    DEFINE_REWRITE_OP(LT);
-    DEFINE_REWRITE_OP(LE);
-    DEFINE_REWRITE_OP(GT);
-    DEFINE_REWRITE_OP(GE);
-    DEFINE_REWRITE_OP(EQ);
-    DEFINE_REWRITE_OP(NE);
-    DEFINE_REWRITE_OP(And);
-    DEFINE_REWRITE_OP(Or);
-    DEFINE_REWRITE_OP(Not);
-    DEFINE_REWRITE_OP(Select);
-    DEFINE_REWRITE_OP(Let);
-    DEFINE_REWRITE_OP(BufferLoad);
-    DEFINE_REWRITE_OP(Call);
-    DEFINE_REWRITE_OP(Add);
-    DEFINE_REWRITE_OP(Ramp);
-    DEFINE_REWRITE_OP(Shuffle);
-    DEFINE_REWRITE_OP(Broadcast);
+    DEFINE_VISIT_OP(Var);
+    DEFINE_VISIT_OP(Cast);
+    DEFINE_VISIT_OP(IntImm);
+    DEFINE_VISIT_OP(FloatImm);
+    DEFINE_VISIT_OP(StringImm);
+    DEFINE_VISIT_OP(Sub);
+    DEFINE_VISIT_OP(Mul);
+    DEFINE_VISIT_OP(Div);
+    DEFINE_VISIT_OP(Mod);
+    DEFINE_VISIT_OP(Min);
+    DEFINE_VISIT_OP(Max);
+    DEFINE_VISIT_OP(LT);
+    DEFINE_VISIT_OP(LE);
+    DEFINE_VISIT_OP(GT);
+    DEFINE_VISIT_OP(GE);
+    DEFINE_VISIT_OP(EQ);
+    DEFINE_VISIT_OP(NE);
+    DEFINE_VISIT_OP(And);
+    DEFINE_VISIT_OP(Or);
+    DEFINE_VISIT_OP(Not);
+    DEFINE_VISIT_OP(Select);
+    DEFINE_VISIT_OP(Let);
+    DEFINE_VISIT_OP(BufferLoad);
+    DEFINE_VISIT_OP(Call);
+    DEFINE_VISIT_OP(Add);
+    DEFINE_VISIT_OP(Ramp);
+    DEFINE_VISIT_OP(Shuffle);
+    DEFINE_VISIT_OP(Broadcast);
 
     PrimExpr RosetteRewriter::result(DataType result_dtype){
         return Call(result_dtype, builtin::call_pure_extern(), args);

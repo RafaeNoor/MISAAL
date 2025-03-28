@@ -45,7 +45,7 @@ class Property:
         self.keep_temp_files = keep_temp_files
         self.memo_path = memo_path
 
-        self.notify_enabled = True
+        self.notify_enabled = False
         self.notify_count = self.BATCH_SIZE
         self.notify_to = 'arnoor2@illinois.edu'
         self.notify_iter = 0
