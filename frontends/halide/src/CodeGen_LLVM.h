@@ -43,6 +43,7 @@ class GlobalVariable;
 #include "Module.h"
 #include "Scope.h"
 #include "Target.h"
+#include "Bounds.h"
 
 namespace Halide {
 
@@ -171,6 +172,8 @@ protected:
     llvm::MDNode *strict_fp_math_md = nullptr;
     std::vector<LoweredArgument> current_function_args;
     std::vector<llvm::CallInst *> hydride_nodes;
+
+    FuncValueBounds func_value_bounds;
 
     /** The target we're generating code for */
     Halide::Target target;

@@ -28,6 +28,8 @@
 
 #include <chrono>
 
+#include "VectorInfo.h"
+
 namespace Halide {
 
     namespace Internal {
@@ -119,6 +121,7 @@ namespace Halide {
                 std::map<std::string, Expr> VariableNameToExpr;
 
                 // Expressions
+                std::vector<Expr> visit(const Reinterpret *op, unsigned num_chunks);
                 std::vector<Expr> visit(const Load *op, unsigned num_chunks);
                 std::vector<Expr> visit(const Add *op, unsigned num_chunks);
                 std::vector<Expr> visit(const Ramp *op, unsigned num_chunks);
@@ -176,6 +179,7 @@ namespace Halide {
                 Stmt visit(const Fork *op);
                 Stmt visit(const IfThenElse *op);
                 Stmt visit(const Atomic *op);
+                Stmt visit(const HoistedStorage *op);
 
                 // Helpers
                 bool can_type_fit_vector_sizes(Type t);

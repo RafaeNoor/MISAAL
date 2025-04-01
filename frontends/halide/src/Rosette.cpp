@@ -324,6 +324,12 @@ public:
         printer.print(op);
         return NYI();
     }
+
+    std::string visit(const Reinterpret *op) {
+        printer.print(op);
+        return NYI();
+    }
+
     std::string visit(const For *op) {
         printer.print(op);
         return NYI();
@@ -698,7 +704,7 @@ public:
             indent.push(indent.top() + 1);
             const std::string rkt_val = dispatch(op->value);
             indent.pop();
-            bool use_generalized_cast = true;
+            // bool use_generalized_cast = true;
 
             size_t iprec = op->value.type().bits();
             std::string iprec_str = std::to_string(iprec);
@@ -804,6 +810,7 @@ public:
             if (op->args[0].type().is_scalar())
                 args_fixed[0] = Broadcast::make(op->args[0], op->args[1].type().lanes());
             return print_intrinsic("if", args_fixed, op->type.is_scalar(), sign, lanes, bits);
+        /*
         } else if (op->is_intrinsic(Call::reinterpret)) {
             internal_assert(op->args.size() == 1);
             const std::string call_string = tabs() + "(vec-reinterpret" + "\n";
@@ -813,6 +820,7 @@ public:
             const std::string full_type_string = "\n" + tabs() + "\'" + type_string + " " + std::to_string(op->type.lanes());
             indent.pop();
             return call_string + arg + full_type_string + ")";
+            */
         } else {
             return print_intrinsic(op->name, op->args, op->type.is_scalar(), sign, lanes, bits);
         }
@@ -1556,7 +1564,7 @@ public:
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
-            Stmt NewFor = For::make(f->name, f->min, f->extent, f->for_type, f->device_api, new_stmt);
+            Stmt NewFor = For::make(f->name, f->min, f->extent, f->for_type, f->partition_policy,  f->device_api, new_stmt);
             return NewFor;
         }
 
@@ -1727,6 +1735,9 @@ misaal::TARGET get_misaal_target(HydrideSupportedArchitecture _arch){
             return misaal::TARGET::x86;
         case HydrideSupportedArchitecture::ARM:
             return misaal::TARGET::ARM;
+        default:
+            assert(false && "Unreachable MISAAL Target");
+
     }
 }
 
@@ -1737,7 +1748,7 @@ public:
     using IRMutator::mutate;
 
     IROptimizer(FuncValueBounds fvb, HydrideSupportedArchitecture _arch, std::set<const BaseExprNode *> &ms, int oid, std::string name)
-        : arch(_arch), func_value_bounds(fvb), mutated_exprs(ms), optimizer_id(oid), benchmark_name(name), RewriteCompiler(misaal::MisaalCompiler(get_misaal_target(_arch))) {
+        : arch(_arch), func_value_bounds(fvb), mutated_exprs(ms), optimizer_id(oid),  RewriteCompiler(misaal::MisaalCompiler(get_misaal_target(_arch))), benchmark_name(name) {
     }
 
     bool isConstantValue(const Expr v) {
@@ -2273,6 +2284,7 @@ private:
                     }
                 }
 
+                /*
             } else if (op->is_intrinsic(Call::rounding_halving_sub)) {
 
                 Expr Two, One;
@@ -2298,6 +2310,7 @@ private:
                     lowered = narrow((widen(op->args[0]) - widen(op->args[1]) + One) / Two);
                 }
 
+                */
             } else if (op->is_intrinsic(Call::sorted_avg)) {
 
                 size_t element_bits = op->args[0].type().bits();

@@ -55,7 +55,7 @@ endif
 SHELL = bash
 CXX ?= g++
 PREFIX ?= /usr/local
-LLVM_CONFIG ?= llvm-config
+LLVM_CONFIG = ~/llvm18/llvm-install/bin/llvm-config
 LLVM_COMPONENTS= $(shell $(LLVM_CONFIG) --components)
 LLVM_VERSION = $(shell $(LLVM_CONFIG) --version | sed 's/\([0-9][0-9]*\)\.\([0-9]\).*/\1.\2/')
 
@@ -752,7 +752,7 @@ HEADER_FILES = \
   RemoveUndef.h \
   runtime/HalideBuffer.h \
   runtime/HalideRuntime.h \
-  VectorInfo.cpp \
+  VectorInfo.h \
   HydrideCodeGen.h \
   DistributeVec.h \
   misaal.h \

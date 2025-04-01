@@ -936,7 +936,7 @@ namespace Halide {
             DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(halving_add)// TODO: Widens internally, distribute differently
             DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(halving_sub)// TODO: Widens internally, distribute differently
             DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_add)  // TODO: Widens internally, distribute differently
-            DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_sub)// TODO: Widens internally, distribute differently
+            // DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_sub)// TODO: Widens internally, distribute differently
             DISTRIBUTE_CALL_CLAUSE(absd)
             //DISTRIBUTE_CALL_INTERNAL_WIDEN_CLAUSE(rounding_shift_right)// TODO: Widens internally, distribute differently
             DISTRIBUTE_CALL_CLAUSE(rounding_shift_right)// TODO: Widens internally, distribute differently
@@ -1082,6 +1082,18 @@ namespace Halide {
 
 
             return exprs;
+        }
+
+        std::vector<Expr> DistributeVec::visit(const Reinterpret* op, unsigned num_chunks){
+            std::vector<Expr> exprs;
+            Expr OrigExpr = Reinterpret::make(op->type, op->value);
+
+            assert(num_chunks == 1 && "Currently limited to supporting num_chunks == 1");
+
+            exprs.push_back(OrigExpr);
+
+            return exprs;
+
         }
 
 
@@ -1331,7 +1343,7 @@ namespace Halide {
 
             debug(0) << "Distributing For\n";
 
-            Stmt new_for =  For::make(op->name, op->min, op->extent, op->for_type, op->device_api, dispatch(op->body));
+            Stmt new_for =  For::make(op->name, op->min, op->extent, op->for_type, op->partition_policy ,op->device_api, dispatch(op->body));
             debug(0) << "Completed Distributing For\n";
             return new_for;
         }
@@ -1407,6 +1419,12 @@ namespace Halide {
         Stmt DistributeVec::visit(const Atomic* op){
             debug(0) << "distributing Atomic\n";
             return Atomic::make(op->producer_name, op->mutex_name, dispatch(op->body));
+
+        }
+
+        Stmt DistributeVec::visit(const HoistedStorage* op){
+            debug(0) << "distributing HoistedStorage\n";
+            return HoistedStorage::make(op->name,  dispatch(op->body));
 
         }
 

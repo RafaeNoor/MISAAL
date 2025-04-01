@@ -134,7 +134,7 @@ namespace Halide {
             INFO_CALL_INTERNAL_WIDEN_CLAUSE(halving_add)// TODO: Widens internally, distribute differently
             INFO_CALL_INTERNAL_WIDEN_CLAUSE(halving_sub)// TODO: Widens internally, distribute differently
             INFO_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_add)  // TODO: Widens internally, distribute differently
-            INFO_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_sub)// TODO: Widens internally, distribute differently
+            // INFO_CALL_INTERNAL_WIDEN_CLAUSE(rounding_halving_sub)// TODO: Widens internally, distribute differently
             INFO_CALL_CLAUSE(absd)
             INFO_CALL_INTERNAL_WIDEN_CLAUSE(rounding_shift_right)// TODO: Widens internally, distribute differently
             INFO_CALL_INTERNAL_WIDEN_CLAUSE(rounding_mul_shift_right)// TODO: Widens internally, distribute differently
@@ -170,6 +170,8 @@ namespace Halide {
 
         };
 
+
+    std::string get_vector_info_version();
 
     }  // namespace Internal
 

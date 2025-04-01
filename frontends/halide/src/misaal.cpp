@@ -76,7 +76,7 @@ import sys\n";
         std::string joined = "";
 
         
-        for(int i =0; i < statements.size(); i++){
+        for(long unsigned int i = 0; i < statements.size(); i++){
             auto str = statements[i];
             if (i == statements.size() - 1){
                 joined = joined +  str;
@@ -118,6 +118,10 @@ import sys\n";
                 inst_dsl_name = "arm_semantics";
                 swizzle_dsl_name = "arm_swizzles";
                 break;
+            default:
+                assert(false && "Unsupported target for MISAAL Output");
+                break;
+
         };
 
         std::string parse_inst_dict = parse_dict("inst_dict", inst_dsl_name);
@@ -148,6 +152,9 @@ import sys\n";
             case ARM:
                 partial_import = "from patterns.ARM import arm_patterns";
                 break;
+            default:
+                assert(false && "Unsupported target for MISAAL Output");
+                break;
         };
 
         return partial_import + " as " + pattern_alias;
@@ -166,6 +173,9 @@ import sys\n";
             case ARM:
                 path = "\"/shared/hydride/LLVMARMLegalizer.so\"";
                 break;
+            default:
+                assert(false && "Unsupported target for MISAAL Output");
+                break;
         };
         return path;
     }
@@ -181,6 +191,10 @@ import sys\n";
                 break;
             case ARM:
                 flag = "\"-arm-hydride-legalize\"";
+                break;
+
+            default:
+                assert(false && "Unsupported target for MISAAL Output");
                 break;
         };
         return flag;
@@ -198,6 +212,9 @@ import sys\n";
                 break;
             case ARM:
                 wrapper = "\"/shared/hydride/arm_wrappers.ll\""; 
+                break;
+            default:
+                assert(false && "Unsupported target for MISAAL Output");
                 break;
         };
         return wrapper;
@@ -313,7 +330,7 @@ import sys\n";
         statements.push_back("# Defining Tests ");
         statements.push_back(test_name + " = []");
 
-        for(int i = 0; i < Expressions.size() ; i++){
+        for(long unsigned int i = 0; i < Expressions.size() ; i++){
             std::string base_name = "test_"+std::to_string(i);
             auto CQ = Expressions[i];
 

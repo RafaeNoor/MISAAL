@@ -10,6 +10,9 @@ namespace Halide {
 
             
             
+        std::string get_vector_info_version(){
+            return "v19";
+        }
 
 
 

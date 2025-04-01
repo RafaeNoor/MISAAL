@@ -96,6 +96,8 @@
 #include <llvm/Transforms/Utils/SymbolRewriter.h>
 #if LLVM_VERSION >= 180
 #include <llvm/Transforms/Utils/RelLookupTableConverter.h>
+#include <llvm/IRReader/IRReader.h>
+#include <llvm/Transforms/Utils/Cloning.h>
 #endif
 
 // IWYU pragma: end_exports
