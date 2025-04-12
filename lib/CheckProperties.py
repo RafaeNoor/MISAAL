@@ -139,7 +139,7 @@ TARGET_TO_SWIZZLE_DMAP = {
     "arm": "arm_swizzle_derivation_map.JSON",
     "x86": "x86_swizzle_derivation_map.JSON",
     "halide" : "halide_swizzle_derivation_map.JSON",
-    "tvm" : "tvm_swizzle_derivation_map.JSON",
+    "tvm" : None,
     "hvx_swizzles": None
 }
 
@@ -172,7 +172,7 @@ TARGETS = ["x86"]
 
 
 
-output_language = "x86"
+output_language = "tvm"
 output_dsl_list = parse_dict_with_bounded(TARGET_TO_SEMA[output_language])
 output_synth_desc = TARGET_TO_DESC[output_language]
 
@@ -180,7 +180,8 @@ test_properties = [EqClassEqualDepthV3Synth]
 test_properties = [EnumeratePattern]
 test_properties = [EqClassEqualDepthV4]
 #test_properties = [IdentifySwizzles]
-test_properties = [RepairRelavanceIntermediates]
+# test_properties = [RepairRelavanceIntermediates]
+test_properties = [RepairRelavanceV4]
 
 
 for property in test_properties:
@@ -285,8 +286,9 @@ for property in test_properties:
                 repair_memo_name = None
             repair_memo_name = None
             repairs_sema = parse_dict(repair_semantics)
-            halide_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+            # halide_dsl_list = parse_dict(halide_semantics)
+            halide_dsl_list = parse_dict(tvm_semantics)
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1, commutative_map_path = commutative_path, memo_path = repair_memo_name )
 
         elif property is RepairRelavanceIntermediates:
             repair_memo_name = "RepairRelavanceIntermediates_{}_intermediate_results.py".format(target)
@@ -296,7 +298,7 @@ for property in test_properties:
             repairs_sema = parse_dict(repair_semantics)
             output_dsl_list = parse_dict(tvm_semantics)
             # output_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = HALIDE_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1, commutative_map_path = commutative_path, memo_path = repair_memo_name )
         elif property is RepairRelavancePostProcess:
             version = "Intermediates"
             repair_memo_name = "RepairRelavance{}_{}_intermediate_results.py".format(version,target)

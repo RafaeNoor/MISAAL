@@ -36,7 +36,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
             "_mm_add_pi8",
         ]
 
-        #dsl_list = [d for d in dsl_list if d.name in input_test_list]
+        dsl_list = [d for d in dsl_list if d.name in input_test_list]
 
 
         print(dsl_list)

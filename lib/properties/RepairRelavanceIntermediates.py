@@ -32,10 +32,11 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
         input_test_list = [
             #"_mm512_sllv_epi16",
-            "_mm256_dpbusd_epi32",
+            # "_mm256_dpbusd_epi32",
+            "_mm_add_si64"
         ]
 
-        #dsl_list = [d for d in dsl_list if d.name in input_test_list]
+        dsl_list = [d for d in dsl_list if d.name in input_test_list]
 
         output_test_list = [
             #"typed:signed-vec-mul",
