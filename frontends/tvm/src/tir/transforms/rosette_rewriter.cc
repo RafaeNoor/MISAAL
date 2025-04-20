@@ -86,16 +86,54 @@ namespace tir {
     REWRITE_BASIC_BINOP(And, "vec-bwand");
     REWRITE_BASIC_BINOP(Or, "vec-or");
 
+    // Rules for special ops
+    std::string RosetteRewriter::Rewrite(const CastNode* op){ 
+        DataType output_dtype = op->dtype; 
+        DataType input_dtype = op->value->dtype;
+        size_t iprec = input_dtype.bits();
+        size_t isize = iprec * input_dtype.lanes();
+        size_t oprec = output_dtype.bits();
 
+        std::string suffix = oprec > iprec ? "-extend" : "-truncate";
+
+        std::string output_str = "(cast" + suffix + " " + MakeString(op->value) + " " +
+            std::to_string(iprec) + " " + std::to_string(isize) + " " + std::to_string(oprec) + " ";
+        if (oprec > iprec){
+            if (input_dtype.is_int()){
+                output_str += "1";
+            } else if (input_dtype.is_uint()){
+                output_str += "0";
+            } else {
+                ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
+                exit(0); \
+                return ""; \
+            }
+        }
+        output_str += ")";
+        return output_str;
+    }
+
+    std::string RosetteRewriter::Rewrite(const RampNode* op){ 
+        DataType dtype = op->dtype;
+        size_t iprec = dtype.bits();
+        size_t osize = dtype.bits() * dtype.lanes();
+
+        // base, stride, iprec, osize
+        return "(ramp " + MakeString(op->base) + " " + MakeString(op->stride) + " " + std::to_string(iprec) + " " + std::to_string(osize) + ")";
+    }
+
+    std::string RosetteRewriter::Rewrite(const BroadcastNode* op){ 
+        DataType dtype = op->dtype;
+        return "(broadcast " + MakeString(op->value) + " " + std::to_string(dtype.bits()) + " " + std::to_string(dtype.lanes()) + ")";
+    }
 
     #define DEFINE_REWRITE_NOT_IMPLEMENTED(Op)                           \
     std::string RosetteRewriter::Rewrite(const Op##Node* op){            \
-        ICHECK(false) << "Rewrite rule for " << #Op << " is not implemented"; \  
+        ICHECK(false) << "Rewrite rule for " << #Op << " is not implemented"; \
         return ""; \
     };
 
     DEFINE_REWRITE_NOT_IMPLEMENTED(Var);
-    DEFINE_REWRITE_NOT_IMPLEMENTED(Cast);
     DEFINE_REWRITE_NOT_IMPLEMENTED(IntImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(FloatImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(StringImm);
@@ -104,10 +142,6 @@ namespace tir {
     DEFINE_REWRITE_NOT_IMPLEMENTED(Let);
     DEFINE_REWRITE_NOT_IMPLEMENTED(BufferLoad);
     DEFINE_REWRITE_NOT_IMPLEMENTED(Call);
-    DEFINE_REWRITE_NOT_IMPLEMENTED(Ramp);
-    DEFINE_REWRITE_NOT_IMPLEMENTED(Shuffle);
-    DEFINE_REWRITE_NOT_IMPLEMENTED(Broadcast);
-
 
     // Rewrite op if it is vectorizable, otherwise stop rewriting.
     #define DEFINE_VISIT_OP(Op)                                       \

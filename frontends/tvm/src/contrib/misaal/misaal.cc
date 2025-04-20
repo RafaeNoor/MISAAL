@@ -10,6 +10,11 @@ bool IsVectorizable(const tir::Op##Node* op){ \
     return op->dtype.is_vector(); \
 };
 
+#define ALWAYS_VECTORIZABLE_OP(Op) \
+bool IsVectorizable(const tir::Op##Node* op){ \
+    return true; \
+};
+
 BASIC_VECTORIZABLE_OP(Sub);
 BASIC_VECTORIZABLE_OP(Mul);
 BASIC_VECTORIZABLE_OP(Div);
@@ -25,6 +30,13 @@ BASIC_VECTORIZABLE_OP(NE); // No semantics implemented
 BASIC_VECTORIZABLE_OP(Or);
 BASIC_VECTORIZABLE_OP(And);
 BASIC_VECTORIZABLE_OP(Add);
+BASIC_VECTORIZABLE_OP(Cast);
+ALWAYS_VECTORIZABLE_OP(Ramp);
+ALWAYS_VECTORIZABLE_OP(Shuffle);
+ALWAYS_VECTORIZABLE_OP(Broadcast);
+
+
+// Complex operations
 
 #define DEFINE_NOT_VECTORIZABLE_OP(Op)           \
     bool IsVectorizable(const tir::Op##Node* op){ \
@@ -32,7 +44,6 @@ BASIC_VECTORIZABLE_OP(Add);
     };
 
 DEFINE_NOT_VECTORIZABLE_OP(Var);
-DEFINE_NOT_VECTORIZABLE_OP(Cast);
 DEFINE_NOT_VECTORIZABLE_OP(IntImm);
 DEFINE_NOT_VECTORIZABLE_OP(FloatImm);
 DEFINE_NOT_VECTORIZABLE_OP(StringImm);
@@ -41,9 +52,6 @@ DEFINE_NOT_VECTORIZABLE_OP(Select);
 DEFINE_NOT_VECTORIZABLE_OP(Let);
 DEFINE_NOT_VECTORIZABLE_OP(BufferLoad);
 DEFINE_NOT_VECTORIZABLE_OP(Call);
-DEFINE_NOT_VECTORIZABLE_OP(Ramp);
-DEFINE_NOT_VECTORIZABLE_OP(Shuffle);
-DEFINE_NOT_VECTORIZABLE_OP(Broadcast);
 
 }
 }
