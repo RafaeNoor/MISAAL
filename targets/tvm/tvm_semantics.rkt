@@ -6,7 +6,7 @@
 (require rosette/lib/destruct)
 (require hydride)
 
-; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor] semantics in this file but shouldn't matter
+; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor] semantics in this file
 
 
 (define (typed:vec-add v1 v2 iprec isize sign)
@@ -179,6 +179,39 @@
                       %result
                       )
             )
+    )
+  dst
+  )
+
+(define (typed:cast-extend vec iprec isize oprec sign)
+  (define dst
+    (apply 
+      concat
+      (for/list ([%iter (reverse (range 0 isize iprec))])
+                (define %lastidx1 (- iprec 1))
+                (define %high (+ %lastidx1 %iter))
+                (define slice (extract %high %iter vec))
+                (define %sext (bvsizeext slice oprec sign))
+                %sext
+                )
+      )
+    )
+  dst
+  )
+
+(define (typed:cast-truncate vec iprec isize oprec)
+  (define dst
+    (apply 
+      concat
+           (for/list ([%iter (reverse (range 0 isize iprec))])
+                     (define %lastidx1 (- iprec 1))
+                     (define %high (+ %lastidx1 %iter))
+                     (define slice (extract %high %iter vec))
+                     (define %offset (- oprec 1))
+                     (define %trunc (extract %offset 0 slice))
+                     %trunc
+                     )
+           )
     )
   dst
   )
