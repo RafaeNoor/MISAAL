@@ -6,7 +6,7 @@
 (require rosette/lib/destruct)
 (require hydride)
 
-; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor] semantics in this file
+; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor; broadcast] semantics in this file
 
 
 (define (typed:vec-add v1 v2 iprec isize sign)
