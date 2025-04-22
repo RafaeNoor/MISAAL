@@ -6,7 +6,7 @@
 (require rosette/lib/destruct)
 (require hydride)
 
-; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor; broadcast] semantics in this file
+; Missing [vec-mod, vec-gt, vec-ge, vec-eq, vec-bwor] semantics in this file
 
 
 (define (typed:vec-add v1 v2 iprec isize sign)
@@ -215,3 +215,25 @@
     )
   dst
   )
+
+
+(define (typed-folded:broadcast vec iprec factor)
+  (define dst
+    (apply 
+      concat
+           (for/list ([%iter (reverse (range 0 factor 1))])
+                     vec
+                     )
+           )
+    )
+  dst
+  )
+
+
+(define (typed-folded:ramp base stride iprec osize)
+  (define dst
+    (apply concat
+      (for/list ([i (range 0 osize)])
+        (define offset (bvadd base (bvmul (bv i iprec) stride)))
+        offset)))
+  dst)
