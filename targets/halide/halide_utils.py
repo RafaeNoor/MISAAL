@@ -899,6 +899,8 @@ def create_reduce_dict_entry(classes):
     for desc in classes:
         target_desc = {"target_instructions": {},
                        "semantics": desc["sema"]}.copy()
+
+        typed_name = "typed-folded:"+desc['name']
         for size in desc['sizes']:
             for prec in desc['precs']:
                 for reduce_factor in desc['reduce_factors']:
@@ -936,17 +938,13 @@ def create_reduce_dict_entry(classes):
                             "ctx_sema": desc["bvops"],
                         })
 
-                        target_desc['target_instructions'][desc['name']+"_p" + str(prec)+"_s"+str(size)+"_signed_"+str(sign) + "_reduce_"+str(reduce_factor)] = entry
+                        target_desc['target_instructions'][typed_name+"_p" + str(prec)+"_s"+str(size)+"_signed_"+str(sign) + "_reduce_"+str(reduce_factor)] = entry
 
-        if desc['name'] in semantics_dict:
+        if typed_name in semantics_dict:
+            pass
 
-            for key in target_desc['target_instructions']:
-                assert key not in semantics_dict[desc['name']
-                                                 ]['target_instructions'], "Key should not be present in dict"
-                semantics_dict[desc['name']
-                               ]['target_instructions'][key] = target_desc['target_instructions'][key]
         else:
-            semantics_dict[desc['name']] = target_desc.copy()
+            semantics_dict[typed_name] = target_desc.copy()
 
     return semantics_dict
 
@@ -990,6 +988,8 @@ for dict in halide_dicts:
 
 print("halide_semantics = ", end = " ")
 pp.pprint(combined_dict)
+#print(json.dumps(combined_dict, indent = 4))
+
 
 
 
