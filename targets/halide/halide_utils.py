@@ -66,13 +66,15 @@ halide_binary_simd_ops_contexts = [
 # Those operations which internally require widening
 halide_binary_widen_prec_simd_ops_contexts = [
 
-    {"name": "vec-mul", "bvops": ["bvmul", "extract", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": [0,1], 'sema': vec_mul_sema},
+    {"name": "vec-mul", "bvops": ["bvmul", "extract", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": [0,1], 'sema': vec_mul_sema, "keep_widen": False},
 
-    {"name": "vec-rounding_shift_right", "bvops": ["bvshl", "bvashr", "bvssat", "bvsdiv", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs , "signedness": [0,1], 'sema': vec_rnd_shift_right_sema },
+    {"name": "vec-widen-mul", "bvops": ["bvmul", "extract", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": [0,1], 'sema': vec_widen_mul_sema, "keep_widen": True},
 
-    {"name": "vec-rounding_halving_add", "bvops": ["extract", "bvadd", "sign-extend", "bvsdiv"] , "sizes": simd_sizes, "precs": simd_precs , "signedness": 1 },
+    {"name": "vec-rounding_shift_right", "bvops": ["bvshl", "bvashr", "bvssat", "bvsdiv", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs , "signedness": [0,1], 'sema': vec_rnd_shift_right_sema , "keep_widen": False},
 
-    {"name": "vec-halving_add", "bvops": ["extract", "bvadd", "sign-extend", "bvsdiv"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": 1},
+    {"name": "vec-rounding_halving_add", "bvops": ["extract", "bvadd", "sign-extend", "bvsdiv"] , "sizes": simd_sizes, "precs": simd_precs , "signedness": [0,1] , "keep_widen": False, 'sema': vec_rnd_hlv_add_sema},
+
+    {"name": "vec-halving_add", "bvops": ["extract", "bvadd", "sign-extend", "bvsdiv"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": [0,1], "keep_widen": False, 'sema': vec_hlv_add_sema},
 
 ]
 
@@ -91,6 +93,16 @@ halide_binary_comparison_ops_contexts = [
 ]
 
 
+
+
+# Those operations which internally require widening
+halide_ternary_widen_prec_simd_ops_contexts = [
+
+    {"name": "vec-rounding_mul_shift_right", "bvops": ["bvmul", "extract", "sign-extend"] , "sizes": simd_sizes, "precs": simd_precs  , "signedness": [0,1], 'sema': vec_rnd_mul_shift_right_sema, "keep_widen": False},
+
+]
+
+
 halide_cast_extend_ops_contexts = [
 
 
@@ -105,6 +117,15 @@ halide_cast_truncate_ops_contexts = [
 
     # down-casting ops
     {"name": "cast-truncate", "bvops": ["extract", "concat"] , "from_sizes": cast_from_sizes, "from_precs": cast_from_precs ,  "to_sizes": cast_to_sizes, "to_precs": cast_to_precs ,"signedness": [0], 'sema': cast_truncate_sema },
+
+
+]
+
+halide_cast_saturate_ops_contexts = [
+
+
+    # down-casting ops
+    {"name": "vec-saturate", "bvops": ["extract", "concat", "bvsaturate", "bvssat", "bvusat"] , "from_sizes": cast_from_sizes, "from_precs": cast_from_precs ,  "to_sizes": cast_to_sizes, "to_precs": cast_to_precs ,"signedness": [0,1], 'sema': cast_saturate_sema },
 
 
 ]
@@ -248,6 +269,7 @@ def create_broadcast_halide_dict_entry(classes):
 
 
     return semantics_dict
+
 def create_cast_truncate_halide_dict_entry(classes):
 
     semantics_dict = {}
@@ -324,6 +346,83 @@ def create_cast_truncate_halide_dict_entry(classes):
 
     return semantics_dict
 
+
+
+def create_cast_saturate_halide_dict_entry(classes):
+
+    semantics_dict = {}
+
+    for desc in classes:
+
+        target_desc = {"target_instructions": {}, "semantics": desc["sema"]}
+        for is_idx in range(len(desc['from_sizes'])):
+            for ip_idx in range(len(desc['from_precs'])):
+                for sign in desc['signedness']:
+                    input_size = desc['from_sizes'][is_idx]
+                    output_size = desc['to_sizes'][is_idx]
+                    input_prec = desc['from_precs'][ip_idx]
+                    output_prec = desc['to_precs'][ip_idx]
+
+                    sign_val = None
+                    if sign == 1:
+                        sign_val = 1
+                    elif sign == 0:
+                        sign_val = 0
+
+                    if input_size == output_size:
+                        continue
+
+                    if input_prec > input_size:
+                        continue
+
+                    if output_prec > output_size:
+                        continue
+
+                    input_lanes = input_size // input_prec
+                    output_lanes = output_size // output_prec
+
+                    if input_lanes != output_lanes:
+                        continue
+
+                    typed_name = "typed-folded:"+desc['name']
+
+
+                    args = ["SYMBOLIC_BV_{}".format(input_size), str(input_prec), str(input_size), str(output_prec), str(sign_val)]
+
+
+
+                    entry = copy.deepcopy({
+                        "args": args,
+                        "in_vectsize": input_size,
+                        "out_vectsize": output_size,
+                        "lanesize": input_prec,
+                        "in_precision" : input_prec,
+                        "out_precision": output_prec,
+                        "in_vectsize_index": 2,
+                        "out_vectsize_index": None,
+                        "in_lanesize_index": 1,
+                        "out_lanesize_index": 3,
+                        "in_precision_index": 1,
+                        "out_precision_index": 3,
+                        "arg_permute_map": [],
+                        "Signedness": sign,
+                        "Cost": "None",
+                        "SIMD": "False",
+                        "Extensions" : ['halide'],
+                        "ctx_sema": desc["bvops"],
+                    })
+                    target_desc['target_instructions'][typed_name+"_ip"+str(input_prec)+"_is"+str(input_size)+ "_op"+str(output_prec)+"_os"+str(output_size)  +"_signed_"+str(sign)] = entry
+
+        if typed_name in semantics_dict:
+            #semantics_dict[typed_name]['semantics'] += desc['bvops']
+            #for key in target_desc['target_instructions']:
+            #    semantics_dict[typed_name]['target_instructions'][key] = target_desc['target_instructions'][key]
+            pass
+        else:
+            semantics_dict[typed_name] = target_desc
+
+
+    return semantics_dict
 
 
 def create_cast_extend_halide_dict_entry(classes):
@@ -600,6 +699,83 @@ def create_nary_halide_dict_entry(classes,n = 1):
     return semantics_dict
 
 
+def create_nary_widen_halide_dict_entry(classes,n = 1):
+
+    semantics_dict = {}
+
+    for desc in classes:
+        typed_name = "typed-folded:"+desc['name']
+        keep_widen = desc['keep_widen']
+
+
+        target_desc = {"target_instructions": {}, "semantics": desc["sema"]}.copy()
+        for size in desc['sizes']:
+            for prec in desc['precs']:
+                for sign in desc['signedness']:
+
+                    sign_val = None
+
+                    widen_prec = prec * 2
+
+                    if sign == 1:
+                        sign_val = 1
+                    elif sign == 0:
+                        sign_val = 0
+                    elif sign is None or sign == -1:
+                        sign_val = -1
+
+                    output_size = size
+                    output_prec = prec
+                    if keep_widen:
+                        output_size = size * 2
+                        output_prec = prec * 2
+
+
+                    if prec > size:
+                        continue
+                    entry = copy.deepcopy({
+                        "args": (["SYMBOLIC_BV_{}".format(size)] * n) + [str(prec), str(widen_prec), str(size), str(sign_val)],
+                        "in_vectsize": size,
+                        "out_vectsize": output_size,
+                        "lanesize": prec,
+                        "in_precision" : prec,
+                        "out_precision": output_prec,
+                        "in_vectsize_index": n + 2,
+                        "out_vectsize_index": None if keep_widen else n+2 ,
+                        "in_lanesize_index": n,
+                        "out_lanesize_index": n+1 if keep_widen else n,
+                        "in_precision_index": n,
+                        "out_precision_index": n+1 if keep_widen else n,
+                        "arg_permute_map": [],
+                        "Signedness": sign,
+                        "Cost": "None",
+                        "SIMD": "True",
+                        "Extensions" : ['halide'],
+                        "ctx_sema": desc["bvops"],
+                    })
+
+
+                    target_desc['target_instructions'][typed_name+"_p"+str(prec)+"_s"+str(size)+"_signed_"+str(sign)] = entry
+
+
+
+
+        if typed_name in semantics_dict:
+        #    semantics_dict[typed_name]['semantics'] += desc['bvops']
+        #    semantics_dict[typed_name]['semantics'] = list(set(semantics_dict[typed_name]['semantics']))
+
+
+
+            for key in target_desc['target_instructions']:
+                assert key not in semantics_dict[typed_name]['target_instructions'], "Key should not be present in dict"
+                semantics_dict[typed_name]['target_instructions'][key] = target_desc['target_instructions'][key]
+        else:
+            semantics_dict[typed_name] = target_desc.copy()
+
+
+
+    return semantics_dict
+
 def create_nary_comparison_halide_dict_entry(classes,n = 1):
 
     semantics_dict = {}
@@ -786,7 +962,11 @@ slice_dict = create_slice_halide_dict_entry(halide_slice_vector_contexts)
 concat_dict = create_concat_halide_dict_entry(halide_concat_vector_contexts)
 cast_extend_dict = create_cast_extend_halide_dict_entry(halide_cast_extend_ops_contexts)
 cast_truncate_dict = create_cast_truncate_halide_dict_entry(halide_cast_truncate_ops_contexts)
+cast_saturate_dict = create_cast_saturate_halide_dict_entry(halide_cast_saturate_ops_contexts)
+binary_widen_ops_dict = create_nary_widen_halide_dict_entry(halide_binary_widen_prec_simd_ops_contexts, n = 2)
 
+
+ternary_widen_ops_dict = create_nary_widen_halide_dict_entry(halide_ternary_widen_prec_simd_ops_contexts, n = 3)
 """
 ternary_dict = create_nary_halide_dict_entry(halide_ternary_ops_contexts, n = 3)
 widen_dict = create_widening_halide_dict_entry(halide_widening_ops_contexts)
@@ -794,7 +974,7 @@ widen_dict = create_widening_halide_dict_entry(halide_widening_ops_contexts)
 
 
 #halide_dicts = [concat_dict ,slice_dict, broadcast_dict, unary_dict ,simd_dict, cast_dict, ternary_dict, widen_dict, comparison_ops, reduce_dicts]
-halide_dicts = [broadcast_dict,unary_dict, simd_dict, comparison_ops, reduce_dicts, slice_dict, concat_dict, cast_extend_dict, cast_truncate_dict ]
+halide_dicts = [broadcast_dict,unary_dict, simd_dict, comparison_ops, reduce_dicts, slice_dict, concat_dict, cast_extend_dict, cast_truncate_dict , cast_saturate_dict, binary_widen_ops_dict, ternary_widen_ops_dict]
 
 
 
