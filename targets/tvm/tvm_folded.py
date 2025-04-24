@@ -5875,7 +5875,6 @@ tvm_folded = {
                     "0"
                 ]
             }
-
         },
         "semantics": [
             '" (define (typed-folded:vec-mul v1 v2 iprec isize widenprec sign) "',
@@ -5891,7 +5890,7 @@ tvm_folded = {
             '" (define %high2 (+ %lastidx2 %iter)) "',
             '" (define slice_v2 (extract %high2 %iter v2)) "',
             '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
-            '" (define prod (bvmul %widen_slice_v1 %widen_slice_v1)) "',
+            '" (define prod (bvmul %widen_slice_v1 %widen_slice_v2)) "',
             '" (define %narrow (extract %lastidx1 0 prod)) "',
             '" %narrow "',
             '" ) "',
