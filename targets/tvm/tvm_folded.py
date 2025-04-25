@@ -5875,7 +5875,6 @@ tvm_folded = {
                     "0"
                 ]
             }
-
         },
         "semantics": [
             '" (define (typed-folded:vec-mul v1 v2 iprec isize widenprec sign) "',
@@ -5891,7 +5890,7 @@ tvm_folded = {
             '" (define %high2 (+ %lastidx2 %iter)) "',
             '" (define slice_v2 (extract %high2 %iter v2)) "',
             '" (define %widen_slice_v2 (bvsizeext slice_v2 widenprec sign)) "',
-            '" (define prod (bvmul %widen_slice_v1 %widen_slice_v1)) "',
+            '" (define prod (bvmul %widen_slice_v1 %widen_slice_v2)) "',
             '" (define %narrow (extract %lastidx1 0 prod)) "',
             '" %narrow "',
             '" ) "',
@@ -19960,6 +19959,3436 @@ tvm_folded = {
             '" ) "',
             '" dst "',
             '" ) "',
+        ]
+    },
+
+    "typed-folded:cast-extend": {
+        "target_instructions": {
+            "typed-folded:cast-extend-unsigned-p8-s8": {
+                "in_vectsize": 8,
+                "out_vectsize": 16,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_8",
+                    "8",
+                    "8",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s8": {
+                "in_vectsize": 8,
+                "out_vectsize": 16,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_8",
+                    "8",
+                    "8",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "8",
+                    "16",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "8",
+                    "16",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "8",
+                    "32",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "8",
+                    "32",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "8",
+                    "64",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "8",
+                    "64",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "8",
+                    "128",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "8",
+                    "128",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "8",
+                    "256",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "8",
+                    "256",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p8-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "8",
+                    "512",
+                    "16",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p8-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "8",
+                    "512",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "16",
+                    "16",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "16",
+                    "16",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "16",
+                    "32",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "16",
+                    "32",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "16",
+                    "128",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "16",
+                    "128",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "16",
+                    "256",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "16",
+                    "256",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "16",
+                    "512",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "16",
+                    "512",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p16-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "16",
+                    "1024",
+                    "32",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p16-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "16",
+                    "1024",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "32",
+                    "32",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "32",
+                    "32",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "32",
+                    "64",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "32",
+                    "64",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "32",
+                    "128",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "32",
+                    "128",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "32",
+                    "256",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "32",
+                    "256",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "32",
+                    "512",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "32",
+                    "512",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "32",
+                    "1024",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "32",
+                    "1024",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p32-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "32",
+                    "2048",
+                    "64",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p32-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 64,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "32",
+                    "2048",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "64",
+                    "64",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "64",
+                    "64",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "64",
+                    "128",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 256,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "64",
+                    "128",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "64",
+                    "256",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 512,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "64",
+                    "256",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "64",
+                    "512",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 1024,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "64",
+                    "512",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "64",
+                    "1024",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 2048,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "64",
+                    "1024",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "64",
+                    "2048",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 4096,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "64",
+                    "2048",
+                    "128",
+                    "1"
+                ]
+            },
+            "typed-folded:cast-extend-unsigned-p64-s4096": {
+                "in_vectsize": 4096,
+                "out_vectsize": 8192,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 0,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_4096",
+                    "64",
+                    "4096",
+                    "128",
+                    "0"
+                ]
+            },
+            "typed-folded:cast-extend-signed-p64-s4096": {
+                "in_vectsize": 4096,
+                "out_vectsize": 8192,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 128,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_4096",
+                    "64",
+                    "4096",
+                    "128",
+                    "1"
+                ]
+            }
+        },
+        "semantics": [
+            '" (define (typed-folded:cast-extend vec iprec isize oprec sign) "',
+            '" (define dst "',
+            '" (apply "',
+            '" concat "',
+            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+            '" (define %lastidx1 (- iprec 1)) "',
+            '" (define %high (+ %lastidx1 %iter)) "',
+            '" (define slice (extract %high %iter vec)) "',
+            '" (define %sext (bvsizeext slice oprec sign)) "',
+            '" %sext "',
+            '" ) "',
+            '" ) "',
+            '" ) "',
+            '" dst "',
+            '" ) "',
+        ]
+    },
+
+    "typed-folded:cast-truncate": {
+        "target_instructions": {
+            "typed-folded:cast-truncate-p16-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 8,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "16",
+                    "16",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 16,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "16",
+                    "32",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 32,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "64",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 64,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "16",
+                    "128",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 128,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "16",
+                    "256",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 256,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "16",
+                    "512",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p16-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 512,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 8,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "16",
+                    "1024",
+                    "8"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 16,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "32",
+                    "32",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 32,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "32",
+                    "64",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 64,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "32",
+                    "128",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 128,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "32",
+                    "256",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 256,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "32",
+                    "512",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 512,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "32",
+                    "1024",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p32-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 1024,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 16,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "32",
+                    "2048",
+                    "16"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 32,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "64",
+                    "64",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s128": {
+                "in_vectsize": 128,
+                "out_vectsize": 64,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "64",
+                    "128",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s256": {
+                "in_vectsize": 256,
+                "out_vectsize": 128,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "64",
+                    "256",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s512": {
+                "in_vectsize": 512,
+                "out_vectsize": 256,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "64",
+                    "512",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s1024": {
+                "in_vectsize": 1024,
+                "out_vectsize": 512,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "64",
+                    "1024",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s2048": {
+                "in_vectsize": 2048,
+                "out_vectsize": 1024,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "64",
+                    "2048",
+                    "32"
+                ]
+            },
+            "typed-folded:cast-truncate-p64-s4096": {
+                "in_vectsize": 4096,
+                "out_vectsize": 2048,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 32,
+                "in_vectsize_index": None,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 3,
+                "arg_permute_map": [],
+                "Signedness": 1,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_4096",
+                    "64",
+                    "4096",
+                    "32"
+                ]
+            }
+        },
+        "semantics": [
+            '" (define (typed-folded:cast-truncate vec iprec isize oprec) "',
+            '" (define dst "',
+            '" (apply "',
+            '" concat "',
+            '" (for/list ([%iter (reverse (range 0 isize iprec))]) "',
+            '" (define %lastidx1 (- iprec 1)) "',
+            '" (define %high (+ %lastidx1 %iter)) "',
+            '" (define slice (extract %high %iter vec)) "',
+            '" (define %offset (- oprec 1)) "',
+            '" (define %trunc (extract %offset 0 slice)) "',
+            '" %trunc "',
+            '" ) "',
+            '" ) "',
+            '" ) "',
+            '" dst "',
+            '" ) "',
+        ]
+    },
+
+    "typed-folded:broadcast": {
+        "target_instructions": {
+            "typed-folded:broadcast-p8-s8": {
+                "in_vectsize": 8,
+                "out_vectsize": 8,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_8",
+                    "8",
+                    "1"
+                ]
+            },
+            "typed-folded:broadcast-p8-s16": {
+                "in_vectsize": 8,
+                "out_vectsize": 16,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "8",
+                    "2"
+                ]
+            },
+            "typed-folded:broadcast-p8-s32": {
+                "in_vectsize": 8,
+                "out_vectsize": 32,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "8",
+                    "4"
+                ]
+            },
+            "typed-folded:broadcast-p8-s64": {
+                "in_vectsize": 8,
+                "out_vectsize": 64,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "8",
+                    "8"
+                ]
+            },
+            "typed-folded:broadcast-p8-s128": {
+                "in_vectsize": 8,
+                "out_vectsize": 128,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "8",
+                    "16"
+                ]
+            },
+            "typed-folded:broadcast-p8-s256": {
+                "in_vectsize": 8,
+                "out_vectsize": 256,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "8",
+                    "32"
+                ]
+            },
+            "typed-folded:broadcast-p8-s512": {
+                "in_vectsize": 8,
+                "out_vectsize": 512,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "8",
+                    "64"
+                ]
+            },
+            "typed-folded:broadcast-p16-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 16,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:broadcast-p16-s32": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "16",
+                    "2"
+                ]
+            },
+            "typed-folded:broadcast-p16-s64": {
+                "in_vectsize": 16,
+                "out_vectsize": 64,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "16",
+                    "4"
+                ]
+            },
+            "typed-folded:broadcast-p16-s128": {
+                "in_vectsize": 16,
+                "out_vectsize": 128,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "16",
+                    "8"
+                ]
+            },
+            "typed-folded:broadcast-p16-s256": {
+                "in_vectsize": 16,
+                "out_vectsize": 256,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "16",
+                    "16"
+                ]
+            },
+            "typed-folded:broadcast-p16-s512": {
+                "in_vectsize": 16,
+                "out_vectsize": 512,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "16",
+                    "32"
+                ]
+            },
+            "typed-folded:broadcast-p16-s1024": {
+                "in_vectsize": 16,
+                "out_vectsize": 1024,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "16",
+                    "64"
+                ]
+            },
+            "typed-folded:broadcast-p32-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 32,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:broadcast-p32-s64": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "32",
+                    "2"
+                ]
+            },
+            "typed-folded:broadcast-p32-s128": {
+                "in_vectsize": 32,
+                "out_vectsize": 128,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "32",
+                    "4"
+                ]
+            },
+            "typed-folded:broadcast-p32-s256": {
+                "in_vectsize": 32,
+                "out_vectsize": 256,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "32",
+                    "8"
+                ]
+            },
+            "typed-folded:broadcast-p32-s512": {
+                "in_vectsize": 32,
+                "out_vectsize": 512,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "32",
+                    "16"
+                ]
+            },
+            "typed-folded:broadcast-p32-s1024": {
+                "in_vectsize": 32,
+                "out_vectsize": 1024,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "32",
+                    "32"
+                ]
+            },
+            "typed-folded:broadcast-p32-s2048": {
+                "in_vectsize": 32,
+                "out_vectsize": 2048,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "32",
+                    "64"
+                ]
+            },
+            "typed-folded:broadcast-p64-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 64,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:broadcast-p64-s128": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "64",
+                    "2"
+                ]
+            },
+            "typed-folded:broadcast-p64-s256": {
+                "in_vectsize": 64,
+                "out_vectsize": 256,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "64",
+                    "4"
+                ]
+            },
+            "typed-folded:broadcast-p64-s512": {
+                "in_vectsize": 64,
+                "out_vectsize": 512,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "64",
+                    "8"
+                ]
+            },
+            "typed-folded:broadcast-p64-s1024": {
+                "in_vectsize": 64,
+                "out_vectsize": 1024,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "64",
+                    "16"
+                ]
+            },
+            "typed-folded:broadcast-p64-s2048": {
+                "in_vectsize": 64,
+                "out_vectsize": 2048,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "64",
+                    "32"
+                ]
+            },
+            "typed-folded:broadcast-p64-s4096": {
+                "in_vectsize": 64,
+                "out_vectsize": 4096,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_4096",
+                    "64",
+                    "64"
+                ]
+            }
+        },
+        "semantics": [
+            '" (define (typed-folded:broadcast %v1 iprec factor) "',
+            '" (define dst "',
+            '" (apply "',
+            '" concat "',
+            '" (for/list ([%iter (reverse (range 0 factor 1))]) "',
+            '" %v1 "',
+            '" ) "',
+            '" ) "',
+            '" ) "',
+            '" dst "',
+            '" ) "',
+        ]
+    }.
+
+    "typed-folded:ramp": {
+        "target_instructions": {
+            "typed-folded:ramp-p8-s8": {
+                "in_vectsize": 8,
+                "out_vectsize": 8,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_8",
+                    "1",
+                    "8",
+                    "1"
+                ]
+            },
+            "typed-folded:ramp-p8-s16": {
+                "in_vectsize": 8,
+                "out_vectsize": 16,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "1",
+                    "8",
+                    "2"
+                ]
+            },
+            "typed-folded:ramp-p8-s32": {
+                "in_vectsize": 8,
+                "out_vectsize": 32,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "1",
+                    "8",
+                    "4"
+                ]
+            },
+            "typed-folded:ramp-p8-s64": {
+                "in_vectsize": 8,
+                "out_vectsize": 64,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "1",
+                    "8",
+                    "8"
+                ]
+            },
+            "typed-folded:ramp-p8-s128": {
+                "in_vectsize": 8,
+                "out_vectsize": 128,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "1",
+                    "8",
+                    "16"
+                ]
+            },
+            "typed-folded:ramp-p8-s256": {
+                "in_vectsize": 8,
+                "out_vectsize": 256,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "1",
+                    "8",
+                    "32"
+                ]
+            },
+            "typed-folded:ramp-p8-s512": {
+                "in_vectsize": 8,
+                "out_vectsize": 512,
+                "lanesize": 8,
+                "in_precision": 8,
+                "out_precision": 8,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "1",
+                    "8",
+                    "64"
+                ]
+            },
+            "typed-folded:ramp-p16-s16": {
+                "in_vectsize": 16,
+                "out_vectsize": 16,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_16",
+                    "1",
+                    "16",
+                    "1"
+                ]
+            },
+            "typed-folded:ramp-p16-s32": {
+                "in_vectsize": 16,
+                "out_vectsize": 32,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "1",
+                    "16",
+                    "2"
+                ]
+            },
+            "typed-folded:ramp-p16-s64": {
+                "in_vectsize": 16,
+                "out_vectsize": 64,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "1",
+                    "16",
+                    "4"
+                ]
+            },
+            "typed-folded:ramp-p16-s128": {
+                "in_vectsize": 16,
+                "out_vectsize": 128,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "1",
+                    "16",
+                    "8"
+                ]
+            },
+            "typed-folded:ramp-p16-s256": {
+                "in_vectsize": 16,
+                "out_vectsize": 256,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "1",
+                    "16",
+                    "16"
+                ]
+            },
+            "typed-folded:ramp-p16-s512": {
+                "in_vectsize": 16,
+                "out_vectsize": 512,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "1",
+                    "16",
+                    "32"
+                ]
+            },
+            "typed-folded:ramp-p16-s1024": {
+                "in_vectsize": 16,
+                "out_vectsize": 1024,
+                "lanesize": 16,
+                "in_precision": 16,
+                "out_precision": 16,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "1",
+                    "16",
+                    "64"
+                ]
+            },
+            "typed-folded:ramp-p32-s32": {
+                "in_vectsize": 32,
+                "out_vectsize": 32,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_32",
+                    "1",
+                    "32",
+                    "1"
+                ]
+            },
+            "typed-folded:ramp-p32-s64": {
+                "in_vectsize": 32,
+                "out_vectsize": 64,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "1",
+                    "32",
+                    "2"
+                ]
+            },
+            "typed-folded:ramp-p32-s128": {
+                "in_vectsize": 32,
+                "out_vectsize": 128,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "1",
+                    "32",
+                    "4"
+                ]
+            },
+            "typed-folded:ramp-p32-s256": {
+                "in_vectsize": 32,
+                "out_vectsize": 256,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "1",
+                    "32",
+                    "8"
+                ]
+            },
+            "typed-folded:ramp-p32-s512": {
+                "in_vectsize": 32,
+                "out_vectsize": 512,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "1",
+                    "32",
+                    "16"
+                ]
+            },
+            "typed-folded:ramp-p32-s1024": {
+                "in_vectsize": 32,
+                "out_vectsize": 1024,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "1",
+                    "32",
+                    "32"
+                ]
+            },
+            "typed-folded:ramp-p32-s2048": {
+                "in_vectsize": 32,
+                "out_vectsize": 2048,
+                "lanesize": 32,
+                "in_precision": 32,
+                "out_precision": 32,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "1",
+                    "32",
+                    "64"
+                ]
+            },
+            "typed-folded:ramp-p64-s64": {
+                "in_vectsize": 64,
+                "out_vectsize": 64,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_64",
+                    "1",
+                    "64",
+                    "1"
+                ]
+            },
+            "typed-folded:ramp-p64-s128": {
+                "in_vectsize": 64,
+                "out_vectsize": 128,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_128",
+                    "1",
+                    "64",
+                    "2"
+                ]
+            },
+            "typed-folded:ramp-p64-s256": {
+                "in_vectsize": 64,
+                "out_vectsize": 256,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_256",
+                    "1",
+                    "64",
+                    "4"
+                ]
+            },
+            "typed-folded:ramp-p64-s512": {
+                "in_vectsize": 64,
+                "out_vectsize": 512,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_512",
+                    "1",
+                    "64",
+                    "8"
+                ]
+            },
+            "typed-folded:ramp-p64-s1024": {
+                "in_vectsize": 64,
+                "out_vectsize": 1024,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_1024",
+                    "1",
+                    "64",
+                    "16"
+                ]
+            },
+            "typed-folded:ramp-p64-s2048": {
+                "in_vectsize": 64,
+                "out_vectsize": 2048,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_2048",
+                    "1",
+                    "64",
+                    "32"
+                ]
+            },
+            "typed-folded:ramp-p64-s4096": {
+                "in_vectsize": 64,
+                "out_vectsize": 4096,
+                "lanesize": 64,
+                "in_precision": 64,
+                "out_precision": 64,
+                "in_vectsize_index": 1,
+                "out_vectsize_index": None,
+                "lanesize_index": 1,
+                "in_precision_index": 1,
+                "out_precision_index": 1,
+                "arg_permute_map": [],
+                "Signedness": None,
+                "Cost": "[]",
+                "SIMD": "False",
+                "Extensions": [
+                    ""
+                ],
+                "args": [
+                    "SYMBOLIC_BV_4096",
+                    "1",
+                    "64",
+                    "64"
+                ]
+            }
+        },
+        "semantics": [
+            '" (define (typed-folded:ramp base stride iprec osize) "',
+            '" (define dst "',
+            '" (apply concat "',
+            '" (for/list ([i (range 0 osize)]) "',
+            '" (define offset (bvadd base (bvmul (bv i iprec) stride))) "',
+            '" offset))) "',
+            '" dst) "',
         ]
     }
 }
