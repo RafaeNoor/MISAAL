@@ -4393,7 +4393,7 @@ tvm_folded = {
                     "4096",
                     "-1"
                 ]
-}
+            }
         },
         "semantics": [
             '" (define (typed-folded:vec-sub v1 v2 iprec isize sign) "',

@@ -36,7 +36,7 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
             "_mm_add_si64"
         ]
 
-        dsl_list = [d for d in dsl_list if d.name in input_test_list]
+        # dsl_list = [d for d in dsl_list if d.name in input_test_list]
 
         output_test_list = [
             #"typed:signed-vec-mul",

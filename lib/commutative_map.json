@@ -1,4 +1,11 @@
 {
+    "typed-folded:vec-add": 1,
+    "typed-folded:vec-mul": 1,
+    "typed-folded:vec-min": 1,
+    "typed-folded:vec-max": 1,
+    "typed-folded:vec-eq": 1,
+    "typed-folded:vec-bwor": 1,
+    "typed-folded:vec-bwand": 1,
     "typed:vec-add": 1,
     "typed:vec-eq": 1,
     "typed:signed-vec-widen-mul": 1,
