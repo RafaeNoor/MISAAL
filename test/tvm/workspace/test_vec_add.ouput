@@ -1,0 +1,995 @@
+==
+hydride.node.misaal_func_0:
+(typed-folded:vec-add
+(reg (bv 1 8))
+(reg (bv 0 8))
+16
+64
+1)
+Compiling misaal
+warning: Linking two modules of different target triples: '/u/is16/526/Hydride/codegen-generator/targets/x86/x86_wrappers.c.ll' is 'x86_64-unknown-linux-gnu' whereas 'llvm-link' is 'unknown-unknown-unknown'
+
+LEGALIZATION BEGIN
+BEFORE LEGALIZATION:
+define <4 x i16> @hydride.node.misaal_func_0(<8 x i8> %arg, <8 x i8> %arg.1) {
+entry:
+  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+  ret <4 x i16> %0
+}
+
+NAME MATCH!!
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:2
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:3
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:4
+OriginalInst->getOperand(Idx):i32 0
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:5
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:6
+OriginalInst->getOperand(Idx):i32 16
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:2
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:3
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:4
+OriginalInst->getOperand(Idx):i32 0
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:5
+OriginalInst->getOperand(Idx):i32 64
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:6
+OriginalInst->getOperand(Idx):i32 16
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:7
+OriginalInst->getOperand(Idx):i32 1
+MATCH FOUND
+MATCHING INST:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Idx:8
+OriginalInst->getOperand(Idx):i32 0
+MATCH FOUND
+INST FUNCTION NAME: _mm_adds_pi16_wrapper
+getArgsAfterPermutation:
+OriginalInst:  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+InstFunction; Function Attrs: noinline nounwind optnone uwtable
+define dso_local double @_mm_adds_pi16_wrapper(double %0, double %1) #5 {
+  %3 = alloca <1 x i64>, align 8
+  %4 = alloca <1 x i64>, align 8
+  %5 = alloca <1 x i64>, align 8
+  %6 = alloca <1 x i64>, align 8
+  %7 = alloca <1 x i64>, align 8
+  %8 = alloca <1 x i64>, align 8
+  %9 = alloca <1 x i64>, align 8
+  %10 = alloca <1 x i64>, align 8
+  %11 = alloca <1 x i64>, align 8
+  %12 = alloca <1 x i64>, align 8
+  %13 = alloca <1 x i64>, align 8
+  %14 = alloca <1 x i64>, align 8
+  %15 = alloca <1 x i64>, align 8
+  %16 = bitcast <1 x i64>* %9 to double*
+  store double %0, double* %16, align 8
+  %17 = load <1 x i64>, <1 x i64>* %9, align 8
+  %18 = bitcast <1 x i64>* %10 to double*
+  store double %1, double* %18, align 8
+  %19 = load <1 x i64>, <1 x i64>* %10, align 8
+  store <1 x i64> %17, <1 x i64>* %11, align 8
+  store <1 x i64> %19, <1 x i64>* %12, align 8
+  %20 = load <1 x i64>, <1 x i64>* %11, align 8
+  %21 = load <1 x i64>, <1 x i64>* %12, align 8
+  store <1 x i64> %20, <1 x i64>* %13, align 8
+  %22 = bitcast <1 x i64>* %13 to double*
+  %23 = load double, double* %22, align 8
+  store <1 x i64> %21, <1 x i64>* %14, align 8
+  %24 = bitcast <1 x i64>* %14 to double*
+  %25 = load double, double* %24, align 8
+  %26 = bitcast <1 x i64>* %4 to double*
+  store double %23, double* %26, align 8
+  %27 = load <1 x i64>, <1 x i64>* %4, align 8
+  %28 = bitcast <1 x i64>* %5 to double*
+  store double %25, double* %28, align 8
+  %29 = load <1 x i64>, <1 x i64>* %5, align 8
+  store <1 x i64> %27, <1 x i64>* %6, align 8
+  store <1 x i64> %29, <1 x i64>* %7, align 8
+  %30 = load <1 x i64>, <1 x i64>* %6, align 8
+  %31 = bitcast <1 x i64> %30 to <4 x i16>
+  %32 = bitcast <4 x i16> %31 to x86_mmx
+  %33 = load <1 x i64>, <1 x i64>* %7, align 8
+  %34 = bitcast <1 x i64> %33 to <4 x i16>
+  %35 = bitcast <4 x i16> %34 to x86_mmx
+  %36 = call x86_mmx @llvm.x86.mmx.padds.w(x86_mmx %32, x86_mmx %35) #6
+  %37 = bitcast x86_mmx %36 to <4 x i16>
+  %38 = bitcast <4 x i16> %37 to <1 x i64>
+  store <1 x i64> %38, <1 x i64>* %3, align 8
+  %39 = bitcast <1 x i64>* %3 to double*
+  %40 = load double, double* %39, align 8
+  %41 = bitcast <1 x i64>* %15 to double*
+  store double %40, double* %41, align 8
+  %42 = load <1 x i64>, <1 x i64>* %15, align 8
+  store <1 x i64> %42, <1 x i64>* %8, align 8
+  %43 = bitcast <1 x i64>* %8 to double*
+  %44 = load double, double* %43, align 8
+  ret double %44
+}
+
+OriginalInst->getNumOperands():10
+OriginalInst->getOperand(I):<8 x i8> %arg
+OriginalInst->getOperand(I):<8 x i8> %arg.1
+OriginalInst->getOperand(I):i32 64
+OriginalInst->getOperand(I):i32 64
+OriginalInst->getOperand(I):i32 0
+OriginalInst->getOperand(I):i32 64
+OriginalInst->getOperand(I):i32 16
+OriginalInst->getOperand(I):i32 1
+OriginalInst->getOperand(I):i32 0
+RequiredTypes size:2
+BitvectorList size:9
+Permutation Idx:0
+Permutation Idx:1
+Permutation Idx:-1
+Permutation Idx:-1
+Permutation Idx:-1
+Permutation Idx:-1
+Permutation Idx:-1
+Permutation Idx:-1
+Permutation Idx:-1
+IDX:0
+PERM IDX:0
+getBitvectorOfRequiredType
+Bitvector:<8 x i8> %arg
+RequiredVectoType:double
+InstToInstMap[Bitvector]:  %0 = bitcast <8 x i8> %arg to double
+NewArgs[PermIdx]:  %0 = bitcast <8 x i8> %arg to double
+----NewArgs.size(): 2
+IDX:1
+PERM IDX:1
+getBitvectorOfRequiredType
+Bitvector:<8 x i8> %arg.1
+RequiredVectoType:double
+InstToInstMap[Bitvector]:  %1 = bitcast <8 x i8> %arg.1 to double
+NewArgs[PermIdx]:  %1 = bitcast <8 x i8> %arg.1 to double
+----NewArgs.size(): 2
+NewArgs.size(): 2
+NEW INSTUCTION:  %2 = call double @_mm_adds_pi16_wrapper(double %0, double %1)
+AFTER LEGALIZATION FUNCTION:
+define <4 x i16> @hydride.node.misaal_func_0(<8 x i8> %arg, <8 x i8> %arg.1) {
+entry:
+  %0 = bitcast <8 x i8> %arg to double
+  %1 = bitcast <8 x i8> %arg.1 to double
+  %2 = call double @_mm_adds_pi16_wrapper(double %0, double %1)
+  %3 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+  ret <4 x i16> %3
+}
+
+Created PIM INIT fUNCTION: define void @pimInitDeviceWrapper() {
+entry:
+  %pimInit = call i32 @pimCreateDevice(i32 1, i32 4, i32 128, i32 32, i32 1024, i32 1024)
+  ret void
+}
+
+Created PIM Stats fUNCTION: define void @pimShowStatsWrapper() {
+entry:
+  call void @pimShowStats()
+  ret void
+}
+
+Instruction to remove:   %3 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+Not found in map!
+FINAL FUNCTION:
+define <4 x i16> @hydride.node.misaal_func_0(<8 x i8> %arg, <8 x i8> %arg.1) {
+entry:
+  %0 = bitcast <8 x i8> %arg to double
+  %1 = bitcast <8 x i8> %arg.1 to double
+  %2 = call double @_mm_adds_pi16_wrapper(double %0, double %1)
+  ret <4 x i16> undef
+}
+
+PARSING CODE:
+['; hydride.node.misaal_func_0\n', '; (reg 0) <8 x i8>\n', '; (reg 1) <8 x i8>\n', ' (_mm_add_pi8_dsl\n', '\t(reg 0)\n', '\t(reg 1)\n', '\t64\n', '\t64\n', '\t0\n', '\t64\n', '\t16\n', '\t1\n', '\t0\n', ' ) ; <4 x i16>\n']
+
+
+
+
+
+
+
+TESTING
+['; (reg 0) <8 x i8>\n', '; (reg 1) <8 x i8>\n', ' (_mm_add_pi8_dsl\n', '\t(reg 0)\n', '\t(reg 1)\n', '\t64\n', '\t64\n', '\t0\n', '\t64\n', '\t16\n', '\t1\n', '\t0\n', ' ) ; <4 x i16>\n']
+hydride.node.misaal_func_0
+
+
+
+FUNCTION:
+hydride.node.misaal_func_0
+['; (reg 0) <8 x i8>\n', '; (reg 1) <8 x i8>\n', ' (_mm_add_pi8_dsl\n', '\t(reg 0)\n', '\t(reg 1)\n', '\t64\n', '\t64\n', '\t0\n', '\t64\n', '\t16\n', '\t1\n', '\t0\n', ' ) ; <4 x i16>\n']
+self.RosetteCode
+['; (reg 0) <8 x i8>\n', '; (reg 1) <8 x i8>\n', ' (_mm_add_pi8_dsl\n', '\t(reg 0)\n', '\t(reg 1)\n', '\t64\n', '\t64\n', '\t0\n', '\t64\n', '\t16\n', '\t1\n', '\t0\n', ' ) ; <4 x i16>\n']
+NEXT TOKEN
+self.Index:
+0
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+; (reg 0) <8 x i8>
+
+TOKEN:
+; (reg 0) <8 x i8>
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+1
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+; (reg 1) <8 x i8>
+
+TOKEN:
+; (reg 1) <8 x i8>
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+2
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+ (_mm_add_pi8_dsl
+
+TOKEN:
+(
+Line:
+_mm_add_pi8_dsl
+--
+NEXT TOKEN
+PARSED LINE:
+_mm_add_pi8_dsl
+TOKEN:
+_mm_add_pi8_dsl
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+3
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	(reg 0)
+
+TOKEN:
+(
+Line:
+reg 0)
+--
+NEXT TOKEN
+PARSED LINE:
+reg 0)
+TOKEN:
+reg
+Line:
+ 0)
+--
+NEXT TOKEN
+PARSED LINE:
+ 0)
+TOKEN:
+0
+Line:
+)
+--
+NEXT TOKEN
+PARSED LINE:
+)
+TOKEN:
+)
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+4
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	(reg 1)
+
+TOKEN:
+(
+Line:
+reg 1)
+--
+NEXT TOKEN
+PARSED LINE:
+reg 1)
+TOKEN:
+reg
+Line:
+ 1)
+--
+NEXT TOKEN
+PARSED LINE:
+ 1)
+TOKEN:
+1
+Line:
+)
+--
+NEXT TOKEN
+PARSED LINE:
+)
+TOKEN:
+)
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+5
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	64
+
+TOKEN:
+64
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+6
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	64
+
+TOKEN:
+64
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+7
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	0
+
+TOKEN:
+0
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+8
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	64
+
+TOKEN:
+64
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+9
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	16
+
+TOKEN:
+16
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+10
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	1
+
+TOKEN:
+1
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+11
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+	0
+
+TOKEN:
+0
+Line:
+
+--
+NEXT TOKEN
+self.Index:
+12
+len(self.RosetteCode) - 1:
+12
+PARSED LINE:
+ ) ; <4 x i16>
+
+TOKEN:
+)
+Line:
+ ; <4 x i16>
+--
+NEXT TOKEN
+PARSED LINE:
+ ; <4 x i16>
+TOKEN:
+; <4 x i16>
+Line:
+
+--
+NEXT TOKEN
+NEXT TOKEN IS NONE
+LIST OF TOKENS:
+['; (reg 0) <8 x i8>', '; (reg 1) <8 x i8>', '(', '_mm_add_pi8_dsl', '(', 'reg', '0', ')', '(', 'reg', '1', ')', '64', '64', '0', '64', '16', '1', '0', ')', '; <4 x i16>']
+readExpressions
+POPPED TOKEN:
+; (reg 0) <8 x i8>
+COMMENT
+readExpressions
+POPPED TOKEN:
+(
+readExpressions
+POPPED TOKEN:
+_mm_add_pi8_dsl
+readExpressions
+POPPED TOKEN:
+(
+readExpressions
+POPPED TOKEN:
+reg
+readExpressions
+POPPED TOKEN:
+0
+readExpressions
+POPPED TOKEN:
+(
+readExpressions
+POPPED TOKEN:
+reg
+readExpressions
+POPPED TOKEN:
+1
+readExpressions
+POPPED TOKEN:
+64
+readExpressions
+POPPED TOKEN:
+64
+readExpressions
+POPPED TOKEN:
+0
+readExpressions
+POPPED TOKEN:
+64
+readExpressions
+POPPED TOKEN:
+16
+readExpressions
+POPPED TOKEN:
+1
+readExpressions
+POPPED TOKEN:
+0
+ParsedExpr:
+[['; (reg 0) <8 x i8>'], ['; (reg 1) <8 x i8>'], ['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]]
+
+
+
+LIFTING FUNCTION:
+hydride.node.misaal_func_0
+RosetteAST:
+[['; (reg 0) <8 x i8>'], ['; (reg 1) <8 x i8>'], ['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]]
+RosetteAST:
+[['; (reg 0) <8 x i8>'], ['; (reg 1) <8 x i8>'], ['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]]
+type(RosetteAST):
+<class 'list'>
+--RosetteAST[0]:
+['; (reg 0) <8 x i8>']
+RegInfo:
+reg0
+Type:
+<8xi8>
+RegNo:
+0
+NumElems:
+<8
+NumElems:
+8
+Precision:
+8
+type(RosetteAST[1]):
+<class 'list'>
+RosetteAST[1]:
+['; (reg 1) <8 x i8>']
+CREATING ARGUMENT
+NumElems:
+<8
+NumElems:
+8
+Precision:
+8
+RosetteAST:
+[['; (reg 1) <8 x i8>'], ['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]]
+type(RosetteAST):
+<class 'list'>
+--RosetteAST[0]:
+['; (reg 1) <8 x i8>']
+RegInfo:
+reg1
+Type:
+<8xi8>
+RegNo:
+1
+NumElems:
+<8
+NumElems:
+8
+Precision:
+8
+type(RosetteAST[1]):
+<class 'list'>
+RosetteAST[1]:
+['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]
+CREATING ARGUMENT
+NumElems:
+<8
+NumElems:
+8
+Precision:
+8
+RosetteAST:
+[['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]]
+type(RosetteAST):
+<class 'list'>
+--RosetteAST[0]:
+['_mm_add_pi8_dsl', ['reg', 0], ['reg', 1], 64, 64, 0, 64, 16, 1, 0, ['; <4 x i16>']]
+--ELSE
+RosetteAST[-1]:
+['; <4 x i16>']
+NumElems:
+<4
+NumElems:
+4
+Precision:
+16
+RosetteAST:
+['reg', 0]
+type(RosetteAST):
+<class 'list'>
+--RosetteAST[0]:
+reg
+REG
+--RosetteAST[1]:
+0
+RosetteAST:
+['reg', 1]
+type(RosetteAST):
+<class 'list'>
+--RosetteAST[0]:
+reg
+REG
+--RosetteAST[1]:
+1
+RosetteAST:
+64
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+64
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+0
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+64
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+16
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+1
+type(RosetteAST):
+<class 'int'>
+RosetteAST:
+0
+type(RosetteAST):
+<class 'int'>
+RosetteAST[0]:
+_mm_add_pi8_dsl
+<class 'int'>
+CallOp:
+%0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+NumElems:
+<4
+NumElems:
+4
+Precision:
+16
+self.RoseValToLLVMType of Retun value:
+<4 x i16>
+self.Params:
+[<RoseValues.RoseArgument object at 0x7f4d829f5c40>, <RoseValues.RoseArgument object at 0x7f4d829f5f10>]
+PARM:
+%reg0
+PARM:
+%reg1
+function hydride.node.misaal_func_0 ( bv64 %reg0, bv64 %reg1 ) {
+ %0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+ ret bv64 %0
+}
+RoseIRFunction:
+function hydride.node.misaal_func_0 ( bv64 %reg0, bv64 %reg1 ) {
+ %0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+ ret bv64 %0
+}
+CreateFunctionTypeForFunction
+RetType:
+<4 x i16>
+Arg:
+%reg0
+bitvector64
+LLVMContext.getLLVMTypeFor(Arg):
+<8 x i8>
+Arg:
+%reg1
+bitvector64
+LLVMContext.getLLVMTypeFor(Arg):
+<8 x i8>
+LLVMFunctionType:
+<4 x i16> (<8 x i8>, <8 x i8>)
+<8 x i8> %arg
+RoseIRFunction.getArg(Idx)
+139970880691264
+<8 x i8> %arg.1
+RoseIRFunction.getArg(Idx)
+139970880691984
+Op.getCallee().getName():
+_mm_add_pi8_dsl
+%0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+Operand:
+%reg0
+bitvector64
+OperandIndex:
+0
+---OperandType[-1]:
+<8 x i8>
+Operand:
+%reg1
+bitvector64
+OperandIndex:
+1
+---OperandType[-1]:
+<8 x i8>
+Operand:
+64
+int32
+OperandIndex:
+2
+Operand.to_llvm_ir(LLVMContext):
+i32 64
+---OperandType[-1]:
+i32
+Operand:
+64
+int32
+OperandIndex:
+3
+Operand.to_llvm_ir(LLVMContext):
+i32 64
+---OperandType[-1]:
+i32
+Operand:
+0
+int32
+OperandIndex:
+4
+Operand.to_llvm_ir(LLVMContext):
+i32 0
+---OperandType[-1]:
+i32
+Operand:
+64
+int32
+OperandIndex:
+5
+Operand.to_llvm_ir(LLVMContext):
+i32 64
+---OperandType[-1]:
+i32
+Operand:
+16
+int32
+OperandIndex:
+6
+Operand.to_llvm_ir(LLVMContext):
+i32 16
+---OperandType[-1]:
+i32
+Operand:
+1
+int32
+OperandIndex:
+7
+Operand.to_llvm_ir(LLVMContext):
+i32 1
+---OperandType[-1]:
+i32
+Operand:
+0
+int32
+OperandIndex:
+8
+Operand.to_llvm_ir(LLVMContext):
+i32 0
+---OperandType[-1]:
+i32
+---OperandTypes:
+[<<class 'llvmlite.ir.types.VectorType'> <8 x i8>>, <<class 'llvmlite.ir.types.VectorType'> <8 x i8>>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>, <<class 'llvmlite.ir.types.IntType'> i32>]
+len(OperandTypes):
+9
+FUNCTION ALREDY IN MODULE GLOBALS
+CHECKING ARG:
+<8 x i8> %arg
+CHECKING ARG:
+<8 x i8> %arg.1
+CHECKING ARG:
+i32 %arg.2
+CHECKING ARG:
+i32 %arg.3
+CHECKING ARG:
+i32 %arg.4
+CHECKING ARG:
+i32 %arg.5
+CHECKING ARG:
+i32 %arg.6
+CHECKING ARG:
+i32 %arg.7
+CHECKING ARG:
+i32 %arg.8
+OP:
+%0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+InstName:
+0
+Args:
+[<ir.Argument 'arg' of type <8 x i8>>, <ir.Argument 'arg.1' of type <8 x i8>>, <ir.Constant type='i32' value=64>, <ir.Constant type='i32' value=64>, <ir.Constant type='i32' value=0>, <ir.Constant type='i32' value=64>, <ir.Constant type='i32' value=16>, <ir.Constant type='i32' value=1>, <ir.Constant type='i32' value=0>]
+len(Args):
+9
+Intrinsic:
+declare <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 %arg.2, i32 %arg.3, i32 %arg.4, i32 %arg.5, i32 %arg.6, i32 %arg.7, i32 %arg.8)
+
+CallInst:
+%0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+--CHECKING ARG:
+<8 x i8> %arg
+--CHECKING ARG:
+<8 x i8> %arg.1
+--CHECKING ARG:
+i32 64
+--CHECKING ARG:
+i32 64
+--CHECKING ARG:
+i32 0
+--CHECKING ARG:
+i32 64
+--CHECKING ARG:
+i32 16
+--CHECKING ARG:
+i32 1
+--CHECKING ARG:
+i32 0
+OP:
+ret bv64 %0
+---
+
+
+
+
+
+ROSE IR FUNCTIONS
+ROSE FUNCTION:
+function hydride.node.misaal_func_0 ( bv64 %reg0, bv64 %reg1 ) {
+ %0 = opaquecall _mm_add_pi8_dsl( bv64 %reg0, bv64 %reg1, int32 64, int32 64, int32 0, int32 64, int32 16, int32 1, int32 0 )
+ ret bv64 %0
+}
+LLVM Module
+; ModuleID = "/u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file"
+target triple = "unknown-unknown-unknown"
+target datalayout = ""
+
+define <4 x i16> @hydride.node.misaal_func_0(<8 x i8> %arg, <8 x i8> %arg.1)
+{
+entry:
+  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+  ret <4 x i16> %0
+}
+
+declare <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 %arg.2, i32 %arg.3, i32 %arg.4, i32 %arg.5, i32 %arg.6, i32 %arg.7, i32 %arg.8)
+
+---
+
+
+
+
+
+LLVM MODULE
+; ModuleID = "/u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file"
+target triple = "unknown-unknown-unknown"
+target datalayout = ""
+
+define <4 x i16> @hydride.node.misaal_func_0(<8 x i8> %arg, <8 x i8> %arg.1)
+{
+entry:
+  %0 = call <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 64, i32 64, i32 0, i32 64, i32 16, i32 1, i32 0)
+  ret <4 x i16> %0
+}
+
+declare <4 x i16> @llvm.hydride._mm_add_pi8_dsl(<8 x i8> %arg, <8 x i8> %arg.1, i32 %arg.2, i32 %arg.3, i32 %arg.4, i32 %arg.5, i32 %arg.6, i32 %arg.7, i32 %arg.8)
+
+EXECUTING:
+llvm-link  /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.ll /u/is16/526/Hydride/codegen-generator/targets/x86/x86_wrappers.c.ll -o /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.linked.bc
+EXECUTING:
+llvm-dis  /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.linked.bc -o /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.linked.ll
+EXECUTING:
+opt -load /u/is16/526/Hydride/codegen-generator/tools/low-level-codegen/build/libX86Legalizer.so -enable-new-pm=0 -x86-hydride-legalize -adce -globaldce /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.linked.ll -S -o /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file.legalize.ll
+Found existing pattern pickle file /u/is16/526/MISAAL/lib/patterns/tvm.pickle
+Read 328 patterns
+Found existing pattern pickle file /u/is16/526/MISAAL/lib/patterns/x86.pickle
+Read 5823 patterns
+1 unique expressions to compile
+PROCESS UNIQUE 0
+
+(typed-folded:vec-add
+(reg (bv 1 8))
+(reg (bv 0 8))
+16
+64
+1)
+
+Creating egg file:	 lonwm_qu.egg
+$[ Egg Compiler ]:  /u/is16/526/egglog/target/debug/egglog lonwm_qu.egg
+Process completed
+EGG LOG PRODUCED (_mm_add_pi8 (SYMBV 0) (SYMBV 1) 64 64 0 64 16 1 0)
+expression_str (_mm_add_pi8 (reg (bv 0 8)) (reg (bv 1 8)) 64 64 0 64 16 1 0)
+Expression does not contain swizzles
+Completed compiling pool...
+PROCESS TEST 0
+hydride.node.misaal_func_0
+
+(typed-folded:vec-add
+(reg (bv 1 8))
+(reg (bv 0 8))
+16
+64
+1)
+
+Already compiled expression!
+GET EXPRESSION STR 
+; hydride.node.misaal_func_0
+; (reg 0) <8 x i8>
+; (reg 1) <8 x i8>
+ (_mm_add_pi8_dsl
+	(reg 0)
+	(reg 1)
+	64
+	64
+	0
+	64
+	16
+	1
+	0
+ ) ; <4 x i16>
+
+['; hydride.node.misaal_func_0\n; (reg 0) <8 x i8>\n; (reg 1) <8 x i8>\n (_mm_add_pi8_dsl\n\t(reg 0)\n\t(reg 1)\n\t64\n\t64\n\t0\n\t64\n\t16\n\t1\n\t0\n ) ; <4 x i16>\n']
+python3 /u/is16/526/Hydride/codegen-generator/tools/low-level-codegen/RoseLowLevelCodeGen.py test.out /u/is16/526/Hydride/codegen-generator/tools/low-level-codegen/build/libX86Legalizer.so /u/is16/526/Hydride/codegen-generator/targets/x86/x86_wrappers.c.ll -x86-hydride-legalize /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal_temp_file
+======= Compile Times =======
+EggLogParallel :	 20.358118295669556 seconds
+LLVM Legalize :	 4.879773378372192 seconds
+========================================
+Total : 25.237891674041748
+
+
+
+======= Virtual Memory =======
+- 113.66796875 Megabytes
+========================================
+Peak : 113.66796875 Megabytes
+
+
+
+======= Physical Memory =======
+- 107.30078125 Megabytes
+========================================
+Peak : 107.30078125 Megabytes
+
+
+
+Writing to /u/is16/526/MISAAL/test/tvm/workspace/test_vec_add_misaal.py ...
+Compilation took 28.1142 seconds ...
+Traceback (most recent call last):
+  File "/u/is16/526/MISAAL/test/tvm/workspace/test_vec_add.py", line 50, in <module>
+    ex = relax.build(mod, target)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/relax/vm_build.py", line 352, in build
+    return _vmlink(
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/relax/vm_build.py", line 252, in _vmlink
+    lib = tvm.build(tir_mod, target=target)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/driver/build_module.py", line 32, in build
+    return tvm.tir.build(mod, target, pipeline)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/tir/build.py", line 186, in build
+    return tir_to_runtime(host_mod, device_mod_dict, target_host)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/tir/build.py", line 98, in tir_to_runtime
+    mhost = codegen_build(mhost_all, target_host)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/tir/build.py", line 80, in codegen_build
+    return bf(mod, target)
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 245, in __call__
+    raise_last_ffi_error()
+  File "/u/is16/526/MISAAL/frontends/tvm/python/tvm/_ffi/base.py", line 465, in raise_last_ffi_error
+    raise py_err
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_module.cc", line 638, in operator()
+    n->Init(mod, target);
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_module.cc", line 369, in tvm::codegen::LLVMModuleNode::Init(tvm::IRModule const&, tvm::Target const&)
+    cg->Init("TVMMod", llvm_target.get(), system_lib_prefix, system_lib_prefix.defined(), false);
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/codegen_misaal.cc", line 99, in tvm::codegen::CodeGenMISAAL::Init(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::codegen::LLVMTarget*, tvm::runtime::Optional<tvm::runtime::String>, bool, bool)
+    HandleImport(misaal_ll_path.value());
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/codegen_llvm.cc", line 382, in tvm::codegen::CodeGenLLVM::HandleImport(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+    mlib = llvm_target_->GetInstance().LoadIR(code);
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_instance.cc", line 178, in tvm::codegen::LLVMInstance::LoadIR(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const
+    return ParseBuffer(**maybe_buffer);
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_instance.cc", line 188, in tvm::codegen::LLVMInstance::ParseBuffer(llvm::MemoryBuffer const&) const
+    LOG(FATAL) << ostream.str();
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  5: operator()
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_module.cc:638
+  4: tvm::codegen::LLVMModuleNode::Init(tvm::IRModule const&, tvm::Target const&)
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_module.cc:369
+  3: tvm::codegen::CodeGenMISAAL::Init(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::codegen::LLVMTarget*, tvm::runtime::Optional<tvm::runtime::String>, bool, bool)
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/codegen_misaal.cc:99
+  2: tvm::codegen::CodeGenLLVM::HandleImport(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/codegen_llvm.cc:382
+  1: tvm::codegen::LLVMInstance::LoadIR(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_instance.cc:178
+  0: tvm::codegen::LLVMInstance::ParseBuffer(llvm::MemoryBuffer const&) const
+        at /u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_instance.cc:188
+  %11 = bitcast <2 x i32> %10 to x86_mmx
+                                 ^
+  File "/u/is16/526/MISAAL/frontends/tvm/src/target/llvm/llvm_instance.cc", line 188
+test_vec_add_misaal_temp_file.legalize.ll: 795397:34: error: expected type

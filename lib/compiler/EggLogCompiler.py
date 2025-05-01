@@ -28,7 +28,11 @@ class EggLogCompiler(CompilerBase):
         self.measure_egglog_time = True
         self.memo = {}
         self.MISAAL_ROOT = os.getenv('MISAAL_SRC')
-        self.axioms_file = os.path.join(self.MISAAL_ROOT, "targets","halide","axioms.egg")
+        self.TVM_TARGET = os.getenv("TVM_TARGET")
+        if (self.TVM_TARGET):
+            self.axioms_file = os.path.join(self.MISAAL_ROOT, "targets","halide","axioms.egg")
+        else:
+            self.axioms_file = os.path.join(self.MISAAL_ROOT, "targets","halide","axioms.egg")
 
 
     def remove_concat_slice_only_patterns(self):

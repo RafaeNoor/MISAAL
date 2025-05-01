@@ -177,8 +177,8 @@ output_dsl_list = parse_dict_with_bounded(TARGET_TO_SEMA[output_language])
 output_synth_desc = TARGET_TO_DESC[output_language]
 
 # test_properties = [EqClassEqualDepthV3Synth]
-test_properties = [EnumeratePattern]
-# test_properties = [EqClassEqualDepthV4]
+# test_properties = [EnumeratePattern]
+test_properties = [EqClassEqualDepthV4]
 # test_properties = [IdentifySwizzles]
 # test_properties = [RepairRelavanceIntermediates]
 # test_properties = [RepairRelavanceV4]

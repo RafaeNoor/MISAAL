@@ -4418,7 +4418,7 @@ tvm_folded = {
     },
 
     "typed-folded:vec-mul": {
-        "target_instrutions": {
+        "target_instructions": {
             "typed-folded:vec-mul-signed-p8-s8": {
                 "in_vectsize": 8,
                 "out_vectsize": 8,
@@ -22676,7 +22676,7 @@ tvm_folded = {
             '" dst "',
             '" ) "',
         ]
-    }.
+    },
 
     "typed-folded:ramp": {
         "target_instructions": {

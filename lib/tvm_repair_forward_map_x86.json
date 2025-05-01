@@ -8,41 +8,50 @@
     "_mm_hadd_pi16": [
         "typed-folded:vec-add"
     ],
+    "_mm_broadcastmb_epi64": [
+        "typed-folded:cast-extend"
+    ],
     "_mm_hadd_pi32": [
+        "typed-folded:vec-add",
         "typed-folded:vec-bwor",
         "typed-folded:vec-min",
-        "typed-folded:vec-max",
-        "typed-folded:vec-add"
+        "typed-folded:vec-max"
     ],
     "_mm_add_pi8": [
         "typed-folded:vec-add"
     ],
     "_mm_div_epi64": [
+        "typed-folded:cast-extend",
         "typed-folded:vec-div"
     ],
     "_mm256_hadd_epi32": [
         "typed-folded:vec-add"
     ],
+    "_mm512_cvtepu8_epi32": [
+        "typed-folded:cast-extend"
+    ],
     "_m_pslld": [
-        "typed-folded:vec-lt",
+        "typed-folded:vec-mod",
+        "typed-folded:vec-sub",
+        "typed-folded:cast-extend",
         "typed-folded:vec-gt",
         "typed-folded:vec-le",
-        "typed-folded:vec-ge",
         "typed-folded:vec-eq",
-        "typed-folded:vec-mod",
-        "typed-folded:vec-sub"
+        "typed-folded:vec-ge",
+        "typed-folded:vec-lt"
     ],
     "_mm256_rol_epi32": [
         "typed-folded:vec-bwor"
     ],
     "_m_psrld": [
-        "typed-folded:vec-lt",
+        "typed-folded:vec-mod",
+        "typed-folded:vec-sub",
+        "typed-folded:cast-extend",
         "typed-folded:vec-gt",
         "typed-folded:vec-le",
-        "typed-folded:vec-ge",
         "typed-folded:vec-eq",
-        "typed-folded:vec-mod",
-        "typed-folded:vec-sub"
+        "typed-folded:vec-ge",
+        "typed-folded:vec-lt"
     ],
     "_mm256_ror_epi32": [
         "typed-folded:vec-bwor"
@@ -64,9 +73,9 @@
     ],
     "_mm_hsub_pi32": [
         "typed-folded:vec-bwor",
+        "typed-folded:vec-sub",
         "typed-folded:vec-min",
-        "typed-folded:vec-max",
-        "typed-folded:vec-sub"
+        "typed-folded:vec-max"
     ],
     "_mm_sub_si64": [
         "typed-folded:vec-sub"
@@ -86,10 +95,32 @@
     "_mm_hsub_epi16": [
         "typed-folded:vec-sub"
     ],
+    "_mm256_dpbusd_epi32": [
+        "typed-folded:cast-extend"
+    ],
+    "_mm256_maddubs_epi16": [
+        "typed-folded:cast-extend"
+    ],
+    "_mm256_mulhrs_epi16": [
+        "typed-folded:cast-extend"
+    ],
     "_mm512_fmadd_epi32": [
-        "typed-folded:vec-add"
+        "typed-folded:vec-add",
+        "typed-folded:cast-extend"
+    ],
+    "_mm256_mul_epi32": [
+        "typed-folded:cast-extend"
+    ],
+    "_mm512_mulhi_epu16": [
+        "typed-folded:cast-extend"
+    ],
+    "_mm_mul_su32": [
+        "typed-folded:cast-extend"
     ],
     "_mm_avg_epu8": [
         "typed-folded:vec-add"
+    ],
+    "_mm512_mulhi_epu32": [
+        "typed-folded:cast-extend"
     ]
 }

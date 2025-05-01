@@ -32,9 +32,9 @@ namespace tir {
     std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
         DataType dtype = op->dtype; \
         if (dtype.is_uint()){ \
-            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
+            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
         } else if (dtype.is_int()){ \
-            return print_signed_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
+            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
         } else { \
             ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
             exit(0); \
@@ -70,21 +70,21 @@ namespace tir {
         return print_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits()); \
     }
 
-    REWRITE_SIGNED_BINOP(Add, "vec-add");
-    REWRITE_SIGNED_BINOP(Sub, "vec-sub");
-    REWRITE_SIGNED_BINOP(Mul, "vec-mul");
-    REWRITE_SIGNED_BINOP(Div, "vec-div");
-    REWRITE_SIGNED_BINOP(Mod, "vec-mod");
-    REWRITE_SIGNED_BINOP(Min, "vec-min");
-    REWRITE_SIGNED_BINOP(Max, "vec-max");
-    REWRITE_COMP_BINOP(EQ, "vec-eq");
-    REWRITE_SIGNED_COMP_BINOP(LT, "vec-lt");
-    REWRITE_COMP_BINOP(NE, "vec-ne");
-    REWRITE_SIGNED_COMP_BINOP(LE, "vec-le");
-    REWRITE_SIGNED_COMP_BINOP(GT, "vec-gt");
-    REWRITE_SIGNED_COMP_BINOP(GE, "vec-ge");
-    REWRITE_BASIC_BINOP(And, "vec-bwand");
-    REWRITE_BASIC_BINOP(Or, "vec-or");
+    REWRITE_SIGNED_BINOP(Add, "typed-folded:vec-add");
+    REWRITE_SIGNED_BINOP(Sub, "typed-folded:vec-sub");
+    REWRITE_SIGNED_BINOP(Mul, "typed-folded:vec-mul");
+    REWRITE_SIGNED_BINOP(Div, "typed-folded:vec-div");
+    REWRITE_SIGNED_BINOP(Mod, "typed-folded:vec-mod");
+    REWRITE_SIGNED_BINOP(Min, "typed-folded:vec-min");
+    REWRITE_SIGNED_BINOP(Max, "typed-folded:vec-max");
+    REWRITE_COMP_BINOP(EQ, "typed-folded:vec-eq");
+    REWRITE_SIGNED_COMP_BINOP(LT, "typed-folded:vec-lt");
+    REWRITE_COMP_BINOP(NE, "typed-folded:vec-ne");
+    REWRITE_SIGNED_COMP_BINOP(LE, "typed-folded:vec-le");
+    REWRITE_SIGNED_COMP_BINOP(GT, "typed-folded:vec-gt");
+    REWRITE_SIGNED_COMP_BINOP(GE, "typed-folded:vec-ge");
+    REWRITE_BASIC_BINOP(And, "typed-folded:vec-bwand");
+    REWRITE_BASIC_BINOP(Or, "typed-folded:vec-or");
 
     // Rules for special ops
     std::string RosetteRewriter::Rewrite(const CastNode* op){ 
@@ -142,6 +142,7 @@ namespace tir {
     DEFINE_REWRITE_NOT_IMPLEMENTED(Let);
     DEFINE_REWRITE_NOT_IMPLEMENTED(BufferLoad);
     DEFINE_REWRITE_NOT_IMPLEMENTED(Call);
+    DEFINE_REWRITE_NOT_IMPLEMENTED(Shuffle);
 
     // Rewrite op if it is vectorizable, otherwise stop rewriting.
     #define DEFINE_VISIT_OP(Op)                                       \
@@ -186,6 +187,10 @@ namespace tir {
 
     PrimExpr RosetteRewriter::result(DataType result_dtype){
         return Call(result_dtype, builtin::call_pure_extern(), args);
+    }
+
+    std::string RosetteRewriter::fresh_arg_name(){
+        return "(reg (bv " + std::to_string(arg_count_++) + " 8))";
     }
 
 }  // namespace tir

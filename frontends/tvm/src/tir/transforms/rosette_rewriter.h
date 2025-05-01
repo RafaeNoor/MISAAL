@@ -87,9 +87,7 @@ namespace tir {
 
         std::string print_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits);
         std::string print_signed_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits, int sign);
-        std::string fresh_arg_name(){
-            return "arg_" + std::to_string(++arg_count_);
-        }
+        std::string fresh_arg_name();
 
         /*! \brief maps arguments in the generated function call to prim exprs*/
         Array<PrimExpr> args;
