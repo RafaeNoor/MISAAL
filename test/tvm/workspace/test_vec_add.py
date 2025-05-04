@@ -15,7 +15,7 @@ import os
 @I.ir_module
 class Module:
     @T.prim_func(private=True)
-    def vec_add(x: T.Buffer((T.int64(1), T.int64(128)), "int16"), y: T.Buffer((T.int64(1), T.int64(128)), "int16"), T_add_intermediate_1: T.Buffer((T.int64(1), T.int64(128)), "bool")):
+    def vec_add(x: T.Buffer((T.int64(1), T.int64(128)), "int16"), y: T.Buffer((T.int64(1), T.int64(128)), "int16"), T_add_intermediate_1: T.Buffer((T.int64(1), T.int64(128)), "int16")):
         T.func_attr({"op_pattern": 0, "tir.is_scheduled": T.bool(True), "tir.noalias": T.bool(True)})
         # with T.block("root"):
         for ax0_ax1_fused_0_ax0_ax1_fused_1_fused_0 in T.parallel(T.int64(32)):
@@ -28,11 +28,11 @@ class Module:
                     T_add_intermediate_1[v_ax0, v_ax1] = x[v_ax0, v_ax1] + y[v_ax0, v_ax1]
 
     @R.function
-    def forward(x: R.Tensor((1, 128), dtype="int16"), y: R.Tensor((1, 128), dtype="int16")) -> R.Tensor((1, 128), dtype="bool"):
+    def forward(x: R.Tensor((1, 128), dtype="int16"), y: R.Tensor((1, 128), dtype="int16")) -> R.Tensor((1, 128), dtype="int16"):
         R.func_attr({"num_input": 2})
         cls = Module
         with R.dataflow():
-            gv = R.call_tir(cls.vec_add, (x, y), out_sinfo=R.Tensor((1, 128), dtype="bool"))
+            gv = R.call_tir(cls.vec_add, (x, y), out_sinfo=R.Tensor((1, 128), dtype="int16"))
             R.output(gv)
         return gv
 
@@ -41,10 +41,11 @@ mod = Module
 target = tvm.target.Target("llvm -mcpu=alderlake -mattr=+avx2 -num-cores=14")
 
 file_name= __file__[:-3]
-## with tvm.transform.PassContext(instruments=[], config={'codegen_debug':False, 'misaal':True,'misaal_s_exp_path':file_name} ):
+# with tvm.transform.PassContext(instruments=[], config={'codegen_debug':False, 'misaal':True,'misaal_s_exp_path':file_name} ):
 with tvm.transform.PassContext(instruments=[], config={
     'codegen_debug':False, 
     'misaal':True,
+    'disable_misaal_compile': False,
     'misaal_benchmark_name':file_name,
     'misaal_ll_path':'test_vec_add_misaal_temp_file.legalize.ll'} ):
     ex = relax.build(mod, target)
@@ -52,12 +53,18 @@ with tvm.transform.PassContext(instruments=[], config={
 device = tvm.cpu()
 vm = relax.VirtualMachine(ex, device)
 
-data_a = np.random.rand(1, 128).astype("int16")
-data_b = np.random.rand(1, 128).astype("int16")
+data_a = np.random.randint(1,2048,(1, 128)).astype("int16")
+data_b = np.random.randint(1,2048,(1, 128)).astype("int16")
 tvm_data_a = tvm.nd.array(data_a, device=device)
 tvm_data_b = tvm.nd.array(data_b, device=device)
 tvm_result = vm["forward"](tvm_data_a, tvm_data_b).numpy()
+numpy_result = data_a + data_b
+print("data_a")
+print(data_a)
+print("data_b")
+print(data_b)
+print("numpy_result")
+print(numpy_result)
+print("tvm_result")
 print(tvm_result)
-# numpy_result = data_a + data_b
-
-# print("tvm and numpy equality: ", np.array_equal(tvm_result,numpy_result))
+print("tvm and numpy equality: ", np.array_equal(tvm_result,numpy_result))

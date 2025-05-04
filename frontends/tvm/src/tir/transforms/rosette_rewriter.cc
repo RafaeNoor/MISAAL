@@ -34,7 +34,7 @@ namespace tir {
         if (dtype.is_uint()){ \
             return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
         } else if (dtype.is_int()){ \
-            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
+            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), -1); \
         } else { \
             ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
             exit(0); \

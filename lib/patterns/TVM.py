@@ -37,36 +37,39 @@ for tf in test_files:
 
 pickle_file_name = MISAAL_ROOT+"/lib/patterns/tvm.pickle"
 #abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
-abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/tvm.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/tvm_abstract.pickle"
 
 TVM_patterns = []
 
 
-if os.path.exists(abstract_pickle_file_name):
-    with open(abstract_pickle_file_name, "rb") as handle:
-        TVM_patterns = pickle.load(handle)
-    print("Found existing pattern pickle file", pickle_file_name)
-    print("Read {} patterns".format(len(TVM_patterns)))
-elif os.path.exists(pickle_file_name):
-    with open(pickle_file_name, "rb") as handle:
-        Halide_patterns = pickle.load(handle)
-    print("Found existing pattern pickle file", pickle_file_name)
-    print("Read {} patterns".format(len(TVM_patterns)))
-    abstractor = PatternAbstractor(TVM_patterns, tvm_dsl_list, examples_limit = None)
-    abstracted_patterns = abstractor.abstract_patterns(Halide_patterns, tvm_dsl_list)
+# if os.path.exists(abstract_pickle_file_name):
+#     with open(abstract_pickle_file_name, "rb") as handle:
+#         TVM_patterns = pickle.load(handle)
+#     print("Found existing pattern pickle file", pickle_file_name)
+#     print("Read {} patterns".format(len(TVM_patterns)))
+# elif os.path.exists(pickle_file_name):
+#     with open(pickle_file_name, "rb") as handle:
+#         TVM_patterns = pickle.load(handle)
+#     print("Found existing pattern pickle file", pickle_file_name)
+#     print("Read {} patterns".format(len(TVM_patterns)))
+#     abstractor = PatternAbstractor(TVM_patterns, tvm_dsl_list, examples_limit = None)
+#     abstracted_patterns = abstractor.abstract_patterns(TVM_patterns, tvm_dsl_list)
 
-    with open(abstract_pickle_file_name, "wb") as handle:
-        pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
-else:
-    parsed_patterns = create_patterns(props, combined_dsl_list)
-    TVM_patterns =  parsed_patterns
+#     with open(abstract_pickle_file_name, "wb") as handle:
+#         pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# else:
+#     parsed_patterns = create_patterns(props, combined_dsl_list)
+#     TVM_patterns =  parsed_patterns
 
-    print("Total Patterns Pre Deduplication:", len(TVM_patterns))
-    TVM_patterns = prune_redundant_patterns(TVM_patterns, combined_dsl_list)
-    print("Total Patterns After Removing redundant patterns:", len(TVM_patterns))
-    TVM_patterns = deduplicate_patterns(TVM_patterns)
+#     print("Total Patterns Pre Deduplication:", len(TVM_patterns))
+#     TVM_patterns = prune_redundant_patterns(TVM_patterns, combined_dsl_list)
+#     print("Total Patterns After Removing redundant patterns:", len(TVM_patterns))
+#     TVM_patterns = deduplicate_patterns(TVM_patterns)
 
-    print("Total Patterns Post Deduplication:", len(TVM_patterns))
+#     print("Total Patterns Post Deduplication:", len(TVM_patterns))
 
-    with open(pickle_file_name, "wb") as handle:
-        pickle.dump(TVM_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
+#     with open(pickle_file_name, "wb") as handle:
+#         pickle.dump(TVM_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open(pickle_file_name, "rb") as handle:
+    TVM_patterns = pickle.load(handle)

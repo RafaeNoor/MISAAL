@@ -820,6 +820,8 @@ TVM_REGISTER_GLOBAL("callhello").set_body([](TVMArgs args, TVMRetValue* rv){
 TVM_REGISTER_PASS_CONFIG_OPTION("misaal", Bool);
 TVM_REGISTER_PASS_CONFIG_OPTION("codegen_debug", Bool);
 TVM_REGISTER_PASS_CONFIG_OPTION("misaal_ll_path", String);
+// Don't run the misaal compiler i.e. link an existing ll file
+TVM_REGISTER_PASS_CONFIG_OPTION("disable_misaal_compile", Bool);
 TVM_REGISTER_PASS_CONFIG_OPTION("misaal_s_exp_path", String);
 TVM_REGISTER_PASS_CONFIG_OPTION("misaal_benchmark_name", String);
 

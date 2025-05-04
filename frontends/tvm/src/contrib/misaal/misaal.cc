@@ -72,7 +72,7 @@ DEFINE_NOT_VECTORIZABLE_OP(Call);
     }
 
     void MisaalCompiler::execute_python_file(std::string fname){
-        std::string cmd = "python3 " + fname;
+        std::string cmd = "python " + fname;
         auto start = std::chrono::system_clock::now();
         int ret_code = system(cmd.c_str());
 
@@ -209,7 +209,7 @@ import sys\n";
         std::string path;
         switch(target){
             case x86:
-                path = "\"/u/is16/526/Hydride/codegen-generator/tools/low-level-codegen/build/libX86Legalizer.so\"";
+                path = "\"/u/is16/526/Hydride/codegen-generator/tools/low-level-codegen/build/libX86LegalizerAllArgs.so\"";
                 break;
             // case HVX:
             //     path = "\"/shared/hydride/LLVMHVXLegalizer.so\"";

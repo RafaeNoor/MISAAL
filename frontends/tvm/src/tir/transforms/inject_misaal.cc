@@ -147,7 +147,12 @@ Pass InjectMisaal() {
         n->body = misaal_injecter(std::move(n->body));
         misaal_injecter.PrintGeneratedFunctions();
         misaal_injecter.PrintSExpToFile();
-        misaal_injecter.CompileMISAAL();
+
+        tvm::transform::PassContext pass_ctx = tvm::transform::PassContext::Current();
+        Optional<Bool> disable_misaal_compile = pass_ctx->GetConfig("disable_misaal_compile", Optional<Bool>(nullptr));
+        if (!disable_misaal_compile || disable_misaal_compile.value() == false){
+            misaal_injecter.CompileMISAAL();
+        }
         return f;
     };
     return CreatePrimFuncPass(pass_func, 0, "misaal.InjectMisaal", {});
