@@ -19237,7 +19237,7 @@ tvm_folded = {
         ]
     },
 
-    "typed-folded:vec:bwand": {
+    "typed-folded:vec-bwand": {
         "target_instructions": {
             "typed-folded:vec-bwand-p8-s8": {
                 "in_vectsize": 8,

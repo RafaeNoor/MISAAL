@@ -85,9 +85,10 @@ namespace tir {
         std::string Rewrite(const ShuffleNode* op);
         std::string Rewrite(const BroadcastNode* op);
 
+        // std::string CallNodeRewriteHelper(const CallNode* op, std::string RosetteOp);
         std::string print_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits);
         std::string print_signed_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits, int sign);
-        std::string fresh_arg_name();
+        std::string fresh_arg_name(size_t bits);
 
         /*! \brief maps arguments in the generated function call to prim exprs*/
         Array<PrimExpr> args;

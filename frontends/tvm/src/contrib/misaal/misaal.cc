@@ -1,5 +1,6 @@
 #include "misaal.h"
 #include <tvm/tir/expr.h>
+#include <tvm/tir/builtin.h>
 
 namespace tvm {
 namespace tir {
@@ -27,8 +28,6 @@ BASIC_VECTORIZABLE_OP(GT);
 BASIC_VECTORIZABLE_OP(GE);
 BASIC_VECTORIZABLE_OP(EQ);
 BASIC_VECTORIZABLE_OP(NE); // No semantics implemented
-BASIC_VECTORIZABLE_OP(Or);
-BASIC_VECTORIZABLE_OP(And);
 BASIC_VECTORIZABLE_OP(Add);
 // BASIC_VECTORIZABLE_OP(Cast);
 // ALWAYS_VECTORIZABLE_OP(Ramp);
@@ -48,6 +47,8 @@ DEFINE_NOT_VECTORIZABLE_OP(Ramp);
 DEFINE_NOT_VECTORIZABLE_OP(Shuffle);
 DEFINE_NOT_VECTORIZABLE_OP(Broadcast);
 
+DEFINE_NOT_VECTORIZABLE_OP(And);
+DEFINE_NOT_VECTORIZABLE_OP(Or);
 DEFINE_NOT_VECTORIZABLE_OP(Var);
 DEFINE_NOT_VECTORIZABLE_OP(IntImm);
 DEFINE_NOT_VECTORIZABLE_OP(FloatImm);
@@ -56,7 +57,15 @@ DEFINE_NOT_VECTORIZABLE_OP(Not);
 DEFINE_NOT_VECTORIZABLE_OP(Select);
 DEFINE_NOT_VECTORIZABLE_OP(Let);
 DEFINE_NOT_VECTORIZABLE_OP(BufferLoad);
-DEFINE_NOT_VECTORIZABLE_OP(Call);
+
+    bool IsVectorizable(const tir::CallNode* op){
+        if (op->op.same_as(builtin::bitwise_or())){
+            return true;
+        } else if (op->op.same_as(builtin::bitwise_and())){
+            return true;
+        }
+        return false;
+    }
 
     void MisaalCompiler::add_expression_to_compile(std::string expr, std::string name){
         CompilerQuery Task(expr, name);

@@ -8,6 +8,7 @@
 #include <tvm/tir/expr.h>
 #include <tvm/tir/op.h>
 #include <tvm/tir/transform.h>
+#include <tvm/tir/builtin.h>
 
 #include <limits>
 #include <unordered_set>
@@ -34,12 +35,19 @@ namespace tir {
         if (dtype.is_uint()){ \
             return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
         } else if (dtype.is_int()){ \
-            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), -1); \
+            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
         } else { \
             ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
             exit(0); \
             return ""; \
         } \
+    }
+
+    // Addsub has sign -1 and 1 for signed saturating and 0 for unsigned saturating.
+    #define REWRITE_ADDSUB(Op, RosetteOp) \
+    std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
+        DataType dtype = op->dtype; \
+        return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), -1); \
     }
 
     // For comparison ops, use the left child dtype as the input to the s-exp
@@ -70,8 +78,8 @@ namespace tir {
         return print_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits()); \
     }
 
-    REWRITE_SIGNED_BINOP(Add, "typed-folded:vec-add");
-    REWRITE_SIGNED_BINOP(Sub, "typed-folded:vec-sub");
+    REWRITE_ADDSUB(Add, "typed-folded:vec-add");
+    REWRITE_ADDSUB(Sub, "typed-folded:vec-sub");
     REWRITE_SIGNED_BINOP(Mul, "typed-folded:vec-mul");
     REWRITE_SIGNED_BINOP(Div, "typed-folded:vec-div");
     REWRITE_SIGNED_BINOP(Mod, "typed-folded:vec-mod");
@@ -84,7 +92,6 @@ namespace tir {
     REWRITE_SIGNED_COMP_BINOP(GT, "typed-folded:vec-gt");
     REWRITE_SIGNED_COMP_BINOP(GE, "typed-folded:vec-ge");
     REWRITE_BASIC_BINOP(And, "typed-folded:vec-bwand");
-    REWRITE_BASIC_BINOP(Or, "typed-folded:vec-or");
 
     // Rules for special ops
     std::string RosetteRewriter::Rewrite(const CastNode* op){ 
@@ -127,6 +134,31 @@ namespace tir {
         return "(broadcast " + MakeString(op->value) + " " + std::to_string(dtype.bits()) + " " + std::to_string(dtype.lanes()) + ")";
     }
 
+    // std::string RosetteRewriter::CallNodeRewriteHelper(const CallNode* op, std::string RosetteOp){
+    //     DataType dtype = op->dtype;
+    //     if (dtype.is_uint()){ 
+    //         return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); 
+    //     } else if (dtype.is_int()){ 
+    //         return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); 
+    //     } else { 
+    //         ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; 
+    //         exit(0); 
+    //         return ""; 
+    // }
+
+    std::string RosetteRewriter::Rewrite(const CallNode* op) {  
+        DataType dtype = op->dtype;
+        if (op->op.same_as(builtin::bitwise_or())) {
+            return print_binary_op("typed-folded:vec-bwor", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
+        } else if (op->op.same_as(builtin::bitwise_and())) {
+            return print_binary_op("typed-folded:vec:bwand", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
+        } else {
+            ICHECK(false) << "Tried to rewrite an unsupported call node."; 
+            exit(0);
+            return "";
+        }
+    }
+
     #define DEFINE_REWRITE_NOT_IMPLEMENTED(Op)                           \
     std::string RosetteRewriter::Rewrite(const Op##Node* op){            \
         ICHECK(false) << "Rewrite rule for " << #Op << " is not implemented"; \
@@ -134,6 +166,7 @@ namespace tir {
     };
 
     DEFINE_REWRITE_NOT_IMPLEMENTED(Var);
+    DEFINE_REWRITE_NOT_IMPLEMENTED(Or);
     DEFINE_REWRITE_NOT_IMPLEMENTED(IntImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(FloatImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(StringImm);
@@ -141,7 +174,6 @@ namespace tir {
     DEFINE_REWRITE_NOT_IMPLEMENTED(Select);
     DEFINE_REWRITE_NOT_IMPLEMENTED(Let);
     DEFINE_REWRITE_NOT_IMPLEMENTED(BufferLoad);
-    DEFINE_REWRITE_NOT_IMPLEMENTED(Call);
     DEFINE_REWRITE_NOT_IMPLEMENTED(Shuffle);
 
     // Rewrite op if it is vectorizable, otherwise stop rewriting.
@@ -150,7 +182,7 @@ namespace tir {
             if (misaal::IsVectorizable(op)){                              \
                 return Rewrite(op);                                     \
             } else {                                                    \
-                std::string arg_name = fresh_arg_name();                \
+                std::string arg_name = fresh_arg_name(op->dtype.bits());                \
                 args.push_back(GetRef<PrimExpr>(op));                   \
                 return arg_name;                                        \
             }                                                           \
@@ -189,8 +221,9 @@ namespace tir {
         return Call(result_dtype, builtin::call_pure_extern(), args);
     }
 
-    std::string RosetteRewriter::fresh_arg_name(){
-        return "(reg (bv " + std::to_string(arg_count_++) + " 8))";
+    // bits is the size of the dtype, not the vector
+    std::string RosetteRewriter::fresh_arg_name(size_t bits){
+        return "(reg (bv " + std::to_string(arg_count_++) + " " + std::to_string(bits) + "))";
     }
 
 }  // namespace tir
