@@ -1,6 +1,6 @@
 # Overview
 
-MISAAL is a program synthesis-based framework for automatically generating retargetable semantics driven optimizations and code-generation for target architectures with their Instruction Set Architectures described in Pseudocode. 
+<tt>MISAAL</tt> is a program synthesis-based framework for automatically generating retargetable semantics driven optimizations and code-generation for target architectures with their Instruction Set Architectures (ISA) described in Pseudocode. 
 
 
 
@@ -13,5 +13,18 @@ MISAAL is a program synthesis-based framework for automatically generating retar
 * Akash Kothari<sup>+</sup>, Abdul Rafae Noor<sup>+</sup>, Muchen Xu, Hassam Uddin, Dhruv Baronia, Stefanos Baziotis, Vikram Adve, Charith Mendis, Sudipta Sengupta, "[Hydride: A Retargetable and Extensible Synthesis-based Compiler for Modern Hardware Architectures](https://hydride.cs.illinois.edu/files/2024/05/Hydride.pdf)", ACM International Conference on Architectural Support for Programming Languages and Operating Systems (<sup>+</sup> **Equal Contribution**) (_ASPLOS 2024_)
 
 
+# Repository Documentation
+To faciliate others to use <tt>MISAAL</tt>, we have documented various important components and concepts.
 
+* [Auto LLVM IR Representation of ISA Semantics](./pages/AutoLLVM.md)
 
+* [ISA Semantic Properties Base Class](./pages/Property.md)
+    * [Example of derived properties in MISAAL](./pages/MISAAL_Properties.md)
+
+* [Swizzle Generation](./pages/Swizzles.md)
+
+* [Rewrite Rule Representation](./pages/Patterns.md)
+
+* [Integrating MISAAL into other Frontends](./pages/Support_Frontend.md)
+
+* [Integrating MISAAL into other Target Architectures](./pages/Support_Backend.md)
