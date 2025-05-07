@@ -27,6 +27,8 @@ To faciliate others to use <tt>MISAAL</tt>, we have documented various important
 
 * [Rewrite Rule Representation](./pages/Patterns.md)
 
+* [Term Rewriting System in MISAAL](./pages/TRS_Compiler.md)
+
 * [Integrating MISAAL into other Frontends](./pages/Support_Frontend.md)
 
 * [Integrating MISAAL into other Target Architectures](./pages/Support_Backend.md)
