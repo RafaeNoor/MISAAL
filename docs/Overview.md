@@ -21,6 +21,8 @@ To faciliate others to use <tt>MISAAL</tt>, we have documented various important
 * [ISA Semantic Properties Base Class](./pages/Property.md)
     * [Example of derived properties in MISAAL](./pages/MISAAL_Properties.md)
 
+* [Concretization Grammar for Synthesis](./pages/Grammar.md)
+
 * [Swizzle Generation](./pages/Swizzles.md)
 
 * [Rewrite Rule Representation](./pages/Patterns.md)
