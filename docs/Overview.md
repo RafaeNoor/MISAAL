@@ -16,7 +16,7 @@
 # Repository Documentation
 To faciliate others to use <tt>MISAAL</tt>, we have documented various important components and concepts.
 
-* [Auto LLVM IR Representation of ISA Semantics](./pages/AutoLLVM.md)
+* [AutoLLVM IR Representation of ISA Semantics](./pages/AutoLLVM.md)
 
 * [ISA Semantic Properties Base Class](./pages/Property.md)
     * [Example of derived properties in MISAAL](./pages/MISAAL_Properties.md)
