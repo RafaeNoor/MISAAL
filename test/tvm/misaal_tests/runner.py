@@ -39,7 +39,8 @@ def cleanup(file_name):
 
 def simple_op(file_name, dtype, buffer_size, vector_size, Module, numpy_op, print_result, do_cleanup=True):
     mod = Module
-    target = tvm.target.Target("llvm -mcpu=alderlake -mattr=+avx2 -num-cores=14")
+    # target = tvm.target.Target("llvm -mcpu=alderlake -mattr=+avx2 -num-cores=14")
+    target = tvm.target.Target("llvm -mcpu=skylake-avx512 -mattr=+avx512f,+avx512dq,+avx512cd,+avx512bw,+avx512vl -num-cores=64")
 
     # with tvm.transform.PassContext(instruments=[], config={'codegen_debug':False, 'misaal':True,'misaal_s_exp_path':file_name} ):
     misaal_ll_path = file_name+'_misaal_temp_file.legalize.ll'

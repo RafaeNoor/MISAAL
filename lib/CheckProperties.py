@@ -178,10 +178,15 @@ output_synth_desc = TARGET_TO_DESC[output_language]
 
 # test_properties = [EqClassEqualDepthV3Synth]
 # test_properties = [EnumeratePattern]
-test_properties = [EqClassEqualDepthV4]
+# test_properties = [EqClassEqualDepthV4]
 # test_properties = [IdentifySwizzles]
-# test_properties = [RepairRelavanceIntermediates]
+# 1.run repair relevance intermediates and repair relevance v4
+# test_properties = [RepairRelavanceIntermediates, RepairRelavanceV4]
 # test_properties = [RepairRelavanceV4]
+# 2. run eqclassdepthv4
+# test_properties = [EqClassEqualDepthV4]
+# 3. run enumerate pattern
+test_properties = [EnumeratePattern]
 
 
 for property in test_properties:
@@ -204,7 +209,7 @@ for property in test_properties:
             swizzles = parse_dict(swizzle_dict)
             print("Total Swizzle classes: ", len(swizzles))
             swizzle_synth_desc = create_synth_desc("{}-swizzles".format(target), True, TARGET_TO_DESC[target].target_vector_sizes, "sema/x86_swizzles.py","x86_swizzles")
-            pattern_file = "../targets/{}/EqClassEqualDepthV4_{}_intermediate_results.py".format(output_language, target)
+            pattern_file = "../targets/{}/depth_2_new_seman/EqClassEqualDepthV4_filtered_{}_intermediate_results.py".format(output_language, target)
 
             with open(pattern_file, "r") as PatternFile:
                 input_patterns = json.load(PatternFile)
@@ -291,7 +296,7 @@ for property in test_properties:
             repairs_sema = parse_dict(repair_semantics)
             # halide_dsl_list = parse_dict(halide_semantics)
             halide_dsl_list = parse_dict(tvm_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = halide_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 2, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
 
         elif property is RepairRelavanceIntermediates:
             repair_memo_name = "RepairRelavanceIntermediates_{}_intermediate_results.py".format(target)
@@ -301,7 +306,7 @@ for property in test_properties:
             repairs_sema = parse_dict(repair_semantics)
             output_dsl_list = parse_dict(tvm_semantics)
             # output_dsl_list = parse_dict(halide_semantics)
-            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 1, target_depth = 1, commutative_map_path = commutative_path, memo_path = repair_memo_name )
+            PropertyInstance = property(dsl_list = dsl_list, synth_desc = synthesizer_desc, target_synth_desc = TVM_X86_SYNTH_DESC, output_dsl_list = output_dsl_list, repair_dsl_list = repairs_sema, target_start_depth = 2, target_depth = 2, commutative_map_path = commutative_path, memo_path = repair_memo_name )
         elif property is RepairRelavancePostProcess:
             version = "Intermediates"
             repair_memo_name = "RepairRelavance{}_{}_intermediate_results.py".format(version,target)
@@ -355,7 +360,7 @@ for property in test_properties:
             ## Remove filter list
             filter_list = None
             
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = output_synth_desc, target_dsl_list = output_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False, filter_list = filter_list)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = output_synth_desc, target_dsl_list = output_dsl_list, output_depth = 1,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False, filter_list = filter_list)
             PropertyInstance.name = PropertyInstance.name +"_filtered"
 
         elif property is EqClassEqualDepthV4Full:
