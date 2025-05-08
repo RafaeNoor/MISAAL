@@ -81,7 +81,7 @@ bool IsVectorizable(const tir::BroadcastNode* op);
 
         private:
 
-            void execute_python_file(std::string fname);
+            bool execute_python_file(std::string fname);
             std::string get_compiler_python_import();
             std::string parse_dict(std::string output_name, std::string dict_name);
             std::string join(std::vector<std::string>& statements, std::string join_on);

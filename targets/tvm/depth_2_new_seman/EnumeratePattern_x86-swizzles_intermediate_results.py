@@ -1,769 +1,1385 @@
 {
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_rem_epu32+typed-folded:vec-mod-signed-p32-s512": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_div_epu32+typed-folded:vec-div-unsigned-p32-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 1)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 0 0 64 0 64 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_rem_epu32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s512"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_rem_epi16+typed-folded:vec-mod-signed-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm256_rem_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p16-s256"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_irem_epi32+typed-folded:vec-mod-signed-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm_irem_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_rem_epi8+typed-folded:vec-mod-signed-p8-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm256_rem_epi8",
-                "dst_ctx": "typed-folded:vec-mod-signed-p8-s256"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_rem_epu64+typed-folded:vec-mod-signed-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm256_rem_epu64",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s256"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_rem_epi16+typed-folded:vec-mod-signed-p16-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_rem_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p16-s512"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_rem_epi32+typed-folded:vec-mod-signed-p32-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm256_rem_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s256"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_rem_epu64+typed-folded:vec-mod-signed-p64-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm_rem_epu64",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s128"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_rem_epu64+typed-folded:vec-mod-signed-p64-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_rem_epu64",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s512"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_rem_epi16+typed-folded:vec-mod-signed-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm_rem_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p16-s128"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_rem_epi8+typed-folded:vec-mod-signed-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_rem_epi8",
-                "dst_ctx": "typed-folded:vec-mod-signed-p8-s512"
-            }
-        }
-    ],
-    " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_rem_epu8+typed-folded:vec-mod-signed-p8-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 1 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epu64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
-                "src_ctx": "_mm_rem_epu8",
-                "dst_ctx": "typed-folded:vec-mod-signed-p8-s128"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+512+_mm512_div_epu32+typed-folded:vec-div-unsigned-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 0 0 64 0 64 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_div_epu32",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p32-s512"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+512+_mm512_div_epu64+typed-folded:vec-div-unsigned-p64-s512": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_div_epu64+typed-folded:vec-div-unsigned-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0 0 128 0 128 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_div_epu64",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p64-s512"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_div_epi8+typed-folded:vec-div-signed-p8-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_div_epi8+typed-folded:vec-div-signed-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 1 16 1 16 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_div_epi8",
                 "dst_ctx": "typed-folded:vec-div-signed-p8-s256"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epu64+typed-folded:vec-div-unsigned-p64-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epu64+typed-folded:vec-div-unsigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 0 0 128 0 128 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 0)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 0 0 128 0 128 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm_div_epu64",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p64-s128"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+512+_mm512_div_epu16+typed-folded:vec-div-unsigned-p16-s512": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_div_epu16+typed-folded:vec-div-unsigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 0 0 32 0 32 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_div_epu16",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p16-s512"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_udiv_epi32+typed-folded:vec-div-unsigned-p32-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_udiv_epi32+typed-folded:vec-div-unsigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 0 0 64 0 64 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_udiv_epi32",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p32-s256"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epu32+typed-folded:vec-div-unsigned-p32-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epu32+typed-folded:vec-div-unsigned-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 0 0 64 0 64 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 0)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 0 0 64 0 64 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm_div_epu32",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p32-s128"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epu16+typed-folded:vec-div-unsigned-p16-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epu16+typed-folded:vec-div-unsigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 0 0 32 0 32 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm_div_epu16",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p16-s128"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_div_epu16+typed-folded:vec-div-unsigned-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 0 0 32 0 32 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_div_epu16",
-                "dst_ctx": "typed-folded:vec-div-unsigned-p16-s256"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+512+_mm512_div_epu8+typed-folded:vec-div-unsigned-p8-s512": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_div_epu8+typed-folded:vec-div-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 0 0 16 0 16 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_div_epu8",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p8-s512"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_div_epu8+typed-folded:vec-div-unsigned-p8-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_div_epu16+typed-folded:vec-div-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 0 0 32 0 32 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_div_epu16",
+                "dst_ctx": "typed-folded:vec-div-unsigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_div_epu8+typed-folded:vec-div-unsigned-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 0 0 16 0 16 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_div_epu8",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p8-s256"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epi8+typed-folded:vec-div-signed-p8-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epi8+typed-folded:vec-div-signed-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 1 1 16 1 16 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm_div_epi8",
                 "dst_ctx": "typed-folded:vec-div-signed-p8-s128"
             }
         }
     ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+512+_mm512_div_epi8+typed-folded:vec-div-signed-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 1 1 16 1 16 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_div_epi8",
-                "dst_ctx": "typed-folded:vec-div-signed-p8-s512"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epi16+typed-folded:vec-div-signed-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 1 1 32 1 32 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
-                "src_ctx": "_mm_div_epi16",
-                "dst_ctx": "typed-folded:vec-div-signed-p16-s128"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+128+_mm_div_epu8+typed-folded:vec-div-unsigned-p8-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epu8+typed-folded:vec-div-unsigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 0 0 16 0 16 0)",
                 "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm_div_epu8",
                 "dst_ctx": "typed-folded:vec-div-unsigned-p8-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epu16+typed-folded:vec-min-unsigned-p16-s128": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_div_epi8+typed-folded:vec-div-signed-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm_min_epu16",
-                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s128"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_div_epu64+typed-folded:vec-div-unsigned-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 0 0 128 0 128 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_div_epu64",
-                "dst_ctx": "typed-folded:vec-div-unsigned-p64-s256"
-            }
-        }
-    ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epi8+typed-folded:vec-min-signed-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 1 16 1 16 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_min_epi8",
-                "dst_ctx": "typed-folded:vec-min-signed-p8-s512"
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_div_epi8",
+                "dst_ctx": "typed-folded:vec-div-signed-p8-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epi32+typed-folded:vec-min-signed-p32-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_div_epi16+typed-folded:vec-div-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_min_epi32",
-                "dst_ctx": "typed-folded:vec-min-signed-p32-s256"
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 1 32 1 32 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm_div_epi16",
+                "dst_ctx": "typed-folded:vec-div-signed-p16-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epi64+typed-folded:vec-min-signed-p64-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_div_epi16+typed-folded:vec-div-signed-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 1)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 1 1 32 1 32 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_min_epi64",
-                "dst_ctx": "typed-folded:vec-min-signed-p64-s256"
-            }
-        }
-    ],
-    " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )+256+_mm256_div_epi16+typed-folded:vec-div-signed-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_div_epi64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 1 32 1 32 0)",
-                "dst": "(typed-folded:vec-div_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epu16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t0\n\t32\n\t0\n\t32\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-unsigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_div_epi16",
                 "dst_ctx": "typed-folded:vec-div-signed-p16-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epu16+typed-folded:vec-min-unsigned-p16-s256": [
+    " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )+ (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_div_epu64+typed-folded:vec-div-unsigned-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 0)",
+                "src": "(_mm_div_epi64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0 0 128 0 128 0)",
+                "dst": "(typed-folded:vec-div_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_min_epu16",
-                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s256"
+                "original_src_expr": " (_mm_div_epi64_dsl ; _mm512_div_epi8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t1\n\t16\n\t1\n\t16\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-div_dsl ; typed-folded:vec-div-signed-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_div_epu64",
+                "dst_ctx": "typed-folded:vec-div-unsigned-p64-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_mm_min_pi16+typed-folded:vec-min-signed-p16-s64": [
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_add_pi8+typed-folded:vec-add-nosigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_pi8",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_adds_pi16+typed-folded:vec-add-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_pi16",
+                "dst_ctx": "typed-folded:vec-add-signed-p16-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_add_epi16+typed-folded:vec-add-nosigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_add_epi16",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_adds_epu16+typed-folded:vec-add-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_epu16",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_add_epi32+typed-folded:vec-add-nosigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_epi32",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_adds_epu8+typed-folded:vec-add-unsigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_adds_epu8",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p8-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_adds_epi16+typed-folded:vec-add-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_adds_epi16",
+                "dst_ctx": "typed-folded:vec-add-signed-p16-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_m_paddw+typed-folded:vec-add-nosigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_m_paddw",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_adds_pu16+typed-folded:vec-add-unsigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 16 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_pu16",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_add_epi16+typed-folded:vec-add-nosigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_epi16",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_adds_epu16+typed-folded:vec-add-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_adds_epu16",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_adds_epu8+typed-folded:vec-add-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_epu8",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_add_epi16+typed-folded:vec-add-nosigned-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_add_epi16",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p16-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_adds_pi8+typed-folded:vec-add-signed-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_pi8",
+                "dst_ctx": "typed-folded:vec-add-signed-p8-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_adds_epi8+typed-folded:vec-add-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_adds_epi8",
+                "dst_ctx": "typed-folded:vec-add-signed-p8-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_add_epi64+typed-folded:vec-add-nosigned-p64-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 64 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_add_epi64",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p64-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_add_pi32+typed-folded:vec-add-nosigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 32 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_pi32",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_add_epi32+typed-folded:vec-add-nosigned-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_add_epi32",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p32-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_adds_epu8+typed-folded:vec-add-unsigned-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_adds_epu8",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p8-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_add_epi64+typed-folded:vec-add-nosigned-p64-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_add_epi64",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p64-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_add_epi8+typed-folded:vec-add-nosigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_epi8",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_adds_epi16+typed-folded:vec-add-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_epi16",
+                "dst_ctx": "typed-folded:vec-add-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+64+_mm_adds_pu8+typed-folded:vec-add-unsigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_pu8",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_add_epi8+typed-folded:vec-add-nosigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_add_epi8",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p8-s256"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_add_epi8+typed-folded:vec-add-nosigned-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_add_epi8",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p8-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_adds_epi16+typed-folded:vec-add-signed-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_adds_epi16",
+                "dst_ctx": "typed-folded:vec-add-signed-p16-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_add_epi64+typed-folded:vec-add-nosigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_add_epi64",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_adds_epi8+typed-folded:vec-add-signed-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_adds_epi8",
+                "dst_ctx": "typed-folded:vec-add-signed-p8-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+128+_mm_adds_epi8+typed-folded:vec-add-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_adds_epi8",
+                "dst_ctx": "typed-folded:vec-add-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+512+_mm512_adds_epu16+typed-folded:vec-add-unsigned-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_adds_epu16",
+                "dst_ctx": "typed-folded:vec-add-unsigned-p16-s512"
+            }
+        }
+    ],
+    " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )+256+_mm256_add_epi32+typed-folded:vec-add-nosigned-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_pi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 -1 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_add_pi8_dsl ; _mm512_add_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_add_epi32",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi16_epi32+typed-folded:cast-extend-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 16 32 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 128 32 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu32_epi64+typed-folded:cast-extend-unsigned-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 32 64 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 256 64 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu16_epi32+typed-folded:cast-extend-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 16 32 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 256 32 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu8_epi16+typed-folded:cast-extend-unsigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 8 16 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 256 16 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi8_epi16+typed-folded:cast-extend-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 8 16 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 128 16 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu8_epi16+typed-folded:cast-extend-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 8 16 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 128 16 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi32_epi64+typed-folded:cast-extend-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 32 64 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 128 64 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi8_epi16+typed-folded:cast-extend-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 8 16 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 256 16 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-signed-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi16_epi32+typed-folded:cast-extend-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 16 32 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 256 32 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-signed-p16-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi32_epi64+typed-folded:cast-extend-signed-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 32 64 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 256 64 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-signed-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu32_epi64+typed-folded:cast-extend-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 32 64 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 128 64 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu16_epi32+typed-folded:cast-extend-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 16 32 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 128 32 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_add_si64_dsl ; _mm_add_si64\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t0\n\t64\n\t64\n\t-1\n\t0\n\t0\n )+ (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p64-s64\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t-1\n )+64+_mm_add_si64+typed-folded:vec-add-nosigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_add_si64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 64 -1 0 0)",
+                "dst": "(typed-folded:vec-add_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_add_si64_dsl ; _mm_add_si64\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t0\n\t64\n\t64\n\t-1\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-add_dsl ; typed-folded:vec-add-nosigned-p64-s64\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_add_si64",
+                "dst_ctx": "typed-folded:vec-add-nosigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_rem_epi16+typed-folded:vec-mod-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_rem_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p16-s256"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_rem_epu32+typed-folded:vec-mod-signed-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_rem_epu32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s512"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_irem_epi32+typed-folded:vec-mod-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm_irem_epi32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_rem_epi8+typed-folded:vec-mod-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_rem_epi8",
+                "dst_ctx": "typed-folded:vec-mod-signed-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_rem_epu64+typed-folded:vec-mod-signed-p64-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_rem_epu64",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s256"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_rem_epi16+typed-folded:vec-mod-signed-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_rem_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p16-s512"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+256+_mm256_rem_epi32+typed-folded:vec-mod-signed-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_rem_epi32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_rem_epu64+typed-folded:vec-mod-signed-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm_rem_epu64",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s128"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_rem_epi16+typed-folded:vec-mod-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm_rem_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_rem_epu64+typed-folded:vec-mod-signed-p64-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_rem_epu64",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s512"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+512+_mm512_rem_epi8+typed-folded:vec-mod-signed-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_rem_epi8",
+                "dst_ctx": "typed-folded:vec-mod-signed-p8-s512"
+            }
+        }
+    ],
+    " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )+128+_mm_rem_epu8+typed-folded:vec-mod-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_rem_epu32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 1 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_rem_epu32_dsl ; _mm512_rem_epi8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-signed-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t1\n )",
+                "src_ctx": "_mm_rem_epu8",
+                "dst_ctx": "typed-folded:vec-mod-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epu16+typed-folded:vec-min-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm_min_epu16",
+                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epi8+typed-folded:vec-min-signed-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_min_epi8",
+                "dst_ctx": "typed-folded:vec-min-signed-p8-s512"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epi32+typed-folded:vec-min-signed-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_min_epi32",
+                "dst_ctx": "typed-folded:vec-min-signed-p32-s256"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epi64+typed-folded:vec-min-signed-p64-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_min_epi64",
+                "dst_ctx": "typed-folded:vec-min-signed-p64-s256"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+64+_mm_min_pi16+typed-folded:vec-min-signed-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 1 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 64 1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_pi16",
                 "dst_ctx": "typed-folded:vec-min-signed-p16-s64"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epi16+typed-folded:vec-min-signed-p16-s256": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epu16+typed-folded:vec-min-unsigned-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 1 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm256_min_epu16",
+                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epi16+typed-folded:vec-min-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_min_epi16",
                 "dst_ctx": "typed-folded:vec-min-signed-p16-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epi8+typed-folded:vec-min-signed-p8-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epi8+typed-folded:vec-min-signed-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 1 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 1 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epi8",
                 "dst_ctx": "typed-folded:vec-min-signed-p8-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epu32+typed-folded:vec-min-unsigned-p32-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epu64+typed-folded:vec-min-unsigned-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_min_epu32",
-                "dst_ctx": "typed-folded:vec-min-unsigned-p32-s512"
-            }
-        }
-    ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epu64+typed-folded:vec-min-unsigned-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_min_epu64",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p64-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_pminub+typed-folded:vec-min-unsigned-p8-s64": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epu32+typed-folded:vec-min-unsigned-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_min_epu32",
+                "dst_ctx": "typed-folded:vec-min-unsigned-p32-s512"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+64+_m_pminub+typed-folded:vec-min-unsigned-p8-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 0 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 64 0)",
                 "output_size": 64,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_m_pminub",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p8-s64"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epi64+typed-folded:vec-min-signed-p64-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epi64+typed-folded:vec-min-signed-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 64 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 512 1)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_min_epi64",
                 "dst_ctx": "typed-folded:vec-min-signed-p64-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epi16+typed-folded:vec-min-signed-p16-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epi16+typed-folded:vec-min-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 1)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epi16",
                 "dst_ctx": "typed-folded:vec-min-signed-p16-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epu32+typed-folded:vec-min-unsigned-p32-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epu32+typed-folded:vec-min-unsigned-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 0 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 0 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epu32",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p32-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epu8+typed-folded:vec-min-unsigned-p8-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epu8+typed-folded:vec-min-unsigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epu8",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p8-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epi64+typed-folded:vec-min-signed-p64-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epi64+typed-folded:vec-min-signed-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 1)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epi64",
                 "dst_ctx": "typed-folded:vec-min-signed-p64-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epi16+typed-folded:vec-min-signed-p16-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epi16+typed-folded:vec-min-signed-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 1)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_min_epi16",
                 "dst_ctx": "typed-folded:vec-min-signed-p16-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epu8+typed-folded:vec-min-unsigned-p8-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epu8+typed-folded:vec-min-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_min_epu8",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p8-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epi32+typed-folded:vec-min-signed-p32-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epi32+typed-folded:vec-min-signed-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 1 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 1 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epi32",
                 "dst_ctx": "typed-folded:vec-min-signed-p32-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epi32+typed-folded:vec-min-signed-p32-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epi32+typed-folded:vec-min-signed-p32-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 1)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_min_epi32",
                 "dst_ctx": "typed-folded:vec-min-signed-p32-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_min_epu64+typed-folded:vec-min-unsigned-p64-s128": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+128+_mm_min_epu64+typed-folded:vec-min-unsigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 0 0)",
                 "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm_min_epu64",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p64-s128"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epu32+typed-folded:vec-min-unsigned-p32-s256": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epu32+typed-folded:vec-min-unsigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_min_epu32",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p32-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epu16+typed-folded:vec-min-unsigned-p16-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_min_epu16",
-                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s512"
-            }
-        }
-    ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_min_epu64+typed-folded:vec-min-unsigned-p64-s512": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epu64+typed-folded:vec-min-unsigned-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm512_min_epu64",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p64-s512"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epu8+typed-folded:vec-min-unsigned-p8-s256": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+512+_mm512_min_epu16+typed-folded:vec-min-unsigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 0 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 0)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
+                "src_ctx": "_mm512_min_epu16",
+                "dst_ctx": "typed-folded:vec-min-unsigned-p16-s512"
+            }
+        }
+    ],
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epu8+typed-folded:vec-min-unsigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 0 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_min_epu8",
                 "dst_ctx": "typed-folded:vec-min-unsigned-p8-s256"
             }
         }
     ],
-    " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_min_epi8+typed-folded:vec-min-signed-p8-s256": [
+    " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )+ (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )+256+_mm256_min_epi8+typed-folded:vec-min-signed-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_min_epu16_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 0)",
-                "dst": "(typed-folded:vec-min_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 1)",
+                "src": "(_mm_min_epu16_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 1 0)",
+                "dst": "(typed-folded:vec-min_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-unsigned-p8-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm_min_epu16_dsl ; _mm512_min_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-min_dsl ; typed-folded:vec-min-signed-p64-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t1\n )",
                 "src_ctx": "_mm256_min_epi8",
                 "dst_ctx": "typed-folded:vec-min-signed-p8-s256"
             }
@@ -783,48 +1399,6 @@
             }
         }
     ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi32+typed-folded:vec-bwor-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm512_or_epi32",
-                "dst_ctx": "typed-folded:vec-bwor-p8-s512"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi64+typed-folded:vec-bwor-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm512_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p8-s512"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi64+typed-folded:vec-bwor-p64-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 512)",
-                "output_size": 512,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm512_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p64-s512"
-            }
-        }
-    ],
     " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi32+typed-folded:vec-bwor-p16-s512": [
         {
             "property_name": "EnumeratePattern",
@@ -836,6 +1410,20 @@
                 "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
                 "src_ctx": "_mm512_or_epi32",
                 "dst_ctx": "typed-folded:vec-bwor-p16-s512"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi32+typed-folded:vec-bwor-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm512_or_epi32",
+                "dst_ctx": "typed-folded:vec-bwor-p8-s512"
             }
         }
     ],
@@ -853,6 +1441,20 @@
             }
         }
     ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi64+typed-folded:vec-bwor-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm512_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p8-s512"
+            }
+        }
+    ],
     " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi64+typed-folded:vec-bwor-p16-s512": [
         {
             "property_name": "EnumeratePattern",
@@ -864,20 +1466,6 @@
                 "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
                 "src_ctx": "_mm512_or_epi64",
                 "dst_ctx": "typed-folded:vec-bwor-p16-s512"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi32+typed-folded:vec-bwor-p32-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm256_or_epi32",
-                "dst_ctx": "typed-folded:vec-bwor-p32-s256"
             }
         }
     ],
@@ -895,31 +1483,17 @@
             }
         }
     ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi32+typed-folded:vec-bwor-p8-s256": [
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi32+typed-folded:vec-bwor-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256)",
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256)",
                 "output_size": 256,
                 "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
                 "src_ctx": "_mm256_or_epi32",
-                "dst_ctx": "typed-folded:vec-bwor-p8-s256"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi64+typed-folded:vec-bwor-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p32-s128"
+                "dst_ctx": "typed-folded:vec-bwor-p32-s256"
             }
         }
     ],
@@ -937,6 +1511,20 @@
             }
         }
     ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi32+typed-folded:vec-bwor-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm256_or_epi32",
+                "dst_ctx": "typed-folded:vec-bwor-p8-s256"
+            }
+        }
+    ],
     " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi64+typed-folded:vec-bwor-p8-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -948,6 +1536,20 @@
                 "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
                 "src_ctx": "_mm_or_epi64",
                 "dst_ctx": "typed-folded:vec-bwor-p8-s128"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi64+typed-folded:vec-bwor-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p32-s128"
             }
         }
     ],
@@ -979,6 +1581,20 @@
             }
         }
     ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+512+_mm512_or_epi64+typed-folded:vec-bwor-p64-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 512)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm512_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p64-s512"
+            }
+        }
+    ],
     " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi64+typed-folded:vec-bwor-p64-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -1007,34 +1623,6 @@
             }
         }
     ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi32+typed-folded:vec-bwor-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 128)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm_or_epi32",
-                "dst_ctx": "typed-folded:vec-bwor-p32-s128"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p32-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm256_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p32-s256"
-            }
-        }
-    ],
     " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi32+typed-folded:vec-bwor-p16-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -1046,48 +1634,6 @@
                 "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
                 "src_ctx": "_mm_or_epi32",
                 "dst_ctx": "typed-folded:vec-bwor-p16-s128"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p8-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm256_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p8-s256"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi32+typed-folded:vec-bwor-p64-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128)",
-                "output_size": 128,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm_or_epi32",
-                "dst_ctx": "typed-folded:vec-bwor-p64-s128"
-            }
-        }
-    ],
-    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
-                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256)",
-                "output_size": 256,
-                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
-                "src_ctx": "_mm256_or_epi64",
-                "dst_ctx": "typed-folded:vec-bwor-p16-s256"
             }
         }
     ],
@@ -1105,12 +1651,82 @@
             }
         }
     ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm256_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi32+typed-folded:vec-bwor-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm_or_epi32",
+                "dst_ctx": "typed-folded:vec-bwor-p32-s128"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+128+_mm_or_epi32+typed-folded:vec-bwor-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128)",
+                "output_size": 128,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm_or_epi32",
+                "dst_ctx": "typed-folded:vec-bwor-p64-s128"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm256_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )+ (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )+256+_mm256_or_epi64+typed-folded:vec-bwor-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_or_epi32_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 64 0)",
+                "dst": "(typed-folded:vec-bwor_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_or_epi32_dsl ; _mm512_or_epi64\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-bwor_dsl ; typed-folded:vec-bwor-p16-s512\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n )",
+                "src_ctx": "_mm256_or_epi64",
+                "dst_ctx": "typed-folded:vec-bwor-p16-s256"
+            }
+        }
+    ],
     " (_mm_sub_si64_dsl ; _mm_sub_si64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t0\n\t64\n\t64\n\t-1\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t-1\n )+64+_mm_sub_si64+typed-folded:vec-sub-nosigned-p64-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm_sub_si64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 64 -1 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 -1)",
+                "src": "(_mm_sub_si64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 64 -1 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 -1)",
                 "output_size": 64,
                 "original_src_expr": " (_mm_sub_si64_dsl ; _mm_sub_si64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t0\n\t64\n\t64\n\t-1\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t64\n\t64\n\t-1\n )",
@@ -1119,815 +1735,787 @@
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epu64+typed-folded:vec-max-unsigned-p64-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epu64+typed-folded:vec-max-unsigned-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 0 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epu64",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p64-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epu64+typed-folded:vec-max-unsigned-p64-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epu64+typed-folded:vec-max-unsigned-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 0 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 64 0 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epu64",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p64-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epi64+typed-folded:vec-max-signed-p64-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epi64+typed-folded:vec-max-signed-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 1)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epi64",
                 "dst_ctx": "typed-folded:vec-max-signed-p64-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epu8+typed-folded:vec-max-unsigned-p8-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epu8+typed-folded:vec-max-unsigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 0 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epu8",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p8-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epi16+typed-folded:vec-max-signed-p16-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epi16+typed-folded:vec-max-signed-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 1)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epi16",
                 "dst_ctx": "typed-folded:vec-max-signed-p16-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epu32+typed-folded:vec-max-unsigned-p32-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epu32+typed-folded:vec-max-unsigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 256 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epu32",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p32-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epu8+typed-folded:vec-max-unsigned-p8-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epu8+typed-folded:vec-max-unsigned-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epu8",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p8-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epi16+typed-folded:vec-max-signed-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
-                "src_ctx": "_mm_max_epi16",
-                "dst_ctx": "typed-folded:vec-max-signed-p16-s128"
-            }
-        }
-    ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epi64+typed-folded:vec-max-signed-p64-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epi64+typed-folded:vec-max-signed-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 256 1)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epi64",
                 "dst_ctx": "typed-folded:vec-max-signed-p64-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+64+_m_pmaxsw+typed-folded:vec-max-signed-p16-s64": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_pmaxsw+typed-folded:vec-max-signed-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 16 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 64 1)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_m_pmaxsw",
                 "dst_ctx": "typed-folded:vec-max-signed-p16-s64"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+64+_mm_max_pu8+typed-folded:vec-max-unsigned-p8-s64": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epi16+typed-folded:vec-max-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "src_ctx": "_mm_max_epi16",
+                "dst_ctx": "typed-folded:vec-max-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_mm_max_pu8+typed-folded:vec-max-unsigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 64 0)",
                 "output_size": 64,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_pu8",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p8-s64"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epi32+typed-folded:vec-max-signed-p32-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epi32+typed-folded:vec-max-signed-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 1)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epi32",
                 "dst_ctx": "typed-folded:vec-max-signed-p32-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epu16+typed-folded:vec-max-unsigned-p16-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epu16+typed-folded:vec-max-unsigned-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 0 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 0 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epu16",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p16-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epu32+typed-folded:vec-max-unsigned-p32-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epu32+typed-folded:vec-max-unsigned-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 32 0 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epu32",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p32-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epi64+typed-folded:vec-max-signed-p64-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epi64+typed-folded:vec-max-signed-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 64 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 1)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epi64",
                 "dst_ctx": "typed-folded:vec-max-signed-p64-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epi32+typed-folded:vec-max-signed-p32-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epi32+typed-folded:vec-max-signed-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 1 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 32 1 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epi32",
                 "dst_ctx": "typed-folded:vec-max-signed-p32-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epi8+typed-folded:vec-max-signed-p8-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epi8+typed-folded:vec-max-signed-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 1 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 1 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epi8",
                 "dst_ctx": "typed-folded:vec-max-signed-p8-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epi8+typed-folded:vec-max-signed-p8-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epi8+typed-folded:vec-max-signed-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 1 0)",
                 "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epi8",
                 "dst_ctx": "typed-folded:vec-max-signed-p8-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epi8+typed-folded:vec-max-signed-p8-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epi8+typed-folded:vec-max-signed-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 1)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_max_epi8",
                 "dst_ctx": "typed-folded:vec-max-signed-p8-s256"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epu64+typed-folded:vec-max-unsigned-p64-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epu64+typed-folded:vec-max-unsigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epu64",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p64-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+128+_mm_max_epu16+typed-folded:vec-max-unsigned-p16-s128": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_max_epu16+typed-folded:vec-max-unsigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm_max_epu16",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p16-s128"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+256+_mm256_max_epi16+typed-folded:vec-max-signed-p16-s256": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epi32+typed-folded:vec-max-signed-p32-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
-                "src_ctx": "_mm256_max_epi16",
-                "dst_ctx": "typed-folded:vec-max-signed-p16-s256"
-            }
-        }
-    ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epu32+typed-folded:vec-max-unsigned-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_max_epu32",
-                "dst_ctx": "typed-folded:vec-max-unsigned-p32-s512"
-            }
-        }
-    ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epi32+typed-folded:vec-max-signed-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 1 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epi32",
                 "dst_ctx": "typed-folded:vec-max-signed-p32-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epu16+typed-folded:vec-max-unsigned-p16-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epu32+typed-folded:vec-max-unsigned-p32-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 0)",
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
-                "src_ctx": "_mm512_max_epu16",
-                "dst_ctx": "typed-folded:vec-max-unsigned-p16-s512"
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_max_epu32",
+                "dst_ctx": "typed-folded:vec-max-unsigned-p32-s512"
             }
         }
     ],
-    " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )+512+_mm512_max_epu8+typed-folded:vec-max-unsigned-p8-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_max_epi16+typed-folded:vec-max-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 1 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "src_ctx": "_mm256_max_epi16",
+                "dst_ctx": "typed-folded:vec-max-signed-p16-s256"
+            }
+        }
+    ],
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epu8+typed-folded:vec-max-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 0 0)",
-                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epi16\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t1\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-signed-p16-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t16\n\t512\n\t1\n )",
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_max_epu8",
                 "dst_ctx": "typed-folded:vec-max-unsigned-p8-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_subs_epi8+typed-folded:vec-sub-signed-p8-s512": [
+    " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_max_epu16+typed-folded:vec-max-unsigned-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm256_max_epu64_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 0 0)",
+                "dst": "(typed-folded:vec-max_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm256_max_epu64_dsl ; _mm512_max_epu8\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-max_dsl ; typed-folded:vec-max-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_max_epu16",
+                "dst_ctx": "typed-folded:vec-max-unsigned-p16-s512"
+            }
+        }
+    ],
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_subs_epi8+typed-folded:vec-sub-signed-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 8 1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_subs_epi8",
                 "dst_ctx": "typed-folded:vec-sub-signed-p8-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_subs_epu16+typed-folded:vec-sub-unsigned-p16-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_subs_epu16+typed-folded:vec-sub-unsigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 0 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_subs_epu16",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_mm_subs_pu16+typed-folded:vec-sub-unsigned-p16-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_mm_subs_pu16+typed-folded:vec-sub-unsigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 16 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 64 0)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 0)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_subs_pu16",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_psubb+typed-folded:vec-sub-nosigned-p8-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psubb+typed-folded:vec-sub-nosigned-p8-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 -1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psubb",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_subs_epi16+typed-folded:vec-sub-signed-p16-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_subs_epi16+typed-folded:vec-sub-signed-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_subs_epi16",
                 "dst_ctx": "typed-folded:vec-sub-signed-p16-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_subs_epu16+typed-folded:vec-sub-unsigned-p16-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_subs_epu16+typed-folded:vec-sub-unsigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 0 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_subs_epu16",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_sub_epi16+typed-folded:vec-sub-nosigned-p16-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sub_epi16+typed-folded:vec-sub-nosigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 -1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 -1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 16 -1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 128 -1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sub_epi16",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_psubsw+typed-folded:vec-sub-signed-p16-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psubsw+typed-folded:vec-sub-signed-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 16 1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 64 1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psubsw",
                 "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_mm_sub_pi16+typed-folded:vec-sub-nosigned-p16-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_mm_sub_pi16+typed-folded:vec-sub-nosigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 16 -1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 -1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 16 -1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 64 -1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sub_pi16",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_sub_epi64+typed-folded:vec-sub-nosigned-p64-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_sub_epi64+typed-folded:vec-sub-nosigned-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 64 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 512 -1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_sub_epi64",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_subs_epi16+typed-folded:vec-sub-signed-p16-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_subs_epi16+typed-folded:vec-sub-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 16 1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_subs_epi16",
                 "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_sub_epi8+typed-folded:vec-sub-nosigned-p8-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_sub_epi8+typed-folded:vec-sub-nosigned-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 -1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_sub_epi8",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_sub_epi32+typed-folded:vec-sub-nosigned-p32-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_sub_epi32+typed-folded:vec-sub-nosigned-p32-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 32 -1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 512 -1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 32 -1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 512 -1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_sub_epi32",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_sub_epi32+typed-folded:vec-sub-nosigned-p32-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sub_epi32+typed-folded:vec-sub-nosigned-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 32 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 128 -1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sub_epi32",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_sub_epi16+typed-folded:vec-sub-nosigned-p16-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_sub_epi16+typed-folded:vec-sub-nosigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 512 512 0 512 16 -1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 512 -1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 16 -1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 512 -1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_sub_epi16",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_subs_epu8+typed-folded:vec-sub-unsigned-p8-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_subs_epu8+typed-folded:vec-sub-unsigned-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 8 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 256 0)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_subs_epu8",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_psubd+typed-folded:vec-sub-nosigned-p32-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psubd+typed-folded:vec-sub-nosigned-p32-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 32 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 32 64 -1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psubd",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_sub_epi8+typed-folded:vec-sub-nosigned-p8-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_sub_epi8+typed-folded:vec-sub-nosigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 -1)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_sub_epi8",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+512+_mm512_subs_epu8+typed-folded:vec-sub-unsigned-p8-s512": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_subs_epu8+typed-folded:vec-sub-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 512 512 0 512 8 0 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 512 0)",
                 "output_size": 512,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_subs_epu8",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s512"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_subs_epi8+typed-folded:vec-sub-signed-p8-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_subs_epi8+typed-folded:vec-sub-signed-p8-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 8 1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_subs_epi8",
                 "dst_ctx": "typed-folded:vec-sub-signed-p8-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_sub_epi8+typed-folded:vec-sub-nosigned-p8-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sub_epi8+typed-folded:vec-sub-nosigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 -1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sub_epi8",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_psubsb+typed-folded:vec-sub-signed-p8-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psubsb+typed-folded:vec-sub-signed-p8-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 64 1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 1)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psubsb",
                 "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_subs_epu8+typed-folded:vec-sub-unsigned-p8-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_subs_epu8+typed-folded:vec-sub-unsigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 0)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 8 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 128 0)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_subs_epu8",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_subs_epi8+typed-folded:vec-sub-signed-p8-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_subs_epi8+typed-folded:vec-sub-signed-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 8 1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 128 1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_subs_epi8",
                 "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_subs_epi16+typed-folded:vec-sub-signed-p16-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_subs_epi16+typed-folded:vec-sub-signed-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_subs_epi16",
                 "dst_ctx": "typed-folded:vec-sub-signed-p16-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+128+_mm_sub_epi64+typed-folded:vec-sub-nosigned-p64-s128": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sub_epi64+typed-folded:vec-sub-nosigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 128 128 0 128 64 -1 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 128 -1)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 128 128 0 128 64 -1 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 128 -1)",
                 "output_size": 128,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sub_epi64",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+64+_m_psubusb+typed-folded:vec-sub-unsigned-p8-s64": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psubusb+typed-folded:vec-sub-unsigned-p8-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 64 64 0 64 8 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 8 64 0)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 64 8 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 8 64 0)",
                 "output_size": 64,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psubusb",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s64"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_subs_epu16+typed-folded:vec-sub-unsigned-p16-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_subs_epu16+typed-folded:vec-sub-unsigned-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 0)",
+                "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 16 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 256 0)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_subs_epu16",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_sub_epi64+typed-folded:vec-sub-nosigned-p64-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_sub_epi64+typed-folded:vec-sub-nosigned-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 64 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 256 -1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_sub_epi64",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s256"
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_sub_epi16+typed-folded:vec-sub-nosigned-p16-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_sub_epi16+typed-folded:vec-sub-nosigned-p16-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 256 256 0 256 16 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x01 8)) 16 256 -1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_sub_epi16",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s256"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-unsigned-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x01 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x00 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
-                "output_size": 64,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s64"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-mod-signed-p16-s64"
             }
         }
     ],
@@ -1945,17 +2533,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p32-s64": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 64 1)",
+                "src": "(_m_psrld_dsl (reg (bv #x01 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x00 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
                 "output_size": 64,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s64"
+                "dst_ctx": "typed-folded:vec-mod-signed-p16-s64"
             }
         }
     ],
@@ -1973,17 +2561,31 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p64-s64": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-unsigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 1)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 0)",
                 "output_size": 64,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s64"
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_m_psrld",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s64"
             }
         }
     ],
@@ -2001,6 +2603,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-signed-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x01 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x00 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_m_psrld",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s64"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrld+typed-folded:vec-mod-unsigned-p64-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -2015,15 +2631,15 @@
             }
         }
     ],
-    " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )+256+_mm256_sub_epi32+typed-folded:vec-sub-nosigned-p32-s256": [
+    " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_sub_epi32+typed-folded:vec-sub-nosigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_mm512_subs_epi8_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 256 256 0 256 32 -1 0)",
                 "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 32 256 -1)",
                 "output_size": 256,
-                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_subs_epu8\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-unsigned-p8-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t8\n\t512\n\t0\n )",
+                "original_src_expr": " (_mm512_subs_epi8_dsl ; _mm512_sub_epi64\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t64\n\t-1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 0 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_sub_epi32",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s256"
             }
@@ -2057,6 +2673,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-signed-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s256"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-signed-p16-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -2068,20 +2698,6 @@
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_srl_epi32",
                 "dst_ctx": "typed-folded:vec-mod-signed-p16-s256"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-unsigned-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s256"
             }
         }
     ],
@@ -2099,17 +2715,31 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-signed-p32-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-signed-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 1)",
                 "output_size": 256,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s256"
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s256"
             }
         }
     ],
@@ -2127,17 +2757,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi32+typed-folded:vec-mod-signed-p64-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi32+typed-folded:vec-mod-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 1)",
-                "output_size": 256,
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 0)",
+                "output_size": 512,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s256"
+                "src_ctx": "_mm512_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s512"
             }
         }
     ],
@@ -2152,20 +2782,6 @@
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_srl_epi32",
                 "dst_ctx": "typed-folded:vec-mod-signed-p8-s512"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi32+typed-folded:vec-mod-unsigned-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s512"
             }
         }
     ],
@@ -2258,12 +2874,26 @@
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 8 128 1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm_srl_epi32",
                 "dst_ctx": "typed-folded:vec-mod-signed-p8-s128"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s128"
             }
         }
     ],
@@ -2281,76 +2911,6 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-signed-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-signed-p64-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p64-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p64-s128"
-            }
-        }
-    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -2365,17 +2925,59 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p8-s64": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-signed-p32-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
-                "output_size": 64,
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
+                "output_size": 128,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-signed-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s128"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_srl_epi32+typed-folded:vec-mod-unsigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p64-s128"
             }
         }
     ],
@@ -2393,17 +2995,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p16-s64": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p8-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
                 "output_size": 64,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
             }
         }
     ],
@@ -2421,20 +3023,6 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-unsigned-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
-                "output_size": 64,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
-            }
-        }
-    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-nosigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -2449,6 +3037,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrld",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p32-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -2460,6 +3062,20 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psrld",
                 "dst_ctx": "typed-folded:vec-sub-signed-p32-s64"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-unsigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrld",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
             }
         }
     ],
@@ -2505,76 +3121,6 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p64-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrld",
-                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p8-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 1)",
-                "output_size": 256,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s256"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-nosigned-p8-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 -1)",
-                "output_size": 256,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s256"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s256"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-nosigned-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 -1)",
-                "output_size": 256,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s256"
-            }
-        }
-    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-unsigned-p64-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -2589,45 +3135,45 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p32-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrld+typed-folded:vec-sub-signed-p64-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 0)",
-                "output_size": 256,
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 64 64 0 64 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 1)",
+                "output_size": 64,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s256"
+                "src_ctx": "_m_psrld",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p64-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
                 "output_size": 256,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p64-s256"
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s256"
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p16-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 0)",
                 "output_size": 256,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s256"
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s256"
             }
         }
     ],
@@ -2659,6 +3205,34 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-nosigned-p64-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s256"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p8-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -2687,17 +3261,73 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p32-s256": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p64-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 1)",
                 "output_size": 256,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p32-s256"
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-unsigned-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-nosigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi32+typed-folded:vec-sub-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 256 256 0 256 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s256"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-nosigned-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s512"
             }
         }
     ],
@@ -2715,17 +3345,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-nosigned-p8-s512": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-signed-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 -1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 1)",
                 "output_size": 512,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s512"
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s512"
             }
         }
     ],
@@ -2771,6 +3401,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-nosigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -2785,6 +3429,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-unsigned-p32-s512": [
         {
             "property_name": "EnumeratePattern",
@@ -2796,20 +3454,6 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_srl_epi32",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s512"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-signed-p16-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s512"
             }
         }
     ],
@@ -2838,48 +3482,6 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_srl_epi32",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s512"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-signed-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p32-s512"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-unsigned-p8-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-signed-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
             }
         }
     ],
@@ -2925,6 +3527,20 @@
             }
         }
     ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi32+typed-folded:vec-sub-signed-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 512 512 0 512 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s512"
+            }
+        }
+    ],
     " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-unsigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -2950,6 +3566,20 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_srl_epi32",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s128"
+            }
+        }
+    ],
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_srl_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
             }
         }
     ],
@@ -2981,31 +3611,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-unsigned-p32-s128": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-nosigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 128 -1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
-            }
-        }
-    ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-signed-p64-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-signed-p64-s128"
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
             }
         }
     ],
@@ -3023,17 +3639,17 @@
             }
         }
     ],
-    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-nosigned-p64-s128": [
+    " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_srl_epi32+typed-folded:vec-sub-signed-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_psrld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000001f 64)) (reg (bv #x01 8)) 128 128 0 128 32 0 64 0 32 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 128 -1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_psrld_dsl ; _mm512_srl_epi32\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000001f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t32\n\t0\n\t64\n\t0\n\t32\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_srl_epi32",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s128"
             }
         }
     ],
@@ -3079,6 +3695,20 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi16+typed-folded:vec-mod-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm256_srl_epi16",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s256"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi16+typed-folded:vec-mod-signed-p32-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -3107,20 +3737,6 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi16+typed-folded:vec-mod-unsigned-p16-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s256"
-            }
-        }
-    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+256+_mm256_srl_epi16+typed-folded:vec-mod-signed-p64-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -3146,20 +3762,6 @@
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm256_srl_epi16",
                 "dst_ctx": "typed-folded:vec-mod-unsigned-p64-s256"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrlw+typed-folded:vec-mod-signed-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-mod-signed-p16-s64"
             }
         }
     ],
@@ -3196,12 +3798,40 @@
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 0)",
                 "output_size": 64,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_m_psrlw",
                 "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrlw+typed-folded:vec-mod-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-mod-signed-p16-s64"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrlw+typed-folded:vec-mod-unsigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s64"
             }
         }
     ],
@@ -3238,7 +3868,7 @@
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0)",
                 "output_size": 64,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
@@ -3247,17 +3877,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+64+_m_psrlw+typed-folded:vec-mod-unsigned-p32-s64": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 64 0)",
-                "output_size": 64,
+                "src": "(_m_pslld_dsl (reg (bv #x01 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x00 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
+                "output_size": 128,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s64"
+                "src_ctx": "_mm_sll_epi16",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s128"
             }
         }
     ],
@@ -3289,17 +3919,45 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p8-s128": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
                 "output_size": 128,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s128"
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_sll_epi16",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm_sll_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
             }
         }
     ],
@@ -3317,73 +3975,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x01 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x00 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s128"
-            }
-        }
-    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-signed-p64-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 128 1)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm_sll_epi16",
                 "dst_ctx": "typed-folded:vec-mod-signed-p64-s128"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-signed-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 128 1)",
-                "output_size": 128,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s128"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+128+_mm_sll_epi16+typed-folded:vec-mod-unsigned-p16-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p16-s128"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-unsigned-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s512"
             }
         }
     ],
@@ -3401,59 +4003,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p64-s512": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-unsigned-p8-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 512 1)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 0)",
                 "output_size": 512,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
                 "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p64-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p8-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-signed-p32-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-unsigned-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s512"
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p8-s512"
             }
         }
     ],
@@ -3471,6 +4031,48 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p32-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p8-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-unsigned-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-mod-unsigned-p32-s512"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-unsigned-p64-s512": [
         {
             "property_name": "EnumeratePattern",
@@ -3485,31 +4087,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-signed-p8-s256": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )+512+_mm512_srl_epi16+typed-folded:vec-mod-signed-p64-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 1)",
-                "output_size": 256,
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-mod_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 512 1)",
+                "output_size": 512,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s256"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-unsigned-p8-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 0)",
-                "output_size": 256,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s256"
+                "original_dst_expr": " (typed-folded:vec-mod_dsl ; typed-folded:vec-mod-unsigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t0\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-mod-signed-p64-s512"
             }
         }
     ],
@@ -3527,6 +4115,20 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-unsigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 0)",
+                "output_size": 256,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s256"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-signed-p16-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -3538,6 +4140,20 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_srl_epi16",
                 "dst_ctx": "typed-folded:vec-sub-signed-p16-s256"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 256 1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s256"
             }
         }
     ],
@@ -3569,34 +4185,6 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-nosigned-p64-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 -1)",
-                "output_size": 256,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s256"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-nosigned-p32-s256": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 -1)",
-                "output_size": 256,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s256"
-            }
-        }
-    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-unsigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
@@ -3625,17 +4213,31 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-signed-p32-s256": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-nosigned-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 -1)",
                 "output_size": 256,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm256_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p32-s256"
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s256"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-nosigned-p64-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 256 -1)",
+                "output_size": 256,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm256_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s256"
             }
         }
     ],
@@ -3653,31 +4255,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p8-s64": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+256+_mm256_srl_epi16+typed-folded:vec-sub-signed-p32-s256": [
         {
             "property_name": "EnumeratePattern",
             "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
-                "output_size": 64,
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000000000000000000000000000000000000000000000000000 256)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 256 256 0 256 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 256 1)",
+                "output_size": 256,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+                "src_ctx": "_mm256_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s256"
             }
         }
     ],
@@ -3709,6 +4297,34 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-unsigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -3720,20 +4336,6 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psrlw",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-nosigned-p16-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 -1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
             }
         }
     ],
@@ -3751,31 +4353,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-unsigned-p32-s64": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-nosigned-p16-s64": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 -1)",
                 "output_size": 64,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s64"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p64-s64": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 1)",
-                "output_size": 64,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_m_psrlw",
-                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
             }
         }
     ],
@@ -3793,6 +4381,20 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-unsigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s64"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-nosigned-p64-s64": [
         {
             "property_name": "EnumeratePattern",
@@ -3804,6 +4406,20 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_m_psrlw",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s64"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+64+_m_psrlw+typed-folded:vec-sub-signed-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x0000000000000000 64)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 64 64 0 64 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_m_psrlw",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
             }
         }
     ],
@@ -3849,20 +4465,6 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p8-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s512"
-            }
-        }
-    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-unsigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
@@ -3874,76 +4476,6 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_srl_epi16",
                 "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-unsigned-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-unsigned-p64-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 512 0)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p16-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-nosigned-p16-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 -1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s512"
-            }
-        }
-    ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-nosigned-p32-s512": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 -1)",
-                "output_size": 512,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s512"
             }
         }
     ],
@@ -3961,17 +4493,73 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p32-s512": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-nosigned-p16-s512": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 -1)",
                 "output_size": 512,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm512_srl_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p32-s512"
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-unsigned-p64-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p8-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p16-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-unsigned-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 0)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s512"
             }
         }
     ],
@@ -3989,17 +4577,45 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-signed-p8-s128": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-nosigned-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 -1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+512+_mm512_srl_epi16+typed-folded:vec-sub-signed-p32-s512": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 512)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 512 512 0 512 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 512 1)",
+                "output_size": 512,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm512_srl_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s512"
+            }
+        }
+    ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-signed-p16-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
             }
         }
     ],
@@ -4031,17 +4647,17 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-signed-p16-s128": [
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-signed-p8-s128": [
         {
             "property_name": "EnumeratePattern",
             "property": {
                 "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
                 "output_size": 128,
                 "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
             }
         }
     ],
@@ -4087,20 +4703,6 @@
             }
         }
     ],
-    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-unsigned-p32-s128": [
-        {
-            "property_name": "EnumeratePattern",
-            "property": {
-                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
-                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
-                "output_size": 128,
-                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
-                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
-                "src_ctx": "_mm_sll_epi16",
-                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
-            }
-        }
-    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-nosigned-p32-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -4129,6 +4731,20 @@
             }
         }
     ],
+    " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_m_pslld_dsl (reg (bv #x00 8)) (lit (bv #x00000000000000000000000000000000 128)) (lit (bv #x000000000000000f 64)) (reg (bv #x01 8)) 128 128 0 128 16 0 64 0 16 0 64 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
+                "src_ctx": "_mm_sll_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
+            }
+        }
+    ],
     " (_m_pslld_dsl ; _mm512_srl_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(lit (bv #x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (bitvector 512)))\n\t(lit (bv #x000000000000000f (bitvector 64)))\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t512\n\t512\n\t0\n\t512\n\t16\n\t0\n\t64\n\t0\n\t16\n\t0\n\t64\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )+128+_mm_sll_epi16+typed-folded:vec-sub-unsigned-p64-s128": [
         {
             "property_name": "EnumeratePattern",
@@ -4154,6 +4770,1234 @@
                 "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p64-s512\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 64 x i8> False\n\t64\n\t512\n\t-1\n )",
                 "src_ctx": "_mm_sll_epi16",
                 "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi16_epi32+typed-folded:cast-extend-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 16 32 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 128 32 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu32_epi64+typed-folded:cast-extend-unsigned-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 32 64 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 256 64 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu16_epi32+typed-folded:cast-extend-unsigned-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 16 32 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 256 32 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p16-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepu8_epi16+typed-folded:cast-extend-unsigned-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 8 16 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 256 16 0)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepu8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi8_epi16+typed-folded:cast-extend-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 8 16 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 128 16 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu8_epi16+typed-folded:cast-extend-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 8 16 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 128 16 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepi32_epi64+typed-folded:cast-extend-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 32 64 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 128 64 1)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepi32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi8_epi16+typed-folded:cast-extend-signed-p8-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 8 16 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 256 16 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi8_epi16",
+                "dst_ctx": "typed-folded:cast-extend-signed-p8-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi16_epi32+typed-folded:cast-extend-signed-p16-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 16 32 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 256 32 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-signed-p16-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+512+_mm512_cvtepi32_epi64+typed-folded:cast-extend-signed-p32-s256": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 256 256 0 256 32 64 1 1 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 256 64 1)",
+                "output_size": 512,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm512_cvtepi32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-signed-p32-s256"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu32_epi64+typed-folded:cast-extend-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 32 64 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 128 64 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu32_epi64",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )+64+x86_swizzle_390+typed-folded:cast-extend-unsigned-p32-s32": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(x86_swizzle_390_dsl (x86_swizzle_404_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (lit (bv #x0000000000000000 64)) 32 32 0 32 32 0 32 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )",
+                "src_ctx": "x86_swizzle_390",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s32"
+            }
+        },
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(x86_swizzle_390_dsl (x86_swizzle_404_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (lit (bv #x0000000000000000 64)) 32 32 0 32 32 0 32 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )",
+                "src_ctx": "x86_swizzle_390",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s32"
+            }
+        }
+    ],
+    " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )+256+_mm256_cvtepu16_epi32+typed-folded:cast-extend-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm512_cvtepu8_epi32_dsl (reg (bv #x00 8)) 128 128 0 128 16 32 1 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 16 128 32 0)",
+                "output_size": 256,
+                "original_src_expr": " (_mm512_cvtepu8_epi32_dsl ; _mm512_cvtepi8_epi16\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t256\n\t256\n\t0\n\t256\n\t8\n\t16\n\t1\n\t1\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-signed-p8-s256\n\t(reg (bv 0 (bitvector 8))) ; < 32 x i8> False\n\t8\n\t256\n\t16\n\t1\n )",
+                "src_ctx": "_mm256_cvtepu16_epi32",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )+ (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )+64+x86_swizzle_391+typed-folded:cast-extend-unsigned-p32-s32": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(x86_swizzle_390_dsl (x86_swizzle_404_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (lit (bv #x0000000000000000 64)) 32 32 0 32 32 32 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )",
+                "src_ctx": "x86_swizzle_391",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s32"
+            }
+        },
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(x86_swizzle_390_dsl (x86_swizzle_404_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (lit (bv #x0000000000000000 64)) 32 32 0 32 32 32 0 0)",
+                "dst": "(typed-folded:cast-extend_dsl (reg (bv #x00 8)) 32 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (x86_swizzle_390_dsl ; x86_swizzle_391\n\t (x86_swizzle_404_dsl ; x86_swizzle_404\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t(lit (bv #x0000000000000000 (bitvector 64)))\n\t32\n\t32\n\t0\n\t32\n\t32\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:cast-extend_dsl ; typed-folded:cast-extend-unsigned-p32-s32\n\t(reg (bv 0 (bitvector 8))) ; < 4 x i8> False\n\t32\n\t32\n\t64\n\t0\n )",
+                "src_ctx": "x86_swizzle_391",
+                "dst_ctx": "typed-folded:cast-extend-unsigned-p32-s32"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-nosigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-nosigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-unsigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-nosigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-nosigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi16+typed-folded:vec-sub-signed-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 -1 16 2 -1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-unsigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-nosigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-nosigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 8 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-unsigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-nosigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-signed-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-signed-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-nosigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsubs_epi16+typed-folded:vec-sub-nosigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 16 16 64 2 0) 128 128 0 64 16 64 128 16 1 16 2 1 112 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_epi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-signed-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-unsigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-nosigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x00 8)) 16 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-unsigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-unsigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-signed-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-unsigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-nosigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-nosigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-nosigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-signed-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 8 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-signed-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-unsigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsub_pi16+typed-folded:vec-sub-nosigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 -1 16 2 -1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-unsigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-nosigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-unsigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-signed-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+64+_mm_hsubs_pi16+typed-folded:vec-sub-nosigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0 32 16 16 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 64 64 0 32 16 16 32 2 0) 64 64 0 32 16 32 64 16 1 16 2 1 48 64 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsubs_pi16",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-unsigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-nosigned-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-unsigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-signed-p8-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-signed-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-unsigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-nosigned-p16-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-unsigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 0)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-signed-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-nosigned-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-nosigned-p32-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 128 -1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )+128+_mm_hsub_epi32+typed-folded:vec-sub-signed-p64-s128": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_epi16_dsl (x86_swizzle_357_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 128 128 0 64 32 32 2 0) (x86_swizzle_356_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 128 128 0 64 32 32 64 2 0) 128 128 0 64 32 64 128 32 -1 32 2 -1 96 128 2 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 128 1)",
+                "output_size": 128,
+                "original_src_expr": " (_mm_hsub_epi16_dsl ; _mm_hsub_epi32\n\t (x86_swizzle_357_dsl ; x86_swizzle_173\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t2\n\t\t0\n\t )\n\t (x86_swizzle_356_dsl ; x86_swizzle_172\n\t\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t\t128\n\t\t128\n\t\t0\n\t\t64\n\t\t32\n\t\t32\n\t\t64\n\t\t2\n\t\t0\n\t )\n\t128\n\t128\n\t0\n\t64\n\t32\n\t64\n\t128\n\t32\n\t-1\n\t32\n\t2\n\t-1\n\t96\n\t128\n\t2\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s128\n\t(reg (bv 0 (bitvector 8))) ; < 16 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 16 x i8> False\n\t32\n\t128\n\t-1\n )",
+                "src_ctx": "_mm_hsub_epi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s128"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-nosigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-signed-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-unsigned-p8-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 8 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p8-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-signed-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 16 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-unsigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-unsigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-signed-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-unsigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 0)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-unsigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-nosigned-p16-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 16 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p16-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-nosigned-p64-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 64 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p64-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-signed-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 0 32 0) (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-signed-p32-s64"
+            }
+        }
+    ],
+    " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )+ (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )+64+_mm_hsub_pi32+typed-folded:vec-sub-nosigned-p32-s64": [
+        {
+            "property_name": "EnumeratePattern",
+            "property": {
+                "src": "(_mm_hsub_pi32_dsl (x86_swizzle_390_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 32 0 32 32 32 0 0) (x86_swizzle_390_dsl (reg (bv #x00 8)) (reg (bv #x00 8)) 32 32 0 32 32 32 0 0) 32 32 0 32 32 -1 -1 32 0 0)",
+                "dst": "(typed-folded:vec-sub_dsl (reg (bv #x01 8)) (reg (bv #x01 8)) 32 64 -1)",
+                "output_size": 64,
+                "original_src_expr": " (_mm_hsub_pi32_dsl ; _mm_hsub_pi32\n\t (x86_swizzle_390_dsl ; x86_swizzle_391\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t32\n\t\t0\n\t\t0\n\t )\n\t (x86_swizzle_390_dsl ; x86_swizzle_390\n\t\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t32\n\t\t0\n\t\t32\n\t\t0\n\t )\n\t32\n\t32\n\t0\n\t32\n\t32\n\t-1\n\t-1\n\t32\n\t0\n\t0\n )",
+                "original_dst_expr": " (typed-folded:vec-sub_dsl ; typed-folded:vec-sub-nosigned-p32-s64\n\t(reg (bv 0 (bitvector 8))) ; < 8 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 8 x i8> False\n\t32\n\t64\n\t-1\n )",
+                "src_ctx": "_mm_hsub_pi32",
+                "dst_ctx": "typed-folded:vec-sub-nosigned-p32-s64"
             }
         }
     ]

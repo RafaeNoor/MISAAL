@@ -24,7 +24,7 @@ combined_dsl_list = tvm_dsl_list + x86_dsl_list + x86_swizzles_dsl_list
 MISAAL_ROOT = os.getenv('MISAAL_SRC')
 
 test_files = [
-    MISAAL_ROOT+ "/targets/tvm/depth_1_new_seman/EnumeratePattern_x86-swizzles_intermediate_results.py",
+    MISAAL_ROOT+ "/targets/tvm/depth_2_new_seman/EnumeratePattern_x86-swizzles_intermediate_results.py",
 ]
 
 

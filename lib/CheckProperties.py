@@ -190,6 +190,7 @@ test_properties = [EnumeratePattern]
 
 
 for property in test_properties:
+    print("Running:", property)
     for target in TARGETS:
         dsl_list = parse_dict_with_bounded(TARGET_TO_SEMA[target])
 
@@ -360,7 +361,7 @@ for property in test_properties:
             ## Remove filter list
             filter_list = None
             
-            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = output_synth_desc, target_dsl_list = output_dsl_list, output_depth = 1,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False, filter_list = filter_list)
+            PropertyInstance = property(dsl_list = dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = output_synth_desc, target_dsl_list = output_dsl_list, output_depth = 1,input_depth = 2,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False, filter_list = filter_list, bidirectional_test=True)
             PropertyInstance.name = PropertyInstance.name +"_filtered"
 
         elif property is EqClassEqualDepthV4Full:

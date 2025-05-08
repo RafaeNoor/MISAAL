@@ -103,7 +103,7 @@ namespace tir {
 
         std::string suffix = oprec > iprec ? "-extend" : "-truncate";
 
-        std::string output_str = "(cast" + suffix + " " + MakeString(op->value) + " " +
+        std::string output_str = "(typed-folded:cast" + suffix + " " + MakeString(op->value) + " " +
             std::to_string(iprec) + " " + std::to_string(isize) + " " + std::to_string(oprec) + " ";
         if (oprec > iprec){
             if (input_dtype.is_int()){
@@ -126,12 +126,12 @@ namespace tir {
         size_t osize = dtype.bits() * dtype.lanes();
 
         // base, stride, iprec, osize
-        return "(ramp " + MakeString(op->base) + " " + MakeString(op->stride) + " " + std::to_string(iprec) + " " + std::to_string(osize) + ")";
+        return "(typed-folded:ramp " + MakeString(op->base) + " " + MakeString(op->stride) + " " + std::to_string(iprec) + " " + std::to_string(osize) + ")";
     }
 
     std::string RosetteRewriter::Rewrite(const BroadcastNode* op){ 
         DataType dtype = op->dtype;
-        return "(broadcast " + MakeString(op->value) + " " + std::to_string(dtype.bits()) + " " + std::to_string(dtype.lanes()) + ")";
+        return "(typed-folded:broadcast " + MakeString(op->value) + " " + std::to_string(dtype.bits()) + " " + std::to_string(dtype.lanes()) + ")";
     }
 
     // std::string RosetteRewriter::CallNodeRewriteHelper(const CallNode* op, std::string RosetteOp){

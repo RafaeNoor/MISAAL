@@ -16,33 +16,32 @@ bool IsVectorizable(const tir::Op##Node* op){ \
     return true; \
 };
 
+
+#define DEFINE_NOT_VECTORIZABLE_OP(Op)           \
+bool IsVectorizable(const tir::Op##Node* op){ \
+    return false;                            \
+};
+
 BASIC_VECTORIZABLE_OP(Sub);
-BASIC_VECTORIZABLE_OP(Mul);
+// BASIC_VECTORIZABLE_OP(Mul);
+DEFINE_NOT_VECTORIZABLE_OP(Mul);
 BASIC_VECTORIZABLE_OP(Div);
 BASIC_VECTORIZABLE_OP(Mod);
 BASIC_VECTORIZABLE_OP(Min);
 BASIC_VECTORIZABLE_OP(Max);
-BASIC_VECTORIZABLE_OP(LT);
-BASIC_VECTORIZABLE_OP(LE);
-BASIC_VECTORIZABLE_OP(GT);
-BASIC_VECTORIZABLE_OP(GE);
-BASIC_VECTORIZABLE_OP(EQ);
-BASIC_VECTORIZABLE_OP(NE); // No semantics implemented
+DEFINE_NOT_VECTORIZABLE_OP(LT);
+DEFINE_NOT_VECTORIZABLE_OP(LE);
+DEFINE_NOT_VECTORIZABLE_OP(GT);
+DEFINE_NOT_VECTORIZABLE_OP(GE);
+DEFINE_NOT_VECTORIZABLE_OP(EQ);
+DEFINE_NOT_VECTORIZABLE_OP(NE); // No semantics implemented
 BASIC_VECTORIZABLE_OP(Add);
-// BASIC_VECTORIZABLE_OP(Cast);
+BASIC_VECTORIZABLE_OP(Cast);
 // ALWAYS_VECTORIZABLE_OP(Ramp);
 // ALWAYS_VECTORIZABLE_OP(Shuffle);
 // ALWAYS_VECTORIZABLE_OP(Broadcast);
 
-
-// Complex operations
-
-#define DEFINE_NOT_VECTORIZABLE_OP(Op)           \
-    bool IsVectorizable(const tir::Op##Node* op){ \
-        return false;                            \
-    };
-
-DEFINE_NOT_VECTORIZABLE_OP(Cast);
+// DEFINE_NOT_VECTORIZABLE_OP(Cast);
 DEFINE_NOT_VECTORIZABLE_OP(Ramp);
 DEFINE_NOT_VECTORIZABLE_OP(Shuffle);
 DEFINE_NOT_VECTORIZABLE_OP(Broadcast);
@@ -80,7 +79,7 @@ DEFINE_NOT_VECTORIZABLE_OP(BufferLoad);
         execute_python_file(python_file_name);
     }
 
-    void MisaalCompiler::execute_python_file(std::string fname){
+    bool MisaalCompiler::execute_python_file(std::string fname){
         std::string cmd = "python " + fname;
         auto start = std::chrono::system_clock::now();
         int ret_code = system(cmd.c_str());
@@ -92,10 +91,10 @@ DEFINE_NOT_VECTORIZABLE_OP(BufferLoad);
         std::cout << "Compilation took "<< elapsed_seconds.count() << " seconds ...\n";
 
         if(ret_code != 0){
-            assert(false && " Error while running compilation script");
+            std::cerr << "MISAAL Unsuccessful";
+            return false;
         }
-
-
+        return true;
     }
 
     void MisaalCompiler::write_to_file(std::string fname, std::string content){

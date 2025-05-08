@@ -1,8 +1,0 @@
-==
-hydride.node.misaal_func_0:
-(typed-folded:vec-add
-(reg (bv 1 8))
-(reg (bv 0 8))
-16
-64
-1)

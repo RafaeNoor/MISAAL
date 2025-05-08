@@ -1,0 +1,18 @@
+; hydride.node.misaal_func_0
+; (reg 0) <64 x i8>
+; (reg 1) <64 x i8>
+ (_mm_div_epi64_dsl
+	(reg 1)
+	(reg 0)
+	512
+	512
+	0
+	512
+	32
+	0
+	0
+	64
+	0
+	64
+	0
+ ) ; <16 x i32>

@@ -48,4 +48,4 @@ def test_simple_vec_max():
 
 
 if __name__ == "__main__":
-    simple_op(file_name = __file__[:-3], dtype=dtype, buffer_size=buffer_size, vector_size=vector_size, Module=Module, numpy_op= numpy_op, print_result=True)
+    simple_op(file_name = __file__[:-3], dtype=dtype, buffer_size=buffer_size, vector_size=vector_size, Module=Module, numpy_op= numpy_op, print_result=True, do_cleanup=False)

@@ -3,8 +3,10 @@ import os
 
 target = "x86"
 
-int_file = f"../targets/tvm/RepairRelavanceIntermediates_{target}_intermediate_results.py"
-v4_file = f"../targets/tvm/RepairRelavanceV4_{target}_intermediate_results.py"
+# int_file = f"../targets/tvm/depth_2_new_seman/RepairRelavanceIntermediates_{target}_intermediate_results.py"
+# v4_file = f"../targets/tvm/depth_2_new_seman/RepairRelavanceV4_{target}_intermediate_results.py"
+int_file = f"./RepairRelavanceIntermediates_{target}_intermediate_results.py"
+v4_file = f"./RepairRelavanceV4_{target}_intermediate_results.py"
 
 files = [int_file, v4_file]
 

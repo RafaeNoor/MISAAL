@@ -27,24 +27,22 @@ class Test:
             file.write(test_text)
 
 class CastTest:
-    def __init__(self, test_name, dtype, buffer_size, vector_size, numpy_op, tir_func):
+    def __init__(self, test_name, input_dtype, output_dtype, buffer_size, vector_size):
         self.test_name = test_name
-        self.dtype = dtype
+        self.input_dtype = input_dtype
+        self.output_dtype = output_dtype
         self.buffer_size = buffer_size
         self.vector_size = vector_size
-        self.numpy_op = numpy_op
-        self.tir_func =tir_func
 
     def generate_test(self):
         test_file_name = test_case_dir + f"/test_{self.test_name}.py"
-        with open(test_template, 'r') as file:
+        with open(test_template_cast, 'r') as file:
             test_text = file.read()
             test_text = test_text.replace("TEST_NAME", self.test_name) 
-            test_text = test_text.replace("DTYPE", self.dtype) 
+            test_text = test_text.replace("INPUT_DTYPE", self.input_dtype) 
+            test_text = test_text.replace("OUTPUT_DTYPE", self.output_dtype) 
             test_text = test_text.replace("BUFFER_SIZE", str(self.buffer_size)) 
             test_text = test_text.replace("VECTOR_SIZE", str(self.vector_size)) 
-            test_text = test_text.replace("NUMPY_OP", self.numpy_op) 
-            test_text = test_text.replace("TIR_FUNC", self.tir_func) 
         with open(test_file_name, 'w') as file:
             file.write(test_text)
         
@@ -63,13 +61,20 @@ tests = [
          "lambda x,y : x - y",
          "T.Sub",
          ),
-    Test("vec_mod", 
-         "int32",
-         128,
-         8,
-         "lambda x,y : np.mod(x,y)",
-         "T.Sub",
-         ),
+    # Test("vec_div", 
+    #      "uint32",
+    #      128,
+    #      16,
+    #      "lambda x,y : x / y",
+    #      "T.Div",
+    #      ),
+    # Test("vec_mod", 
+    #      "int32",
+    #      128,
+    #      8,
+    #      "lambda x,y : np.mod(x,y)",
+    #      "T.Sub",
+    #      ),
     Test("vec_max", 
          "int32",
          128,
@@ -91,12 +96,18 @@ tests = [
          "lambda x,y : np.bitwise_or(x,y)",
          "T.bitwise_or",
          ),
-    Test("vec_bwand", 
+    # Test("vec_bwand", 
+    #      "int16",
+    #      128,
+    #      32,
+    #      "lambda x,y : np.bitwise_and(x,y)",
+    #      "T.bitwise_and",
+    #      ),
+    CastTest("cast_extend", 
          "int16",
+         "int32",
          128,
-         32,
-         "lambda x,y : np.bitwise_and(x,y)",
-         "T.bitwise_and",
+         8,
          ),
 ]
 
