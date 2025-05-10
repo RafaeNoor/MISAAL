@@ -12,6 +12,8 @@ import copy
 import json
 from graphlib import TopologicalSorter, CycleError
 from sema.halide_decomposed import halide_decomposed  as halide_semantics
+from tqdm import tqdm
+import datetime
 
 
 def create_patterns(props, combined_dsl_list):
@@ -20,8 +22,9 @@ def create_patterns(props, combined_dsl_list):
 
     patterns = []
 
-    for idx, prop in enumerate(props):
-        for key, value in prop.items():
+    print("len(props): ", len(props))
+    for idx, prop in enumerate(tqdm(props, desc="props loop")):
+        for key, value in tqdm(prop.items(), leave=False, desc="props.items"):
             src_key_name = "src"
             for src_key in src_key_names:
                 if src_key in value[0]['property']:
@@ -50,7 +53,7 @@ def get_possible_output_sizes_for_eq_class(ctx, dsl_list):
 
 def deduplicate_patterns(patterns):
     unique_patterns = []
-    for s_idx, pattern in enumerate(patterns):
+    for s_idx, pattern in enumerate(tqdm(patterns, desc="dedup patterns loop")):
         insert = True
         for j in range(s_idx + 1, len(patterns)):
             other_pattern = patterns[j]
@@ -63,32 +66,77 @@ def deduplicate_patterns(patterns):
     return unique_patterns
 
 
-def deduplicate_patterns_parallel(patterns, pool_size = 8, parallel = True):
+# def deduplicate_patterns_parallel(patterns, pool_size = 32, parallel = True):
+
+#     mask = [False] * len(patterns)
+
+#     def worker(s_idx):
+#         insert = True
+#         pattern_i = patterns[s_idx]
+#         for j in range(s_idx + 1, len(patterns)):
+#             other_pattern = patterns[j]
+
+#             if other_pattern.equal_to(pattern_i):
+#                 insert = False
+#                 break
+#         mask[s_idx] =  insert
+#         if s_idx % (len(patterns)/1000) == 0:
+#             print(datetime.datetime.now(), ":")
+#             print(s_idx / len(patterns), "% complete.")
+
+#     if parallel:
+#         pool = concurrent.futures.ThreadPoolExecutor(max_workers=pool_size)
+#         for s_idx, pattern in enumerate(tqdm(patterns, desc="dedup patterns parallel")):
+#             pool.submit(worker, s_idx)
+
+
+#         pool.shutdown(wait=True)
+#     else:
+#         for s_idx, pattern in enumerate(patterns):
+#             worker(s_idx)
+
+
+
+#     unique_patterns = []
+#     for idx, mask_val in enumerate(mask):
+#         if mask_val:
+#             unique_patterns.append(patterns)
+
+
+
+#     return unique_patterns
+
+## Use a process pool
+patterns_global = None
+
+def worker(s_idx):
+    pattern_i = patterns_global[s_idx]
+    for j in range(s_idx + 1, len(patterns_global)):
+        other_pattern = patterns_global[j]
+
+        if other_pattern.equal_to(pattern_i):
+            return (s_idx, False)
+    return (s_idx, True)
+
+def deduplicate_patterns_parallel(patterns, pool_size = 32, parallel = True):
+    global patterns_global
+    patterns_global = patterns
 
     mask = [False] * len(patterns)
 
-    def worker(s_idx):
-        insert = True
-        pattern_i = patterns[s_idx]
-        for j in range(s_idx + 1, len(patterns)):
-            other_pattern = patterns[j]
-
-            if other_pattern.equal_to(pattern_i):
-                insert = False
-                break
-        mask[s_idx] =  insert
 
     if parallel:
-        pool = concurrent.futures.ThreadPoolExecutor(max_workers=pool_size)
-        for s_idx, pattern in enumerate(patterns):
-            pool.submit(worker, s_idx)
-
+        pool = concurrent.futures.ProcessPoolExecutor(max_workers=pool_size)
+        for (s_idx, result) in pool.map(worker, range(len(patterns))):
+            mask[s_idx] =  result
+            if s_idx % (len(patterns)/1000) == 0:
+                print(datetime.datetime.now(), ":")
+                print(s_idx / len(patterns), "% complete.")
 
         pool.shutdown(wait=True)
     else:
         for s_idx, pattern in enumerate(patterns):
             worker(s_idx)
-
 
 
     unique_patterns = []
@@ -99,7 +147,6 @@ def deduplicate_patterns_parallel(patterns, pool_size = 8, parallel = True):
 
 
     return unique_patterns
-
 
 
 

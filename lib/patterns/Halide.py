@@ -29,6 +29,7 @@ test_files = [
 props = [
 ]
 
+print("Loading Halide json files..")
 for tf in test_files:
     with open(tf, "r") as ReadFile:
         props.append(json.load(ReadFile))
@@ -38,6 +39,7 @@ pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
 abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
 
 Halide_patterns = []
+halide_patterns_intermediate_pickle_file = MISAAL_ROOT+"/lib/patterns/halide_patterns_intermediate.pickle"
 
 
 if os.path.exists(abstract_pickle_file_name):
@@ -56,8 +58,17 @@ elif os.path.exists(pickle_file_name):
     with open(abstract_pickle_file_name, "wb") as handle:
         pickle.dump(abstracted_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
-    parsed_patterns = create_patterns(props, combined_dsl_list)
-    Halide_patterns =  parsed_patterns
+    if os.path.exists(halide_patterns_intermediate_pickle_file):
+        print("Loading patterns from intermediate pickle file")
+        with open(halide_patterns_intermediate_pickle_file, "rb") as handle:
+            Halide_patterns = pickle.load(handle)
+    else:
+        print("Creating patterns..")
+        parsed_patterns = create_patterns(props, combined_dsl_list)
+        print("Done creating patterns")
+        Halide_patterns =  parsed_patterns
+        with open(halide_patterns_intermediate_pickle_file, "wb") as handle:
+            pickle.dump(Halide_patterns, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     print("Total Patterns Pre Deduplication:", len(Halide_patterns))
     Halide_patterns = prune_redundant_patterns(Halide_patterns, combined_dsl_list)

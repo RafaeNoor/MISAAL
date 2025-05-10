@@ -9,6 +9,7 @@ import subprocess as sb
 import psutil
 from utils.ReadDSL import read_string_to_dsl
 import time
+from tqdm import tqdm
 
 # Compiler using the EggLog DSL for applying rewrites
 
@@ -113,6 +114,10 @@ class EggLogCompiler(CompilerBase):
         for pattern in test_patterns:
             rewrite = emit_rewrite_expr(pattern.src_expr, pattern.target_expr, bidirectional = pattern.bidirectional)
             egglog_patterns.append(rewrite)
+        # for pattern_group in tqdm(test_patterns):
+        #         for pattern in pattern_group:
+        #             rewrite = emit_rewrite_expr(pattern.src_expr, pattern.target_expr, bidirectional = pattern.bidirectional)
+        #             egglog_patterns.append(rewrite)
 
 
         # Read in axioms file:

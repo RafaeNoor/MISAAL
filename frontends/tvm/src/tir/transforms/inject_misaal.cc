@@ -107,6 +107,11 @@ class MisaalInjecter : public tvm::arith::IRMutatorWithAnalyzer {
 
     void CompileMISAAL(){
         std::cout<< "Compiling misaal" << std::endl;
+        if (rosette_funcs_.empty()){
+            std::cout<< "Nothing to compile. Skipping MISAAL compilation" << std::endl;
+            return;
+        }
+
         for (auto& pair : rosette_funcs_){
             misaal_backend.add_expression_to_compile(pair.second, pair.first);
         }

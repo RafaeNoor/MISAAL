@@ -21,6 +21,15 @@
 namespace tvm {
 namespace tir {
 
+    std::string RosetteRewriter::print_decomp_signed_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits, int sign){
+        if (sign == 0){
+            op = "typed:unsigned-" + op;
+        } else {
+            op = "typed:signed-" + op;
+        }
+        return "(" + op + "\n" + a + "\n" + b + "\n" + std::to_string(bits) + "\n" + std::to_string(bits * lanes) + ")";
+    }
+
     std::string RosetteRewriter::print_signed_binary_op(std::string op, std::string a, std::string b, size_t lanes, size_t bits, int sign){
         return "(" + op + "\n" + a + "\n" + b + "\n" + std::to_string(bits) + "\n" + std::to_string(bits * lanes) + "\n" + std::to_string(sign) + ")";
     }
@@ -29,13 +38,13 @@ namespace tir {
         return "(" + op + "\n" + a + "\n" + b + "\n" + std::to_string(bits) + "\n" + std::to_string(bits * lanes) + ")";
     }
 
-    #define REWRITE_SIGNED_BINOP(Op, RosetteOp) \
+    #define REWRITE_DECOMP_SIGNED_BINOP(Op, RosetteOp) \
     std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
         DataType dtype = op->dtype; \
         if (dtype.is_uint()){ \
-            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
+            return print_decomp_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 0); \
         } else if (dtype.is_int()){ \
-            return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
+            return print_decomp_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), 1); \
         } else { \
             ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
             exit(0); \
@@ -47,7 +56,7 @@ namespace tir {
     #define REWRITE_ADDSUB(Op, RosetteOp) \
     std::string RosetteRewriter::Rewrite(const Op##Node* op){ \
         DataType dtype = op->dtype; \
-        return print_signed_binary_op(RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), -1); \
+        return print_signed_binary_op("typed:" RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits(), -1); \
     }
 
     // For comparison ops, use the left child dtype as the input to the s-exp
@@ -78,45 +87,45 @@ namespace tir {
         return print_binary_op(#RosetteOp, MakeString(op->a), MakeString(op->b), dtype.lanes(), dtype.bits()); \
     }
 
-    REWRITE_ADDSUB(Add, "typed-folded:vec-add");
-    REWRITE_ADDSUB(Sub, "typed-folded:vec-sub");
-    REWRITE_SIGNED_BINOP(Mul, "typed-folded:vec-mul");
-    REWRITE_SIGNED_BINOP(Div, "typed-folded:vec-div");
-    REWRITE_SIGNED_BINOP(Mod, "typed-folded:vec-mod");
-    REWRITE_SIGNED_BINOP(Min, "typed-folded:vec-min");
-    REWRITE_SIGNED_BINOP(Max, "typed-folded:vec-max");
+    REWRITE_ADDSUB(Add, "vec-add");
+    REWRITE_ADDSUB(Sub, "vec-sub");
+    REWRITE_DECOMP_SIGNED_BINOP(Mul, "vec-mul");
+
+    // Note that div and mod are not rewritable
+    REWRITE_DECOMP_SIGNED_BINOP(Div, "vec-div");
+    REWRITE_DECOMP_SIGNED_BINOP(Mod, "vec-mod");
+
+    REWRITE_DECOMP_SIGNED_BINOP(Min, "vec-min");
+    REWRITE_DECOMP_SIGNED_BINOP(Max, "vec-max");
     REWRITE_COMP_BINOP(EQ, "typed-folded:vec-eq");
     REWRITE_SIGNED_COMP_BINOP(LT, "typed-folded:vec-lt");
     REWRITE_COMP_BINOP(NE, "typed-folded:vec-ne");
     REWRITE_SIGNED_COMP_BINOP(LE, "typed-folded:vec-le");
     REWRITE_SIGNED_COMP_BINOP(GT, "typed-folded:vec-gt");
     REWRITE_SIGNED_COMP_BINOP(GE, "typed-folded:vec-ge");
-    REWRITE_BASIC_BINOP(And, "typed-folded:vec-bwand");
 
     // Rules for special ops
     std::string RosetteRewriter::Rewrite(const CastNode* op){ 
         DataType output_dtype = op->dtype; 
         DataType input_dtype = op->value->dtype;
         size_t iprec = input_dtype.bits();
-        size_t isize = iprec * input_dtype.lanes();
+        size_t lanes = input_dtype.lanes();
         size_t oprec = output_dtype.bits();
-
+        
+        std::string type_suffix;
+        if (input_dtype.is_int()){
+            type_suffix = "-int";
+        } else if (input_dtype.is_uint()){
+            type_suffix = "-uint";
+        } else {
+            ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
+            exit(0); \
+            return ""; \
+        }
         std::string suffix = oprec > iprec ? "-extend" : "-truncate";
 
-        std::string output_str = "(typed-folded:cast" + suffix + " " + MakeString(op->value) + " " +
-            std::to_string(iprec) + " " + std::to_string(isize) + " " + std::to_string(oprec) + " ";
-        if (oprec > iprec){
-            if (input_dtype.is_int()){
-                output_str += "1";
-            } else if (input_dtype.is_uint()){
-                output_str += "0";
-            } else {
-                ICHECK(false) << "Trying to rewrite an operation with an unsupported datatype."; \
-                exit(0); \
-                return ""; \
-            }
-        }
-        output_str += ")";
+        std::string output_str = "(typed:cast" + type_suffix + suffix + " " + MakeString(op->value) + " " +
+            std::to_string(iprec) + " 1 " + std::to_string(lanes) + " " + std::to_string(oprec) + ")";
         return output_str;
     }
 
@@ -148,10 +157,11 @@ namespace tir {
 
     std::string RosetteRewriter::Rewrite(const CallNode* op) {  
         DataType dtype = op->dtype;
+        // BWOR not rewritable
         if (op->op.same_as(builtin::bitwise_or())) {
-            return print_binary_op("typed-folded:vec-bwor", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
+            return print_binary_op("typed:vec-bwor", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
         } else if (op->op.same_as(builtin::bitwise_and())) {
-            return print_binary_op("typed-folded:vec:bwand", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
+            return print_binary_op("typed:vec-bwand", MakeString(op->args[0]), MakeString(op->args[1]), dtype.lanes(), dtype.bits());
         } else {
             ICHECK(false) << "Tried to rewrite an unsupported call node."; 
             exit(0);
@@ -167,6 +177,7 @@ namespace tir {
 
     DEFINE_REWRITE_NOT_IMPLEMENTED(Var);
     DEFINE_REWRITE_NOT_IMPLEMENTED(Or);
+    DEFINE_REWRITE_NOT_IMPLEMENTED(And);
     DEFINE_REWRITE_NOT_IMPLEMENTED(IntImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(FloatImm);
     DEFINE_REWRITE_NOT_IMPLEMENTED(StringImm);

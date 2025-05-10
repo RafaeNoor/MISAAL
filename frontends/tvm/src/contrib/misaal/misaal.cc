@@ -23,10 +23,9 @@ bool IsVectorizable(const tir::Op##Node* op){ \
 };
 
 BASIC_VECTORIZABLE_OP(Sub);
-// BASIC_VECTORIZABLE_OP(Mul);
-DEFINE_NOT_VECTORIZABLE_OP(Mul);
-BASIC_VECTORIZABLE_OP(Div);
-BASIC_VECTORIZABLE_OP(Mod);
+BASIC_VECTORIZABLE_OP(Mul);
+DEFINE_NOT_VECTORIZABLE_OP(Div);
+DEFINE_NOT_VECTORIZABLE_OP(Mod);
 BASIC_VECTORIZABLE_OP(Min);
 BASIC_VECTORIZABLE_OP(Max);
 DEFINE_NOT_VECTORIZABLE_OP(LT);
@@ -59,7 +58,7 @@ DEFINE_NOT_VECTORIZABLE_OP(BufferLoad);
 
     bool IsVectorizable(const tir::CallNode* op){
         if (op->op.same_as(builtin::bitwise_or())){
-            return true;
+            return false;
         } else if (op->op.same_as(builtin::bitwise_and())){
             return true;
         }
@@ -112,7 +111,6 @@ from compiler.HydrideCompiler import HydrideCompiler\n\
 from utils.egg_config import EGG_PKG_PATH\n\
 from sema.hexsemantics_new import semantics as hvx_semantics\n\
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
-from sema.tvm_folded import tvm_folded as tvm_semantics\n\
 from sema.halide_decomposed import halide_decomposed as halide_semantics\n\
 from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles\n\
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles\n\
@@ -150,11 +148,9 @@ import sys\n";
 
     std::string MisaalCompiler::get_input_dsl_list_definition(std::string input_dsl_name){
         std::vector<std::string> statements;
-        std::string parse_tvm_dict = parse_dict("tvm_dsl_list", "tvm_semantics");
         std::string parse_halide_dict = parse_dict("halide_dsl_list", "halide_semantics");
-        statements.push_back(parse_tvm_dict);
         statements.push_back(parse_halide_dict);
-        statements.push_back(input_dsl_name + " = tvm_dsl_list + halide_dsl_list");
+        statements.push_back(input_dsl_name + " = halide_dsl_list");
 
         return join(statements, "\n");
     }
@@ -275,7 +271,7 @@ import sys\n";
 
         std::string pattern_alias_input = "misaal_input_patterns";
         if(import_frontend_patterns){
-            std::string pattern_imports_input = "from patterns.TVM import TVM_patterns as "+pattern_alias_input;
+            std::string pattern_imports_input = "from patterns.Halide import Halide_patterns as "+pattern_alias_input;
             statements.push_back(pattern_imports_input);
         } else {
             std::string pattern_imports_input = pattern_alias_input + " = []";

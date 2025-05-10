@@ -1,4 +1,5 @@
-import os
+#!/usr/bin/env python3
+import os, glob, sys
 
 test_case_dir = "/u/is16/526/MISAAL/test/tvm/misaal_tests/test_cases"
 test_template = "/u/is16/526/MISAAL/test/tvm/misaal_tests/test_case_template.txt"
@@ -61,20 +62,21 @@ tests = [
          "lambda x,y : x - y",
          "T.Sub",
          ),
-    # Test("vec_div", 
-    #      "uint32",
-    #      128,
-    #      16,
-    #      "lambda x,y : x / y",
-    #      "T.Div",
-    #      ),
-    # Test("vec_mod", 
-    #      "int32",
-    #      128,
-    #      8,
-    #      "lambda x,y : np.mod(x,y)",
-    #      "T.Sub",
-    #      ),
+    Test("vec_mul", 
+         "uint32",
+         128,
+         16,
+         "lambda x,y : x * y",
+         "T.Mul",
+         ),
+    ## Not supported by MISAAL but it still compiles correctly.
+    Test("vec_div", 
+         "uint32",
+         128,
+         16,
+         "lambda x,y : x // y",
+         "T.Div",
+         ),
     Test("vec_max", 
          "int32",
          128,
@@ -96,20 +98,31 @@ tests = [
          "lambda x,y : np.bitwise_or(x,y)",
          "T.bitwise_or",
          ),
-    # Test("vec_bwand", 
-    #      "int16",
-    #      128,
-    #      32,
-    #      "lambda x,y : np.bitwise_and(x,y)",
-    #      "T.bitwise_and",
-    #      ),
+    Test("vec_bwand", 
+         "int16",
+         128,
+         32,
+         "lambda x,y : np.bitwise_and(x,y)",
+         "T.bitwise_and",
+         ),
     CastTest("cast_extend", 
          "int16",
          "int32",
          128,
          8,
          ),
+    CastTest("cast_truncate", 
+         "int32",
+         "int16",
+         128,
+         8,
+         ),
 ]
+
+if len(sys.argv) > 1 and str(sys.argv[1]) == "clean":
+    for file in glob.glob(test_case_dir + "/*"):
+        if not os.path.isdir(file):
+            os.remove(file)
 
 for test in tests:
     test.generate_test()

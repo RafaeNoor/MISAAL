@@ -1,0 +1,4 @@
+include tvm/libtvm.so
+include tvm/libtvm_runtime.so
+recursive-include tvm/3rdparty *
+recursive-include tvm/jvm *
