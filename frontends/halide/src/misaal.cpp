@@ -155,16 +155,17 @@ import sys\n";
 
 
     std::string MisaalCompiler::get_llvm_so_path(){
-        std::string path;
+        const char *legalizer_path = getenv("LEGALIZERS_DIR");
+        std::string path(legalizer_path);
         switch(target){
             case x86:
-                path = "\"/shared/hydride/LLVMx86Legalizer.so\"";
+                path = "\"" + path + "/libx86LegalizerAllArgs.so" + "\"";
                 break;
             case HVX:
-                path = "\"/shared/hydride/LLVMHVXLegalizer.so\"";
+                path = "\"" + path + "/libHVXLegalizer.so" + "\"";
                 break;
             case ARM:
-                path = "\"/shared/hydride/LLVMARMLegalizer.so\"";
+                path = "\"" + path + "/libARMLegalizer.so" + "\"";
                 break;
         };
         return path;
@@ -188,19 +189,21 @@ import sys\n";
 
 
     std::string MisaalCompiler::get_llvm_intrinsic_wrapper(){
-        std::string wrapper;
+        const char *hydride_path = getenv("HYDRIDE_DIR");
+        std::string wrapper_path(hydride_path);
+        wrapper_path = "\"" + wrapper_path + "/codegen-generator/tools/low-level-codegen/wrappers/";
         switch(target){
             case x86:
-                wrapper = "\"/shared/hydride/x86_wrappers.c.ll\"";
+                wrapper_path += "x86_wrappers.c.ll\"";
                 break;
             case HVX:
-                wrapper = "\"/shared/hydride/hvx_wrappers.ll\"";
+                wrapper_path += "hvx_wrappers.ll\"";
                 break;
             case ARM:
-                wrapper = "\"/shared/hydride/arm_wrappers.ll\""; 
+                wrapper_path += "arm_wrappers.c.ll\""; 
                 break;
         };
-        return wrapper;
+        return wrapper_path;
     }
 
 

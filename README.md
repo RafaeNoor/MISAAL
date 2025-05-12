@@ -1,6 +1,12 @@
 # MISAAL
 
-# Build Instructions
+# Build from script
+
+```bash
+source install_misaal.sh
+```
+
+# Build Instructions (Manual)
 
 ### Build Hydride
 Note that Hydride needs to be built before building MISAAL repository
