@@ -30,26 +30,6 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
         force_contains_all_regs = False
 
-        input_test_list = [
-            #"_mm512_sllv_epi16",
-            "_mm256_dpbusd_epi32",
-        ]
-
-        #dsl_list = [d for d in dsl_list if d.name in input_test_list]
-
-        output_test_list = [
-            #"typed:signed-vec-mul",
-            #"typed:cast-uint",
-            "typed:vec-shl",
-        ]
-
-        #output_dsl_list = [d for d in output_dsl_list if d.name in output_test_list]
-
-        repair_test_list = [
-            "repair-add",
-        ]
-
-        #repair_dsl_list = [d for d in repair_dsl_list if d.name in repair_test_list]
 
         super().__init__(dsl_list = dsl_list, synth_desc = synth_desc, output_dsl_list = output_dsl_list, repair_dsl_list = repair_dsl_list, target_synth_desc = target_synth_desc, target_start_depth = target_start_depth, target_depth = target_depth, const_fold = const_fold, commutative_map_path = commutative_map_path, force_contains_all_regs = force_contains_all_regs, memo_path = memo_path)
 
@@ -62,6 +42,10 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
     def prepare_candidate_generator(self, candidate_prep, use_max_args = True):
         input_dsl_inst = candidate_prep[0]
+        output_dsl_inst = candidate_prep[1]
+        if "int-extend" not in output_dsl_inst.name :
+            return
+
         arg_id = self.get_repair_context_index(input_dsl_inst, use_max_args = use_max_args)
         modified_sema = self.get_instrumented_semantics(input_dsl_inst, arg_id)
         print(modified_sema)
@@ -107,6 +91,7 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
         ordered_defns = repair_env_obj['ordered_defns']
         formal_param_defs = repair_env_obj['formal_param_defs']
 
+        print("Ordered keys:", ordered_keys)
 
         sliced_sizes = env_sizes
         print("Sliced sizes:\t",sliced_sizes)
@@ -150,17 +135,20 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
 
 
 
-        output_dsl_inst = candidate_prep[1]
         input_signedness = src_ctx.signedness
         target_dsl = self.get_grammar_relevant_dsl(out_precision, reduce_factor, synth_input_sizes, input_precs, input_signedness, src_ctx, output_dsl_inst)
 
+
         print("Target DSL Size: ", len(target_dsl))
+        print("Enum target dsl: ", target_dsl)
+        print("ordered keys:", ordered_keys)
 
 
 
         for idx, intermediate_val_name in enumerate(ordered_keys):
             if intermediate_val_name.startswith("reg"):
                 continue
+
 
             if idx+1 == len(ordered_keys):
                 continue
@@ -218,6 +206,7 @@ class RepairRelavanceIntermediates(RepairRelavanceV4):
                     canon_target = self.canonicalizer.canonicalize(expr)
                     if self.useCanon and  not self.canonicalizer.isCanonical(expr, canon_target):
                         continue
+
 
 
 

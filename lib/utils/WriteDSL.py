@@ -30,6 +30,7 @@ def convert_context_to_dict(ctx):
     dictionary['SIMD'] = str(ctx.SIMD)
     dictionary['Extensions'] = ctx.extensions
     dictionary['args'] = ctx.unparsed_args
+    dictionary['arg_permute_map'] = ctx.permutation
 
 
     return dictionary
@@ -57,11 +58,13 @@ def convert_dsl_list_to_dict(dsl_list):
 
 
 
-def write_dsl_dict_to_file(dsl_dict, fpath, dict_name):
+def write_dsl_dict_to_file(dsl_dict, fpath, dict_name, indent = False):
     with open(fpath, "w+") as WriteFile:
         WriteFile.write("{} =".format(dict_name))
-        #WriteFile.write(json.dumps(dsl_dict, indent = 4))
-        WriteFile.write(str(dsl_dict))
+        if indent:
+            WriteFile.write(json.dumps(dsl_dict, indent = 4))
+        else:
+            WriteFile.write(str(dsl_dict))
         WriteFile.write("\n")
 
 

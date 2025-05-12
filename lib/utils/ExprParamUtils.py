@@ -19,6 +19,8 @@ def class_name(arg):
         return "int"
     elif isinstance(arg, Bool):
         return "bool"
+    elif isinstance(arg, Variable):
+        return "var"
     elif isinstance(arg, Reg):
         return "reg"+str(arg.index)
     elif isinstance(arg, Context):

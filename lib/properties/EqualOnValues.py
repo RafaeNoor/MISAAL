@@ -291,7 +291,7 @@ class EqualOnValues(Property):
 
 
 
-    def run_on_completion(self):
+    def run_on_completion(self, pmap):
 
         for key in self.forward_map:
             self.forward_map[key] = list(set(self.forward_map[key]))

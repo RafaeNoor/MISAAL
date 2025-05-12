@@ -160,3 +160,6 @@ HALIDE_HVX_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_na
 
 
 HALIDE_SYNTH_DESC = CodeSynthesizerDesc(target_name= "halide",interpreter_name="typed:halide:interpret-hydride", cost_name= "typed:halide:cost", bind_name="halide:bind-expr", printer_name="typed:halide:hydride-printer", get_prec_name="typed:halide:get-prec", get_length_name="typed:halide:get-length", target_vector_sizes = [pow(2,i) for i in range(3, 12+1 )] , visitor_name = "typed:halide:visitor", get_ops_name = "typed:halide:get-bv-ops" , sema_path = os.path.join(MISAAL_SRC,"/lib/sema/halide_sema.py"), dict_name = "halide_semantics" )
+
+PIM_FUSED_SYNTH_DESC = CodeSynthesizerDesc(target_name= "pim",interpreter_name="pim:interpret", cost_name= "pim:cost", bind_name="pim:bind-expr", printer_name="pim:hydride-printer", get_prec_name="pim:get-prec", get_length_name="pim:get-length", target_vector_sizes = [pow(2,i) for i in range(3, 12+1 )] , visitor_name = "pim:visitor", get_ops_name = "pim:get-bv-ops" , sema_path = os.path.join(MISAAL_SRC,"/lib/sema/bitserial_fused_sema.py"), dict_name = "bitserial_fused_sema" ,emit_interpreter = True)
+

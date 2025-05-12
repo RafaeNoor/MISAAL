@@ -90,8 +90,8 @@ class EqClassEqualDepthV4NoSwizzle(EqClassEqualDepthV4):
                     if sample_ctx.out_vectsize == None:
                         print("Skipping as samle context has no outvect size")
                         continue
-
-                    src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
+                    src_ctx = self.get_context_with_max_sym_bvs(dsl_inst)
+                    print(src_ctx.name)
 
                     if src_ctx.out_vectsize == None:
                         print("Skipping as src context has no outvect size")
@@ -119,8 +119,13 @@ class EqClassEqualDepthV4NoSwizzle(EqClassEqualDepthV4):
                             continue
 
 
-                        if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 4:
+
+
+
+
+                        if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 3:
                             continue
+
 
 
                         canonical_src_expr = self.canonicalizer.canonicalize(src_expr)
@@ -137,7 +142,8 @@ class EqClassEqualDepthV4NoSwizzle(EqClassEqualDepthV4):
                                 continue
 
 
-                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 3)
+
+                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 4)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
 
@@ -148,6 +154,11 @@ class EqClassEqualDepthV4NoSwizzle(EqClassEqualDepthV4):
 
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
+
+                            if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 3:
+                                continue
+
+
 
 
                             if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):

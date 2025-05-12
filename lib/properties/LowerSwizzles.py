@@ -32,6 +32,7 @@ class LowerSwizzles(EqClassEqualDepthV4):
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = 1, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth = start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list)
         self.name = "LowerSwizzles"
         self.lowered_swizzles_ctx = []
+        self.ensure_structure = False
 
 
 
@@ -202,6 +203,8 @@ class LowerSwizzles(EqClassEqualDepthV4):
                     src_expressions = []
 
                     for ctx in dsl_inst.contexts:
+                        if ctx.name != "hvx_swizzle_2":
+                            continue
                         if not ctx.out_vectsize is None:
                             src_expressions.append(create_context_expr_with_fresh_regs(ctx))
 
@@ -252,6 +255,9 @@ class LowerSwizzles(EqClassEqualDepthV4):
 
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
+
+
+
 
 
 

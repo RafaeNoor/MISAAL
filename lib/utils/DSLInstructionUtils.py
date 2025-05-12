@@ -42,7 +42,7 @@ HYDRIDE_HEADER =  """
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
         (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
-        (current-bitwidth 32)
+        (current-bitwidth 16)
         """
 
 
@@ -147,7 +147,7 @@ def execute_racket_file(statements):
             write_line(statement)
 
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
-    TIMEOUT = int(5* 60) # 20 mins
+    TIMEOUT = int(3 * 60) # 20 mins
     result = None
 
     USE_P_OPEN = True
@@ -1062,6 +1062,9 @@ def get_expr_intermediate_sizes(dsl_expr):
     return sizes
 
 def get_expr_depth(dsl_expr):
+    if isinstance(dsl_expr, Context) and dsl_expr.extensions != None and 'integer_arith' in dsl_expr.extensions:
+        return 0
+
 
     if isinstance(dsl_expr, Context):
         return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
@@ -1371,3 +1374,18 @@ def bind_expr_to_reg(ctx, index, value):
             ctx.context_args[idx] = bind_expr_to_reg(arg, index, value)
 
     return ctx
+
+
+def count_num_instructions(ctx):
+    if not isinstance(ctx, Context):
+        return 0
+
+    count = 0
+    for arg in ctx.context_args:
+        count += count_num_instructions(arg)
+
+    return 1 + count
+
+
+
+

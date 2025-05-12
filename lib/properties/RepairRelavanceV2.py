@@ -76,7 +76,7 @@ class RepairRelavanceV2(RepairRelavance):
         relavent_dsls = []
         count = 0
 
-        FAST = True
+        FAST = False #True
         src_bv_ops = src_ctx.get_bv_ops()
 
         for dsl_inst in self.repair_dsl_list:
