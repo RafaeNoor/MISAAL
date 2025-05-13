@@ -1,10 +1,11 @@
 from abc import abstractclassmethod, abstractmethod, ABC
 import datetime
+import traceback
 import os
 
 class MISAAL_PASS(ABC):
-    
-    def __init__(self, pass_name, pass_description, parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", 
+
+    def __init__(self, pass_name, pass_description, parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/",
                  log_file = "/tmp/log.txt", stop_after_exception = True, src_dsl_list = None, target_dsl_list = None,
                  src_synth_desc = None, target_synth_desc = None):
         super().__init__()
@@ -17,13 +18,14 @@ class MISAAL_PASS(ABC):
         self.working_directory = os.path.join(self.working_directory_base, self.pass_name)
         if not os.path.exists(self.working_directory):
             os.makedirs(self.working_directory)
+
         self.log_file = log_file
         self.stop_after_exception = stop_after_exception
         self.src_dsl_list = src_dsl_list
-        self.target_dsl_list = target_dsl_list  
+        self.target_dsl_list = target_dsl_list
         self.src_synth_desc = src_synth_desc
         self.target_synth_desc = target_synth_desc
-        
+
         self.passes_results = {}
 
 
@@ -38,11 +40,15 @@ class MISAAL_PASS(ABC):
     def get_pass_name(cls):
         return ""
 
+    @abstractclassmethod
+    def get_pass_description(cls):
+        return ""
+
     def log(self, *texts):
         concatenated = " ".join([str(t) for t in texts])
         with open(self.log_file, "a+") as LogFile:
             LogFile.write(concatenated + "\n")
-            
+
 
     def log_init(self):
         now = datetime.datetime.now()
@@ -50,13 +56,13 @@ class MISAAL_PASS(ABC):
 
         prefix = f"[ {now}, {self.pass_name} ]"
         header = f"{prefix} Begin"
-        parallel_desc = f"{prefix} Parallelism Enabled:\t{self.parallelize}, POOL:\t{self.pool},Batch:\t{self.batch_size}"
+        parallel_desc = f"{prefix} Parallelism Enabled:\t{self.parallelize}, POOL:\t{self.pool}, Batch:\t{self.batch_size}"
         working_directory = f"{prefix} Working Directory: {self.working_directory}"
 
         self.log(header)
         self.log(parallel_desc)
         self.log(working_directory)
-    
+
     @abstractmethod
     def get_results_summary(self):
         return ""
@@ -64,8 +70,9 @@ class MISAAL_PASS(ABC):
     @abstractmethod
     def get_pass_results(self):
         return None
-    
 
+
+    @classmethod
     def pass_depends_on(self):
         """
         Defines the pass dependencies for the current pass so that it can use the results of other passes.
@@ -89,24 +96,29 @@ class MISAAL_PASS(ABC):
         self.end_time = now
         prefix = f"[ {now}, {self.pass_name} ]"
         elapsed_time = self.end_time - self.start_time
-        failed = f"{prefix} Ended with excpetion, elapsed time:\t {elapsed_time}"
+        failed = f"{prefix} Ended with exception, elapsed time:\t {elapsed_time}"
         error_desc = f"{prefix} Exception:\t{exception_}"
+        trace_desc = traceback.format_exc()
         self.log(failed)
         self.log(error_desc)
-    
+        self.log(trace_desc)
+
 
     @abstractmethod
     def execute(self):
         pass
 
 class MISAAL_PASS_PIPELINE:
-    def __init__(self, passes: list[MISAAL_PASS], parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", 
-                 log_file = "/tmp/log.txt", src_dsl_list = None, target_dsl_list = None, src_synth_desc = None, target_synth_desc = None):
+    def __init__(self, passes, parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/",
+                 log_file = "/tmp/log.txt", src_dsl_list = None, target_dsl_list = None, src_synth_desc = None, target_synth_desc = None, stop_after_exception = True):
         self.passes = passes
         self.parallelize = parallelize
+        self.stop_after_exception = stop_after_exception
         self.pool = pool
         self.batch_size = batch_size
         self.working_directory = working_directory
+        if not os.path.exists(self.working_directory):
+            os.makedirs(self.working_directory)
         self.log_file = log_file
         self.src_dsl_list = src_dsl_list
         self.target_dsl_list = target_dsl_list
@@ -115,8 +127,22 @@ class MISAAL_PASS_PIPELINE:
 
         self.passes_results = {}
 
-
+        self.check_env()
         self.check_pipeline_valid()
+
+    def check_env(self):
+        env_variables = ["MISAAL_SRC", "HYDRIDE_ROOT", "PYTHONPATH"]
+        for var in env_variables:
+            if var not in os.environ:
+                raise Exception(f"Environment variable {var} is not set.")
+
+        python_paths = ["code-synthesizer", "codegen-generator"]
+
+        PYTHON_PATH = os.environ["PYTHONPATH"]
+        for python_path in python_paths:
+            if python_path not in PYTHON_PATH:
+                raise Exception(f"Python path {python_path} is not in PYTHONPATH.")
+
 
     def check_pipeline_valid(self):
         """
@@ -128,40 +154,46 @@ class MISAAL_PASS_PIPELINE:
             for dep in dependencies:
                 if dep.get_pass_name() not in pass_names[:i]:
                     raise Exception(f"Pass {pass_.get_pass_name()} depends on {dep.get_pass_name()} but it is not in the pipeline.")
-        return True 
-    
+        return True
+
     def log(self, *texts):
         concatenated = " ".join([str(t) for t in texts])
         with open(self.log_file, "a+") as LogFile:
             LogFile.write(concatenated + "\n")
 
     def execute_pass_pipeline(self):
+
+        # Create the log file
+        with open(self.log_file, "w+") as InitLog:
+            pass
+
         self.log("==========================")
         self.log("Executing Pass Pipeline")
         self.log("==========================")
         for idx, pass_ in enumerate(self.passes):
             self.log(f"{idx}. Executing pass: {pass_.get_pass_name()}")
-            self.log(f"{idx}. Description: {pass_.pass_description}")
-            
+            self.log(f"{idx}. Description: {pass_.get_pass_description()}")
+        self.log("==========================")
         for pass_ in self.passes:
-            pass_instance = pass_(parallelize=self.parallelize, pool=self.pool, batch_size=self.batch_size, working_directory=self.working_directory, log_file=self.log_file, 
-                                  stop_after_exception=pass_.stop_after_exception, src_dsl_list=self.src_dsl_list, target_dsl_list=self.target_dsl_list,
-                                  src_synth_desc=self.src_synth_desc, target_synth_desc=self.target_synth_desc)
-            
+            pass_instance = pass_(parallelize=self.parallelize, pool=self.pool, batch_size=self.batch_size, working_directory=self.working_directory,
+                                  log_file=self.log_file, stop_after_exception=self.stop_after_exception, src_dsl_list=self.src_dsl_list,
+                                  target_dsl_list=self.target_dsl_list, src_synth_desc=self.src_synth_desc, target_synth_desc=self.target_synth_desc)
+
+
             # Set the results of the dependencies for the current pass
             for dep in pass_.pass_depends_on():
                 dep_results = self.passes_results[dep.get_pass_name()]
                 pass_instance.set_dependency_results(dep.get_pass_name(), dep_results)
-            
+
             pass_instance.log_init()
             try:
                 pass_instance.execute()
             except Exception as e:
                 pass_instance.log_exception(e)
                 if pass_instance.stop_after_exception:
-                    break
+                    return False
             finally:
                 pass_instance.log_end()
                 self.passes_results[pass_.get_pass_name()] = pass_instance.get_pass_results()
 
-
+        return True

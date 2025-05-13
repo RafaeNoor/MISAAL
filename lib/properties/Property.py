@@ -18,7 +18,6 @@ import pwd
 from subprocess import check_output
 from utils.NotificationUtil import send_email
 import copy
-
 import random
 
 class Property:
@@ -26,7 +25,8 @@ class Property:
 
     """
 
-    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True, is_candidate_generator = False, keep_temp_files = False, memo_path = None):
+    def __init__(self, name = "Property", dsl_list = [], synth_desc = None, parallel = True, is_candidate_generator = False, keep_temp_files = False, memo_path = None,
+                 work_dir = None):
         """Class constructor for base class
 
         Args:
@@ -57,6 +57,7 @@ class Property:
         self.candidates = []
         self.support_dsl = default_structs
         self.is_candidate_generator = is_candidate_generator
+        self.work_dir = work_dir
 
     def set_candidates(self, candidates):
         self.candidates = candidates
@@ -67,6 +68,16 @@ class Property:
     def generate_candidates(self):
         raise NotImplementedError()
 
+    def set_work_dir(self, work_dir):
+        """Set the working directory for the pass
+
+        Args:
+            work_dir (str): _description_
+        """
+        self.work_dir = work_dir
+        if not os.path.exists(self.work_dir):
+            os.makedirs(self.work_dir)
+        
 
     def get_property_desc(self):
         """Abstract method for returning string which describes the property
@@ -216,7 +227,10 @@ class Property:
                 print("Completed compiling pool...")
                 self.run_on_batch_completion()
 
-                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                intermediate_results_path = self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py"
+                if self.work_dir is not None:
+                    intermediate_results_path = os.path.join(self.work_dir, intermediate_results_path)
+                with open(intermediate_results_path, "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
                 cleanup_tmp_files()
@@ -229,8 +243,10 @@ class Property:
                     worker(candidate)
 
                 self.run_on_batch_completion()
-
-                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                intermediate_results_path = self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py"
+                if self.work_dir is not None:
+                    intermediate_results_path = os.path.join(self.work_dir, intermediate_results_path)
+                with open(intermediate_results_path, "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
                 cleanup_tmp_files()
@@ -263,9 +279,12 @@ class Property:
                 self.run_on_batch_completion()
 
                 print("Property", self.name, "holds on", candidate_count,  " candidates ...")
+                
+                intermediate_results_path = self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py"
+                if self.work_dir is not None:
+                    intermediate_results_path = os.path.join(self.work_dir, intermediate_results_path)
 
-
-                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                with open(intermediate_results_path, "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
 
@@ -289,8 +308,10 @@ class Property:
                     break
 
                 self.run_on_batch_completion()
-
-                with open(self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py", "w+") as WriteFile:
+                intermediate_results_path = self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py"
+                if self.work_dir is not None:
+                    intermediate_results_path = os.path.join(self.work_dir, intermediate_results_path)
+                with open(intermediate_results_path, "w+") as WriteFile:
                     WriteFile.write(json.dumps(property_map, indent = 4))
 
                 if self.should_notify(num_processed):
@@ -314,8 +335,10 @@ class Property:
         self.run_on_completion(property_map)
         end_time = time.time()
         elapsed_time = end_time - start_time
-
-        with open("property_time_log.txt","a+") as LogFile:
+        time_log_path = "property_time_log.txt"
+        if self.work_dir is not None:
+            time_log_path = os.path.join(self.work_dir, time_log_path)
+        with open(time_log_path,"a+") as LogFile:
             LogFile.write("{} : {} seconds\n".format(self.name, elapsed_time))
 
 
