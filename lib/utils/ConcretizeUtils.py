@@ -36,6 +36,10 @@ def get_valid_concretization_helper(ref_expr, output_size, dsl_list):
         return [Reg(ref_expr.index, ref_expr.precision, output_size, signed = ref_expr.signed)]
 
 
+    if isinstance(ref_expr, ConstBitVector):
+        #print(ref_expr.get_rkt_value())
+        return [ConstBitVector(ref_expr.value, output_size, name = ref_expr.name)]
+
     assert isinstance(ref_expr, Context)
 
     dsl_inst = get_dsl_inst_for_ctx(ref_expr, dsl_list)
@@ -292,6 +296,7 @@ def materialize_expression_template(valid_template):
     # Else context
 
     context_copy = copy.deepcopy(expr)
+    print(context_copy.name)
 
     argument_settings = valid_template[1]
 

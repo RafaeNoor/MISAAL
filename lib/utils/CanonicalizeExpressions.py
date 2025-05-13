@@ -186,35 +186,44 @@ class CanonicalizeExpression:
 
 
 
-        elif len(args) == 3 and self.is_expr_commutable(expr):
+        elif len(args) >= 3 and self.is_expr_commutable(expr):
             # Count number of nodes on both sides and then set accordingly. Recursively
             # canoncialize operands
             commutable_indices = self.get_commutable_indices(expr)
-            lhs_idx, lhs_term = args[commutable_indices[0]]
-            rhs_idx, rhs_term = args[commutable_indices[1]]
-            num_lhs_terms = self.count_terms(lhs_term)
-            num_rhs_terms = self.count_terms(rhs_term)
 
-            self.canonicalize_helper(lhs_term)
-            self.canonicalize_helper(rhs_term)
+            commutable_ctxs = None
 
-            lhs_name = ""
-            if isinstance(lhs_term, Context):
-                lhs_name = lhs_term.name
+            if isinstance(commutable_indices[0], list):
+                commutable_ctxs = commutable_indices
+            else:
+                commutable_ctxs = [commutable_indices]
 
-            rhs_name = ""
-            if isinstance(rhs_term, Context):
-                rhs_name = rhs_term.name
+            for comm_ctx in commutable_ctxs:
+                lhs_idx, lhs_term = args[comm_ctx[0]]
+                rhs_idx, rhs_term = args[comm_ctx[1]]
+                num_lhs_terms = self.count_terms(lhs_term)
+                num_rhs_terms = self.count_terms(rhs_term)
 
-            if num_rhs_terms > num_lhs_terms:
-                # Swap terms
-                expr.context_args[rhs_idx] = lhs_term
-                expr.context_args[lhs_idx] = rhs_term
-            elif num_rhs_terms == num_lhs_terms and len(rhs_name) > len(lhs_name):
-                # Use context name to break tie
-                # Swap terms
-                expr.context_args[rhs_idx] = lhs_term
-                expr.context_args[lhs_idx] = rhs_term
+                self.canonicalize_helper(lhs_term)
+                self.canonicalize_helper(rhs_term)
+
+                lhs_name = ""
+                if isinstance(lhs_term, Context):
+                    lhs_name = lhs_term.name
+
+                rhs_name = ""
+                if isinstance(rhs_term, Context):
+                    rhs_name = rhs_term.name
+
+                if num_rhs_terms > num_lhs_terms:
+                    # Swap terms
+                    expr.context_args[rhs_idx] = lhs_term
+                    expr.context_args[lhs_idx] = rhs_term
+                elif num_rhs_terms == num_lhs_terms and len(rhs_name) > len(lhs_name):
+                    # Use context name to break tie
+                    # Swap terms
+                    expr.context_args[rhs_idx] = lhs_term
+                    expr.context_args[lhs_idx] = rhs_term
 
 
 

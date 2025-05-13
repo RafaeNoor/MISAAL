@@ -40,6 +40,7 @@ def get_matching_context(nested_expr, dsl_list):
     # We iterate over the numeric arguments and at each step update matching_context
     # indices until we have a matching context
 
+    #print("searching for dsl_name", dsl_name)
     matching_context_indices = range(len(matching_dsl_inst.contexts))
 
     num_reg_like_arguments = 0

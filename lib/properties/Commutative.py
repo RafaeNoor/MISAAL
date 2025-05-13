@@ -2,6 +2,7 @@ from properties.Property import *
 from  utils.DSLInstructionUtils import *
 import copy
 from  common.Types import *
+import json
 
 class Commutative(Property):
     """Class for inferring the commutative property on DSL Instructions. This property
@@ -177,7 +178,7 @@ class Commutative(Property):
 
 
 
-        property_holds = check_if_contexts_equal(commute_expr_0, commute_expr_1, dsl_inst, dsl_inst, vector_args, self.synth_desc)
+        property_holds = check_if_contexts_equal(commute_expr_0, commute_expr_1, dsl_inst, dsl_inst, vector_args, self.synth_desc, dsl_list = [dsl_inst])
 
 
         if property_holds.returncode == 0:
@@ -231,6 +232,28 @@ class Commutative(Property):
                 egg_rules.append(rule)
 
         return egg_rules
+
+
+    def run_on_completion(self, pmap):
+        commutative_map = {}
+        for key, props in pmap.items():
+            prop = props[0]['property']
+            candidate = prop['candidate']
+            if candidate not in commutative_map:
+                commutative_map[candidate] = []
+            commutative_map[candidate].append(prop['indices'])
+
+
+        with open(f"commutative_map_{self.synth_desc.target_name}.json", "w+") as OutFile:
+            OutFile.write(json.dumps(commutative_map, indent = 2))
+
+
+
+
+
+
+
+
 
 
 

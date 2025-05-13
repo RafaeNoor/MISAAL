@@ -311,7 +311,7 @@ class Property:
             self.notify(count,candidate_count, start_time)
 
         print(property_map)
-        self.run_on_completion()
+        self.run_on_completion(property_map)
         end_time = time.time()
         elapsed_time = end_time - start_time
 
@@ -464,8 +464,9 @@ class Property:
             names += self.get_nested_contexts_dsl_name(arg)
         return list(set(names))
 
-    def run_on_completion(self):
+    def run_on_completion(self, pmap):
         return
+
 
 
     def run_on_batch_completion(self):
