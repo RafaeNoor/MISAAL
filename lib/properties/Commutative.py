@@ -247,6 +247,8 @@ class Commutative(Property):
         with open(f"commutative_map_{self.synth_desc.target_name}.json", "w+") as OutFile:
             OutFile.write(json.dumps(commutative_map, indent = 2))
 
+        return commutative_map
+
 
 
 

@@ -4,7 +4,9 @@ import os
 
 class MISAAL_PASS(ABC):
     
-    def __init__(self, pass_name, pass_description, parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", log_file = "/tmp/log.txt", stop_after_exception = True, src_dsl_list = None, target_dsl_list = None):
+    def __init__(self, pass_name, pass_description, parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", 
+                 log_file = "/tmp/log.txt", stop_after_exception = True, src_dsl_list = None, target_dsl_list = None,
+                 src_synth_desc = None, target_synth_desc = None):
         super().__init__()
         self.pass_name = pass_name
         self.pass_description = pass_description
@@ -19,6 +21,8 @@ class MISAAL_PASS(ABC):
         self.stop_after_exception = stop_after_exception
         self.src_dsl_list = src_dsl_list
         self.target_dsl_list = target_dsl_list  
+        self.src_synth_desc = src_synth_desc
+        self.target_synth_desc = target_synth_desc
         
         self.passes_results = {}
 
@@ -96,7 +100,8 @@ class MISAAL_PASS(ABC):
         pass
 
 class MISAAL_PASS_PIPELINE:
-    def __init__(self, passes: list[MISAAL_PASS], parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", log_file = "/tmp/log.txt", src_dsl_list = None, target_dsl_list = None):
+    def __init__(self, passes: list[MISAAL_PASS], parallelize = True, pool = 4, batch_size = 1024, working_directory = "/tmp/", 
+                 log_file = "/tmp/log.txt", src_dsl_list = None, target_dsl_list = None, src_synth_desc = None, target_synth_desc = None):
         self.passes = passes
         self.parallelize = parallelize
         self.pool = pool
@@ -105,6 +110,8 @@ class MISAAL_PASS_PIPELINE:
         self.log_file = log_file
         self.src_dsl_list = src_dsl_list
         self.target_dsl_list = target_dsl_list
+        self.src_synth_desc = src_synth_desc
+        self.target_synth_desc = target_synth_desc
 
         self.passes_results = {}
 
@@ -123,9 +130,23 @@ class MISAAL_PASS_PIPELINE:
                     raise Exception(f"Pass {pass_.get_pass_name()} depends on {dep.get_pass_name()} but it is not in the pipeline.")
         return True 
     
+    def log(self, *texts):
+        concatenated = " ".join([str(t) for t in texts])
+        with open(self.log_file, "a+") as LogFile:
+            LogFile.write(concatenated + "\n")
+
     def execute_pass_pipeline(self):
+        self.log("==========================")
+        self.log("Executing Pass Pipeline")
+        self.log("==========================")
+        for idx, pass_ in enumerate(self.passes):
+            self.log(f"{idx}. Executing pass: {pass_.get_pass_name()}")
+            self.log(f"{idx}. Description: {pass_.pass_description}")
+            
         for pass_ in self.passes:
-            pass_instance = pass_(parallelize=self.parallelize, pool=self.pool, batch_size=self.batch_size, working_directory=self.working_directory, log_file=self.log_file, stop_after_exception=pass_.stop_after_exception, src_dsl_list=self.src_dsl_list, target_dsl_list=self.target_dsl_list)
+            pass_instance = pass_(parallelize=self.parallelize, pool=self.pool, batch_size=self.batch_size, working_directory=self.working_directory, log_file=self.log_file, 
+                                  stop_after_exception=pass_.stop_after_exception, src_dsl_list=self.src_dsl_list, target_dsl_list=self.target_dsl_list,
+                                  src_synth_desc=self.src_synth_desc, target_synth_desc=self.target_synth_desc)
             
             # Set the results of the dependencies for the current pass
             for dep in pass_.pass_depends_on():
