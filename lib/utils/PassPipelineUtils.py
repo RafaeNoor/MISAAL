@@ -161,6 +161,12 @@ class MISAAL_PASS_PIPELINE:
         with open(self.log_file, "a+") as LogFile:
             LogFile.write(concatenated + "\n")
 
+
+    def get_dsl_list_summary(self, dsl_list):
+        num_dsl_inst = len(dsl_list)
+        num_ctxs = sum([len(dsl_inst.contexts) for dsl_inst in dsl_list])
+        return f"Number of DSLInstructions: {num_dsl_inst}, Number of Contexts: {num_ctxs}"
+
     def execute_pass_pipeline(self):
 
         # Create the log file
@@ -174,6 +180,18 @@ class MISAAL_PASS_PIPELINE:
             self.log(f"{idx}. Executing pass: {pass_.get_pass_name()}")
             self.log(f"{idx}. Description: {pass_.get_pass_description()}")
         self.log("==========================")
+
+        if self.src_synth_desc is not None:
+            self.log(f"Source Synthesizer Description: {self.src_synth_desc.target_name}")
+            src_dsl_list_summary = self.get_dsl_list_summary(self.src_dsl_list)
+            self.log(f"Source DSL List: {src_dsl_list_summary}")
+
+        if self.target_synth_desc is not None:  
+            self.log(f"Target Synthesizer Description: {self.target_synth_desc.target_name}")
+            target_dsl_list_summary = self.get_dsl_list_summary(self.target_dsl_list)
+            self.log(f"Target DSL List: {target_dsl_list_summary}")
+        self.log("==========================")
+        self.log("Executing Passes")
         for pass_ in self.passes:
             pass_instance = pass_(parallelize=self.parallelize, pool=self.pool, batch_size=self.batch_size, working_directory=self.working_directory,
                                   log_file=self.log_file, stop_after_exception=self.stop_after_exception, src_dsl_list=self.src_dsl_list,

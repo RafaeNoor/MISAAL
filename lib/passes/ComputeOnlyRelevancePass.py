@@ -19,12 +19,13 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
         self.prop_result = {}
 
         self.repair_dsl_list = parse_dict(repair_semantics)
+        self.repair_map = {}
     
     @classmethod
     def get_pass_name(self):
         return "ComputeOnlyRelevancePass"
     @classmethod
-    def get_pass_desc(self):
+    def get_pass_description(self):
         return "Check if two DSLInstructions share similar computational semantics independently of data-movements"
     
     @classmethod
@@ -33,6 +34,13 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
         Defines the pass dependencies for the current pass so that it can use the results of other passes.
         """
         return [CommutativePass]
+    
+    def get_pass_results(self):
+        return self.repair_map
+    
+    def get_results_summary(self):
+        num_inst_repair = len([k for k in self.repair_map.keys()])
+        return f"Number of {self.target_synth_desc.target_name} equivalence classes which have are semantically related to {self.src_synth_desc.target_name}: {num_inst_repair}"
     
     def merge_dict(self, d1, d2):
         merged = {key: list(set(d1.get(key, []) + d2.get(key, []))) for key in set(d1) | set(d2)}
@@ -120,6 +128,7 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
         self.log(f"{prefix} All repairs completed, Generating repair maps")
         repair_prop_results = [self.prop_result[RepairInstance.name] for RepairInstance in RepairInstances]
         repair_map = self.generate_repair_maps(*repair_prop_results)
+        self.repair_map = repair_map
 
         repair_map_path = os.path.join(self.working_directory, "repair_map.json")
         with open(repair_map_path, "w") as f:
