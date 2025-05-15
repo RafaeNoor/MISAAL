@@ -26,7 +26,7 @@ if __name__ == "__main__":
     test_working_dir = os.path.join(CUR_DIR, "work")
     pass_pipeline = MISAAL_PASS_PIPELINE([CommutativePass, ComputeOnlyRelevancePass], working_directory=test_working_dir, 
                                          log_file=os.path.join(test_working_dir, "log.txt"),  
-                                         src_dsl_list=halide_add_insts, src_synth_desc=HALIDE_FOLDED_SYNTH_DESC, parallelize = True,
+                                         src_dsl_list=halide_add_insts, src_synth_desc=HALIDE_FOLDED_SYNTH_DESC, parallelize = False,
                                          pool=8, batch_size=1024,
                                          target_dsl_list=x86_add_insts, target_synth_desc=X86_SYNTH_DESC, stop_after_exception = True)
 

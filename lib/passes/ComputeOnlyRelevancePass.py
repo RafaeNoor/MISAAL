@@ -11,13 +11,13 @@ import json
 import os
 
 class ComputeOnlyRelevancePass(MISAAL_PASS):
-    def __init__(self, parallelize: bool = True, pool: int = 4, batch_size: int = 1024, working_directory: str = "/tmp/", log_file: str = "/tmp/log.txt", src_dsl_list: list = None, target_dsl_list: list = None, src_synth_desc: str = None, target_synth_desc: str = None, stop_after_exception = True):
+    def __init__(self, parallelize: bool = True, pool: int = 4, batch_size: int = 1024, working_directory: str = "/tmp/", log_file: str = "/tmp/log.txt", src_dsl_list: list = None, target_dsl_list: list = None, src_synth_desc: str = None, target_synth_desc: str = None, stop_after_exception = True, post_process = True):
         pass_name = "ComputeOnlyRelevancePass"
         pass_desc = "Check if two DSLInstructions share similar computational semantics independently of data-movements"
         super().__init__(pass_name, pass_desc, parallelize=parallelize, pool=pool, batch_size=batch_size, working_directory=working_directory, log_file=log_file,
                          src_dsl_list=src_dsl_list, target_dsl_list=target_dsl_list, src_synth_desc=src_synth_desc, target_synth_desc=target_synth_desc, stop_after_exception = stop_after_exception)
         self.prop_result = {}
-
+        self.post_process = post_process
         self.repair_dsl_list = parse_dict(repair_semantics)
         self.repair_map = {}
     
@@ -43,7 +43,7 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
         return f"Number of {self.target_synth_desc.target_name} equivalence classes which have are semantically related to {self.src_synth_desc.target_name}: {num_inst_repair}"
     
     def merge_dict(self, d1, d2):
-        merged = {key: list(set(d1.get(key, []) + d2.get(key, []))) for key in set(d1) | set(d2)}
+        merged = {key: list(d1.get(key, []) + d2.get(key, [])) for key in set(d1.keys()) | set(d2.keys())}
         return merged
 
 
@@ -104,30 +104,34 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
             RepairInstance.BATCH_SIZE = self.batch_size
 
 
-            start_time = datetime.datetime.now()
+            prefix, result = self.invoke_repair_instance(RepairInstance)
 
-            prefix = f"[ {start_time}, {RepairInstance.name} ]"
-            self.log(f"{prefix} Start")
+        # Now we merge the results from all the repair instances
+        repair_prop_results = {}
+        for RepairInstance in RepairInstances:
+            repair_prop_results = self.merge_dict(repair_prop_results, self.prop_result[RepairInstance.name])
+        self.log(f"{prefix} Merged Results Created!")
+        results_path = os.path.join(self.working_directory, f"combined_prop_results.json")
+        with open(results_path, "w+") as f:
+            json.dump(repair_prop_results, f)
+        self.log(f"{prefix} Merged Results saved to {results_path}")
 
-            repair_result = RepairInstance.get_property()
-            self.prop_result[RepairInstance.name] = repair_result
-            
-            end_time = datetime.datetime.now()
-            prefix = f"[ {end_time}, {RepairInstance.name} ]"
-            
-            elapsed_time = end_time - start_time
-            self.log(f"{prefix} End, Elapsed Time: {elapsed_time}")
+        # Now optionally run the post-process to prune out redundant relevances from identities
+        if self.post_process:
+            RepairInstance = RepairRelavancePostProcess(input_dsl_list = self.target_dsl_list, 
+                                           output_dsl_list= self.src_dsl_list, repair_dsl_list=self.repair_dsl_list, target = self.target_synth_desc.target_name, memo_path = results_path)
+            RepairInstance.set_work_dir(self.working_directory)
+            RepairInstance.parallel = self.parallelize
+            RepairInstance.POOL_SIZE = self.pool
+            RepairInstance.BATCH_SIZE = self.batch_size
+            prefix, repair_prop_results = self.invoke_repair_instance(RepairInstance)
 
-            results_path = os.path.join(self.working_directory, f"{RepairInstance.name}_results.json")
-            with open(results_path, "w") as f:
-                json.dump(repair_result, f)
-            self.log(f"{prefix} Results saved to {results_path}")
+
 
         now = datetime.datetime.now()
         prefix = f"[ {now}, {self.pass_name} ]"
         self.log(f"{prefix} All repairs completed, Generating repair maps")
-        repair_prop_results = [self.prop_result[RepairInstance.name] for RepairInstance in RepairInstances]
-        repair_map = self.generate_repair_maps(*repair_prop_results)
+        repair_map = self.generate_repair_maps(repair_prop_results)
         self.repair_map = repair_map
 
         repair_map_path = os.path.join(self.working_directory, "repair_map.json")
@@ -136,3 +140,24 @@ class ComputeOnlyRelevancePass(MISAAL_PASS):
         self.log(f"{prefix} Repair map saved to {repair_map_path}")
 
         return repair_map
+
+    def invoke_repair_instance(self, RepairInstance):
+        start_time = datetime.datetime.now()
+
+        prefix = f"[ {start_time}, {RepairInstance.name} ]"
+        self.log(f"{prefix} Start")
+
+        repair_result = RepairInstance.get_property()
+        self.prop_result[RepairInstance.name] = repair_result
+            
+        end_time = datetime.datetime.now()
+        prefix = f"[ {end_time}, {RepairInstance.name} ]"
+            
+        elapsed_time = end_time - start_time
+        self.log(f"{prefix} End, Elapsed Time: {elapsed_time}")
+
+        results_path = os.path.join(self.working_directory, f"{RepairInstance.name}_results.json")
+        with open(results_path, "w") as f:
+            json.dump(repair_result, f)
+        self.log(f"{prefix} Results saved to {results_path}")
+        return prefix, repair_result
