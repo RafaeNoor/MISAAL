@@ -12,8 +12,8 @@ LLVM_BRANCH="llvmorg-14.0.5"
 LLVM_SRC=$HALIDE_ROOT/llvm-project/llvm
 
 # Install options
-NUM_THREADS=64
-NUM_THREADS_INPUT=64
+NUM_THREADS=32
+NUM_THREADS_INPUT=32
 
 echo "#############################################################################"
 # read -p "Number of threads: " NUM_THREADS_INPUT
