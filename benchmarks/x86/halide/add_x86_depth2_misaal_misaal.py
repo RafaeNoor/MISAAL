@@ -19,10 +19,10 @@ misaal_input = halide_dsl_list
 inst_dict = parse_dict_with_bounded(x86_semantics)
 swizzle_dict = parse_dict_with_bounded(x86_swizzles)
 misaal_output = inst_dict + swizzle_dict
-so_path = "/home/llvm-lab/MISAAL-test/MISAAL/Hydride/codegen-generator/tools/low-level-codegen/build//libx86LegalizerAllArgs.so"
+so_path = "/home/llvm-lab/MISAAL-test/submodule-test-MISAAL/Hydride/codegen-generator/tools/low-level-codegen/build//libx86LegalizerAllArgs.so"
 llvm_flags = ["-x86-hydride-legalize"]
-intrin = "/home/llvm-lab/MISAAL-test/MISAAL/Hydride/codegen-generator/tools/low-level-codegen/wrappers/x86_wrappers.c.ll"
-HYDRIDE_ROOT = "/home/llvm-lab/MISAAL-test/MISAAL/Hydride"
+intrin = "/home/llvm-lab/MISAAL-test/submodule-test-MISAAL/Hydride/codegen-generator/tools/low-level-codegen/wrappers/x86_wrappers.c.ll"
+HYDRIDE_ROOT = "/home/llvm-lab/MISAAL-test/submodule-test-MISAAL/Hydride"
 # Defining Tests 
 tests = []
 test_0_name = "hydride.node.add_x86_depth2_misaal.0"

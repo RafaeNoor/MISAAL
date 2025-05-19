@@ -1,8 +1,8 @@
 HALIDE_ROOT=$(pwd)
 HALIDE_DIR=$HALIDE_ROOT/distrib
 HALIDE_DISTRIB=$HALIDE_DIR
-BUILD_DIR=$HALIDE_ROOT/llvm-build
-LLVM_ROOT=$HALIDE_ROOT/llvm-build
+BUILD_DIR=$HALIDE_ROOT/llvm-build/
+LLVM_ROOT=$HALIDE_ROOT/llvm-build/
 
 LLVM_URL="https://github.com/llvm/llvm-project.git"
 LLVM_BRANCH="llvmorg-14.0.5"

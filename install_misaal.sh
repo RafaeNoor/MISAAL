@@ -7,9 +7,10 @@ export HYDRIDE_DIR="${MISAAL_ROOT_DIR}/Hydride"
 
 if [ ! -d "$HYDRIDE_DIR" ]; then
   echo "Cloning Hydride repository..."
-  git clone -b bitserial https://github.com/akothen/Hydride.git
+  #git clone -b bitserial https://github.com/akothen/Hydride.git
+  git submodule update Hydride
 else
-  echo "Hydride directory already exists. Skipping clone."
+  echo "Hydride directory exists."
 fi
 cd $HYDRIDE_DIR
 if [ -f setup.sh ]; then
@@ -70,8 +71,14 @@ echo ""
 echo "Building Other Dependencies..."
 
 # Egglog
+export EGGLOG_DIR="${MISAAL_ROOT_DIR}/egglog"
 echo "Building Egglog..."
-git clone https://github.com/egraphs-good/egglog.git
+if [ ! -d "$EGGLOG_DIR" ]; then
+  echo "Cloning egglog repository..."
+  git submodule update egglog
+else
+  echo "Egglog directory exists."
+fi
 cd egglog/
 cargo install --locked cargo-nextest@0.9.85
 cargo build

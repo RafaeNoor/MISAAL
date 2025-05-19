@@ -1,5 +1,18 @@
 # MISAAL
 
+# Install
+
+```bash
+git clone --recurse-submodules git@github.com:RafaeNoor/MISAAL.git
+```
+
+``` Build legalizers (have LLVM 12 available on system for now)
+cd Hydride/codegen-generator/tools/low-level-codegen
+mkdir build && cd build
+cmake ..
+make
+```
+
 # Build from script
 
 ```bash
