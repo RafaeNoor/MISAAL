@@ -1,10 +1,11 @@
 from utils.PassPipelineUtils import MISAAL_PASS
 from properties.EqClassEqualDepthV4 import EqClassEqualDepthV4
+from properties.EnumeratePattern import EnumeratePattern
 import datetime
 import json
 import os
 
-class EqClassEqualDepthV4Pass(MISAAL_PASS):
+class AutoLLVMEnumerate(MISAAL_PASS):
 
     def __init__(self, parallelize: bool = True, pool: int = 4, batch_size: int = 1024, 
                  working_directory: str = "/tmp/", log_file: str = "/tmp/log.txt", 
@@ -16,8 +17,8 @@ class EqClassEqualDepthV4Pass(MISAAL_PASS):
                  bidirectional_test: bool = False, filter_list: list = None,
                  ensure_structure: bool = True, forward_map_path: str = None,
                  swizzle_map_path: str = None, commutative_map_path: str = None):
-        pass_name = "EqClassEqualDepthV4Pass"
-        pass_desc = "This pass identifies equivalent expressions up to a specified depth using EqClassEqualDepthV4"
+        pass_name = "AutoLLVMEnumerate"
+        pass_desc = "This pass identifies equivalent expressions up to a specified depth using EqClassEqualDepthV4 and then enumerates patterns"
         super().__init__(pass_name, pass_desc, parallelize=parallelize, pool=pool, 
                         batch_size=batch_size, working_directory=working_directory, 
                         log_file=log_file, src_dsl_list=src_dsl_list, 
@@ -41,15 +42,16 @@ class EqClassEqualDepthV4Pass(MISAAL_PASS):
 
     @classmethod
     def get_pass_name(cls):
-        return "EqClassEqualDepthV4Pass"
+        return "AutoLLVMEnumerate"
 
     @classmethod
     def get_pass_description(cls):
-        return "This pass identifies equivalent expressions up to a specified depth using EqClassEqualDepthV4"
+        return "This pass identifies equivalent expressions up to a specified depth using EqClassEqualDepthV4 and then enumerates patterns"
 
     def get_results_summary(self):
-        num_eq_classes = len(self.prop_result)
-        return f"Number of equivalence classes found: {num_eq_classes}"
+
+        num_patterns = len(self.prop_result)
+        return f"Number of enumerated patterns: {num_patterns}"
 
     def get_pass_results(self):
         return self.prop_result
@@ -72,6 +74,7 @@ class EqClassEqualDepthV4Pass(MISAAL_PASS):
         self.log(f"Bidirectional test: {self.bidirectional_test}")
 
         for idx, (dsl_list, synth_desc) in enumerate(contexts):
+            # First run EqClassEqualDepthV4
             prop = EqClassEqualDepthV4(
                 dsl_list=dsl_list,
                 source_synth_desc=synth_desc,
@@ -117,4 +120,28 @@ class EqClassEqualDepthV4Pass(MISAAL_PASS):
                 json.dump(eq_class_map, OutFile, indent=4)
             self.log(f"{prefix} Wrote equivalence class map to {eq_class_path}")
 
-            self.prop_result.update(eq_class_map) 
+            #self.prop_result['EqClassEqualDepthV4'] = eq_class_map
+
+            # Now run EnumeratePattern using the results from EqClassEqualDepthV4
+            enumerate_prop = EnumeratePattern(
+                dsl_list=dsl_list + (self.target_dsl_list or []),
+                synth_desc=synth_desc,
+                input_patterns_dict=eq_class_map
+            )
+
+            enumerate_prop.parallel = self.parallelize
+            enumerate_prop.POOL_SIZE = self.pool
+            enumerate_prop.BATCH_SIZE = self.batch_size
+            enumerate_prop.set_work_dir(self.working_directory)
+
+            # Get and run the property
+            enumerate_map = enumerate_prop.get_property()
+            print(f"EnumeratePattern results: {enumerate_map}")
+
+            # Save enumerated patterns
+            enumerate_path = os.path.join(self.working_directory, f"EnumeratePatternResults_{idx}.json")
+            with open(enumerate_path, "w+") as OutFile:
+                json.dump(enumerate_map, OutFile, indent=4)
+            self.log(f"{prefix} Wrote enumerated patterns to {enumerate_path}")
+
+            self.prop_result.update(enumerate_map) 

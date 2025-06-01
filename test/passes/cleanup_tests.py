@@ -11,6 +11,7 @@ def cleanup_test_artifacts(test_dir):
     - work directory
     - .log files
     - .json files
+    - .rkt files
     
     Args:
         test_dir: The directory to clean up
@@ -41,6 +42,13 @@ def cleanup_test_artifacts(test_dir):
         if os.path.exists(json_file):
             print(f"Removing {json_file}")
             os.remove(json_file)
+
+    # Remove .rkt files
+    rkt_files = glob.glob(os.path.join(test_dir, "*.rkt"))
+    for rkt_file in rkt_files:
+        if os.path.exists(rkt_file):
+            print(f"Removing {rkt_file}")
+            os.remove(rkt_file)
 
 if __name__ == "__main__":
     # Get the directory containing this script

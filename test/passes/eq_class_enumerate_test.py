@@ -1,7 +1,7 @@
 import unittest
 import logging
 from utils.PassPipelineUtils import MISAAL_PASS_PIPELINE
-from passes.EqClassEqualDepthV4Pass import EqClassEqualDepthV4Pass
+from passes.AutoLLVMEnumerate import AutoLLVMEnumerate
 from common.DSLParser import parse_dict
 from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HALIDE_SYNTH_DESC
 from sema.halide_folded_full import halide_folded_full as halide_semantics
@@ -10,7 +10,7 @@ import os
 import json
 
 
-class TestEqClassEqualDepthV4Pass(unittest.TestCase):
+class TestAutoLLVMEnumerate(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Set up logging configuration
@@ -26,7 +26,7 @@ class TestEqClassEqualDepthV4Pass(unittest.TestCase):
         )
         
         # Create a logger for this test
-        cls.logger = logging.getLogger('EqClassEqualDepthV4Test')
+        cls.logger = logging.getLogger('AutoLLVMEnumerateTest')
 
     def setUp(self):
         # Parse DSL lists
@@ -64,28 +64,26 @@ class TestEqClassEqualDepthV4Pass(unittest.TestCase):
 
         # Setup pass configurations with only forward_map_path
         self.pass_configs = {
-            "EqClassEqualDepthV4Pass": [
+            "AutoLLVMEnumerate": [
                 ("forward_map_path", self.forward_map_path)
             ]
         }
 
-    
-
     def test_halide_to_x86_execution(self):
-        """Test EqClassEqualDepthV4Pass with Halide IR to x86 translation"""
+        """Test AutoLLVMEnumerate with Halide IR to x86 translation"""
         self.logger.info("Starting Halide to x86 equivalence class test")
         
-        # Create a pass pipeline with EqClassEqualDepthV4Pass
+        # Create a pass pipeline with AutoLLVMEnumerate
         pass_pipeline = MISAAL_PASS_PIPELINE(
-            [EqClassEqualDepthV4Pass], 
+            [AutoLLVMEnumerate], 
             working_directory=self.test_working_dir,
             log_file=os.path.join(self.test_working_dir, "pipeline_halide_x86.log"),
             src_dsl_list=self.halide_test_insts,
             src_synth_desc=HALIDE_SYNTH_DESC,
             target_dsl_list=self.x86_test_insts,
             target_synth_desc=X86_SYNTH_DESC,
-            parallelize=False,
-            pool=4,
+            parallelize=True,
+            pool=6,
             batch_size=1024,
             stop_after_exception=True,
             pass_configs=self.pass_configs
@@ -98,7 +96,7 @@ class TestEqClassEqualDepthV4Pass(unittest.TestCase):
         self.assertTrue(result, "Halide to x86 pass pipeline execution failed")
 
         # Check if results were generated
-        results = pass_pipeline.passes_results.get(EqClassEqualDepthV4Pass.get_pass_name(), {})
+        results = pass_pipeline.passes_results.get(AutoLLVMEnumerate.get_pass_name(), {})
         self.assertGreater(len(results), 0, "No equivalence classes were found")
 
     def tearDown(self):
