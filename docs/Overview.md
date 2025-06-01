@@ -21,6 +21,10 @@ To faciliate others to use <tt>MISAAL</tt>, we have documented various important
 * [ISA Semantic Properties Base Class](./pages/Property.md)
     * [Example of derived properties in MISAAL](./pages/MISAAL_Properties.md)
 
+* [Pass Pipeline Framework](./pages/PassPipeline.md)
+    * Orchestrates semantic analysis passes
+    * Manages pass dependencies and execution
+
 * [Concretization Grammar for Synthesis](./pages/Grammar.md)
 
 * [Swizzle Generation](./pages/Swizzles.md)

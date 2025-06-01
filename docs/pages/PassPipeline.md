@@ -1,0 +1,164 @@
+[\[<< Property Base Class\]](./Property.md)  [\[Overview\]](../Overview.md) [\[>> MISAAL Properties\]](./MISAAL_Properties.md)
+
+# MISAAL Pass Pipeline Framework
+
+The MISAAL Pass Pipeline framework provides a structured way to implement and execute compiler passes for semantic property analysis. The framework consists of two main classes: `MISAAL_PASS` (the base class for individual passes) and `MISAAL_PASS_PIPELINE` (the orchestrator for executing multiple passes in sequence).
+
+## MISAAL_PASS Base Class
+
+The `MISAAL_PASS` class serves as an abstract base class for implementing individual compiler passes in MISAAL. Each pass represents a specific analysis or transformation step in the semantic property compilation process.
+
+### Key Components
+
+1. **Pass Configuration**
+   - `pass_name`: Unique identifier for the pass
+   - `pass_description`: Detailed description of what the pass does
+   - `parallelize`: Boolean flag to enable/disable parallel execution
+   - `pool`: Number of parallel workers (default: 4)
+   - `batch_size`: Size of batches for processing (default: 1024)
+   - `working_directory`: Directory for pass-specific temporary files
+   - `log_file`: Path to the log file for pass execution details
+
+2. **Required Abstract Methods**
+```python
+@abstractclassmethod
+def get_pass_name(cls):
+    """Return the unique name of the pass"""
+
+@abstractclassmethod
+def get_pass_description(cls):
+    """Return a detailed description of the pass"""
+
+@abstractmethod
+def get_results_summary(self):
+    """Return a summary of the pass execution results"""
+
+@abstractmethod
+def get_pass_results(self):
+    """Return the complete results of the pass execution"""
+
+@abstractmethod
+def execute(self):
+    """Main execution method for the pass"""
+```
+
+3. **Dependency Management**
+```python
+@classmethod
+def pass_depends_on(self):
+    """Define dependencies on other passes"""
+    return []
+
+def set_dependency_results(self, pass_name, results):
+    """Access results from dependent passes"""
+```
+
+4. **Logging Infrastructure**
+   - Automatic logging of pass initialization
+   - Execution progress tracking
+   - Exception handling and logging
+   - Execution time measurement
+   - Results summary logging
+
+## MISAAL_PASS_PIPELINE Class
+
+The `MISAAL_PASS_PIPELINE` class orchestrates the execution of multiple passes in a specific order, handling dependencies and maintaining the overall execution state.
+
+### Features
+
+1. **Pipeline Configuration**
+   - Configurable parallelization settings
+   - Environment validation
+   - Dependency validation
+   - Centralized logging
+   - DSL list management for source and target languages
+
+2. **Environment Validation**
+   The pipeline validates required environment variables and Python paths:
+   - Required variables: `MISAAL_SRC`, `HYDRIDE_ROOT`, `PYTHONPATH`
+   - Required Python paths: `code-synthesizer`, `codegen-generator`
+
+3. **Pipeline Execution Flow**
+   1. Initialize logging infrastructure
+   2. Validate environment and dependencies
+   3. Execute passes in sequence
+   4. Handle pass dependencies
+   5. Maintain results from each pass
+   6. Provide detailed execution logs
+
+### Example Usage
+
+```python
+# Define passes
+passes = [Pass1, Pass2, Pass3]
+
+# Create pipeline
+pipeline = MISAAL_PASS_PIPELINE(
+    passes=passes,
+    parallelize=True,
+    pool=4,
+    batch_size=1024,
+    working_directory="/path/to/work/dir",
+    log_file="/path/to/log.txt"
+)
+
+# Execute pipeline
+success = pipeline.execute_pass_pipeline()
+```
+
+## Available Passes
+
+MISAAL includes several pre-implemented passes in the `lib/passes` directory:
+
+1. **CommutativePass**
+   - Purpose: Identifies commutative properties in DSL Instructions
+   - Implementation: `CommutativePass.py`
+   - Key Features:
+     - Analyzes both source and target DSL instructions
+     - Generates commutative equivalence classes
+     - Produces a commutative map for use by other passes
+     - Supports parallel execution for performance
+   - Output:
+     - Generates property results and commutative maps
+     - Results are saved as JSON files in the working directory
+
+2. **ComputeOnlyRelevancePass**
+   - Purpose: Analyzes computational semantics similarities between DSL Instructions
+   - Implementation: `ComputeOnlyRelevancePass.py`
+   - Dependencies: Requires `CommutativePass` results
+   - Key Features:
+     - Multi-stage analysis using different repair relevance checks:
+       - RepairRelevanceV4
+       - RepairRelevanceIntermediates
+       - Optional post-processing stage
+     - Merges results from multiple repair instances
+     - Handles data movement independence
+   - Output:
+     - Generates repair maps showing semantic relationships
+     - Produces detailed JSON output for each analysis stage
+     - Creates a combined results file for all analyses
+
+## Best Practices
+
+1. **Pass Implementation**
+   - Inherit from `MISAAL_PASS`
+   - Implement all required abstract methods
+   - Use the provided logging infrastructure
+   - Handle exceptions appropriately
+   - Document pass dependencies
+
+2. **Pipeline Configuration**
+   - Ensure correct pass ordering based on dependencies
+   - Configure appropriate parallelization settings
+   - Set up proper working directories
+   - Use meaningful pass names and descriptions
+
+3. **Error Handling**
+   - Use the built-in exception handling
+   - Configure `stop_after_exception` based on requirements
+   - Review logs for debugging
+
+## See Also
+- [Property Base Class](./Property.md)
+- [MISAAL Properties](./MISAAL_Properties.md)
+- [TRS Compiler](./TRS_Compiler.md) 
