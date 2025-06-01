@@ -1,4 +1,5 @@
 from properties.Property import *
+import random
 import os
 import time
 import glob
@@ -24,7 +25,7 @@ import gc
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None, ensure_structure = True):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None, ensure_structure = True):
 
 
 
@@ -223,14 +224,21 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     for idx, ros in enumerate(relavent_swizzle_subset):
                         print(idx, ".", ros.name)
 
-                    sample_ctx = dsl_inst.get_sample_context()
+                    target_vector_sizes = self.target_synth_desc.get_target_vector_sizes()
+
+                    possible_sample_ctxs = [ctx for ctx in dsl_inst.contexts if ctx.out_vectsize in target_vector_sizes]
+                    sample_ctx = random.choice(possible_sample_ctxs)
+                    print("Sample context", sample_ctx.name)
+
 
 
                     if sample_ctx.out_vectsize == None:
-                        print("Skipping as samle context has no outvect size")
+                        print("Skipping as sample context has no outvect size")
                         continue
 
-                    src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
+                    dsl_inst_copy = copy.deepcopy(dsl_inst)
+                    dsl_inst_copy.contexts = possible_sample_ctxs
+                    src_ctx = self.get_context_with_min_sym_bvs(dsl_inst_copy)
 
 
                     if src_ctx.out_vectsize == None:
@@ -337,6 +345,10 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         VIRT_MEM = get_process_virtual_memory_megabytes()
         if VIRT_MEM > self.VIRT_MEM_LIMIT_MB:
             self.collect_garbage("BATCH_COMPLETION")
+
+    def run_on_completion(self, property_map):
+        print("EqClassEqualDepthV4 run_on_completion!")
+        return property_map
 
     def get_notify_body(self, count, success_count, start_time):
         parent_body = super().get_notify_body(count, success_count, start_time)

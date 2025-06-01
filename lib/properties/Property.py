@@ -331,7 +331,7 @@ class Property:
         if self.notify_enabled:
             self.notify(count,candidate_count, start_time)
 
-        print(property_map)
+        print("Property Map\n",property_map)
         self.run_on_completion(property_map)
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -488,7 +488,8 @@ class Property:
         return list(set(names))
 
     def run_on_completion(self, pmap):
-        return
+        print(f"{self.name} run_on_completion!")
+        return pmap
 
 
 
