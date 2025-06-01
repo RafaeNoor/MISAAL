@@ -243,9 +243,14 @@ class Commutative(Property):
                 commutative_map[candidate] = []
             commutative_map[candidate].append(prop['indices'])
 
+        cmap_path = f"commutative_map_{self.synth_desc.target_name}.json"
+        if self.work_dir is not None:
+            cmap_path = os.path.join(self.work_dir, cmap_path)
 
-        with open(f"commutative_map_{self.synth_desc.target_name}.json", "w+") as OutFile:
+        with open(cmap_path, "w+") as OutFile:
             OutFile.write(json.dumps(commutative_map, indent = 2))
+
+        return commutative_map
 
 
 
