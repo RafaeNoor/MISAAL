@@ -1,0 +1,838 @@
+g++ --std=c++17 -fno-rtti -O3 -DLOG2VLEN=7 \
+	-I /home/baronia3/MISAAL/frontends/halide/distrib/include -I /home/baronia3/MISAAL/frontends/halide/distrib/tools \
+	-g add/src/add_generator.cpp /home/baronia3/MISAAL/frontends/halide/distrib/tools/GenGen.cpp \
+	hannk/common_halide.cpp \
+	-o add/bin/add_generator \
+	-L /home/baronia3/MISAAL/frontends/halide/distrib/lib -lHalide -lrt -ldl -lm -lz -lxml2
+export LD_LIBRARY_PATH=/home/baronia3/MISAAL/frontends/halide/distrib/lib;HL_EXPR_DEPTH=2  HYDRIDE_BENCHMARK=add_x86_depth2_misaal  HL_ENABLE_MISAAL=1  HL_ENABLE_HYDRIDE=1 HL_SYNTH_BW=16  HYDRIDE_INITIAL_HASH="empty_hash"  MISAAL_DISABLE_FRONTEND_PATTERNS=1 ./add/bin/add_generator \
+	-t 0 \
+	-o add/bin \
+	-g add \
+	-e static_library,stmt,h,llvm_assembly,assembly \
+	-f add target=host-x86-64-no_bounds_query-no_asserts 
+produce output:
+  for y:
+    for x.x:
+      vectorized x.v0 in [0, 63]:
+        output(...) = ...
+Target has Saphire Rapids Support: 0
+Target triple of initial module: x86_64--linux-gnu
+Hydride Optimize X86
+Invoked Fold Load Stores
+Producer Consumer STMT  Instruction: produce output {
+ let t17 = output.min.1*output.stride.1
+ let t18 = input1.min.1*input1.stride.1
+ let t19 = input2.min.1*input2.stride.1
+ let t20 = max(output.extent.0/64, 0)
+ let t12 = ((output.extent.0 + 63)/64) - t20
+ let t10 = (output.min.0 - t19) - input2.min.0
+ let t9 = (output.min.0 - t18) - input1.min.0
+ let t13 = output.extent.0 + output.min.0
+ for (output.s0.y.rebased, 0, output.extent.1) {
+  let t22 = 0 - t17
+  let t21 = output.min.1 + output.s0.y.rebased
+  for (output.s0.x.x, 0, t20) {
+   output[ramp((output.s0.x.x*64) + ((output.stride.1*t21) + t22), 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+  }
+  let t25 = (t13 - t19) - input2.min.0
+  let t24 = (t13 - t18) - input1.min.0
+  let t26 = (t13 - t17) - output.min.0
+  let t23 = output.min.1 + output.s0.y.rebased
+  for (output.s0.x.x, 0, t12) {
+   output[ramp(((output.stride.1*t23) + t26) + -64, 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+  }
+ }
+}
+
+Popping scope_name: output_prod
+RemoveRedundant Statements invoked
+Checking if pointer 0x5590a931b2b0 is redundant 
+Checking if pointer 0x5590a931b560 is redundant 
+Invoked distribute_vector_exprs with multiple bitwidths 
+Distribute number of bitvector sizes:	4
+Distribute via look ahead: 0
+Distributing Block
+Distributing Block
+Distributing Block
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Block
+Distributing Block
+Distributing Block
+Distributing ProducerConsumer
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing For
+Distributing Block
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing Let
+Distributing For
+INFO_OP Max:512
+INFO_OP Min:512
+INFO_OP Cast:512
+INFO_OP Max:1024
+INFO_OP Min:1024
+Vector info on Call node
+INFO_CALL_CLAUSE width : saturating_add: 1024
+INFO_OP Cast:1024
+INFO_OP Max:2048
+INFO_OP Min:2048
+Vector info on Call node
+Widenened maximum size: 4096
+INFO_OP Add:2048
+Vector info on Call node
+INFO_CALL_CLAUSE width : widening_mul: 2048
+INFO_OP Add:1024
+Vector info on Call node
+INFO_OP Cast:1024
+INFO_OP Load:512
+INFO_OP Broadcast:64
+INFO_OP Add:32
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Mul:16
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Variable:16
+Vector info on Call node
+INFO_CALL_CLAUSE width : widening_mul: 2048
+INFO_OP Add:1024
+Vector info on Call node
+INFO_OP Cast:1024
+INFO_OP Load:512
+INFO_OP Broadcast:64
+INFO_OP Add:32
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Mul:16
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Variable:16
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:1024
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:512
+INFO_OP Variable:8
+INFO_OP Broadcast:512
+INFO_OP Variable:8
+DistributeVec on store 
+output[ramp(((output.stride.1*t23) + t26) + -64, 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+ producing bitvectors of size 512 with maximum bitwidth 4096 
+Need to distribute stores into 1 chunks!
+Distribute Broadcast x64((uint1)1) into 1!
+Completed distributing broadcast!
+Distribute ramp into 1 chunks 
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distribute Cast uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))) into 1!
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: saturating_addinto 1
+Distribute Cast int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))) into 1!
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: rounding_shift_rightinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: widening_mulinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: shift_leftinto 1
+Distribute Cast int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]) into 1!
+Distribute Load into 1!
+Distribute Broadcast x64((uint16)6) into 1!
+Completed distributing broadcast!
+shift_left Distributed op 0 size: 1
+shift_left Distributed op 1 size: 1
+int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])
+x64((uint16)6)
+Distribute Broadcast x64(int16((uint8)input1_zero)*(int16)-64) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)input1_multiplier) into 1!
+Completed distributing broadcast!
+widening_mul Distributed op 0 size: 1
+widening_mul Distributed op 1 size: 1
+((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64))
+x64((int16)input1_multiplier)
+Distributing: widening_mulinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: shift_leftinto 1
+Distribute Cast int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]) into 1!
+Distribute Load into 1!
+Distribute Broadcast x64((uint16)6) into 1!
+Completed distributing broadcast!
+shift_left Distributed op 0 size: 1
+shift_left Distributed op 1 size: 1
+int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])
+x64((uint16)6)
+Distribute Broadcast x64(int16((uint8)input2_zero)*(int16)-64) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)input2_multiplier) into 1!
+Completed distributing broadcast!
+widening_mul Distributed op 0 size: 1
+widening_mul Distributed op 1 size: 1
+((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64))
+x64((int16)input2_multiplier)
+Distribute Broadcast x64((uint32)16) into 1!
+Completed distributing broadcast!
+rounding_shift_right Distributed op 0 size: 1
+rounding_shift_right Distributed op 1 size: 1
+((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)))
+x64((uint32)16)
+Distribute Broadcast x64(32767) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64(-32768) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64(int16((uint8)output_zero)) into 1!
+Completed distributing broadcast!
+saturating_add Distributed op 0 size: 1
+saturating_add Distributed op 1 size: 1
+int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768)))
+x64(int16((uint8)output_zero))
+Distribute Broadcast x64((int16)255) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)0) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((uint8)output_max) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((uint8)output_min) into 1!
+Completed distributing broadcast!
+Single Store where immediate child is also one value
+New Store: output[ramp(((output.stride.1*t23) + t26) + -64, 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+
+New Simplified Store: output[ramp(((output.stride.1*t23) + t26) + -64, 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+
+Completed Distributing For
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing Let
+Distributing Let
+Distributing For
+INFO_OP Max:512
+INFO_OP Min:512
+INFO_OP Cast:512
+INFO_OP Max:1024
+INFO_OP Min:1024
+Vector info on Call node
+INFO_CALL_CLAUSE width : saturating_add: 1024
+INFO_OP Cast:1024
+INFO_OP Max:2048
+INFO_OP Min:2048
+Vector info on Call node
+Widenened maximum size: 4096
+INFO_OP Add:2048
+Vector info on Call node
+INFO_CALL_CLAUSE width : widening_mul: 2048
+INFO_OP Add:1024
+Vector info on Call node
+INFO_OP Cast:1024
+INFO_OP Load:512
+INFO_OP Broadcast:64
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Mul:16
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Variable:16
+Vector info on Call node
+INFO_CALL_CLAUSE width : widening_mul: 2048
+INFO_OP Add:1024
+Vector info on Call node
+INFO_OP Cast:1024
+INFO_OP Load:512
+INFO_OP Broadcast:64
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Add:32
+INFO_OP Mul:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Variable:32
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Mul:16
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Variable:16
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:2048
+INFO_OP Broadcast:1024
+INFO_OP Cast:16
+INFO_OP Variable:8
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:1024
+INFO_OP Broadcast:512
+INFO_OP Variable:8
+INFO_OP Broadcast:512
+INFO_OP Variable:8
+DistributeVec on store 
+output[ramp((output.s0.x.x*64) + ((output.stride.1*t21) + t22), 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+ producing bitvectors of size 512 with maximum bitwidth 4096 
+Need to distribute stores into 1 chunks!
+Distribute Broadcast x64((uint1)1) into 1!
+Completed distributing broadcast!
+Distribute ramp into 1 chunks 
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distribute Cast uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))) into 1!
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: saturating_addinto 1
+Distribute Cast int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))) into 1!
+Distributing Binary Op Max!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing Binary Op Min!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: rounding_shift_rightinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: widening_mulinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: shift_leftinto 1
+Distribute Cast int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]) into 1!
+Distribute Load into 1!
+Distribute Broadcast x64((uint16)6) into 1!
+Completed distributing broadcast!
+shift_left Distributed op 0 size: 1
+shift_left Distributed op 1 size: 1
+int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])
+x64((uint16)6)
+Distribute Broadcast x64(int16((uint8)input1_zero)*(int16)-64) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)input1_multiplier) into 1!
+Completed distributing broadcast!
+widening_mul Distributed op 0 size: 1
+widening_mul Distributed op 1 size: 1
+((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64))
+x64((int16)input1_multiplier)
+Distributing: widening_mulinto 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing smaller than supported vector sizes: resetting to 1
+Distributing: shift_leftinto 1
+Distribute Cast int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]) into 1!
+Distribute Load into 1!
+Distribute Broadcast x64((uint16)6) into 1!
+Completed distributing broadcast!
+shift_left Distributed op 0 size: 1
+shift_left Distributed op 1 size: 1
+int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])
+x64((uint16)6)
+Distribute Broadcast x64(int16((uint8)input2_zero)*(int16)-64) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)input2_multiplier) into 1!
+Completed distributing broadcast!
+widening_mul Distributed op 0 size: 1
+widening_mul Distributed op 1 size: 1
+((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64))
+x64((int16)input2_multiplier)
+Distribute Broadcast x64((uint32)16) into 1!
+Completed distributing broadcast!
+rounding_shift_right Distributed op 0 size: 1
+rounding_shift_right Distributed op 1 size: 1
+((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)))
+x64((uint32)16)
+Distribute Broadcast x64(32767) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64(-32768) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64(int16((uint8)output_zero)) into 1!
+Completed distributing broadcast!
+saturating_add Distributed op 0 size: 1
+saturating_add Distributed op 1 size: 1
+int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768)))
+x64(int16((uint8)output_zero))
+Distribute Broadcast x64((int16)255) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((int16)0) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((uint8)output_max) into 1!
+Completed distributing broadcast!
+Distribute Broadcast x64((uint8)output_min) into 1!
+Completed distributing broadcast!
+Single Store where immediate child is also one value
+New Store: output[ramp((output.s0.x.x*64) + ((output.stride.1*t21) + t22), 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64)shift_left(int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)]), x64((uint16)6)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+
+New Simplified Store: output[ramp((output.s0.x.x*64) + ((output.stride.1*t21) + t22), 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+
+Completed Distributing For
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Completed Distributing Block
+Completed Distributing For
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Sub!  into num chunks 1
+Distributing Binary Op Max!  into num chunks 1
+Distributing Binary Op Div!  into num chunks 1
+Distributing Binary Op Div!  into num chunks 1
+Distributing Binary Op Add!  into num chunks 1
+Distributing Binary Op Max!  into num chunks 1
+Distributing Binary Op Div!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Distributing Binary Op Mul!  into num chunks 1
+Completed Distributing ProducerConsumer
+Completed Distributing Block
+Completed Distributing Block
+Completed Distributing Block
+Completed Distributing Block
+Completed Distributing Block
+Completed Distributing Block
+Distributed Stmt:
+assert((uint64)reinterpret((halide_buffer_t *)output.buffer) != (uint64)0, halide_error_buffer_argument_is_null("output"))
+assert((uint64)reinterpret((halide_buffer_t *)input2.buffer) != (uint64)0, halide_error_buffer_argument_is_null("input2"))
+assert((uint64)reinterpret((halide_buffer_t *)input1.buffer) != (uint64)0, halide_error_buffer_argument_is_null("input1"))
+let input1 = (void *)_halide_buffer_get_host((halide_buffer_t *)input1.buffer)
+let input1.min.0 = _halide_buffer_get_min((halide_buffer_t *)input1.buffer, 0)
+let input1.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)input1.buffer, 0)
+let input1.min.1 = _halide_buffer_get_min((halide_buffer_t *)input1.buffer, 1)
+let input1.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)input1.buffer, 1)
+let input2 = (void *)_halide_buffer_get_host((halide_buffer_t *)input2.buffer)
+let input2.min.0 = _halide_buffer_get_min((halide_buffer_t *)input2.buffer, 0)
+let input2.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)input2.buffer, 0)
+let input2.min.1 = _halide_buffer_get_min((halide_buffer_t *)input2.buffer, 1)
+let input2.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)input2.buffer, 1)
+let output = (void *)_halide_buffer_get_host((halide_buffer_t *)output.buffer)
+let output.min.0 = _halide_buffer_get_min((halide_buffer_t *)output.buffer, 0)
+let output.extent.0 = _halide_buffer_get_extent((halide_buffer_t *)output.buffer, 0)
+let output.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)output.buffer, 0)
+let output.min.1 = _halide_buffer_get_min((halide_buffer_t *)output.buffer, 1)
+let output.extent.1 = _halide_buffer_get_extent((halide_buffer_t *)output.buffer, 1)
+let output.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)output.buffer, 1)
+assert(input1.stride.0 == 1, 0)
+assert(input2.stride.0 == 1, 0)
+assert(output.stride.0 == 1, 0)
+produce output {
+ let t17 = output.min.1*output.stride.1
+ let t18 = input1.min.1*input1.stride.1
+ let t19 = input2.min.1*input2.stride.1
+ let t20 = max(output.extent.0/64, 0)
+ let t12 = ((output.extent.0 + 63)/64) - max(output.extent.0/64, 0)
+ let t10 = (output.min.0 - (input2.min.1*input2.stride.1)) - input2.min.0
+ let t9 = (output.min.0 - (input1.min.1*input1.stride.1)) - input1.min.0
+ let t13 = output.extent.0 + output.min.0
+ for (output.s0.y.rebased, 0, output.extent.1) {
+  let t22 = 0 - (output.min.1*output.stride.1)
+  let t21 = output.min.1 + output.s0.y.rebased
+  for (output.s0.x.x, 0, t20) {
+   output[ramp((output.s0.x.x*64) + ((output.stride.1*t21) + t22), 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64(input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64(input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+  }
+  let t25 = ((output.extent.0 + output.min.0) - (input2.min.1*input2.stride.1)) - input2.min.0
+  let t24 = ((output.extent.0 + output.min.0) - (input1.min.1*input1.stride.1)) - input1.min.0
+  let t26 = ((output.extent.0 + output.min.0) - (output.min.1*output.stride.1)) - output.min.0
+  let t23 = output.min.1 + output.s0.y.rebased
+  for (output.s0.x.x, 0, t12) {
+   output[ramp(((output.stride.1*t23) + t26) + -64, 1, 64)] = max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64(input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64(input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+  }
+ }
+}
+
+Lower Intrinsic on call: _halide_buffer_get_host
+Abstracting call: _halide_buffer_get_host
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Lower Intrinsic on call: _halide_buffer_get_host
+Abstracting call: _halide_buffer_get_host
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Lower Intrinsic on call: _halide_buffer_get_host
+Abstracting call: _halide_buffer_get_host
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_extent
+Abstracting call: _halide_buffer_get_extent
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Lower Intrinsic on call: _halide_buffer_get_min
+Abstracting call: _halide_buffer_get_min
+Lower Intrinsic on call: _halide_buffer_get_extent
+Abstracting call: _halide_buffer_get_extent
+Lower Intrinsic on call: _halide_buffer_get_stride
+Abstracting call: _halide_buffer_get_stride
+Starting synthesis for expr_id: 0
+Expression before lower intrinsic: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Lower Intrinsic on call: saturating_add
+Lower Intrinsic on call: rounding_shift_right
+Lowered Expression: (int32x64)shift_right((int32x64)saturating_add((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), (int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)), x64((uint32)16))
+Lower Intrinsic on call: shift_right
+Lower Intrinsic on call: saturating_add
+Lowered Expression: (min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + ((int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)))
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: shift_left
+Expression after lower intrinsic: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)shift_right(min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + ((int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after simplification: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after legalizing division operations to target: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression before InlineLets: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after InlineLets: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression before abstraction: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Abstracting call: saturating_add
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Expression after abstraction: max(min((uint8x64)h37, x64((uint8)output_max)), x64((uint8)output_min))
+Input expression to synthesize: max(min((uint8x64)h37, x64((uint8)output_max)), x64((uint8)output_min))
+h37 maps to (reg (bv 0 8))
+output_max maps to (reg (bv 1 8))
+output_min maps to (reg (bv 2 8))
+Halide expr:
+max(min((uint8x64)h37, x64((uint8)output_max)), x64((uint8)output_min)),  text expression:
+  (typed:unsigned-vec-max
+  (typed:unsigned-vec-min
+   (reg (bv 0 8))
+   (typed:xBroadcast (reg (bv 1 8))  8 8 64 ) 8 512)
+  (typed:xBroadcast (reg (bv 2 8))  8 8 64 ) 8 512)
+Expression after replace abstraction: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Generating Call with type: uint8x64 and lanes 64
+Ending synthesis for expr: 0
+
+Optimized expression: (uint8x64)hydride.node.add_x86_depth2_misaal.0(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), (uint8)output_max, (uint8)output_min)
+Starting synthesis for expr_id: 1
+Expression before lower intrinsic: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Lower Intrinsic on call: saturating_add
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: widening_mul
+Expression after lower intrinsic: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after simplification: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after legalizing division operations to target: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression before InlineLets: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after InlineLets: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression before abstraction: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Abstracting call: saturating_add
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Expression after abstraction: (uint8x64)h46
+Expression after replace abstraction: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp((output.s0.x.x*64) + ((input1.stride.1*t21) + t9), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp((output.s0.x.x*64) + ((input2.stride.1*t21) + t10), 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Starting synthesis for expr_id: 1
+Expression before lower intrinsic: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)rounding_shift_right((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Lower Intrinsic on call: saturating_add
+Lower Intrinsic on call: rounding_shift_right
+Lowered Expression: (int32x64)shift_right((int32x64)saturating_add((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), (int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)), x64((uint32)16))
+Lower Intrinsic on call: shift_right
+Lower Intrinsic on call: saturating_add
+Lowered Expression: (min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + ((int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)))
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: shift_left
+Expression after lower intrinsic: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max(min((int32x64)shift_right(min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + ((int32x64)shift_left(x64(1), max(x64((uint32)0), x64((uint32)16)))/x64(2)), x64((uint32)16)), x64(32767)), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after simplification: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after legalizing division operations to target: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression before InlineLets: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression after InlineLets: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Expression before abstraction: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Abstracting call: saturating_add
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Expression after abstraction: max(min((uint8x64)h68, x64((uint8)output_max)), x64((uint8)output_min))
+Input expression to synthesize: max(min((uint8x64)h68, x64((uint8)output_max)), x64((uint8)output_min))
+h68 maps to (reg (bv 0 8))
+output_max maps to (reg (bv 1 8))
+output_min maps to (reg (bv 2 8))
+Halide expr:
+max(min((uint8x64)h68, x64((uint8)output_max)), x64((uint8)output_min)),  text expression:
+  (typed:unsigned-vec-max
+  (typed:unsigned-vec-min
+   (reg (bv 0 8))
+   (typed:xBroadcast (reg (bv 1 8))  8 8 64 ) 8 512)
+  (typed:xBroadcast (reg (bv 2 8))  8 8 64 ) 8 512)
+Expression after replace abstraction: max(min(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), x64((uint8)output_max)), x64((uint8)output_min))
+Generating Call with type: uint8x64 and lanes 64
+Ending synthesis for expr: 1
+
+Optimized expression: (uint8x64)hydride.node.add_x86_depth2_misaal.1(uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0))), (uint8)output_max, (uint8)output_min)
+Starting synthesis for expr_id: 2
+Expression before lower intrinsic: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Lower Intrinsic on call: saturating_add
+Lower Intrinsic on call: widening_mul
+Lower Intrinsic on call: widening_mul
+Expression after lower intrinsic: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after simplification: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after legalizing division operations to target: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression before InlineLets: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression after InlineLets: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Expression before abstraction: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Abstracting call: saturating_add
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Abstracting call: widening_mul
+Checking if length is supported on target: 1024
+Traceback (most recent call last):
+  File "/home/baronia3/MISAAL/Hydride/codegen-generator/tools/low-level-codegen/RoseLowLevelCodeGen.py", line 9, in <module>
+    from RoseLLVMCodeGen import LLVMCodeGen
+  File "/home/baronia3/MISAAL/Hydride/codegen-generator/codegen/llvm/RoseLLVMCodeGen.py", line 12, in <module>
+    from RoseUtilities import *
+  File "/home/baronia3/MISAAL/Hydride/codegen-generator/rosette-ir/RoseUtilities.py", line 9, in <module>
+    from sympy import symbols, simplify, Integer
+ModuleNotFoundError: No module named 'sympy'
+Found existing pattern pickle file /home/baronia3/MISAAL/lib/patterns/x86.pickle
+Read 5823 patterns
+1 unique expressions to compile
+PROCESS UNIQUE 0
+
+ (typed:unsigned-vec-max
+  (typed:unsigned-vec-min
+   (reg (bv 0 8))
+   (typed:xBroadcast (reg (bv 1 8))  8 8 64 ) 8 512)
+  (typed:xBroadcast (reg (bv 2 8))  8 8 64 ) 8 512)
+
+Creating egg file:	 b1taf6_y.egg
+$[ Egg Compiler ]:  /home/baronia3/MISAAL/egglog/target/debug/egglog b1taf6_y.egg
+Process completed
+EGG LOG PRODUCED (_mm256_max_epu64 (_mm_min_epu16 (_mm512_broadcastq_epi64 (SYMBV 1) 8 8 0 512 8 0 0) (SYMBV 0) 512 512 0 512 8 0 0) (_mm512_broadcastq_epi64 (SYMBV 2) 8 8 0 512 8 0 0) 512 512 0 512 8 0 0)
+expression_str (_mm256_max_epu64 (_mm_min_epu16 (_mm512_broadcastq_epi64 (reg (bv 1 8)) 8 8 0 512 8 0 0) (reg (bv 0 8)) 512 512 0 512 8 0 0) (_mm512_broadcastq_epi64 (reg (bv 2 8)) 8 8 0 512 8 0 0) 512 512 0 512 8 0 0)
+Expression does not contain swizzles
+Completed compiling pool...
+PROCESS TEST 0
+hydride.node.add_x86_depth2_misaal.0
+
+ (typed:unsigned-vec-max
+  (typed:unsigned-vec-min
+   (reg (bv 0 8))
+   (typed:xBroadcast (reg (bv 1 8))  8 8 64 ) 8 512)
+  (typed:xBroadcast (reg (bv 2 8))  8 8 64 ) 8 512)
+
+Already compiled expression!
+GET EXPRESSION STR 
+; hydride.node.add_x86_depth2_misaal.0
+; (reg 0) <64 x i8>
+; (reg 1) <1 x i8>
+; (reg 2) <1 x i8>
+ (_mm256_max_epu64_dsl
+	 (_mm_min_epu16_dsl
+		 (_mm512_broadcastq_epi64_dsl
+			(reg 1)
+			8
+			8
+			0
+			512
+			8
+			0
+			0
+		 ) ; <64 x i8>
+
+		(reg 0)
+		512
+		512
+		0
+		512
+		8
+		0
+		0
+	 ) ; <64 x i8>
+
+	 (_mm512_broadcastq_epi64_dsl
+		(reg 2)
+		8
+		8
+		0
+		512
+		8
+		0
+		0
+	 ) ; <64 x i8>
+
+	512
+	512
+	0
+	512
+	8
+	0
+	0
+ ) ; <64 x i8>
+
+PROCESS TEST 1
+hydride.node.add_x86_depth2_misaal.1
+
+ (typed:unsigned-vec-max
+  (typed:unsigned-vec-min
+   (reg (bv 0 8))
+   (typed:xBroadcast (reg (bv 1 8))  8 8 64 ) 8 512)
+  (typed:xBroadcast (reg (bv 2 8))  8 8 64 ) 8 512)
+
+Already compiled expression!
+GET EXPRESSION STR 
+; hydride.node.add_x86_depth2_misaal.1
+; (reg 0) <64 x i8>
+; (reg 1) <1 x i8>
+; (reg 2) <1 x i8>
+ (_mm256_max_epu64_dsl
+	 (_mm_min_epu16_dsl
+		 (_mm512_broadcastq_epi64_dsl
+			(reg 1)
+			8
+			8
+			0
+			512
+			8
+			0
+			0
+		 ) ; <64 x i8>
+
+		(reg 0)
+		512
+		512
+		0
+		512
+		8
+		0
+		0
+	 ) ; <64 x i8>
+
+	 (_mm512_broadcastq_epi64_dsl
+		(reg 2)
+		8
+		8
+		0
+		512
+		8
+		0
+		0
+	 ) ; <64 x i8>
+
+	512
+	512
+	0
+	512
+	8
+	0
+	0
+ ) ; <64 x i8>
+
+['; hydride.node.add_x86_depth2_misaal.0\n; (reg 0) <64 x i8>\n; (reg 1) <1 x i8>\n; (reg 2) <1 x i8>\n (_mm256_max_epu64_dsl\n\t (_mm_min_epu16_dsl\n\t\t (_mm512_broadcastq_epi64_dsl\n\t\t\t(reg 1)\n\t\t\t8\n\t\t\t8\n\t\t\t0\n\t\t\t512\n\t\t\t8\n\t\t\t0\n\t\t\t0\n\t\t ) ; <64 x i8>\n\n\t\t(reg 0)\n\t\t512\n\t\t512\n\t\t0\n\t\t512\n\t\t8\n\t\t0\n\t\t0\n\t ) ; <64 x i8>\n\n\t (_mm512_broadcastq_epi64_dsl\n\t\t(reg 2)\n\t\t8\n\t\t8\n\t\t0\n\t\t512\n\t\t8\n\t\t0\n\t\t0\n\t ) ; <64 x i8>\n\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n ) ; <64 x i8>\n', '; hydride.node.add_x86_depth2_misaal.1\n; (reg 0) <64 x i8>\n; (reg 1) <1 x i8>\n; (reg 2) <1 x i8>\n (_mm256_max_epu64_dsl\n\t (_mm_min_epu16_dsl\n\t\t (_mm512_broadcastq_epi64_dsl\n\t\t\t(reg 1)\n\t\t\t8\n\t\t\t8\n\t\t\t0\n\t\t\t512\n\t\t\t8\n\t\t\t0\n\t\t\t0\n\t\t ) ; <64 x i8>\n\n\t\t(reg 0)\n\t\t512\n\t\t512\n\t\t0\n\t\t512\n\t\t8\n\t\t0\n\t\t0\n\t ) ; <64 x i8>\n\n\t (_mm512_broadcastq_epi64_dsl\n\t\t(reg 2)\n\t\t8\n\t\t8\n\t\t0\n\t\t512\n\t\t8\n\t\t0\n\t\t0\n\t ) ; <64 x i8>\n\n\t512\n\t512\n\t0\n\t512\n\t8\n\t0\n\t0\n ) ; <64 x i8>\n']
+python3 /home/baronia3/MISAAL/Hydride/codegen-generator/tools/low-level-codegen/RoseLowLevelCodeGen.py test.out /shared/hydride/LLVMx86Legalizer.so /shared/hydride/x86_wrappers.c.ll -x86-hydride-legalize /tmp/add_x86_depth2_misaal
+======= Compile Times =======
+EggLogParallel :	 52.20958733558655 seconds
+LLVM Legalize :	 0.07323193550109863 seconds
+========================================
+Total : 52.28281927108765
+
+
+
+======= Virtual Memory =======
+- 122.765625 Megabytes
+========================================
+Peak : 122.765625 Megabytes
+
+
+
+======= Physical Memory =======
+- 117.12109375 Megabytes
+========================================
+Peak : 117.12109375 Megabytes
+
+
+
+Hydride Function: declare <64 x i8> @hydride.node.add_x86_depth2_misaal.0(<64 x i8>, i8, i8)
+
+Expression after abstraction: (uint8x64)h77
+Expression after replace abstraction: uint8x64(max(min((int16x64)saturating_add(int16x64(max((min((int32x64)widening_mul((int16x64((uint8x64)input1[ramp(((input1.stride.1*t23) + t24) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input1_zero)*(int16)-64), x64((int16)input1_multiplier)) + (int32x64)widening_mul((int16x64((uint8x64)input2[ramp(((input2.stride.1*t23) + t25) + -64, 1, 64)])*x64((int16)64)) + x64(int16((uint8)input2_zero)*(int16)-64), x64((int16)input2_multiplier)), x64(2147450879)) + x64(32768))/x64(65536), x64(-32768))), x64(int16((uint8)output_zero))), x64((int16)255)), x64((int16)0)))
+Writing to add_x86_depth2_misaal_misaal.py ...
+Compilation took 54.973662 seconds ...
+Why is this being invoked in build
+Generating Hydride Call:   %700 = call <64 x i8> @hydride.node.add_x86_depth2_misaal.0(<64 x i8> %699, i8 %output_max, i8 %output_min) #16in parent function add
+Hydride Function: declare <64 x i8> @hydride.node.add_x86_depth2_misaal.1(<64 x i8>, i8, i8)
+
+Why is this being invoked in build
+Generating Hydride Call:   %932 = call <64 x i8> @hydride.node.add_x86_depth2_misaal.1(<64 x i8> %931, i8 %output_max, i8 %output_min) #16in parent function add
+Linking Hydride module!
+Internal Error at /home/baronia3/MISAAL/frontends/halide/src/CodeGen_LLVM.cpp:418 triggered by user code at : Failure parsing /tmp/add_x86_depth2_misaal.ll 
+Aborted (core dumped)
+make: *** [Makefile:65: add] Error 134

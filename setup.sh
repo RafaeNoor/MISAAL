@@ -1,7 +1,14 @@
 CUR_DIR=$(pwd)
 
 export MISAAL_SRC=$CUR_DIR
-export PYTHONPATH=${CUR_DIR}/lib/:$PYTHONPATH
-export HALIDE_SRC=$CUR_DIR/frontends/halide
+export MISAAL_ROOT_DIR=$MISAAL_SRC
+export HYDRIDE_DIR="${MISAAL_ROOT_DIR}/Hydride"
+cd $HYDRIDE_DIR
+source setup.sh
+cd $MISAAL_ROOT_DIR
+export PYTHONPATH=${MISAAL_ROOT_DIR}/lib/:$PYTHONPATH
+export HALIDE_SRC=$MISAAL_ROOT_DIR/frontends/halide
 export HALIDE_DISTRIB=$HALIDE_SRC/distrib
-
+export HALIDE_DIR=$HALIDE_SRC/distrib
+export LLVM_DIS_ROOT=$HALIDE_SRC/llvm-build
+export LLVM_ROOT=$LLVM_DIS_ROOT
