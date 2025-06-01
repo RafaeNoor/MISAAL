@@ -18,6 +18,7 @@ The `MISAAL_PASS` class serves as an abstract base class for implementing indivi
    - `batch_size`: Size of batches for processing (default: 1024)
    - `working_directory`: Directory for pass-specific temporary files
    - `log_file`: Path to the log file for pass execution details
+   - `pass_configs`: Dictionary of pass-specific configurations (see Pass-Specific Configurations section)
 
 2. **Required Abstract Methods**
 ```python
@@ -72,6 +73,7 @@ The `MISAAL_PASS_PIPELINE` class orchestrates the execution of multiple passes i
    - Dependency validation
    - Centralized logging
    - DSL list management for source and target languages
+   - Pass-specific configuration management
 
 2. **Environment Validation**
    The pipeline validates required environment variables and Python paths:
@@ -86,11 +88,38 @@ The `MISAAL_PASS_PIPELINE` class orchestrates the execution of multiple passes i
    5. Maintain results from each pass
    6. Provide detailed execution logs
 
+### Pass-Specific Configurations
+
+The pipeline supports pass-specific configurations through the `pass_configs` parameter. This allows you to customize the behavior of individual passes without modifying their implementation:
+
+```python
+pass_configs = {
+    "PassName": [
+        ("config_param1", value1),
+        ("config_param2", value2)
+    ]
+}
+
+pipeline = MISAAL_PASS_PIPELINE(
+    passes=passes,
+    pass_configs=pass_configs,
+    # ... other configurations ...
+)
+```
+
 ### Example Usage
 
 ```python
 # Define passes
 passes = [Pass1, Pass2, Pass3]
+
+# Define pass-specific configurations
+pass_configs = {
+    "Pass1": [
+        ("forward_map_path", "/path/to/forward_map.json"),
+        ("depth", 3)
+    ]
+}
 
 # Create pipeline
 pipeline = MISAAL_PASS_PIPELINE(
@@ -99,7 +128,8 @@ pipeline = MISAAL_PASS_PIPELINE(
     pool=4,
     batch_size=1024,
     working_directory="/path/to/work/dir",
-    log_file="/path/to/log.txt"
+    log_file="/path/to/log.txt",
+    pass_configs=pass_configs
 )
 
 # Execute pipeline
@@ -110,7 +140,27 @@ success = pipeline.execute_pass_pipeline()
 
 MISAAL includes several pre-implemented passes in the `lib/passes` directory:
 
-1. **CommutativePass**
+1. **AutoLLVMEnumerate**
+   - Purpose: Identifies equivalent expressions and enumerates patterns for AutoLLVM IR translation
+   - Implementation: `AutoLLVMEnumerate.py`
+   - Key Features:
+     - Combines EqClassEqualDepthV4 and EnumeratePattern properties
+     - Identifies equivalent expressions up to a specified depth
+     - Generates all possible output patterns for AutoLLVM IR classes
+     - Supports parallel execution for performance
+   - Configuration Parameters:
+     - `forward_map_path`: Path to the forward mapping JSON file
+     - `output_depth`: Maximum depth for output expressions
+     - `input_depth`: Maximum depth for input expressions
+     - `depth_range`: Whether to explore all depths up to max
+     - `use_canon_map`: Whether to use canonical form mapping
+     - `bidirectional_test`: Whether to test both directions
+   - Output:
+     - Generates equivalence classes and enumerated patterns
+     - Results are organized by property name in the output
+     - Saves detailed JSON files for each analysis stage
+
+2. **CommutativePass**
    - Purpose: Identifies commutative properties in DSL Instructions
    - Implementation: `CommutativePass.py`
    - Key Features:
@@ -122,7 +172,7 @@ MISAAL includes several pre-implemented passes in the `lib/passes` directory:
      - Generates property results and commutative maps
      - Results are saved as JSON files in the working directory
 
-2. **ComputeOnlyRelevancePass**
+3. **ComputeOnlyRelevancePass**
    - Purpose: Analyzes computational semantics similarities between DSL Instructions
    - Implementation: `ComputeOnlyRelevancePass.py`
    - Dependencies: Requires `CommutativePass` results
@@ -152,6 +202,7 @@ MISAAL includes several pre-implemented passes in the `lib/passes` directory:
    - Configure appropriate parallelization settings
    - Set up proper working directories
    - Use meaningful pass names and descriptions
+   - Provide pass-specific configurations when needed
 
 3. **Error Handling**
    - Use the built-in exception handling
