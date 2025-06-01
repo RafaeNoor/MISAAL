@@ -225,7 +225,7 @@ class RepairRelavancePostProcess(Property):
         self.print_stats()
         self.dump_evaluated_tests()
 
-    def run_on_completion(self):
+    def run_on_completion(self, pmap):
         self.print_stats()
         self.dump_evaluated_tests()
 

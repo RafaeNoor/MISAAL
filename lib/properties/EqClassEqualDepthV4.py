@@ -1,4 +1,5 @@
 from properties.Property import *
+import random
 import os
 import time
 import glob
@@ -24,7 +25,7 @@ import gc
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = True, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None, ensure_structure = True):
 
 
 
@@ -41,6 +42,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         self.gc_log = []
         self.bidirectional_test = bidirectional_test
         self.filter_list = filter_list
+        self.ensure_structure =ensure_structure
 
 
 
@@ -109,6 +111,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
             dst_copy = copy.deepcopy(valid_dst_conc)
 
 
+            print("Valid src conc")
+            print(valid_src_conc.emit_context_expr_string())
             success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
 
             if not success:
@@ -118,13 +122,13 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
             synth_src_expr = read_string_to_dsl(src_expr_str, test_dsl_list)
 
             # isCanonical matches structure according to DSL list
-            if not self.canonicalizer.isCanonical(synth_src_expr, valid_src_conc):
+            if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_src_expr, valid_src_conc):
                 continue
 
             synth_dst_expr = read_string_to_dsl(dst_expr_str, test_dsl_list)
 
             # isCanonical matches structure according to DSL list
-            if not self.canonicalizer.isCanonical(synth_dst_expr, dst_copy):
+            if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_dst_expr, dst_copy):
                 continue
 
 
@@ -139,7 +143,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                 break
 
 
-        if self.bidirectional_test:
+        if self.bidirectional_test and not isinstance(dst_ctx, Reg):
             print("Bidirectional test")
 
             valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
@@ -220,14 +224,22 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     for idx, ros in enumerate(relavent_swizzle_subset):
                         print(idx, ".", ros.name)
 
-                    sample_ctx = dsl_inst.get_sample_context()
+                    target_vector_sizes = self.target_synth_desc.get_target_vector_sizes()
+
+                    possible_sample_ctxs = [ctx for ctx in dsl_inst.contexts if ctx.out_vectsize in target_vector_sizes]
+                    sample_ctx = random.choice(possible_sample_ctxs)
+                    print("Sample context", sample_ctx.name)
+
 
 
                     if sample_ctx.out_vectsize == None:
-                        print("Skipping as samle context has no outvect size")
+                        print("Skipping as sample context has no outvect size")
                         continue
 
-                    src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
+                    dsl_inst_copy = copy.deepcopy(dsl_inst)
+                    dsl_inst_copy.contexts = possible_sample_ctxs
+                    src_ctx = self.get_context_with_min_sym_bvs(dsl_inst_copy)
+
 
                     if src_ctx.out_vectsize == None:
                         print("Skipping as src context has no outvect size")
@@ -238,7 +250,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         continue
                     print("output_size = ", src_ctx.out_vectsize)
 
-                    src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize)
+                    src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
 
                     self.src_canon_map.clear()
                     for src_expr in src_expressions:
@@ -251,23 +263,18 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         if get_expr_depth(src_expr) != input_depth:
                             continue
 
+
+
                         if not self.expr_contains(src_expr, dsl_inst.name):
                             continue
 
-                        if self.count_contexts(src_expr, dsl_inst.name) != 1:
+                        if self.count_contexts(src_expr, dsl_inst.name) < 1:
                             continue
 
-                        print("Source expression output size:", src_expr.out_vectsize)
+                        #if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 4:
+                        #    continue
 
 
-
-
-
-
-
-
-                        if not isinstance(src_expr,Reg) and len(get_unique_context_registers(src_expr)) > 4:
-                            continue
 
 
                         canonical_src_expr = self.canonicalizer.canonicalize(src_expr)
@@ -285,7 +292,6 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
 
-                        print(src_expr.emit_context_expr_string())
 
                         target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
                         self.target_canon_map.clear()
@@ -297,7 +303,6 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
-
 
 
                             if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
@@ -324,7 +329,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                                 # TEMP:
                                 #if not isinstance(target_expr,Reg) and  not self.expr_contains(target_expr, dsl_inst.name):
                                 #    continue
-                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 5:
+                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 6:
                                     continue
 
                                 self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
@@ -340,6 +345,10 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         VIRT_MEM = get_process_virtual_memory_megabytes()
         if VIRT_MEM > self.VIRT_MEM_LIMIT_MB:
             self.collect_garbage("BATCH_COMPLETION")
+
+    def run_on_completion(self, property_map):
+        print("EqClassEqualDepthV4 run_on_completion!")
+        return property_map
 
     def get_notify_body(self, count, success_count, start_time):
         parent_body = super().get_notify_body(count, success_count, start_time)

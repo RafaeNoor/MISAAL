@@ -115,7 +115,6 @@ class RepairRelavanceV4(RepairRelavanceV3):
                             continue
                     else:
                         candidate_generator = self.prepare_candidate_generator(candidate_prep, use_max_args = False)
-                        print(candidate_generator)
 
                         # Generator internally will query state to know
                         # if the repair property is already valid hence we will exit early
@@ -320,6 +319,7 @@ class RepairRelavanceV4(RepairRelavanceV3):
         bitwidth_sizes_int = [arg.size for arg in src_ctx_regs]
 
         for expr in enumerate_target_program:
+            print("TESTING")
 
 
 
@@ -428,6 +428,14 @@ class RepairRelavanceV4(RepairRelavanceV3):
         tokens = [self.rosette_flatten_list(arg) for arg in expr]
         return "({})".format(" ".join(tokens))
 
+    def rosette_map_nested_list(self, expr, expr_map):
+        if not isinstance(expr, list):
+            return expr_map[expr] if expr in expr_map else expr
+
+        tokens = [self.rosette_map_nested_list(arg, expr_map) for arg in expr]
+
+        return tokens
+
     def handle_profile_bv_expr(self, label, expr, extract_labels, is_extract = False):
         stmt = ""
         if is_extract:
@@ -522,15 +530,9 @@ class RepairRelavanceV4(RepairRelavanceV3):
                     inlined_terms = []
 
                     for term in expr:
-                        if isinstance(term, list) and term[0] == 'bv':
-                            print(term)
-                            mapped_items = [term[0], term[1]]
-                            mapped_bv = [expr_map[t] if t in expr_map else t for t in term[2]]
-                            mapped_items.append('({})'.format(" ".join(mapped_bv)))
-                            print("MAPPED ITEMS: ", mapped_items)
-                            inlined_terms.append("({})".format(" ".join(mapped_items)))
-                            print("INLINED:", inlined_terms[-1])
-
+                        if isinstance(term, list):
+                            updated_term = self.rosette_map_nested_list(term, expr_map)
+                            inlined_terms.append(self.rosette_flatten_list(updated_term))
                             continue
 
                         if term in expr_map:

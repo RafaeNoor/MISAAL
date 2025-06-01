@@ -21,12 +21,13 @@ from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 class EqClassEqualDepthV3Synth(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False, filter_list = None):
 
 
 
         super().__init__(dsl_list = dsl_list, source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, target_dsl_list = target_dsl_list, output_depth = output_depth, forward_map_path = forward_map_path, swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = swizzle_map_path, commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map)
         self.name = "EqClassEqualDepthV3Synth"
+        self.filter_list = filter_list
 
 
 
@@ -85,6 +86,11 @@ class EqClassEqualDepthV3Synth(EqClassEqualDepthV3):
             for output_depth in range(1, self.output_depth+ 1):
                 self.current_output_depth = output_depth
                 for input_inst in self.input_dsl_list:
+
+                    if not self.filter_list is None:
+                        if input_inst.name not in self.filter_list:
+                            continue
+
                     relavent_swizzle_subset = self.get_relavent_swizzle_dsl_subset(input_inst)
                     relavent_swizzle_subset = deduplicate_dsl_list(relavent_swizzle_subset)
                     relavent_output_subset = self.get_relavent_output_dsl_subset(input_inst)
@@ -104,6 +110,9 @@ class EqClassEqualDepthV3Synth(EqClassEqualDepthV3):
 
                     if sample_ctx.out_vectsize == None:
                         continue
+
+                    src_ctx = None
+
 
                     src_ctx = self.get_context_with_min_sym_bvs(input_inst)
 

@@ -28,16 +28,16 @@ class EqClassEqualDepthV4Full(EqClassEqualDepthV4):
 
         with open("empty_file.json", "w+") as EmptyFile:
             EmptyFile.write("{}\n")
-        super().__init__(dsl_list = dsl_list,  source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, output_depth = output_depth, forward_map_path = "empty_file.json", swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = "empty_file.json", commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth =start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list)
+        super().__init__(dsl_list = dsl_list,  source_synth_desc = source_synth_desc, target_synth_desc = target_synth_desc, output_depth = output_depth, forward_map_path = "empty_file.json", swizzle_dsl_list = swizzle_dsl_list, swizzle_map_path = "empty_file.json", commutative_map_path = commutative_map_path, input_depth = input_depth, depth_range = depth_range, use_canon_map = use_canon_map, start_input_depth = start_input_depth, start_output_depth =start_output_depth, bidirectional_test = bidirectional_test, filter_list = filter_list, target_dsl_list = target_dsl_list)
         self.name = "EqClassEqualDepthV4Full"
 
 
     def get_relavent_swizzle_dsl_subset(self, dsl_inst):
-        return [x for x in self.input_dsl_list if x.name != dsl_inst.name]
+        return []
 
 
     def get_relavent_output_dsl_subset(self, dsl_inst):
-        return self.input_dsl_list
+        return self.output_dsl_list
 
 
 
