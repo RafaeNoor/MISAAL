@@ -67,7 +67,76 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                 if isinstance(c_arg, BitVector):
                     symbolic_indices.append(idx)
 
-            if len(symbolic_indices) == 4:
+
+            if len(symbolic_indices) == 5:
+
+                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                for expr0 in generator_0:
+
+                    expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
+                    # Short circuit any expressions which can't be bound together anyways
+                    if not isinstance(expr0, Reg) and len(expr0_out_sizes.intersection(rctx_input_sizes)) == 0:
+                        continue
+
+                    if not is_expr_valid(expr0):
+                        continue
+
+
+                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                    for expr1 in generator_1:
+
+
+                        expr1_out_sizes = get_possible_output_sizes_of_eq_class(expr1, dsl_list)
+                        # Short circuit any expressions which can't be bound together anyways
+                        if not isinstance(expr1, Reg) and len(expr1_out_sizes.intersection(rctx_input_sizes)) == 0:
+                            continue
+
+                        if not is_expr_valid(expr1):
+                            continue
+
+
+
+                        generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                        for expr2 in generator_2:
+
+                            expr2_out_sizes = get_possible_output_sizes_of_eq_class(expr2, dsl_list)
+                            # Short circuit any expressions which can't be bound together anyways
+                            if not isinstance(expr2, Reg) and  len(expr2_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                continue
+
+                            if not is_expr_valid(expr2):
+                                continue
+
+                            generator_3 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                            for expr3 in generator_3:
+
+                                expr3_out_sizes = get_possible_output_sizes_of_eq_class(expr3, dsl_list)
+                                # Short circuit any expressions which can't be bound together anyways
+                                if not isinstance(expr3, Reg) and  len(expr3_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                    continue
+
+                                if not is_expr_valid(expr3):
+                                    continue
+
+                                generator_4 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                                for expr4 in generator_4:
+
+                                    expr4_out_sizes = get_possible_output_sizes_of_eq_class(expr4, dsl_list)
+                                    # Short circuit any expressions which can't be bound together anyways
+                                    if not isinstance(expr4, Reg) and  len(expr3_out_sizes.intersection(rctx_input_sizes)) == 0:
+                                        continue
+
+                                    if not is_expr_valid(expr4):
+                                        continue
+
+                                    copied_rctx = copy_fn(rctx)
+                                    copied_rctx.context_args[symbolic_indices[0]] = expr0
+                                    copied_rctx.context_args[symbolic_indices[1]] = expr1
+                                    copied_rctx.context_args[symbolic_indices[2]] = expr2
+                                    copied_rctx.context_args[symbolic_indices[3]] = expr3
+                                    copied_rctx.context_args[symbolic_indices[4]] = expr4
+                                    yield copied_rctx
+            elif len(symbolic_indices) == 4:
 
                 generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
                 for expr0 in generator_0:

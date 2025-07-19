@@ -52,6 +52,9 @@ class CanonicalizeExpression:
     def get_sym_or_ctx_args(self, ctx):
         return ([(idx, arg) for idx, arg in enumerate(ctx.context_args) if isinstance(arg, BitVector) or isinstance(arg, Context) or isinstance(arg, Reg)])
 
+    def get_all_ctx_args(self, ctx):
+        return ([(idx, arg) for idx, arg in enumerate(ctx.context_args)])
+
 
     def count_terms(self, expr):
         if isinstance(expr, Reg):
@@ -199,11 +202,19 @@ class CanonicalizeExpression:
                 commutable_ctxs = [commutable_indices]
 
             for comm_ctx in commutable_ctxs:
-                lhs_idx, lhs_term = args[comm_ctx[0]]
-                rhs_idx, rhs_term = args[comm_ctx[1]]
+                print(comm_ctx)
+
+                # Symbolic bitvector operands may not necessarily be the top
+                # most arguments
+                #lhs_idx, lhs_term = args[comm_ctx[0]]
+                #rhs_idx, rhs_term = args[comm_ctx[1]]
+
+                all_args = self.get_all_ctx_args(expr)
+                lhs_idx, lhs_term = all_args[comm_ctx[0]]
+                rhs_idx, rhs_term = all_args[comm_ctx[1]]
+
                 num_lhs_terms = self.count_terms(lhs_term)
                 num_rhs_terms = self.count_terms(rhs_term)
-
                 self.canonicalize_helper(lhs_term)
                 self.canonicalize_helper(rhs_term)
 

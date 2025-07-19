@@ -41,7 +41,7 @@ HYDRIDE_HEADER =  """
 
         ;; Uncomment the line below to enable verbose logging
         (enable-debug)
-        (custodian-limit-memory (current-custodian) (* 10000 1024 1024))
+        (custodian-limit-memory (current-custodian) (* 8000 1024 1024))
         (current-bitwidth 16)
         """
 
@@ -147,7 +147,7 @@ def execute_racket_file(statements):
             write_line(statement)
 
     # Timeout for repair should be 20 minutes, timeout for eqclass equal depth should be much smaller
-    TIMEOUT = int(3 * 60) # 20 mins
+    TIMEOUT = int(2.5 * 60) # 20 mins
     result = None
 
     USE_P_OPEN = True

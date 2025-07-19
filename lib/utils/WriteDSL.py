@@ -61,10 +61,13 @@ def convert_dsl_list_to_dict(dsl_list):
 def write_dsl_dict_to_file(dsl_dict, fpath, dict_name, indent = False):
     with open(fpath, "w+") as WriteFile:
         WriteFile.write("{} =".format(dict_name))
+        content = str(dsl_dict)
         if indent:
-            WriteFile.write(json.dumps(dsl_dict, indent = 4))
-        else:
-            WriteFile.write(str(dsl_dict))
+            content = json.dumps(dsl_dict, indent = 4)
+
+
+        content.replace("null", "None")
+        WriteFile.write(content)
         WriteFile.write("\n")
 
 

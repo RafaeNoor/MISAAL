@@ -324,6 +324,7 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list, root_ctx
         if not is_expression_template_valid(valid_template):
             continue
         valid = True
+        print(valid_template)
         materialize_context = materialize_expression_template(valid_template)
         yield materialize_context
 

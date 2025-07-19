@@ -55,23 +55,28 @@ class ExtendDSLUtils:
         # the  required output_bitwidth
 
         valid_ctxs = [ctx for ctx in dsl_inst.contexts if ctx.out_precision == output_bitwidth]
-        assert len(valid_ctxs) != 0
+        #assert len(valid_ctxs) != 0, f"Unable to find valid contexts for {dsl_inst.name} at output_precision {output_bitwidth}"
+        if len(valid_ctxs) == 0:
+            # Possibly extending instructions
+            return
 
         # Next we find a context with at least 128-bit vector sizes to
         # reduce any confusion between parameters which correspond to size
         # and lanes / precisions
 
         valid_ctxs = [ctx for ctx in valid_ctxs if ctx.out_vectsize == 128]
-        assert len(valid_ctxs) != 0
+        assert len(valid_ctxs) != 0 , f"Unable to find valid contexts for {dsl_inst.name} at output_precision {output_bitwidth} at output size {128}"
 
         for ctx_idx, sample_ctx in enumerate(valid_ctxs):
             in_vect_size_matches = True
 
             io_ratio = sample_ctx.out_vectsize / sample_ctx.in_vectsize
+            print(f"IO Ratio:\t{io_ratio}")
 
             for idx, ctx in enumerate(dsl_inst.contexts):
-                bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector)]
+                bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector) and arg.size != ctx.in_precision] # Leave the 'scalar' bitvector sizes as is
                 ctx_input_sizes = [arg.size for arg in bv_args]
+                print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision)
 
                 in_vect_size_matches = in_vect_size_matches and all([ctx.in_vectsize == size for size in ctx_input_sizes])
 
@@ -114,9 +119,12 @@ class ExtendDSLUtils:
 
 
                 if idx in bw_idxs:
+                    print(f"{idx} is is bw_idxs {bw_idxs}")
                     continue
 
                 lane_size_idxs = [sample_ctx.in_lanesize_index, sample_ctx.out_lanesize_index]
+
+
 
                 if idx in lane_size_idxs:
                     lane_size_val = int(arg)
@@ -137,6 +145,9 @@ class ExtendDSLUtils:
 
 
 
+                # At this point, we would've adjusted the the lane size and bw idxs already
+                adjusted_idxs = bw_idxs + lane_size_idxs
+                print("Adjusted idxs:", adjusted_idxs)
 
 
                 integer_val = None
@@ -144,7 +155,7 @@ class ExtendDSLUtils:
                     integer_val = int(arg)
                 except:
                     print(arg)
-                    print("Invalid")
+                    print("Invalid Non integer type val")
                     valid = False
                     break
 
@@ -156,12 +167,37 @@ class ExtendDSLUtils:
                 idx_arg_vals = self.get_arg_value_by_index(dsl_inst, idx)
                 idx_arg_vals = np.array(idx_arg_vals)
 
+                out_sizes = self.get_dsl_inst_out_vectsizes(dsl_inst)
+                in_sizes = self.get_dsl_inst_in_vectsizes(dsl_inst)
+
+                # If always equal to out_vectsize, then set it accordingly
+                if (np.array(out_sizes) == idx_arg_vals).all():
+                    print("Always equal out sizes")
+                    new_ctx_args[idx] = str(output_size)
+                    continue
+
+                out_precs = self.get_dsl_inst_out_precisions(dsl_inst)
+                in_precs = self.get_dsl_inst_in_precisions(dsl_inst)
+
+                # If always equal to out_precision, then set it accordingly
+                if (np.array(out_precs) == idx_arg_vals).all():
+                    print("Always equal out precs")
+                    new_ctx_args[idx] = str(output_bitwidth)
+                    continue
+
+
+
+
+                print("IDX ARG VALS: ", idx_arg_vals)
+                print("UNIQUE:", set(idx_arg_vals))
                 if len(set(idx_arg_vals)) == 1:
                     continue
 
-                print("Need to find ratio where consistent")
+                print(f"Need to find ratio where consistent for idx {idx}")
 
                 found_unique = False
+                print("new_ctx_args", new_ctx_args)
+                #  ['SYMBOLIC_BV_4096', 'SYMBOLIC_BV_4096', 'SYMBOLIC_BV_4096', 'SYMBOLIC_BV_32', '32', '32', '0', '128', '32', '1', '0', '1', '64', '1', '0']
                 for inner_arg_idx in range(len(new_ctx_args)):
                     sample_arg = sample_ctx.unparsed_args[inner_arg_idx]
                     if "BV" in sample_arg:
@@ -171,10 +207,18 @@ class ExtendDSLUtils:
                     if inner_arg_idx == idx:
                         continue
 
+                    #if inner_arg_idx in adjusted_idxs:
+                    #    continue
+
                     inner_idx_arg_vals = self.get_arg_value_by_index(dsl_inst, inner_arg_idx)
                     inner_idx_arg_vals = np.array(inner_idx_arg_vals)
+                    print("outer", idx)
+                    print("outer_idx_arg_vals", idx_arg_vals)
+                    print("inner_arg_idx", inner_arg_idx)
+                    print("inner_idx_arg_vals", inner_idx_arg_vals)
 
                     ratio = idx_arg_vals / inner_idx_arg_vals
+                    print("ratio", ratio)
                     # Check for any inf or nan
 
                     contains_inf = np.isinf(ratio).any()
@@ -194,19 +238,40 @@ class ExtendDSLUtils:
 
                     new_val =  int(sample_arg) * int(unique_values[0])
                     new_ctx_args[idx] = str(int(new_val))
+                    #new_ctx_args[inner_arg_idx] = str(int(new_val))
+
                     break
 
                 if not found_unique:
+                    print("Not found unique")
                     valid = False
                     break
 
 
             if not valid:
+                print(f"UNABLE TO Scale {dsl_inst.name} to {output_size} size and {output_bitwidth} bitwidth")
+                print("Original CTX", sample_ctx.name)
+                print("Original Args:", sample_ctx.unparsed_args)
+                print("New Args:", new_ctx_args)
+                print("Not Valid")
+                assert False
                 continue
 
-            print("Scale to {output_size} size and {output_bitwidth} bitwidth")
+            print(f"Scale to {output_size} size and {output_bitwidth} bitwidth")
             print("Original Args:", sample_ctx.unparsed_args)
             print("New Args:", new_ctx_args)
+            dsl_inst.add_context(name = extended_name,
+                                 in_vectsize = new_arg_size,
+                                 out_vectsize = output_size,
+                                 lane_size = int(new_ctx_args[sample_ctx.in_lanesize_index]),
+                                 in_precision = int(new_ctx_args[sample_ctx.in_precision_index]),
+                                 out_precision = output_bitwidth,
+                                 args = new_ctx_args,
+                                 in_precision_index = sample_ctx.in_precision_index,
+                                 out_precision_index = sample_ctx.out_precision_index,
+                                 permutation = sample_ctx.permutation
+                                 )
+
 
 
 
@@ -279,6 +344,30 @@ class ExtendDSLUtils:
 
         return vals
 
+    def get_dsl_inst_out_vectsizes(self, inst):
+        vals = []
+        for ctx in inst.contexts:
+            vals.append(ctx.out_vectsize)
+        return vals
+
+    def get_dsl_inst_in_vectsizes(self, inst):
+        vals = []
+        for ctx in inst.contexts:
+            vals.append(ctx.in_vectsize)
+        return vals
+
+    def get_dsl_inst_out_precisions(self, inst):
+        vals = []
+        for ctx in inst.contexts:
+            vals.append(ctx.out_precision)
+        return vals
+
+    def get_dsl_inst_in_precisions(self, inst):
+        vals = []
+        for ctx in inst.contexts:
+            vals.append(ctx.in_precision)
+        return vals
+
     def is_arg_numeric_at_arg_idx(self, inst, idx):
         sample_ctx = inst.contexts[0]
         ctx_arg = sample_ctx.context_args[idx]
@@ -312,7 +401,7 @@ class ExtendDSLUtils:
                 num_ctx_args = len(dsl_inst.contexts[0].context_args)
 
                 for arg_idx in range(num_ctx_args):
-                    if not is_arg_numeric_at_arg_idx(dsl_inst , arg_idx):
+                    if not self.is_arg_numeric_at_arg_idx(dsl_inst , arg_idx):
                         continue
                     arg_values = self.get_arg_value_by_index(dsl_inst, arg_idx)
 
@@ -333,7 +422,12 @@ class ExtendDSLUtils:
 
 
 pim_dsl_list = parse_dict(bitserial_fused_sema)
-pim_dsl_list = [d for d in pim_dsl_list if d.name == "test_enum_1_comb_9_fused_pim_op_127"]
+filter_names = [
+    #"test_enum_1_comb_14_fused_pim_op_1546",
+    "test_enum_1_comb_2_fused_pim_op_7",
+]
+pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
+#pim_dsl_list = [d for d in pim_dsl_list]
 print("Sample dsl_list:", pim_dsl_list)
 DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 13)], extend_to_bw = [8, 16, 32])
 
