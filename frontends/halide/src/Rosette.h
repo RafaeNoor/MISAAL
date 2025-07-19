@@ -20,6 +20,8 @@ std::string expr_to_racket(const Expr &expr, const std::map<std::string, VarEnco
 Stmt hydride_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs);
 
 
+
+Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs);
 Stmt misaal_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs);
 
 Stmt misaal_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs);
@@ -39,6 +41,7 @@ Stmt hydride_preprocess_x86(Stmt s);
 Stmt optimize_x86_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb);
 Stmt optimize_arm_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb);
 Stmt optimize_hexagon_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb);
+Stmt optimize_pim_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb);
 }  // namespace Internal
 
 }  // namespace Halide

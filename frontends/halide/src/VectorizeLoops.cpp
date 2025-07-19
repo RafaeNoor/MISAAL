@@ -504,7 +504,11 @@ class VectorSubs : public IRMutator {
 
     // Widen an expression to the given number of lanes.
     Expr widen(Expr e, int lanes) {
+        bool is_ramp = e.node_type() == IRNodeType::Ramp;
+
         if (e.type().lanes() == lanes) {
+            return e;
+        } else if (is_ramp && e.as<Ramp>()->lanes == lanes) {
             return e;
         } else if (lanes % e.type().lanes() == 0) {
             return Broadcast::make(e, lanes / e.type().lanes());

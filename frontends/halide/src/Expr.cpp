@@ -5,6 +5,7 @@ namespace Halide {
 namespace Internal {
 
 const IntImm *IntImm::make(Type t, int64_t value) {
+    // debug(0) << "Type: "<< t << ", value "<< value << " " << "is int?: "<< t.is_int() << ", is_scalar: "<< t.is_scalar() << "\n" ;
     internal_assert(t.is_int() && t.is_scalar())
         << "IntImm must be a scalar Int\n";
     internal_assert(t.bits() >= 1 && t.bits() <= 64)

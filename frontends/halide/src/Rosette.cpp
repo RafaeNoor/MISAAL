@@ -48,7 +48,8 @@ namespace {
 enum HydrideSupportedArchitecture {
     HVX,
     ARM,
-    X86
+    X86,
+    PIM
 };
 
 enum Sign {
@@ -253,14 +254,18 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
 
             switch (sign){
             case Sign::SIGNED:
-                return tabs() + "(typed:signed-vec-" + name + rkt_args + " " + type_suffix+ ")";
+
+                type_suffix += " 1"; 
+                return tabs() + "(typed-folded:vec-" + name + rkt_args + " " + type_suffix+ ")";
                 break;
 
             case Sign::UNSIGNED:
-                return tabs() + "(typed:unsigned-vec-" + name + rkt_args + " " + type_suffix+ ")";
+                type_suffix += " 0"; 
+                return tabs() + "(typed-folded:vec-" + name + rkt_args + " " + type_suffix+ ")";
                 break;
             case Sign::NOSIGN:
-                return tabs() + "(typed:vec-" + name + rkt_args + " " + type_suffix+ ")";
+                type_suffix += " -1"; 
+                return tabs() + "(typed-folded:vec-" + name + rkt_args + " " + type_suffix+ ")";
                 break;
 
             }
@@ -279,13 +284,16 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
         std::string expr = "";
         switch (sign){
             case Sign::SIGNED:
-                expr = tabs() + "(typed:signed-vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                type_suffix += " 1"; 
+                expr = tabs() + "(typed-folded:vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
                 break;
             case Sign::UNSIGNED:
-                expr = tabs() + "(typed:unsigned-vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                type_suffix += " 0"; 
+                expr = tabs() + "(typed-folded:vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
                 break;
             case Sign::NOSIGN:
-                expr = tabs() + "(typed:vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
+                type_suffix += " -1"; 
+                expr = tabs() + "(typed-folded:vec-" + bv_name + "\n" + rkt_lhs + "\n" + rkt_rhs + type_suffix + ")";
                 break;
         }
         return expr;
@@ -778,9 +786,9 @@ public:
 
             return tabs() + "(" + op->name + rkt_args + ")";
         } else if (op->is_intrinsic(Call::saturating_add)) {
-            return print_intrinsic("sat-add", op->args, op->type.is_scalar(), sign, lanes, bits);
+            return print_intrinsic("add", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::saturating_sub)) {
-            return print_intrinsic("sat-sub", op->args, op->type.is_scalar(), sign, lanes, bits);
+            return print_intrinsic("sub", op->args, op->type.is_scalar(), sign, lanes, bits);
         } else if (op->is_intrinsic(Call::widening_mul)) {
             return print_intrinsic("widen-mul", op->args, op->type.is_scalar(), sign, lanes, op->args[0].type().bits());
         } else if (op->is_intrinsic(Call::shift_right)) {
@@ -901,8 +909,14 @@ public:
             std::string rkt_cond = dispatch(cond);
             std::string rkt_true = dispatch(op->true_value);
             std::string rkt_false = dispatch(op->false_value);
+
+            Type VecTy = op->true_value.type();
+            size_t iprec = VecTy.bits();
+            size_t isize = VecTy.bits() * VecTy.lanes();
+
+            std::string type_info = " "+ std::to_string(iprec) + " " + std::to_string(isize);
             indent.pop();
-            return tabs() + "(vec-if\n" + rkt_cond + "\n" + rkt_true + "\n" + rkt_false + ")";
+            return tabs() + "(typed-folded:vec-if\n" + rkt_cond + "\n" + rkt_true + "\n" + rkt_false + type_info +")";
         } else if (mode.top() == VarEncoding::Bitvector) {
             std::string rkt_cond = dispatch(op->condition);
             std::string rkt_true = dispatch(op->true_value);
@@ -1727,6 +1741,8 @@ misaal::TARGET get_misaal_target(HydrideSupportedArchitecture _arch){
             return misaal::TARGET::x86;
         case HydrideSupportedArchitecture::ARM:
             return misaal::TARGET::ARM;
+        case HydrideSupportedArchitecture::PIM:
+            return misaal::TARGET::PIM;
     }
 }
 
@@ -1925,6 +1941,7 @@ public:
 
         // Simplify constants
         if (arch != HydrideSupportedArchitecture::HVX) {
+            // MISAAL TEMP
             spec_expr = simplify(spec_expr);
         }
 
@@ -2024,7 +2041,7 @@ public:
 
         if (!skipped_synthesis) {
 
-            std::string fn_name = "hydride.node." + benchmark_name + "." + std::to_string(expr_id);
+            std::string fn_name = "misaal_node_" + benchmark_name + "_" + std::to_string(expr_id);
             Expr call_expr = ExtractIntoCall().generate_call(fn_name, final_expr, abstractions);
 
             std::cout << "Ending synthesis for expr: " << expr_id << "\n";
@@ -2768,7 +2785,7 @@ private:
 
             // Abstract scalar arithmetic
             // operations.
-            if (!op->type.is_vector() || (_arch == HydrideSupportedArchitecture::HVX)) {
+            if (!op->type.is_vector() || (_arch == HydrideSupportedArchitecture::HVX) || (_arch == HydrideSupportedArchitecture::X86)) {
                 std::string uname = unique_name('h');
                 abstractions[uname] = IRMutator::visit(op);
                 return Variable::make(op->type, uname);
@@ -3493,12 +3510,12 @@ public:
 void IROptimizer::run_rewrites() {
     if(expr_id != 0) {
         RewriteCompiler.compile_expression("/tmp/"+benchmark_name, benchmark_name);
-    }
+    } 
 }
 
 Expr IROptimizer::misaal_rewrite_impl(Expr spec_expr) {
 
-    std::cout << "Input expression to synthesize: " << spec_expr << "\n";
+    std::cout << "MISAAL input expression to rewrite: " << spec_expr << "\n";
 
     RegToLoadMap.clear();
     LoadToRegMap.clear();
@@ -3513,7 +3530,8 @@ Expr IROptimizer::misaal_rewrite_impl(Expr spec_expr) {
 
     debug(0) << "Halide expr:\n" << spec_expr << ",  text expression:\n " << expr << "\n";
 
-    std::string expr_name = "hydride.node." + benchmark_name + "." + std::to_string(expr_id);
+
+    std::string expr_name = "misaal_node_" + benchmark_name + "_" + std::to_string(expr_id);
     RewriteCompiler.add_expression_to_compile(expr, expr_name);
 
     SkipNodes.clear();
@@ -3600,6 +3618,7 @@ Expr IROptimizer::synthesize_impl(Expr spec_expr, Expr orig_expr) {
             << "\n";
 
         std::string fn_name = "hydride.node." + benchmark_name + "." + std::to_string(expr_id);
+
         rkt << HSE.emit_compile_to_llvm("synth-res", "id-map", fn_name, benchmark_name);
 
         std::string cur_hash_path = HSE.get_synthlog_hash_filepath(expr_id);
@@ -3751,6 +3770,41 @@ Stmt misaal_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const Base
 }
 
 
+Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
+
+    debug(0) << "MISAAL Optimize PIM"
+             << "\n";
+
+
+    std::set<const IRNode *> DeadStmts;
+    auto FLS = Hydride::FoldLoadStores(DeadStmts);
+    auto folded = FLS.mutate(s);
+    debug(1) << "Printing Folded Stmt:\n";
+    debug(1) << folded << "\n";
+
+    debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+
+    auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
+    debug(1) << "Printing Pruned Stmt:\n";
+    debug(1) << pruned << "\n";
+
+    auto distributed = pruned;
+    debug(0) << "Distributed Stmt:\n";
+
+
+    srand(time(0));
+    int random_seed = rand() % 1024;
+
+    const char *benchmark_name = getenv("HYDRIDE_BENCHMARK");
+    std::string name = benchmark_name ? std::string(benchmark_name) : "misaal";
+    auto Optimizer = Hydride::IROptimizer(fvb, HydrideSupportedArchitecture::PIM, mutated_exprs, random_seed, name);
+    auto Result = Optimizer.mutate(distributed);
+    Optimizer.run_rewrites();
+
+    return Result;
+}
+
+
 Stmt hydride_optimize_hvx(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
 
     debug(0) << "Hydride Optimize HVX"
@@ -3847,24 +3901,34 @@ Stmt hydride_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const Bas
 
 
 Stmt misaal_optimize_x86(FuncValueBounds fvb, const Stmt &s, std::set<const BaseExprNode *> &mutated_exprs) {
-    debug(0) << "Hydride Optimize X86"
+    debug(0) << "MISAAL Optimize X86"
              << "\n";
-    std::set<const IRNode *> DeadStmts;
-    auto FLS = Hydride::FoldLoadStores(DeadStmts);
-    auto folded = FLS.mutate(s);
-    debug(1) << "Printing Folded Stmt:\n";
-    debug(1) << folded << "\n";
 
-    debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+    Stmt distributed;
 
-    auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
-    debug(1) << "Printing Pruned Stmt:\n";
-    debug(1) << pruned << "\n";
+    const char *disable_preprocess = getenv("HL_DISABLE_PREPROCESS");
+    if (disable_preprocess) {
+        debug(0) << "Disabling pre-processing pass\n";
+        distributed = s;
+    } else {
+        std::set<const IRNode *> DeadStmts;
+        auto FLS = Hydride::FoldLoadStores(DeadStmts);
+        auto folded = FLS.mutate(s);
+        debug(1) << "Printing Folded Stmt:\n";
+        debug(1) << folded << "\n";
 
-    std::vector<unsigned> x86_vector_sizes = {512, 256, 128, 64};
-    auto distributed = distribute_vector_exprs(pruned, x86_vector_sizes, true);
-    debug(0) << "Distributed Stmt:\n";
-    debug(0) << distributed << "\n";
+        debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
+
+        auto pruned = Hydride::RemoveRedundantStmt(DeadStmts).mutate(folded);
+        debug(1) << "Printing Pruned Stmt:\n";
+        debug(1) << pruned << "\n";
+
+        std::vector<unsigned> x86_vector_sizes = {512, 256, 128, 64};
+        distributed = distribute_vector_exprs(pruned, x86_vector_sizes, true);
+        debug(0) << "Distributed Stmt:\n";
+        debug(0) << distributed << "\n";
+    }
+
 
     srand(time(0));
     int random_seed = rand() % 1024;
@@ -4002,6 +4066,21 @@ Stmt optimize_x86_instructions_synthesis(Stmt s, const Target &t, FuncValueBound
 
     return s;
 }
+
+
+Stmt optimize_pim_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
+
+    std::set<const BaseExprNode *> mutated_exprs;
+    bool use_misaal = true;
+    if (use_misaal){
+        s = misaal_optimize_pim(fvb, s, mutated_exprs);
+    } else {
+    }
+
+    return s;
+}
+
+
 
 Stmt optimize_hexagon_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
 

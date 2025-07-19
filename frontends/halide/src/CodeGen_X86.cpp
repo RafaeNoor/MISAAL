@@ -268,6 +268,7 @@ bool should_use_dot_product(const Expr &a, const Expr &b, vector<Expr> &result) 
     const char* enable_hydride = getenv("HL_ENABLE_HYDRIDE");
     if(enable_hydride && strcmp(enable_hydride, "0") != 0){
         // Should not try to fold dot product when hydride is enabled
+        debug(1) << "HYDRIDE ENABLED, DO NOT USE X86 Halide Backend\n";
         return false;
     }
 
@@ -275,6 +276,7 @@ bool should_use_dot_product(const Expr &a, const Expr &b, vector<Expr> &result) 
     internal_assert(b.type() == t);
 
     if (!(t.is_int() && t.bits() == 32 && t.lanes() >= 4)) {
+        debug(1) << "x86 bits and lanes not match\n";
         return false;
     }
 
@@ -282,9 +284,11 @@ bool should_use_dot_product(const Expr &a, const Expr &b, vector<Expr> &result) 
     const Call *mb = Call::as_intrinsic(b, {Call::widening_mul});
     // dot_product can't handle mixed type widening muls.
     if (ma && ma->args[0].type() != ma->args[1].type()) {
+        debug(1) << "MA FAIL\n";
         return false;
     }
     if (mb && mb->args[0].type() != mb->args[1].type()) {
+        debug(1) << "MB FAIL\n";
         return false;
     }
     // If the operands are widening shifts, we might be able to treat these as

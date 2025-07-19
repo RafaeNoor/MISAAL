@@ -867,15 +867,18 @@ void CodeGen_LLVM::compile_func(const LoweredFunc &f, const std::string &simple_
 
     const char *enable_hydride = getenv("HL_ENABLE_HYDRIDE");
 
+
     if (enable_hydride && strcmp(enable_hydride, "0") != 0) {
         if (target.arch == Target::X86) {
-            body = optimize_x86_instructions_synthesis(body, target, this->func_value_bounds);
+            //body = optimize_x86_instructions_synthesis(body, target, this->func_value_bounds);
+            body =   optimize_pim_instructions_synthesis(body, target, this->func_value_bounds);
+
         } else if (target.arch == Target::Hexagon) {
             // body = optimize_hexagon_instructions_synthesis(body, target, this->func_value_bounds);
         } else if (target.arch == Target::ARM) {
             body = optimize_arm_instructions_synthesis(body, target, this->func_value_bounds);
         }
-    }
+    } 
     body.accept(this);
 
     // Clean up and return.

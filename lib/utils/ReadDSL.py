@@ -171,14 +171,14 @@ def get_matching_context(nested_expr, dsl_list):
 
 
 [['define', 'hydride-expr', ['_mm_movm_epi8_dsl', ['reg', ['bv', '0', ['bitvector', '8']]], ['lit', ['bv', '#b1', ['bitvector', '1']]], ['lit', ['bv', '#x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', ['bitvector', '512']]], ['reg', ['bv', '1', ['bitvector', '8']]], '512', '512', '0', '512', '16', '1', '16', '0']]]
-def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None):
+def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None, expecting_return_prec = None):
 
 
     first_term = nested_expr[0]
 
     # Skip defines if they exist
     if first_term == 'define':
-        return parse_nested_expr_to_dsl(nested_expr[2], dsl_list, expecting_return_size =  expecting_return_size)
+        return parse_nested_expr_to_dsl(nested_expr[2], dsl_list, expecting_return_size =  expecting_return_size, expecting_return_prec = expected_return_prec)
 
     elif first_term == 'reg':
         # Just create a register with arbritary size and precision. Parent of this
@@ -197,7 +197,11 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
         if not expecting_return_size is None:
             reg_size = expecting_return_size
 
-        reg = Reg(reg_index_term, 8, reg_size)
+        reg_prec = 8
+        if not expecting_return_prec is None:
+            reg_prec = expecting_return_prec
+
+        reg = Reg(reg_index_term, reg_prec, reg_size)
 
         return reg
 
@@ -287,7 +291,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
         for idx, arg in enumerate(matching_context.context_args):
             if isinstance(arg, BitVector) or isinstance(arg, ConstBitVector):
-                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list, expecting_return_size = arg.size) # Offset zero corresponds to the name of the current matching context
+                matching_context.context_args[idx] = parse_nested_expr_to_dsl(nested_expr[idx + 1], dsl_list, expecting_return_size = arg.size, expecting_return_prec = matching_context.in_precision) # Offset zero corresponds to the name of the current matching context
 
         if matching_context != None:
             return matching_context

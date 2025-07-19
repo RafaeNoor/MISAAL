@@ -53,14 +53,17 @@ namespace misaal {
     std::string MisaalCompiler::get_compiler_python_import(){
         std::string imports = "\
 from compiler.HydrideCompiler import HydrideCompiler\n\
+from compiler.PIMFusedCompiler import PIMFusedCompiler\n\
 from utils.egg_config import EGG_PKG_PATH\n\
 from sema.hexsemantics_new import semantics as hvx_semantics\n\
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
-from sema.halide_decomposed import halide_decomposed as halide_semantics\n\
+from sema.halide_folded_full import halide_folded_full as halide_semantics\n\
 from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles\n\
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles\n\
 from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles\n\
 from sema.ARMSema import arm_semantics\n\
+from sema.bitserial_fused_sema import bitserial_fused_sema\n\
+from sema.pim_extend_dsl import pim_extended_dsl\n\
 from sema.repairs_sema import repair_semantics\n\
 from utils.DSLInstructionUtils import parse_dict_with_bounded\n\
 import sys\n";
@@ -118,15 +121,28 @@ import sys\n";
                 inst_dsl_name = "arm_semantics";
                 swizzle_dsl_name = "arm_swizzles";
                 break;
+            case PIM:
+                inst_dsl_name = "bitserial_fused_sema";
+                swizzle_dsl_name = "{}";
+                break;
         };
 
         std::string parse_inst_dict = parse_dict("inst_dict", inst_dsl_name);
         std::string parse_swizzle_dict = parse_dict("swizzle_dict", swizzle_dsl_name);
 
+
+
+
         std::vector<std::string> statements;
 
         statements.push_back(parse_inst_dict);
         statements.push_back(parse_swizzle_dict);
+
+        if(target == PIM){
+            std::string extended_inst_dict = parse_dict("extended_dsl_list", "pim_extended_dsl");
+
+            statements.push_back(extended_inst_dict);
+        }
 
         std::string output_list = output_dsl_name + " = inst_dict + swizzle_dict"; 
         statements.push_back(output_list);
@@ -148,6 +164,9 @@ import sys\n";
             case ARM:
                 partial_import = "from patterns.ARM import arm_patterns";
                 break;
+            case PIM:
+                partial_import = "from patterns.PIM import pim_patterns";
+                break;
         };
 
         return partial_import + " as " + pattern_alias;
@@ -166,6 +185,9 @@ import sys\n";
             case ARM:
                 path = "\"/shared/hydride/LLVMARMLegalizer.so\"";
                 break;
+            case PIM:
+                path = "\"/shared/hydride/PLACEHOLDER.so\"";
+                break;
         };
         return path;
     }
@@ -181,6 +203,9 @@ import sys\n";
                 break;
             case ARM:
                 flag = "\"-arm-hydride-legalize\"";
+                break;
+            case PIM:
+                flag = "\"PLACEHOLDER\"";
                 break;
         };
         return flag;
@@ -198,6 +223,9 @@ import sys\n";
                 break;
             case ARM:
                 wrapper = "\"/shared/hydride/arm_wrappers.ll\""; 
+                break;
+            case PIM:
+                wrapper = "\"\"";
                 break;
         };
         return wrapper;
@@ -291,8 +319,16 @@ import sys\n";
         params.push_back("intrinsics_file =  intrin");
         params.push_back("hydride_root_path =  HYDRIDE_ROOT");
         params.push_back("llvm_out_file_name = \"" + output_path + "\"");
+        params.push_back("skip_axioms = True");
 
-        std::string compiler_defn = compiler_name + " = HydrideCompiler(" + join(params, ", ") + ")"; 
+
+        std::string compiler_type = "HydrideCompiler";
+
+        if(target == PIM){
+            params.push_back("extended_dsl_list = extended_dsl_list");
+            compiler_type = "PIMFusedCompiler";
+        }
+        std::string compiler_defn = compiler_name + " = "+ compiler_type+"(" + join(params, ", ") + ")"; 
 
         statements.push_back(compiler_defn);
 

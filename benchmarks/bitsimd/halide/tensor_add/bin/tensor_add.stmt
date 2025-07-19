@@ -1,0 +1,44 @@
+module name=tensor_add, target=x86-64-linux-avx-avx2-avx512-avx512_skylake-f16c-fma-no_asserts-no_bounds_query-sse41
+external_plus_metadata func tensor_add (A, B, output) {
+assert((uint64)reinterpret((halide_buffer_t *)output.buffer) != (uint64)0, halide_error_buffer_argument_is_null("output"))
+assert((uint64)reinterpret((halide_buffer_t *)B.buffer) != (uint64)0, halide_error_buffer_argument_is_null("B"))
+assert((uint64)reinterpret((halide_buffer_t *)A.buffer) != (uint64)0, halide_error_buffer_argument_is_null("A"))
+let A = (void *)_halide_buffer_get_host((halide_buffer_t *)A.buffer)
+let A.min.0 = _halide_buffer_get_min((halide_buffer_t *)A.buffer, 0)
+let A.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)A.buffer, 0)
+let A.min.1 = _halide_buffer_get_min((halide_buffer_t *)A.buffer, 1)
+let A.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)A.buffer, 1)
+let B = (void *)_halide_buffer_get_host((halide_buffer_t *)B.buffer)
+let B.min.0 = _halide_buffer_get_min((halide_buffer_t *)B.buffer, 0)
+let B.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)B.buffer, 0)
+let B.min.1 = _halide_buffer_get_min((halide_buffer_t *)B.buffer, 1)
+let B.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)B.buffer, 1)
+let output = (void *)_halide_buffer_get_host((halide_buffer_t *)output.buffer)
+let output.min.0 = _halide_buffer_get_min((halide_buffer_t *)output.buffer, 0)
+let output.extent.0 = _halide_buffer_get_extent((halide_buffer_t *)output.buffer, 0)
+let output.stride.0 = _halide_buffer_get_stride((halide_buffer_t *)output.buffer, 0)
+let output.min.1 = _halide_buffer_get_min((halide_buffer_t *)output.buffer, 1)
+let output.extent.1 = _halide_buffer_get_extent((halide_buffer_t *)output.buffer, 1)
+let output.stride.1 = _halide_buffer_get_stride((halide_buffer_t *)output.buffer, 1)
+assert(A.stride.0 == 1, 0)
+assert(B.stride.0 == 1, 0)
+assert(output.stride.0 == 1, 0)
+produce output {
+ let t5 = (output.extent.0 + 127)/128
+ let t7 = (output.min.0 - (B.min.1*B.stride.1)) - B.min.0
+ let t6 = (output.min.0 - (A.min.1*A.stride.1)) - A.min.0
+ let t8 = 0 - (output.min.1*output.stride.1)
+ for (output.s0.x.x, 0, t5) {
+  let output.s0.x.v0.base.s = min(output.s0.x.x*128, output.extent.0 + -128)
+  let t11 = output.s0.x.v0.base.s + t8
+  let t10 = output.s0.x.v0.base.s + t7
+  let t9 = output.s0.x.v0.base.s + t6
+  for (output.s0.y.rebased, 0, output.extent.1) {
+   let t4 = output.min.1 + output.s0.y.rebased
+   output[ramp((output.stride.1*t4) + t11, 1, 128)] = A[ramp((A.stride.1*t4) + t9, 1, 128)] + B[ramp((B.stride.1*t4) + t10, 1, 128)]
+  }
+ }
+}
+}
+
+

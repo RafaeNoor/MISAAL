@@ -66,7 +66,7 @@ def write_dsl_dict_to_file(dsl_dict, fpath, dict_name, indent = False):
             content = json.dumps(dsl_dict, indent = 4)
 
 
-        content.replace("null", "None")
+        content = content.replace("null", "None")
         WriteFile.write(content)
         WriteFile.write("\n")
 

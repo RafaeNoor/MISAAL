@@ -88,7 +88,7 @@ class ExtendDSLUtils:
 
 
 
-            extended_name = f"{dsl_inst.name}_extended_size_{output_size}_bw_{output_bitwidth}_ctx_{ctx_idx}"
+            #extended_name = f"{dsl_inst.name}_extended_size_{output_size}_bw_{output_bitwidth}_ctx_{ctx_idx}"
 
             new_ctx_args = copy.deepcopy(sample_ctx.unparsed_args)
 
@@ -259,6 +259,7 @@ class ExtendDSLUtils:
 
             print(f"Scale to {output_size} size and {output_bitwidth} bitwidth")
             print("Original Args:", sample_ctx.unparsed_args)
+            extended_name = f"{sample_ctx.name}_extended_size_{output_size}_bw_{output_bitwidth}_ctx_{ctx_idx}"
             print("New Args:", new_ctx_args)
             dsl_inst.add_context(name = extended_name,
                                  in_vectsize = new_arg_size,

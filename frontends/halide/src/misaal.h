@@ -14,7 +14,8 @@ namespace misaal {
         x86,
         HVX,
         ARM,
-        Halide
+        Halide,
+        PIM
     };
 
     struct CompilerQuery {
