@@ -2,40 +2,8 @@ HALIDE_DISTRIB ?= /home/arnoor2/MISAAL/frontends/halide/distrib/
 HALIDE_DIR ?=/home/arnoor2/MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
-benchmarks = gaussian3x3 \
-			 dilate3x3  \
-			 dilate5x5 \
-			 dilate7x7 \
-			 max_pool  \
-			 sobel3x3 \
-			 sobel5x5 \
-			 blur3x3 \
-			 blur5x5 \
-			 blur7x7 \
-			 gaussian5x5 \
-			 gaussian7x7 \
-			 median3x3 \
-			 batched_matmul_256_32bit \
-			 max_pool_add \
-			 average_pool \
-			 average_pool_add \
-			 l2norm \
-			 add \
-			 matmul_bias_relu_matmul \
-			 matmul_bias_gelu_matmul \
-			 matmul_256_32bit_bias_add_relu \
-			 matmul_256_32bit_bias_add_gelu \
-			 matmul_256_32bit_bias_add \
-			 matmul_256_32bit_bias_add_add \
-			 mul \
-			 softmax \
-			 fully_connected \
-			 depthwise_conv \
-			 tensor_shr \
-			 tensor_add \
-			 conv_nn \
-			 conv3x3a16 \
-			 tensor_sat
+benchmarks = tensor_add \
+			 relu
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 
@@ -47,7 +15,7 @@ SYNTH_BITWIDTH ?= 16
 
 BENCHMARK ?=1
 
-CC=clang
+CC=g++#clang
 #TARGET=host-x86-64 #host-noos-no_bounds_query-no_asserts
 TARGET=host-x86-64-no_bounds_query-no_asserts #host-noos-no_bounds_query-no_asserts
 STARTING_HASH_FLAG= #HYDRIDE_INITIAL_HASH=x86_hash
@@ -76,28 +44,33 @@ $(benchmarks): %: %/bin
 		-t 0 \
 		-o $@/bin \
 		-g $@ \
-		-e static_library,stmt,h,llvm_assembly,assembly \
+		-e cpp,h,stmt \
 		-f $@ target=$(TARGET)
 	export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;HL_EXPR_DEPTH=$(EXPR_DEPTH) HL_ENABLE_HYDRIDE=0 HL_DEBUG_CODEGEN=1  HL_SYNTH_BW=$(SYNTH_BITWIDTH) MISAAL_DISABLE_FRONTEND_PATTERNS=1 ./$@/bin/$@_generator \
 		-r halide_runtime_x86 \
 		-o $@/bin \
 		-e object,c_header \
 		target=$(TARGET)
+ifeq ($(ENABLE_HYDRIDE),1)
+	python3 inline.py $@
+endif
 
-	$(CC) -Dbenchmark_$@ --std=c++17 \
+	$(CC) -DHALIDE_CPP_ALWAYS_USE_CPP_VECTORS -DFUSED -Dbenchmark_$@ --std=c++17 \
 		-O0 -march=native -mavx512vl -mavx512ifma \
-		-I $(HALIDE_DISTRIB)/include -I ./$@/bin \
+		-I $(HALIDE_DISTRIB)/include -I ./$@/bin -I ./libpimsim/ \
 		-lstdc++ -ldl -pthread \
 		test/run.cpp \
 		test/stubs.cpp \
-		$@/bin/$@.a \
+		$@/bin/$@.halide_generated.cpp \
+		-L ./libpimsim/ \
+		-lpimeval \
 		$@/bin/halide_runtime_x86.o \
 		-o $@/bin/$@_run.out
 	
 ifeq ($(BENCHMARK),1) 
 
 # Benchmark the generated binary
-	$@/bin/$@_run.out 1920 1080 
+	$@/bin/$@_run.out 
 
 endif
 
@@ -116,6 +89,6 @@ clean:
 	rm -rf /tmp/base_*
 	rm -rf /tmp/hydride_hash*
 	rm -rf /tmp/hydride.node*
-	rm -rf ./*.py ./*.egg ./*.txt ./*.rkt ./test.out ./egg*
+	rm -rf ./*misaal.py ./*.egg ./*.txt ./*.rkt ./test.out ./egg*
 	rm -rf ./pim_fused_lowering.h
 

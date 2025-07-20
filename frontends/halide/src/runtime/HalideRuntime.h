@@ -443,14 +443,14 @@ struct halide_type_t {
 
     /** How many elements in a vector. This is 1 for scalar types. */
     HALIDE_ATTRIBUTE_ALIGN(2)
-    uint16_t lanes;
+    uint32_t lanes;
 
 #if (__cplusplus >= 201103L || _MSVC_LANG >= 201103L)
     /** Construct a runtime representation of a Halide type from:
      * code: The fundamental type from an enum.
      * bits: The bit size of one element.
      * lanes: The number of vector elements in the type. */
-    HALIDE_ALWAYS_INLINE constexpr halide_type_t(halide_type_code_t code, uint8_t bits, uint16_t lanes = 1)
+    HALIDE_ALWAYS_INLINE constexpr halide_type_t(halide_type_code_t code, uint8_t bits, uint32_t lanes = 1)
         : code(code), bits(bits), lanes(lanes) {
     }
 
@@ -498,7 +498,7 @@ struct halide_type_t {
 };
 
 #if (__cplusplus >= 201103L || _MSVC_LANG >= 201103L)
-static_assert(sizeof(halide_type_t) == sizeof(uint32_t), "size mismatch in halide_type_t");
+static_assert(sizeof(halide_type_t) == sizeof(uint64_t), "size mismatch in halide_type_t");
 #endif
 
 enum halide_trace_event_code_t { halide_trace_load = 0,

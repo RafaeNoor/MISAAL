@@ -68,6 +68,16 @@ const string headers = R"INLINE_CODE(
 #include <stdio.h>
 #include <string.h>
 #include <type_traits>
+#include <vector>
+#include "libpimeval.h"
+#ifdef FUSED
+#include "fused_lower.h"
+#endif
+
+#ifdef UNFUSED
+#include "unfused_lower.h"
+#endif
+
 )INLINE_CODE";
 
 // We now add definitions of things in the runtime which are
@@ -451,7 +461,14 @@ namespace {
 // which will interfere with ours.
 template <typename ElementType, size_t Lanes>
 struct CppVector {
-    ElementType elements[Lanes];
+    //ElementType elements[Lanes];
+    std::vector<ElementType> elements;
+
+    CppVector() : elements(Lanes) {}
+    // Copy Constructor
+    CppVector(const CppVector& other) : elements(other.elements) {}
+    // Move Constructor
+    CppVector(CppVector&& other) : elements(std::move(other.elements)) {}
 
     HALIDE_ALWAYS_INLINE
     ElementType& operator[](size_t i) {
@@ -465,12 +482,14 @@ struct CppVector {
 
     HALIDE_ALWAYS_INLINE
     ElementType *data() {
-        return elements;
+        //return elements;
+        return elements.data();
     }
 
     HALIDE_ALWAYS_INLINE
     const ElementType *data() const {
-        return elements;
+        //return elements;
+        return elements.data();
     }
 };
 
@@ -2618,7 +2637,7 @@ string CodeGen_C::print_scalarized_expr(const Expr &e) {
 }
 
 string CodeGen_C::print_extern_call(const Call *op) {
-    if (op->type.is_vector()) {
+    if (op->type.is_vector()  && op->name.find("misaal") == std::string::npos) {
         // Need to split into multiple scalar calls.
         return print_scalarized_expr(op);
     }

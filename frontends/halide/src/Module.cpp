@@ -1,4 +1,5 @@
 #include "Module.h"
+#include "Rosette.h"
 
 #include <array>
 #include <fstream>
@@ -660,6 +661,20 @@ void Module::compile(const std::map<OutputFileType, std::string> &output_files) 
         Internal::CodeGen_C cg(file,
                                target(),
                                target().has_feature(Target::CPlusPlusMangling) ? Internal::CodeGen_C::CPlusPlusImplementation : Internal::CodeGen_C::CImplementation);
+
+
+        for(auto &test_f: contents->functions){
+            const char *enable_hydride = getenv("HL_ENABLE_HYDRIDE");
+            if (enable_hydride && strcmp(enable_hydride, "0") != 0) {
+                auto body = optimize_pim_instructions_synthesis(test_f.body, target(), get_func_value_bounds());
+                test_f.body = body;
+
+
+            }
+        }
+
+
+
         cg.compile(*this);
     }
     if (contains(output_files, OutputFileType::python_extension)) {
