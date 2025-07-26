@@ -3,7 +3,14 @@ HALIDE_DIR ?=/home/arnoor2/MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
 benchmarks = tensor_add \
-			 relu
+			 bitsimd_gemv \
+			 bitsimd_matmul \
+			 histogram \
+			 relu \
+			 filter_by_key \
+			 convolution \
+			 max_pool \
+			 radix_sort
 
 bin_dirs = $(addsuffix /bin,$(benchmarks))
 

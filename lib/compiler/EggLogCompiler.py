@@ -315,6 +315,7 @@ class EggLogCompiler(CompilerBase):
 
         print("EGG LOG PRODUCED", final_expression_str)
         output_expression = self.parse_egglog_output_expr(final_expression_str, num_regs)
+        print("Post apply rewrite!")
 
         recompile_iter_count = 0
         while self.expr_contains_src_language(output_expression, "typed"):
@@ -337,11 +338,13 @@ class EggLogCompiler(CompilerBase):
             print("Expression does not contain swizzles")
 
 
+        print("Adding rewriten expression to memo map")
         self.memo[key] = output_expression
 
         return output_expression
 
     def expr_contains_src_language(self, expr, prefix):
+        print("Checking if expression contains source language")
         if not isinstance(expr, Context):
             return False
         dsl_names = get_ctx_expr_dsl_names(expr, self.target_dsl_list + self.src_dsl_list)

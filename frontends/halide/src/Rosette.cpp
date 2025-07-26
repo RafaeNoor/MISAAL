@@ -280,6 +280,9 @@ class ExprPrinter : public VariadicVisitor<ExprPrinter, std::string, std::string
 
 
         std::string type_suffix = " " + std::to_string(bits) + " " + std::to_string(lanes * bits);
+        if(bv_name == "mul"){
+            type_suffix = " " + std::to_string(bits) +" " + std::to_string(bits * 2)+ " " + std::to_string(lanes * bits);
+        }
         indent.pop();
         std::string expr = "";
         switch (sign){
@@ -554,8 +557,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("eq", "eq?", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
@@ -566,8 +569,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("ne", "ne?", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
@@ -578,8 +581,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("lt", "<", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
@@ -590,8 +593,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("le", "<=", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
@@ -602,8 +605,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("gt", ">", op->a, op->b, getExprSign(op->type), lanes, bits);
     }
 
@@ -614,8 +617,8 @@ public:
             SkipNodes.insert(op->b.get());
             return "";
         }
-        size_t lanes = op->type.lanes();
-        size_t bits = op->type.bits();
+        size_t lanes = op->a.type().lanes();
+        size_t bits = op->a.type().bits();
         return print_binary_op("ge", ">", op->a, op->b, getExprSign(op->type), lanes , bits);
     }
 
@@ -674,11 +677,11 @@ public:
 
         std::string bits = std::to_string(op->type.bits());
         std::string lanes = std::to_string(op->lanes);
-        std::string rkt_type = " " + bits + " " + bits + " " + lanes +" ";
+        std::string rkt_type = " " + bits +  " " + lanes +" ";
         std::string rkt_val = dispatch(op->value);
         // std::cout << "Broadcast "<<rkt_val << "to x"<<rkt_type <<"\n";
         indent.pop();
-        return tabs() + "(typed:xBroadcast " + rkt_val + " " + rkt_type + ")";
+        return tabs() + "(typed-folded:xBroadcast " + rkt_val + " " + rkt_type + ")";
     }
 
     std::string get_type_string(Type t) {
@@ -993,8 +996,8 @@ public:
             mode.pop();
             indent.pop();
 
-            std::string type_info = " " + iprec_str + " " + iprec_str + " " + rkt_fac;
-            return tabs() + "(typed:xBroadcast " +  rkt_vec +" " + type_info +")";
+            std::string type_info = " " + iprec_str  + " " + rkt_fac;
+            return tabs() + "(typed-folded:xBroadcast " +  rkt_vec +" " + type_info +")";
             //return tabs() + "(vec-broadcast " + rkt_fac + "\n" + rkt_vec + ")";
         } else if (op->is_interleave()) {
             switch (op->vectors.size()) {
@@ -1895,7 +1898,7 @@ public:
         }
 
         // If the expression is a conditional, optimize the branches individually
-        if (base_e.node_type() == IRNodeType::Select) {
+        if (base_e.node_type() == IRNodeType::Select && (arch != HydrideSupportedArchitecture::PIM)  ) {
             debug(1) << "Select case"
                      << "\n";
             return IRMutator::mutate(expr);
@@ -2772,7 +2775,7 @@ private:
 
         Expr visit(const Mod *op) override {
 
-            if ((_arch == HydrideSupportedArchitecture::HVX)) {
+            if ((_arch == HydrideSupportedArchitecture::HVX) || (_arch == HydrideSupportedArchitecture::PIM) ) {
                 std::string uname = unique_name('h');
                 abstractions[uname] = IRMutator::visit(op);
                 return Variable::make(op->type, uname);

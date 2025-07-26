@@ -13,6 +13,8 @@
 #include "tensor_add.h"
 #elif benchmark_relu
 #include "relu.h"
+#elif benchmark_bitsimd_gemv
+#include "bitsimd_gemv.h"
 #endif
 
 #define LOG2VLEN 7
@@ -137,6 +139,46 @@ int main(int argc, char **argv) {
     free(simple_input_1);
     free(simple_input_2);
     free(simple_output);
+#endif
+
+#if benchmark_bitsimd_gemv
+
+  int M = 1024;
+  int N = 1;
+  int K = 1024;
+
+  halide_dimension_t x_dim_A{0, M, 1};
+  halide_dimension_t y_dim_A{0, K, M};
+  halide_dimension_t shape_A[2] = {x_dim_A, y_dim_A};
+  int32_t* matAptr = (int32_t*) malloc(sizeof(int32_t) * M * K);
+  Halide::Runtime::Buffer<int32_t> matA((int32_t *)matAptr, 2, shape_A);
+
+
+  halide_dimension_t x_dim_B{0, K, 1};
+  halide_dimension_t y_dim_B{0, N, K};
+  halide_dimension_t shape_B[2] = {x_dim_B, y_dim_B};
+  int32_t* matBptr = (int32_t*) malloc(sizeof(int32_t) * N * K);
+  Halide::Runtime::Buffer<int32_t> matB((int32_t *)matBptr, 2, shape_B);
+
+
+
+  halide_dimension_t x_dim_O{0, M, 1};
+  halide_dimension_t y_dim_O{0, N, M};
+  halide_dimension_t shape_O[2] = {x_dim_O, y_dim_O};
+  int32_t* matOptr = (int32_t*) malloc(sizeof(int32_t) * N * M);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)matOptr, 2, shape_O);
+
+  benchmark([&]() {
+    printf("Launching bitsimd gemv!\n");
+    int error = bitsimd_gemv(matA, matB, output_buf);
+    if (error != 0) {
+      printf("bitsimd_gemv pipeline failed: %d\n", error);
+    }
+  });
+
+  free(matAptr);
+  free(matBptr);
+  free(matOptr);
 #endif
 
     printf("Success!\n");
