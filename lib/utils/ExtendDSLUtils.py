@@ -10,7 +10,7 @@ import numpy as np
 # for a given output vector size and element bitwitdths.
 class ExtendDSLUtils:
 
-    def __init__(self, extend_to_sizes = [], extend_to_bw = [], output_file_name = "extend_dsl.py", write_to_file = True):
+    def __init__(self, extend_to_sizes = [], extend_to_bw = [], output_file_name = "pim_extend_dsl.py", write_to_file = True):
         self.extend_to_sizes = extend_to_sizes
         self.extend_to_bw = extend_to_bw
         self.output_file_name = output_file_name
@@ -30,7 +30,7 @@ class ExtendDSLUtils:
 
         if self.write_to_file:
             dict_form = convert_dsl_list_to_dict(dsl_list)
-            write_dsl_dict_to_file(dict_form , self.output_file_name, "extended_dsl", indent = True)
+            write_dsl_dict_to_file(dict_form , self.output_file_name, "pim_extended_dsl", indent = True)
 
 
     def get_eq_class_ctx(self, dsl_inst, output_size, bitwidth):
@@ -77,8 +77,11 @@ class ExtendDSLUtils:
                 bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector) and arg.size != ctx.in_precision] # Leave the 'scalar' bitvector sizes as is
                 ctx_input_sizes = [arg.size for arg in bv_args]
                 print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision, "comparing to",ctx.in_vectsize)
-
-                in_vect_size_matches = in_vect_size_matches and any([ctx.in_vectsize == size for size in ctx_input_sizes])
+                if ctx_input_sizes == []:
+                    # I.e. has only scalar operands
+                    break
+                else:
+                    in_vect_size_matches = in_vect_size_matches and any([ctx.in_vectsize == size for size in ctx_input_sizes])
 
 
             if not in_vect_size_matches:
@@ -105,6 +108,7 @@ class ExtendDSLUtils:
                     arg_size = int(arg.split("SYMBOLIC_BV_")[-1])
 
                     if arg_size in [8,16,32]:
+                        new_arg_size = arg_size
                         # For broadcast like instructions just use the same size
                         if sample_ctx.in_precision >= arg_size:
                             # If really scalar then continue
@@ -464,12 +468,7 @@ class ExtendDSLUtils:
 
 pim_dsl_list = parse_dict(bitserial_fused_sema)
 filter_names = [
-    #"test_enum_1_comb_14_fused_pim_op_1546",
-    #"test_enum_1_comb_2_fused_pim_op_7",
-    #"test_enum_1_comb_13_fused_pim_op_2150",
-    #"test_enum_1_comb_14_fused_pim_op_3601",
-    #"test_enum_1_comb_14_fused_pim_op_162",
-    "test_enum_1_comb_11_fused_pim_op_2",
+    "test_enum_1_comb_2_fused_pim_op_0",
 
 ]
 #pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
