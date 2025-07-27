@@ -76,14 +76,16 @@ class ExtendDSLUtils:
             for idx, ctx in enumerate(dsl_inst.contexts):
                 bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector) and arg.size != ctx.in_precision] # Leave the 'scalar' bitvector sizes as is
                 ctx_input_sizes = [arg.size for arg in bv_args]
-                print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision)
+                print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision, "comparing to",ctx.in_vectsize)
 
-                in_vect_size_matches = in_vect_size_matches and all([ctx.in_vectsize == size for size in ctx_input_sizes])
+                in_vect_size_matches = in_vect_size_matches and any([ctx.in_vectsize == size for size in ctx_input_sizes])
 
 
             if not in_vect_size_matches:
                 print(f"Unable to extend {dsl_inst.name} for size {output_size}, bitwidth {output_bitwidth} with ctx {sample_ctx.name}")
                 continue
+            else:
+                print(f"Found match!")
 
 
 
@@ -95,14 +97,26 @@ class ExtendDSLUtils:
             valid = True
 
             for idx, arg in enumerate(new_ctx_args):
+                # If it's a constant value (usually bit 1 or 0 keep as is)
+                if arg in ["(bv #b1 1)" , "(bv #b0 1)"]:
+                    continue
+
                 if "SYMBOLIC_BV_" in arg:
                     arg_size = int(arg.split("SYMBOLIC_BV_")[-1])
 
                     if arg_size in [8,16,32]:
                         # For broadcast like instructions just use the same size
-                        continue
+                        if sample_ctx.in_precision >= arg_size:
+                            # If really scalar then continue
+                            continue
 
+                    io_ratio = sample_ctx.out_vectsize / arg_size
+
+
+
+                    #new_arg_size = output_size / io_ratio
                     new_arg_size = output_size / io_ratio
+                    print("new_arg_size",new_arg_size, "not integer:", not new_arg_size.is_integer())
 
                     if not new_arg_size.is_integer():
                         print("Setting invalid because value isnt integer")
@@ -110,6 +124,7 @@ class ExtendDSLUtils:
                         break
                     new_arg_size = int(new_arg_size)
                     bv_str = f"SYMBOLIC_BV_{new_arg_size}"
+                    print(f"idx: {idx}, io_ratio: {io_ratio}, result size: {new_arg_size}")
 
                     new_ctx_args[idx] = bv_str
                     continue
@@ -170,6 +185,12 @@ class ExtendDSLUtils:
                 out_sizes = self.get_dsl_inst_out_vectsizes(dsl_inst)
                 in_sizes = self.get_dsl_inst_in_vectsizes(dsl_inst)
 
+                # If always equal to in_vectsize, then set it accordingly
+                if (np.array(in_sizes) == idx_arg_vals).all():
+                    print("Always in_sizes out sizes")
+                    new_ctx_args[idx] = str(new_arg_size)
+                    continue
+
                 # If always equal to out_vectsize, then set it accordingly
                 if (np.array(out_sizes) == idx_arg_vals).all():
                     print("Always equal out sizes")
@@ -184,6 +205,21 @@ class ExtendDSLUtils:
                     print("Always equal out precs")
                     new_ctx_args[idx] = str(output_bitwidth)
                     continue
+
+                out_precs = self.get_dsl_inst_out_precisions(dsl_inst)
+                #If always a ratio of out_precision
+                ratio = idx_arg_vals / idx_arg_vals
+                contains_inf = np.isinf(ratio).any()
+                contains_nan = np.isnan(ratio).any()
+
+                if (not contains_inf)  and (not contains_nan):
+                    unique_values, counts = np.unique(ratio , return_counts=True)
+                    if len(counts) == 1:
+                        print("Always ratio of output_bitwidth!")
+                        new_ctx_args[idx] = str(int(unique_values[0] * output_bitwidth))
+                        continue
+
+
 
 
 
@@ -212,6 +248,7 @@ class ExtendDSLUtils:
 
                     inner_idx_arg_vals = self.get_arg_value_by_index(dsl_inst, inner_arg_idx)
                     inner_idx_arg_vals = np.array(inner_idx_arg_vals)
+                    print("==========================")
                     print("outer", idx)
                     print("outer_idx_arg_vals", idx_arg_vals)
                     print("inner_arg_idx", inner_arg_idx)
@@ -231,6 +268,7 @@ class ExtendDSLUtils:
 
 
 
+                    print("Unique values", unique_values)
                     if len(counts) != 1:
                         continue
 
@@ -241,6 +279,7 @@ class ExtendDSLUtils:
                     #new_ctx_args[inner_arg_idx] = str(int(new_val))
 
                     break
+
 
                 if not found_unique:
                     print("Not found unique")
@@ -258,6 +297,7 @@ class ExtendDSLUtils:
                 continue
 
             print(f"Scale to {output_size} size and {output_bitwidth} bitwidth")
+            print("ORIGINAL CTX", sample_ctx.name)
             print("Original Args:", sample_ctx.unparsed_args)
             extended_name = f"{sample_ctx.name}_extended_size_{output_size}_bw_{output_bitwidth}_ctx_{ctx_idx}"
             print("New Args:", new_ctx_args)
@@ -425,9 +465,14 @@ class ExtendDSLUtils:
 pim_dsl_list = parse_dict(bitserial_fused_sema)
 filter_names = [
     #"test_enum_1_comb_14_fused_pim_op_1546",
-    "test_enum_1_comb_2_fused_pim_op_7",
+    #"test_enum_1_comb_2_fused_pim_op_7",
+    #"test_enum_1_comb_13_fused_pim_op_2150",
+    #"test_enum_1_comb_14_fused_pim_op_3601",
+    #"test_enum_1_comb_14_fused_pim_op_162",
+    "test_enum_1_comb_11_fused_pim_op_2",
+
 ]
-pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
+#pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
 #pim_dsl_list = [d for d in pim_dsl_list]
 print("Sample dsl_list:", pim_dsl_list)
 DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 13)], extend_to_bw = [8, 16, 32])
