@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <chrono>
+#include <cstdlib>
 #include "misaal.h"
 
 
@@ -57,7 +58,7 @@ from compiler.PIMFusedCompiler import PIMFusedCompiler\n\
 from utils.egg_config import EGG_PKG_PATH\n\
 from sema.hexsemantics_new import semantics as hvx_semantics\n\
 from sema.x86SemanticsAllArgs import semantcs as x86_semantics\n\
-from sema.halide_folded_full import halide_folded_full as halide_semantics\n\
+from sema.halide_full_pim import halide_semantics\n\
 from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles\n\
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles\n\
 from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles\n\
@@ -320,6 +321,14 @@ import sys\n";
         params.push_back("hydride_root_path =  HYDRIDE_ROOT");
         params.push_back("llvm_out_file_name = \"" + output_path + "\"");
         params.push_back("skip_axioms = True");
+        std::string output_file_name = "pim_fused_lowering.h";
+
+        const char* env_var = std::getenv("PIM_HEADER_FILE");
+        if(env_var != nullptr){
+            output_file_name = env_var;
+        }
+
+        params.push_back("output_file_path = \"" + output_file_name + "\"");
 
 
         std::string compiler_type = "HydrideCompiler";

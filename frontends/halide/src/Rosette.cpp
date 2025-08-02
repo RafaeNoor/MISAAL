@@ -3056,6 +3056,14 @@ private:
                 supported_input_sizes.push_back(32);
                 supported_input_sizes.push_back(16);
                 supported_input_sizes.push_back(8);
+            case HydrideSupportedArchitecture::PIM:
+                debug(1) << "Abstraction vector sizes for X86 "
+                         << "\n";
+                {
+                    for(int i = 8; i < 524288; i *= 2){
+                        supported_input_sizes.push_back(i);
+                    } 
+                }
             };
 
             Expr v = op->value;
