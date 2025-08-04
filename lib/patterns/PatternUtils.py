@@ -2,9 +2,11 @@ from compiler.Pattern import Pattern, parse_pattern_from_string
 import concurrent.futures
 from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.DSLInstructionUtils import *
-from utils.ConcretizeUtils import get_valid_concretization_generator
+from utils.ConcretizeUtils import get_valid_concretization_generator, get_valid_concretization
+from utils.EggLogUtils import *
 from utils.CanonicalizeExpressions import CanonicalizeExpression
 from utils.ReadDSL import read_string_to_dsl
+from utils.egg_config import EGG_PKG_PATH
 from sema.integer_arith_sema import integer_arith_sema_dict
 from common.Types import *
 from collections import defaultdict
@@ -12,6 +14,10 @@ import copy
 import json
 from graphlib import TopologicalSorter, CycleError
 from sema.halide_decomposed import halide_decomposed  as halide_semantics
+from compiler.EggLogCompiler import EggLogCompiler
+import subprocess as sb
+import sys
+import time
 
 
 def create_patterns(props, combined_dsl_list):
@@ -231,8 +237,9 @@ class PatternAbstractor:
     def emit_create_param_abstract_spec(self, input_values, output_value):
         return "(TESTS {} (vector {}))".format(output_value, " ".join([str(v) for v in input_values]))
 
-    def emit_synthesize_query(self, test_cases, depth = 2, num_src_regs = 2, exclude_regs = []):
-        return "(synthesize-param-expression {} {} {} (list {}))".format(test_cases, depth, num_src_regs - 1, " ".join([str(reg) for reg in exclude_regs]))
+    def emit_synthesize_query(self, test_cases, depth = 2, num_src_regs = 2, exclude_regs = [], reg_only = False):
+        reg_only_str = "#t" if reg_only else "#f"
+        return "(synthesize-param-expression {} {} {} (list {}) {})".format(test_cases, depth, num_src_regs - 1, " ".join([str(reg) for reg in exclude_regs]), reg_only_str)
 
     def generate_param_expr(self, src_param_map, dst_param_map, dst_param_name, depth = 2, only_src_params = False, exclude_regs = []):
         statements = []
@@ -358,7 +365,7 @@ class PatternAbstractor:
         test_def = "(define param-test-cases (list \n{}\n))".format("\n".join(test_cases_def))
         statements.append(test_def)
 
-        synthesis_query = self.emit_synthesize_query("param-test-cases", depth = depth, exclude_regs = exclude_regs)
+        synthesis_query = self.emit_synthesize_query("param-test-cases", depth = depth, exclude_regs = exclude_regs, reg_only = True)
 
         synthesis_result = "(define-values (sat? expr) {})".format(synthesis_query)
         statements.append(synthesis_result)
@@ -526,17 +533,48 @@ class PatternAbstractor:
             global abstracted_patterns
             global concrete_patterns
 
+            bidirectional = True
+
+            lifted_patterns = []
+
             # Forward pattern
             succ_forward, new_patterns = self.abstract_pattern_bucket(bucket, dsl_list)
             if not succ_forward:
                 failed_bucket_indicies.append(("forward",idx))
                 concrete_patterns += len(bucket)
                 abstracted_patterns += bucket
+                return
             else:
-                abstracted_patterns += new_patterns
+                for pattern in new_patterns:
+                    pattern.bidirectional = True
+                    valid_bidirectional = is_pattern_valid_egg(dsl_list,pattern, EGG_PKG_PATH, keep_temp_files = False)
+                    pattern.bidirectional = False
+                    bidirectional = bidirectional and valid_bidirectional
 
+                if bidirectional:
+                    print("Pattern is bidirectional!")
+                    for pattern in new_patterns:
+                        pattern.bidirectional = True
+                        lifted_patterns.append(pattern)
+                else:
+                    for pattern in new_patterns:
+                        valid = is_pattern_valid_egg(dsl_list,pattern, EGG_PKG_PATH, keep_temp_files = False)
+                        if valid:
+                            lifted_patterns.append(pattern)
+                        else:
+                            print("Forward pattern not valid")
+                            valid = is_pattern_valid_egg(dsl_list,pattern, EGG_PKG_PATH, keep_temp_files = True)
+                            print("SYS EXITING!")
+                            sys.exit()
+
+            if bidirectional:
+                print("Bidirectional rules abstracted, #rules ", len(bucket), "->", len(lifted_patterns))
+                # No need to identify backward patterns if not needed
+                abstracted_patterns += lifted_patterns
+                return
 
             # Backward pattern
+
 
             swapped_bucket = self.swap_patterns(bucket)
             succ_backward, new_patterns = self.abstract_pattern_bucket(swapped_bucket, dsl_list)
@@ -546,13 +584,33 @@ class PatternAbstractor:
                 concrete_patterns += len(bucket)
                 abstracted_patterns += bucket
             else:
-                abstracted_patterns += new_patterns
+                for pattern in new_patterns:
+                    valid = is_pattern_valid_egg(dsl_list,pattern, EGG_PKG_PATH, keep_temp_files = False)
+                    if valid:
+                        lifted_patterns.append(pattern)
+                    else:
+                        print("Backward pattern not valid")
+                        print("SYS EXITING!")
+                        sys.exit()
+
+                if len(lifted_patterns) == 0:
+                    print("SYS EXITING!")
+                    sys.exit(0)
+
+                if len(lifted_patterns) > len(bucket):
+
+                    print("Unidirectional rules failed!, #rules ", len(bucket), "->", len(lifted_patterns))
+                    abstracted_patterns += bucket
+                else:
+                    print("Unidirectional rules abstracted, #rules ", len(bucket), "->", len(lifted_patterns))
+                    abstracted_patterns += lifted_patterns
 
 
 
         POOL_SIZE = 8
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=POOL_SIZE)
         PARALLEL = True
+        start_time = time.time()
         failed_bucket_indicies = []
         #buckets = [buckets[564]]
         for idx, test_bucket in enumerate(buckets):
@@ -566,6 +624,16 @@ class PatternAbstractor:
         print("Successfully abstracted", len(buckets) - len(failed_bucket_indicies) , " / ", len(buckets), "patterns")
         print("Number of abstract patterns (including concrete rewrites)", len(abstracted_patterns))
         print("Number of remaining concrete rewrites",concrete_patterns )
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+
+        with open(self.target + "_abstract_time.txt", "w+") as TimeLog:
+            seconds = "{} seconds".format(elapsed_time)
+            mins = "{} minutes".format(elapsed_time / 60)
+            hours = "{} hours".format(elapsed_time /(60 * 60))
+            TimeLog.write("\n".join([seconds, mins, hours]))
 
         with open(self.target+"_failed_buckets.txt", "w+") as FailLog:
             FailLog.write(str(failed_bucket_indicies))
@@ -1095,4 +1163,160 @@ class PatternAbstractor:
         return most_cycles_node, node_cycle_count.get(most_cycles_node, 0)
 
 
+
+def is_pattern_valid_egg(dsl_list, pattern, egg_pkg_path, keep_temp_files = False):
+    compiler =  EggLogCompiler([pattern], src_dsl_list = dsl_list, target_dsl_list = [], egg_pkg_path = egg_pkg_path, run_iterations = 3, skip_axioms = True)
+    pattern_abstractor = PatternAbstractor([pattern], dsl_list)
+
+    input_expr = None
+    ouput_expr = None
+
+    for i in range(1, 12):
+        output_size = pow(2, i)
+        input_expr = get_valid_concretization(pattern.src_expr, output_size, dsl_list)
+
+        if not input_expr is None:
+            input_expr = pattern_abstractor.canonicalize_halide(input_expr)
+            break
+
+    for i in range(1, 12):
+        output_size = pow(2, i)
+        output_expr = get_valid_concretization(pattern.target_expr, output_size, dsl_list)
+
+        if not output_expr is None:
+            output_expr = pattern_abstractor.canonicalize_halide(output_expr)
+            break
+
+
+
+    test_expressions = []
+
+    if pattern.bidirectional:
+        test_expressions = [input_expr, output_expr]
+    else:
+        test_expressions = [input_expr]
+
+    for expr in test_expressions:
+        statements = []
+        egg_content = compiler.emit_pattern_matching_based_compiler(expr)
+        statements.append(egg_content)
+
+        expr_regs = get_context_registers(expr)
+        expr_regs = compiler.get_unique_registers(expr_regs)
+        reg_data_structures = compiler.convert_reg_to_compiler_datastructure(expr_regs)
+
+        statements += [defn for label, defn in reg_data_structures]
+
+        src_expr_name = "test"
+        src_expr_egg = emit_expr_to_egg(expr)
+        define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
+        statements.append(define_src_expr)
+
+        statements.append(emit_egg_run_iter(compiler.run_iterations))
+        statements.append(emit_egg_extract_expr(src_expr_name))
+
+
+
+        egg_fname = get_random_tempfile_name()+".egg"
+
+        with open(egg_fname, "w+") as EggFile:
+            EggFile.write("\n".join(statements))
+
+        cmd = [compiler.egglog_bin, egg_fname]
+        return_code = sb.run(" ".join(cmd), shell = True, stdout=sb.DEVNULL, stderr=sb.DEVNULL)
+
+        if not keep_temp_files:
+            cmd = ["rm", egg_fname]
+            sb.run(" ".join(cmd), shell = True)
+
+        print("Return code", return_code )
+        success = return_code.returncode == 0
+
+        if not success:
+            return False
+    return True
+
+
+
+
+def simplify_double_div_expr(expr):
+    if not isinstance(expr, Context):
+        return expr
+
+    for idx, arg in enumerate(expr.context_args):
+        expr.context_args[idx] = simplify_double_div_expr(arg)
+
+    if "DIV" in expr.name:
+        if not isinstance(expr.context_args[0], Context):
+            if isinstance(expr.context_args[1], Context) and "DIV" in expr.context_args[1].name:
+                outer_expr = expr
+                outer_numerator = expr.context_args[0]
+                inner_expr = expr.context_args[1]
+                inner_numerator = inner_expr.context_args[0]
+                inner_denominator = inner_expr.context_args[1]
+
+                if int(outer_numerator.value) % int(inner_numerator.value) == 0:
+
+                    result_value = int(outer_numerator.value) // int(inner_numerator.value)
+                    result_integer = Integer("simplified", value = result_value)
+                    integer_arith_sema = parse_dict(integer_arith_sema_dict)
+
+                    for dsl_inst in integer_arith_sema:
+                        if "MUL" in dsl_inst.name:
+                            # Create mul operation
+                            mul_op_copy = copy.deepcopy(dsl_inst.contexts[0])
+                            mul_op_copy.context_args[0] = result_integer
+                            mul_op_copy.context_args[1] = inner_denominator
+                            print("Simplified expr")
+                            print(mul_op_copy.emit_context_expr_string())
+                            return mul_op_copy
+
+
+
+
+    return expr
+
+
+
+
+
+def simplify_double_div_pattern(pattern):
+    simplify_double_div_expr(pattern.src_expr)
+    simplify_double_div_expr(pattern.target_expr)
+
+
+def contains_double_division_expr(expr):
+    if not isinstance(expr, Context):
+        return False
+
+    if "DIV" in expr.name:
+        if not isinstance(expr.context_args[0], Context):
+            if isinstance(expr.context_args[1], Context) and "DIV" in expr.context_args[1].name:
+                return True
+
+
+
+
+    for arg in expr.context_args:
+        if contains_double_division_expr(arg):
+            return True
+
+    return False
+
+
+
+def contains_double_division_pattern(pattern):
+    return contains_double_division_expr(pattern.src_expr) or contains_double_division_expr(pattern.target_expr)
+
+
+def simplify_double_division(patterns):
+    count = 0
+    for pattern in patterns:
+        if contains_double_division_pattern(pattern):
+            #pattern.print_pattern()
+            simplify_double_div_pattern(pattern)
+            #pattern.print_pattern()
+            count +=1
+    print(f"Simplified {count} expressions")
+    return patterns
 

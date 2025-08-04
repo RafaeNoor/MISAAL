@@ -84,10 +84,17 @@ class ExtendDSLUtils:
                     in_vect_size_matches = in_vect_size_matches and any([ctx.in_vectsize == size for size in ctx_input_sizes])
 
 
-            if not in_vect_size_matches:
+            if False and not in_vect_size_matches:
                 print(f"Unable to extend {dsl_inst.name} for size {output_size}, bitwidth {output_bitwidth} with ctx {sample_ctx.name}")
                 continue
             else:
+                bv_sizes = [arg.size for arg in ctx.context_args if isinstance(arg, BitVector)]
+                valid_ = False
+                for b in bv_sizes:
+                    for c in ctx_input_sizes:
+                        valid_ = valid_ or (b == c)
+                if not valid_:
+                    continue
                 print(f"Found match!")
 
 
@@ -192,7 +199,22 @@ class ExtendDSLUtils:
                 # If always equal to in_vectsize, then set it accordingly
                 if (np.array(in_sizes) == idx_arg_vals).all():
                     print("Always in_sizes out sizes")
-                    new_ctx_args[idx] = str(new_arg_size)
+                    # Need to identify corresponding arg size to choose from
+
+                    match_idx = None
+                    for orig_idx, orig_arg in enumerate(sample_ctx.context_args):
+                        if isinstance(orig_arg, BitVector) and orig_arg.size == sample_ctx.in_vectsize:
+                            match_idx = orig_idx
+                            break
+
+
+                    #new_ctx_args[idx] = str(new_arg_size)
+
+                    assert match_idx is not None
+                    assert "SYMBOLIC_BV" in new_ctx_args[match_idx]
+                    new_size = new_ctx_args[match_idx].split("_")[-1]
+
+                    new_ctx_args[idx] = new_size
                     continue
 
                 # If always equal to out_vectsize, then set it accordingly
@@ -468,13 +490,14 @@ class ExtendDSLUtils:
 
 pim_dsl_list = parse_dict(bitserial_fused_sema)
 filter_names = [
-    "test_enum_1_comb_2_fused_pim_op_0",
+    "test_enum_1_comb_13_fused_pim_op_59",
+    #"test_enum_1_comb_13_fused_pim_op_951",
 
 ]
 #pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
 #pim_dsl_list = [d for d in pim_dsl_list]
 print("Sample dsl_list:", pim_dsl_list)
-DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 13)], extend_to_bw = [8, 16, 32])
+DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 23+1)], extend_to_bw = [8, 16, 32])
 
 DSLExtender.extend(pim_dsl_list)
 

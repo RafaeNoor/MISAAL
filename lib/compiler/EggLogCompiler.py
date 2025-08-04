@@ -17,7 +17,7 @@ class EggLogCompiler(CompilerBase):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
-        self.egglog_bin = os.path.join(self.egg_pkg_path, "target","debug","egglog")
+        self.egglog_bin = os.path.join(self.egg_pkg_path, "target","release","egglog")
         self.input_cost = 1000
         self.prune_patterns = prune_patterns
         self.output_cost = 1
@@ -279,7 +279,10 @@ class EggLogCompiler(CompilerBase):
         key = expr.emit_context_expr_string()
         return copy.deepcopy(self.memo[key])
 
-    def apply_rewrite(self, expr, compiler_functionality, reg_data_structures):
+    def apply_rewrite(self, expr, compiler_functionality, reg_data_structures, num_iterations = None):
+
+        if num_iterations is None:
+            num_iterations = self.run_iterations
 
         if self.has_compiled_expr(expr):
             return get_compiled_expr(expr)
@@ -300,7 +303,7 @@ class EggLogCompiler(CompilerBase):
         define_src_expr = emit_egg_define_var(src_expr_name, src_expr_egg)
         statements.append(define_src_expr)
 
-        statements.append(emit_egg_run_iter(self.run_iterations))
+        statements.append(emit_egg_run_iter(num_iterations))
 
         statements.append(emit_egg_extract_expr(src_expr_name))
 
