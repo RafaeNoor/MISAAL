@@ -1542,15 +1542,16 @@ public:
 
             if (!isConstantValue(s->value)) {
                 Expr updated_val = mutate(s->value);
-                debug(1) << "Store Instruction: " << stmt << "\n";
-                debug(1) << "Store name: " << s->name << "\n";
+                debug(0) << "Store Instruction: " << stmt << "\n";
+                debug(0) << "Store name: " << s->name << "\n";
 
                 std::string current_scope = scope_name.top();
-                debug(1) << "Current Scope name: " << current_scope << "\n";
+                debug(0) << "Current Scope name: " << current_scope << "\n";
 
                 auto &context = MemMap.ref(scope_name.top());
 
                 Stmt NewStore = Store::make(s->name, updated_val, s->index, s->param, s->predicate, s->alignment);
+                debug(0) << "Updated store for \n"<< stmt<< "\n is \n" << NewStore << "\n";
 
                 UpdateDeadStatements(context, s);
                 context[NewStore.as<Store>()] = updated_val;
@@ -1561,15 +1562,15 @@ public:
 
         if (stmt.node_type() == IRNodeType::For) {
             const For *f = stmt.as<For>();
-            debug(1) << "For Instruction: " << stmt << "\n";
+            debug(0) << "For Instruction: " << stmt << "\n";
             std::map<const Store *, Expr> scoped_map;
 
             scope_name.push(f->name);
 
-            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt = mutate(f->body);
-            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1580,15 +1581,15 @@ public:
         // Start a new scope for Let
         if (stmt.node_type() == IRNodeType::LetStmt) {
             const LetStmt *l = stmt.as<LetStmt>();
-            debug(1) << "Let  Instruction: " << stmt << "\n";
+            debug(0) << "Let  Instruction: " << stmt << "\n";
             std::map<const Store *, Expr> scoped_map;
 
             scope_name.push(l->name);
 
-            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt = mutate(l->body);
-            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1620,23 +1621,23 @@ public:
         // Start a new scope for IfThenElse
         if (stmt.node_type() == IRNodeType::IfThenElse) {
             const IfThenElse *ite = stmt.as<IfThenElse>();
-            debug(1) << "If then else  Instruction: " << stmt << "\n";
+            debug(0) << "If then else  Instruction: " << stmt << "\n";
 
             std::map<const Store *, Expr> scoped_map;
             scope_name.push("ite_then");
-            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt_then = mutate(ite->then_case);
-            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
             std::map<const Store *, Expr> scoped_map_else;
             scope_name.push("ite_else");
-            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map_else);
             auto new_stmt_else = mutate(ite->else_case);
-            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1650,6 +1651,10 @@ public:
     Expr visit(const Load *op) override {
         Expr folded = Load::make(op->type, op->name, op->index, op->image, op->param, op->predicate, op->alignment);
 
+        debug(0) << "Current load:" << folded <<"\n";
+        std::string current_scope = scope_name.top();
+        debug(0) << "Current Scope name for load: " << current_scope << "\n";
+
         if (scope_name.empty() || !MemMap.contains(scope_name.top())) {
             return folded;
         }
@@ -1657,25 +1662,38 @@ public:
         auto &context = MemMap.ref(scope_name.top());
 
         for (auto const &x : context) {
-
             auto store = x.first;
+            debug(0) << " Checking if store matches: "<<store->name << "\n";
 
-            if (store->name != op->name)
+            if (store->name != op->name){
+                debug(0) << "Op name not match\n";
                 continue;
+            }
 
-            if (!equal(store->predicate, op->predicate))
+            if (!equal(store->predicate, op->predicate)){
+                debug(0) << "Predicate not equal\n";
                 continue;
+            }
 
-            if (!equal(store->index, op->index))
-                continue;
 
-            if (!store->param.same_as(op->param))
+            if (!equal(store->index, op->index)){
+                debug(0) << "Index not equal\n";
                 continue;
+            }
+
+            /*
+            if (!store->param.same_as(op->param)){
+                debug(0) << "Param not same\n";
+                continue;
+            }
+            */
 
             // Halide modulus remainder class only
             // defines equality
-            if (!(store->alignment == op->alignment))
+            if (!(store->alignment == op->alignment)){
+                debug(0) << "Alignment not same\n";
                 continue;
+            }
 
             debug(0) << "LOAD STORE MATCHED!"
                      << "\n";
@@ -3790,8 +3808,8 @@ Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const Base
     std::set<const IRNode *> DeadStmts;
     auto FLS = Hydride::FoldLoadStores(DeadStmts);
     auto folded = FLS.mutate(s);
-    debug(1) << "Printing Folded Stmt:\n";
-    debug(1) << folded << "\n";
+    debug(0) << "Printing Folded Stmt:\n";
+    debug(0) << folded << "\n";
 
     debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
 
@@ -3801,6 +3819,7 @@ Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const Base
 
     auto distributed = pruned;
     debug(0) << "Distributed Stmt:\n";
+    debug(0) << distributed << "\n";
 
 
     srand(time(0));

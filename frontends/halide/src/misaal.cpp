@@ -321,6 +321,7 @@ import sys\n";
         params.push_back("hydride_root_path =  HYDRIDE_ROOT");
         params.push_back("llvm_out_file_name = \"" + output_path + "\"");
         params.push_back("skip_axioms = True");
+        params.push_back("parallel = True");
         std::string output_file_name = "pim_fused_lowering.h";
 
         const char* env_var = std::getenv("PIM_HEADER_FILE");

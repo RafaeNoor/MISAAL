@@ -677,7 +677,7 @@ std::unique_ptr<llvm::TargetMachine> make_target_machine(const llvm::Module &mod
                                                 options,
                                                 use_pic ? llvm::Reloc::PIC_ : llvm::Reloc::Static,
                                                 use_large_code_model ? llvm::CodeModel::Large : llvm::CodeModel::Small,
-                                                llvm::CodeGenOpt::Aggressive);
+                                                llvm::CodeGenOpt::None); //llvm::CodeGenOpt::Aggressive);
     return std::unique_ptr<llvm::TargetMachine>(tm);
 }
 

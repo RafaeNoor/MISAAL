@@ -23,7 +23,7 @@ class PIMFusedCompiler(EggLogCompiler):
         self.hydride_root_path = hydride_root_path
         self.parallel = parallel
         self.input_tests = tests
-        self.pool_size = 8
+        self.pool_size = 6
         self.measure_egglog_time = False
         self.egglog_results = []
         self.extended_dsl_list = extended_dsl_list
@@ -118,7 +118,6 @@ class PIMFusedCompiler(EggLogCompiler):
         from PIM_API_UTILS import FusedPIMOpLegalizerHalide
         halide_legalizer_gen = FusedPIMOpLegalizerHalide(self.output_file_path, [], self.src_dsl_list + self.extended_dsl_list )
 
-        #defn = halide_legalizer_gen.legalize(test_expr, func_name, [512, 512], [32, 32])
 
         lowered_progs = []
 
@@ -127,8 +126,16 @@ class PIMFusedCompiler(EggLogCompiler):
             sizes = [reg.size for reg in regs]
             precs = [reg.precision for reg in regs]
             defn = halide_legalizer_gen.legalize(output_expr, function_name, sizes, precs)
-            print(defn)
-            lowered_progs.append(defn)
+            # WRAP IN PROFILE_COMPUTE
+            compute_profile = f"#ifdef PROFILE_COMPUTE\n{defn}\n#endif"
+            print(compute_profile)
+            lowered_progs.append(compute_profile)
+
+            defn = halide_legalizer_gen.legalize_profile_opt_data_movement(output_expr, function_name, sizes, precs)
+            # WRAP IN PROFILE_COMPUTE
+            data_movement_profile = f"#ifdef PROFILE_DATA_MOVEMENT\n{defn}\n#endif"
+            print(data_movement_profile)
+            lowered_progs.append(data_movement_profile)
 
 
         PIM_HEADER= """
