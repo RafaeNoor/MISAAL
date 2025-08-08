@@ -24,7 +24,7 @@ BENCHMARK ?=1
 
 CC=g++#clang
 #TARGET=host-x86-64 #host-noos-no_bounds_query-no_asserts
-TARGET=host-x86-64-no_bounds_query-no_asserts #host-noos-no_bounds_query-no_asserts
+TARGET=host# host-x86-64-no_bounds_query-no_asserts #host-noos-no_bounds_query-no_asserts
 STARTING_HASH_FLAG= #HYDRIDE_INITIAL_HASH=x86_hash
 
 #STARTING_HASH ?= "hash_v3" #"empty_hash" 
@@ -47,7 +47,7 @@ $(benchmarks): %: %/bin
 
 # 	Use the generator (to get a manual schedule which is the default)
 #
-	 export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;HL_EXPR_DEPTH=$(EXPR_DEPTH) $(STARTING_HASH_FLAG) HYDRIDE_BENCHMARK=$@_x86_depth$(EXPR_DEPTH)_misaal  HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_SYNTH_BW=$(SYNTH_BITWIDTH) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) MISAAL_DISABLE_FRONTEND_PATTERNS=1 ./$@/bin/$@_generator \
+	 export LD_LIBRARY_PATH=$(HALIDE_DIR)/lib;HL_EXPR_DEPTH=$(EXPR_DEPTH) $(STARTING_HASH_FLAG) HYDRIDE_BENCHMARK=$@_x86_depth$(EXPR_DEPTH)_misaal  HL_ENABLE_MISAAL=$(ENABLE_HYDRIDE)  MISAAL_EQ_SAT_ITERS=3 HL_ENABLE_HYDRIDE=$(ENABLE_HYDRIDE) HL_SYNTH_BW=$(SYNTH_BITWIDTH) HYDRIDE_INITIAL_HASH=$(STARTING_HASH) MISAAL_DISABLE_FRONTEND_PATTERNS=1  COST_FILE_CSV_NAME=/home/arnoor2/PiMCOM/codegen-generator/targets/DRAM_BitSIMD/perf_cost_model/perf_logs/pim_perf_results_devicePIM_DEVICE_BANK_LEVEL_rank4_BPR128_SPB32_rows1024_cols8192_vf1024.csv ./$@/bin/$@_generator \
 		-t 0 \
 		-o $@/bin \
 		-g $@ \
@@ -62,8 +62,8 @@ ifeq ($(ENABLE_HYDRIDE),1)
 	python3 inline.py $@
 endif
 
-	$(CC) -DHALIDE_CPP_ALWAYS_USE_CPP_VECTORS -DFUSED -Dbenchmark_$@ --std=c++17 \
-		-O0 -march=native -mavx512vl -mavx512ifma \
+	$(CC) -DPROFILE_COMPUTE=1 -DHALIDE_CPP_ALWAYS_USE_CPP_VECTORS -DFUSED -Dbenchmark_$@ --std=c++17 \
+		-O3 -march=native -mavx512vl -mavx512ifma \
 		-I $(HALIDE_DISTRIB)/include -I ./$@/bin -I ./libpimsim/ \
 		-lstdc++ -ldl -pthread \
 		test/run.cpp \
@@ -72,15 +72,22 @@ endif
 		-L ./libpimsim/ \
 		-lpimeval \
 		$@/bin/halide_runtime_x86.o \
-		-o $@/bin/$@_run.out
+		-o $@/bin/$@_compute_run.out
 	
-ifeq ($(BENCHMARK),1) 
 
-# Benchmark the generated binary
-	$@/bin/$@_run.out 
+	$(CC) -DPROFILE_DATA_MOVEMENT=1 -DHALIDE_CPP_ALWAYS_USE_CPP_VECTORS  -Dbenchmark_$@ --std=c++17 \
+		-O3 -march=native -mavx512vl -mavx512ifma \
+		-I $(HALIDE_DISTRIB)/include -I ./$@/bin -I ./libpimsim/ \
+		-lstdc++ -ldl -pthread \
+		test/run.cpp \
+		test/stubs.cpp \
+		$@/bin/$@.halide_generated.cpp \
+		-L ./libpimsim/ \
+		-lpimeval \
+		$@/bin/halide_runtime_x86.o \
+		-o $@/bin/$@_data_movement_run.out
 
-endif
-
+	bash profile_compute_and_data.sh $@
 #-lpng -lpthread -ldl -ljpeg 
 	
 

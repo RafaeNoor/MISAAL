@@ -17,8 +17,15 @@ public:
         // Schedules for BitSIMD 
         output
             .update(0)
-            .vectorize(x,4)
-            .unroll(y,1)
+            .specialize(A.dim(0).extent() == 1024)
+            .specialize(A.dim(1).extent() == 1024)
+            .specialize(B.dim(0).extent() == 1024)
+            .specialize(B.dim(1).extent() == 1024)
+            .specialize(output.dim(0).extent() == 1024)
+            .specialize(output.dim(1).extent() == 1024)
+            .fuse(x, y, x)
+            .vectorize(x,1024 * 1024)
+            .unroll(k, 64)
             ;
 
     }

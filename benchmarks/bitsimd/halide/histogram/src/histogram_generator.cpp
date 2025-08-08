@@ -15,12 +15,11 @@ public:
 
     void generate() {
         RDom k(0, matrix_size_x, 0, matrix_size_y);
-        const int32_t vectorization_factor = 4;
+        const int32_t vectorization_factor = 2048;
 
         // Histogram Algorithm
         Func color_hist("color_hist");
         color_hist(i,c) = 0;
-        //color_hist(IMG(k.x, k.y, c),c) += 1;
         color_hist(clamp(IMG(k.x, k.y, c), 0, 255), c) += 1;
 
         // Histogram Schedule

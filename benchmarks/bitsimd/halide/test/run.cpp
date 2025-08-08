@@ -15,6 +15,12 @@
 #include "relu.h"
 #elif benchmark_bitsimd_gemv
 #include "bitsimd_gemv.h"
+#elif benchmark_bitsimd_matmul
+#include "bitsimd_matmul.h"
+#elif benchmark_convolution
+#include "convolution.h"
+#elif benchmark_histogram
+#include "histogram.h"
 #endif
 
 #define LOG2VLEN 7
@@ -88,13 +94,12 @@ int main(int argc, char **argv) {
 
 
     // 1GB capacity
-    unsigned numRanks = 1;
-    unsigned numBankPerRank = 1;
-    unsigned numSubarrayPerBank = 8;
+    unsigned numRanks = 4;
+    unsigned numBankPerRank = 128;
+    unsigned numSubarrayPerBank = 32;
     unsigned numRows = 1024;
     unsigned numCols = 8192;
     PimStatus status = pimCreateDevice(PIM_DEVICE_BANK_LEVEL, numRanks, numBankPerRank, numSubarrayPerBank, numRows, numCols);
-    //PimStatus status = pimCreateDevice(PIM_FUNCTIONAL, numRanks, numBankPerRank, numSubarrayPerBank, numRows, numCols);
 
 #if benchmark_tensor_add
     printf("Testing With Tensor Add!\n");
@@ -168,7 +173,7 @@ int main(int argc, char **argv) {
   int32_t* matOptr = (int32_t*) malloc(sizeof(int32_t) * N * M);
   Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)matOptr, 2, shape_O);
 
-  benchmark([&]() {
+   benchmark([&]() {
     printf("Launching bitsimd gemv!\n");
     int error = bitsimd_gemv(matA, matB, output_buf);
     if (error != 0) {
@@ -179,6 +184,242 @@ int main(int argc, char **argv) {
   free(matAptr);
   free(matBptr);
   free(matOptr);
+#endif
+
+#if benchmark_convolution
+  printf("\t*** Convolution\n");
+
+  int image_row = 256;
+  int image_col = 256;
+  int image_depth = 3;
+
+
+  int filter_row = 3;
+  int filter_col = 3;
+  int filter_depth = 64;
+
+  int output_row = image_row;
+  int output_col = image_col;
+  int output_depth = filter_depth;
+
+
+  int32_t *input_image = (int32_t*) aligned_malloc(
+      image_depth * image_row * image_col * sizeof(int32_t) ,
+      1 << LOG2VLEN); 
+
+  int32_t *filter = (int32_t*) aligned_malloc(
+      filter_row * filter_col * filter_depth * sizeof(int32_t),
+      1 << LOG2VLEN); 
+
+
+  int32_t *conv_output = (int32_t*) aligned_malloc(
+      output_row * output_col * output_depth * sizeof(int32_t),
+      1 << LOG2VLEN); 
+
+  
+  for(int i =0 ; i < image_row; i++){
+      for(int j =0; j < image_col; j++){
+          int offset = (i * image_col) + j;
+          *(input_image + offset) = offset;
+      }
+  }
+
+  for(int i =0 ; i < filter_row; i++){
+      for(int j =0; j < filter_col; j++){
+          int offset = (i * filter_col) + j;
+          *(filter + offset) = 1;
+      }
+  }
+
+
+  halide_dimension_t image_x_dim{0, image_row, 1};
+  halide_dimension_t image_y_dim{0, image_col, image_row};
+  halide_dimension_t image_channel_dim{0, image_depth, image_row * image_depth};
+  halide_dimension_t image_shape[3] = { image_x_dim, image_y_dim, image_channel_dim};
+
+  halide_dimension_t filter_x{0, filter_row, 1};
+  halide_dimension_t filter_y{0, filter_col, filter_row};
+  halide_dimension_t filter_channel_dim{0, filter_depth, filter_row * filter_col};
+  halide_dimension_t filter_shape[3] = {filter_x, filter_y, filter_channel_dim};
+
+
+  halide_dimension_t output_x{0, output_row, 1};
+  halide_dimension_t output_y{0, output_col, output_row};
+  halide_dimension_t output_channel_dim{0, filter_depth, output_row * output_col};
+  halide_dimension_t output_shape[3] = {output_x, output_y, output_channel_dim};
+
+  Halide::Runtime::Buffer<int32_t> IMG(input_image, 3, image_shape);
+  Halide::Runtime::Buffer<int32_t> Filter(filter, 3, filter_shape);
+  Halide::Runtime::Buffer<int32_t> Output(conv_output, 3, output_shape);
+
+  benchmark([&]() {
+    int error = convolution(IMG, Filter, Output);
+    if (error != 0) {
+      printf("Convolution pipeline failed: %d\n", error);
+    }
+  });
+
+
+  free(input_image);
+  free(filter);
+  free(conv_output);
+
+
+#endif
+
+#if benchmark_relu
+  printf("Testing With Relu!\n");
+  int simple_width = 64 * 64 * 4;
+  int simple_height = 1;
+
+  halide_dimension_t x_dim{0, simple_width, 1};
+  halide_dimension_t y_dim{0, simple_height, simple_width};
+  halide_dimension_t shape[2] = {x_dim, y_dim};
+
+  int32_t *simple_input_1 =
+      (int32_t *)malloc(simple_width * simple_height * sizeof(int32_t));
+
+  for (int i = 0; i < simple_width * simple_height; i++) {
+    simple_input_1[i] = 2;
+  }
+
+  int32_t *simple_output =
+      (int32_t *)malloc(simple_width * simple_height * sizeof(int32_t));
+
+  Halide::Runtime::Buffer<int32_t> input_buf_1(simple_input_1, 2, shape);
+  Halide::Runtime::Buffer<int32_t> output_buf(simple_output, 2, shape);
+
+  benchmark([&]() {
+    int error = relu(input_buf_1,  output_buf);
+    if (error != 0) {
+      printf("relu pipeline failed: %d\n", error);
+    }
+  });
+
+  printf("Completed executing relu!\n");
+
+  free(simple_input_1);
+  free(simple_output);
+#endif
+
+#if benchmark_bitsimd_matmul
+
+  int M = 1024;
+  int N = 1024;
+  int K = 1024;
+
+  halide_dimension_t x_dim_A{0, M, 1};
+  halide_dimension_t y_dim_A{0, K, M};
+  halide_dimension_t shape_A[2] = {x_dim_A, y_dim_A};
+  int32_t* matAptr = (int32_t*) malloc(sizeof(int32_t) * M * K);
+  Halide::Runtime::Buffer<int32_t> matA((int32_t *)matAptr, 2, shape_A);
+
+
+  halide_dimension_t x_dim_B{0, K, 1};
+  halide_dimension_t y_dim_B{0, N, K};
+  halide_dimension_t shape_B[2] = {x_dim_B, y_dim_B};
+  int32_t* matBptr = (int32_t*) malloc(sizeof(int32_t) * N * K);
+  Halide::Runtime::Buffer<int32_t> matB((int32_t *)matBptr, 2, shape_B);
+
+
+
+  halide_dimension_t x_dim_O{0, M, 1};
+  halide_dimension_t y_dim_O{0, N, M};
+  halide_dimension_t shape_O[2] = {x_dim_O, y_dim_O};
+  int32_t* matOptr = (int32_t*) malloc(sizeof(int32_t) * N * M);
+  Halide::Runtime::Buffer<int32_t> output_buf((int32_t *)matOptr, 2, shape_O);
+
+  benchmark([&]() {
+    printf("Launching bitsimd matmul!\n");
+    int error = bitsimd_matmul(matA, matB, output_buf);
+    if (error != 0) {
+      printf("bitsimd_matmul pipeline failed: %d\n", error);
+    }
+  });
+
+  free(matAptr);
+  free(matBptr);
+  free(matOptr);
+#endif
+
+#if benchmark_histogram
+  printf("\t*** Histogram\n");
+
+  int width = 2048;
+  int height = 402;
+
+  int32_t *input_image = (int32_t*) aligned_malloc(
+      width * height * sizeof(int32_t) * 3,
+      1 << LOG2VLEN); 
+
+  int32_t *bins = (int32_t*) aligned_malloc(
+      256 * sizeof(int32_t) * 3,
+      1 << LOG2VLEN); 
+
+  // Initialize image
+  for(int c = 0; c < 3; c++){
+      int32_t* channel_offset = input_image + (c * height * width);
+      int32_t value = 0;
+      switch(c){
+          case 0:
+              value = 0;
+              break;
+          case 1:
+              value = 1;
+              break;
+          case 3:
+              value = 2;
+              break;
+
+      };
+      for(int w = 0; w < width; w++){
+          for(int h = 0; h < height; h++){
+              value = (value + 2) % 256;
+              int32_t* pixel_offset = channel_offset + (h * width) + w;
+              *pixel_offset = value;
+          }
+      }
+  }
+
+
+  halide_dimension_t x_dim{0, width, 1};
+  halide_dimension_t y_dim{0, height, width};
+  halide_dimension_t channel_dim{0, 3, height * width};
+  halide_dimension_t shape[3] = { x_dim, y_dim, channel_dim};
+
+  halide_dimension_t x_bin_dim{0, 256, 1};
+  halide_dimension_t y_bin_dim{0, 3, 256};
+  halide_dimension_t bin_shape[2] = {x_bin_dim, y_bin_dim};
+
+
+  Halide::Runtime::Buffer<int32_t> IMG(input_image, 3, shape);
+  Halide::Runtime::Buffer<int32_t> Bins(bins, 2, bin_shape);
+
+  benchmark([&]() {
+    int error = histogram(IMG, Bins);
+    if (error != 0) {
+      printf("histogram pipeline failed: %d\n", error);
+    }
+  });
+
+  printf("Red Bins\n");
+  for(int i =0; i < 8; i ++){
+      printf("[%d]:\t%d\n", i, Bins(i, 0));
+  }
+
+  printf("Blue Bins\n");
+  for(int i =0; i < 8; i ++){
+      printf("[%d]:\t%d\n", i, Bins(i, 1));
+  }
+
+  printf("Green Bins\n");
+  for(int i =0; i < 8; i ++){
+      printf("[%d]:\t%d\n", i, Bins(i, 2));
+  }
+
+  free(input_image);
+  free(bins);
+
 #endif
 
     printf("Success!\n");
