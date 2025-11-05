@@ -1320,3 +1320,18 @@ def simplify_double_division(patterns):
     print(f"Simplified {count} expressions")
     return patterns
 
+
+
+def remove_invalid_patterns(patterns):
+    count = 0
+    pruned_patterns = []
+    from utils.EggLogUtils import is_rewrite_valid
+    for pattern in patterns:
+        if not is_rewrite_valid(pattern.src_expr, pattern.target_expr):
+            count +=1
+            pattern.print_pattern()
+        else:
+            pruned_patterns.append(pattern)
+    print(f"removed {count} expressions patterns")
+    return pruned_patterns
+

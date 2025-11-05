@@ -61,6 +61,19 @@ def emit_egg_datatypes_two_dsl(input_dsl_list, output_dsl_list,  input_cost = 1,
     return  "\n".join([comment, scalars ,decl_insts])
 
 
+def emit_egg_datatypes_two_dsl_variable_cost(input_dsl_list, output_dsl_list,  input_cost = 1, output_cost = 1, swizzle_cost = 1, cost_dict = {}):
+
+    symbolic_bvs = emit_egg_decl_bv()
+    scalars = emit_egg_decl_scalar()
+
+    input_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = input_cost if dsl_inst.name not in cost_dict else cost_dict[dsl_inst.name], swizzle_cost = swizzle_cost) for dsl_inst in input_dsl_list]
+    output_dsl_decls = [emit_egg_dsl_decl(dsl_inst, cost = output_cost if dsl_inst.name not in cost_dict else cost_dict[dsl_inst.name], swizzle_cost = swizzle_cost) for dsl_inst in output_dsl_list]
+
+    comment = "; Declaring constructs for instructionsd"
+
+    decl_insts = "(datatype  {} {})".format(HYDRIDE_EXPR_LABEL, "\n".join([symbolic_bvs] +  input_dsl_decls + output_dsl_decls))
+    return  "\n".join([comment, scalars ,decl_insts])
+
 
 def egg_sanatize_name(name):
     rem_col = name.replace(":","_")
@@ -290,6 +303,29 @@ def is_birewrite_valid(expr1, expr2):
         return False
 
 
+
+    return True
+
+
+
+
+def is_rewrite_valid(expr1, expr2):
+
+
+    regs_expr1 = get_context_registers(expr1)
+    regs_expr2 = get_context_registers(expr2)
+
+    # all expr_2 regs must exist in expr_1
+
+    reg_ids_1 = [int(reg.index) for reg in regs_expr1]
+    reg_ids_2 = [int(reg.index) for reg in regs_expr2]
+
+    unique_ids_1 = list(set(reg_ids_1))
+    unique_ids_2 = list(set(reg_ids_2))
+
+    for expr_reg_2 in reg_ids_2:
+        if expr_reg_2 not in unique_ids_1:
+            return False
 
     return True
 
