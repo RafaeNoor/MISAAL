@@ -370,7 +370,7 @@ void CustomInliner(llvm::CallInst *CI) {
     if (!CF) return;
 
     // Map Arguments in the VMAP
-    for (unsigned i = 0; i < CI->getNumArgOperands(); i++) {
+    for (unsigned i = 0; i < CI->getNumOperands(); i++) {
         llvm::Value *ActualParam = CI->getArgOperand(i);
 
         llvm::Value *FormalParam = llvm::dyn_cast<llvm::Argument>((CF->arg_begin() + i));

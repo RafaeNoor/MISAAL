@@ -1,0 +1,7 @@
+[submodule "Hydride"]
+	path = Hydride
+	url = https://github.com/akothen/Hydride.git
+	branch = bitserial
+[submodule "egglog"]
+	path = egglog
+	url = https://github.com/egraphs-good/egglog.git
