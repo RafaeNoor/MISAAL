@@ -188,26 +188,6 @@ MISAAL includes several pre-implemented passes in the `lib/passes` directory:
      - Produces detailed JSON output for each analysis stage
      - Creates a combined results file for all analyses
 
-## Best Practices
-
-1. **Pass Implementation**
-   - Inherit from `MISAAL_PASS`
-   - Implement all required abstract methods
-   - Use the provided logging infrastructure
-   - Handle exceptions appropriately
-   - Document pass dependencies
-
-2. **Pipeline Configuration**
-   - Ensure correct pass ordering based on dependencies
-   - Configure appropriate parallelization settings
-   - Set up proper working directories
-   - Use meaningful pass names and descriptions
-   - Provide pass-specific configurations when needed
-
-3. **Error Handling**
-   - Use the built-in exception handling
-   - Configure `stop_after_exception` based on requirements
-   - Review logs for debugging
 
 ## See Also
 - [Property Base Class](./Property.md)

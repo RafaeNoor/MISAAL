@@ -122,3 +122,17 @@ The second purpose this property serves is that it produces the pseudocode of th
 
 This set of operation pseudocodes are then parsed into <tt>Hydride</tt>'s intermediate representation after which they generate the Python dictionary representation of AutoLLVM IR representation as described in [AutoLLVM IR Representation](./AutoLLVM.md). The result of these are fully formally specified and automatically generated swizzle operations ready for synthesis! 
 
+## Generating Swizzles AutoLLVM IR with Semantics
+Once the `.xml` files of swizzle pseudocodes are generated, `MISAAL` parses the file into Hydride IR and performs the similar instructions analysis to emit AutoLLVM IR for the swizzles. Parameters such as offsets, vector sizes, element bitwidths and such are abstracted via additional parameterizations.
+
+An simple test of emitting swizzle AutoLLVM IR is shown in the [swizzle generation test case](../../test/utils/swizzle_abstract/). The directory contains a sample [x86_swizzles.xml](../../test/utils/swizzle_abstract/x86_swizzles.xml). 
+
+```python
+from utils.SwizzleUtils import compile_swizzle_pseudocode_to_autollvm
+swizzles_path = "x86_swizzles.xml"
+compile_swizzle_pseudocode_to_autollvm(swizzles_path)
+```
+
+The above commands will launch a long running process where the pseudocode is converted to formal semantics then AutoLLVM IR classes are generated. Importantly, the AutoLLVM IR generation re-rolls many of the fully unrolled pseudocode semantics generating a compact equivalent representation. Then by abstracting the loop bounds into symbolic parameters, this can allow swizzles on different vector sizes to be unified.
+
+**Note the current implementation of this utility generates all temporary files within the current working directory. The number of files generally scales quadratically with the size of the number of concrete swizzles.**

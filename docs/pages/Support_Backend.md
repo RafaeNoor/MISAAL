@@ -14,7 +14,7 @@ Adding a new backend requires:
 
 ## Step 1: Implementing Target Semantics
 
-You can provide target semantics in two formats:
+You can provide target semantics in Pseudocode format, which can then be parsed using into AutoLLVM IR:
 
 ### 1. Pseudocode Format
 ```python
@@ -37,6 +37,9 @@ def horizontal_add_sat_i16(a, b):
 ```
 
 ### 2. Python Dictionary Format
+
+Structure of generated python dictionary entry
+
 ```python
 {
     "_mm_hadd_pi16": {
@@ -62,7 +65,8 @@ def horizontal_add_sat_i16(a, b):
                 "SIMD": "True",
                 "Extensions": "['ssse3']"
             }
-        }
+        },
+        "semantics": [...]
     }
 }
 ```
@@ -224,27 +228,7 @@ std::string MisaalCompiler::get_llvm_so_path() {
    - Use Hydride compilation flow for generating LLVM passes
    - Ensure correct pass invocation for your target
 
-3. **Performance Considerations**
-   - Define accurate cost models in semantics
-   - Consider SIMD capabilities
-   - Document required extensions
 
-## Best Practices
-
-1. **Semantics Definition**
-   - Document all instruction variants
-   - Include edge cases and constraints
-   - Provide comprehensive test cases
-
-2. **AutoLLVM IR**
-   - Follow existing patterns for similar instructions
-   - Validate IR generation
-   - Test with different parameter combinations
-
-3. **Backend Integration**
-   - Follow LLVM coding guidelines
-   - Add debug logging
-   - Document pass dependencies
 
 ## See Also
 - [AutoLLVM IR](./AutoLLVM.md)

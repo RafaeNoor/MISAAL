@@ -206,46 +206,7 @@ const char* HYDRIDE_PATH = std::getenv("HYDRIDE_ROOT");
 assert(HYDRIDE_PATH && "HYDRIDE_ROOT path not defined");
 ```
 
-2. **Compilation Monitoring**
-```cpp
-// Timing information is automatically logged
-auto start = std::chrono::system_clock::now();
-// ... compilation ...
-auto end = std::chrono::system_clock::now();
-std::chrono::duration<double> elapsed_seconds = end - start;
-std::cout << "Compilation took " << elapsed_seconds.count() 
-          << " seconds ...\n";
-```
 
-3. **Error Checking**
-```cpp
-int ret_code = system(cmd.c_str());
-if(ret_code != 0) {
-    assert(false && "Error while running compilation script");
-}
-```
-
-### Best Practices for libmisaal Integration
-
-1. **Expression Management**
-   - Generate unique names for expressions
-   - Batch related expressions together
-   - Clean up temporary files after compilation
-
-2. **Resource Management**
-   - Set up environment variables in build system
-   - Validate all paths before compilation
-   - Handle cleanup of generated files
-
-3. **Performance Optimization**
-   - Batch expressions when possible
-   - Reuse compiler instance
-   - Configure appropriate iteration counts
-
-4. **Debugging Support**
-   - Add logging for expression generation
-   - Monitor compilation progress
-   - Preserve intermediate files when needed
 
 ### Common Issues and Solutions
 
@@ -261,28 +222,7 @@ if(ret_code != 0) {
    - Problem: Synthesis timeout
    - Solution: Adjust `MISAAL_EQ_SAT_ITERS`
 
-4. **Integration Testing**
-   - Problem: Difficult to verify correctness
-   - Solution: Add unit tests for s-expression generation
 
-## Best Practices
-
-1. **IR Semantics**
-   - Document all operation semantics thoroughly
-   - Include test cases for semantic verification
-   - Handle edge cases and type variations
-
-2. **Expression Generation**
-   - Maintain type safety during conversion
-   - Handle all IR node types
-   - Implement proper error handling
-   - Add logging for debugging
-
-3. **Integration**
-   - Set up proper build system integration
-   - Add tests for the integration
-   - Document environment requirements
-   - Handle resource cleanup
 
 ## See Also
 - [Pass Pipeline Framework](./PassPipeline.md)
