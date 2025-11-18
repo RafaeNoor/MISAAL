@@ -1,0 +1,94 @@
+<intrinsics_list>
+
+<intrinsic tech="AVX2" name="x86_swizzle_0">
+	<type>Integer</type>
+	<CPUID>AVX2</CPUID>
+	<category>Swizzle</category>
+	<return type="__m256i" varname="dst" etype="UI32"/>
+        <parameter type="__m512i" varname="v0" etype="UI32"/>
+<parameter type="__m512i" varname="v1" etype="UI32"/>
+	<description>Automatically generated swizzle.</description>
+	<operation>
+        dst[31:0] := v0[415:384]
+dst[63:32] := v1[415:384]
+dst[95:64] := v0[447:416]
+dst[127:96] := v1[447:416]
+dst[159:128] := v0[479:448]
+dst[191:160] := v1[479:448]
+dst[223:192] := v0[511:480]
+dst[255:224] := v1[511:480]
+
+	</operation>
+	<instruction name="x86_swizzle_0" form="ymm, ymm, ymm" xed="VPUNPCKLBW_YMMqq_YMMqq_YMMqq"/>
+	<header>immintrin.h</header>
+</intrinsic>
+        
+
+<intrinsic tech="AVX2" name="x86_swizzle_1">
+	<type>Integer</type>
+	<CPUID>AVX2</CPUID>
+	<category>Swizzle</category>
+	<return type="__m256i" varname="dst" etype="UI32"/>
+        <parameter type="__m512i" varname="v0" etype="UI32"/>
+<parameter type="__m512i" varname="v1" etype="UI32"/>
+	<description>Automatically generated swizzle.</description>
+	<operation>
+        dst[31:0] := v0[287:256]
+dst[63:32] := v1[287:256]
+dst[95:64] := v0[319:288]
+dst[127:96] := v1[319:288]
+dst[159:128] := v0[351:320]
+dst[191:160] := v1[351:320]
+dst[223:192] := v0[383:352]
+dst[255:224] := v1[383:352]
+
+	</operation>
+	<instruction name="x86_swizzle_1" form="ymm, ymm, ymm" xed="VPUNPCKLBW_YMMqq_YMMqq_YMMqq"/>
+	<header>immintrin.h</header>
+</intrinsic>
+        
+
+
+<intrinsic tech="AVX2" name="x86_swizzle_4">
+	<type>Integer</type>
+	<CPUID>AVX2</CPUID>
+	<category>Swizzle</category>
+	<return type="__m256i" varname="dst" etype="UI32"/>
+        <parameter type="__m128i" varname="v0" etype="UI32"/>
+<parameter type="__m128i" varname="v1" etype="UI32"/>
+	<description>Automatically generated swizzle.</description>
+	<operation>
+        dst[31:0] := v0[31:0]
+dst[63:32] := v1[31:0]
+dst[95:64] := v0[63:32]
+dst[127:96] := v1[63:32]
+dst[159:128] := v0[95:64]
+dst[191:160] := v1[95:64]
+dst[223:192] := v0[127:96]
+dst[255:224] := v1[127:96]
+
+	</operation>
+	<instruction name="x86_swizzle_4" form="ymm, ymm, ymm" xed="VPUNPCKLBW_YMMqq_YMMqq_YMMqq"/>
+	<header>immintrin.h</header>
+</intrinsic>
+
+<intrinsic tech="AVX2" name="x86_swizzle_163">
+	<type>Integer</type>
+	<CPUID>AVX2</CPUID>
+	<category>Swizzle</category>
+	<return type="__m128i" varname="dst" etype="UI32"/>
+        <parameter type="__m64" varname="v0" etype="UI32"/>
+<parameter type="__m64" varname="v1" etype="UI32"/>
+	<description>Automatically generated swizzle.</description>
+	<operation>
+        dst[31:0] := v0[31:0]
+dst[63:32] := v1[31:0]
+dst[95:64] := v0[63:32]
+dst[127:96] := v1[63:32]
+
+	</operation>
+	<instruction name="x86_swizzle_163" form="ymm, ymm, ymm" xed="VPUNPCKLBW_YMMqq_YMMqq_YMMqq"/>
+	<header>immintrin.h</header>
+</intrinsic>
+        
+</intrinsics_list>

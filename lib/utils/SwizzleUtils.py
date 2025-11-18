@@ -4,6 +4,7 @@ import json
 import os
 
 from utils.WriteDSL import write_dsl_dict_to_file, convert_dsl_list_to_dict
+from RoseSimilarityChecker import RoseSimilarityChecker
 
 
 class Swizzle:
@@ -455,5 +456,13 @@ def create_swizzle_identity_map(dsl_list):
             swizzle_map[extract_op.name].append(sample_ctx.name)
 
     return swizzle_map
+
+
+def compile_swizzle_pseudocode_to_autollvm(swizzle_xml_path):
+    assert os.path.exists(swizzle_xml_path), "swizzle_xml_path does not exist"
+    SimilarityChecker = RoseSimilarityChecker(["swizzle"], xml_file_path = swizzle_xml_path)
+    SimilarityChecker.performSimilarityChecking()
+
+
 
 
