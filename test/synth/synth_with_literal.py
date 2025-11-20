@@ -1,0 +1,57 @@
+import argparse
+from common.Types import *
+import json
+import sys
+import os
+
+from common.DSLParser import parse_dict
+from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX_SYNTH_DESC,ARM_SYNTH_DESC, create_synth_desc, HALIDE_SYNTH_DESC, HALIDE_X86_SYNTH_DESC
+from sema.halide_decomposed import halide_decomposed  as halide_semantics
+
+from properties.EqClassEqualDepthV4Full import EqClassEqualDepthV4Full
+from utils.EnumerateUtils import create_exhaustive_expressions_generator_v2
+
+
+halide_dsl_list = parse_dict(halide_semantics)
+
+# Focus on halide subset
+halide_subset = ["shl", "unsigned-vec-mul"]
+halide_dsl_list = [d for d in halide_dsl_list if any([substr in d.name for substr in halide_subset])]
+
+expr_gen = create_exhaustive_expressions_generator_v2(halide_dsl_list, 1, output_size = 128)
+
+for e in expr_gen:
+    if isinstance(e, Reg):
+        continue
+
+    print(e.emit_context_expr_string())
+    pass
+
+
+
+
+target_swizzles = []
+swizzle_forward_path = None
+forward_path_name = None
+commutative_path = None
+synthesizer_desc = HALIDE_HVX_SYNTH_DESC
+
+
+PropertyInstance = EqClassEqualDepthV4Full(dsl_list = halide_dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+
+PropertyInstance.parallel = False
+PropertyInstance.POOL_SIZE = 8
+PropertyInstance.BATCH_SIZE = 1024
+
+property_map = PropertyInstance.get_property()
+
+property_label = "Test_"+PropertyInstance.name
+fname = "{}.py".format(PropertyInstance.name)
+
+if os.path.exists(fname):
+    prepend = get_random_tempfile_name()
+    # If file exists then append prefix
+    fname = prepend +"_"+fname
+    property_label = prepend + "_"+property_label
+with open(fname, "w+") as DumpFile:
+    DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))

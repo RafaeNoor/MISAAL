@@ -1,5 +1,6 @@
 from utils.DSLInstructionUtils import *
 from utils.ConcretizeUtils import *
+from utils.LiteralHole import LiteralHole
 
 
 
@@ -13,6 +14,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
     if expr_depth == 0:
         yield copy_fn(Reg("0_placeholder", 8, 8))
+        yield LiteralHole.contexts[0]
     else:
         relavent_ctx = []
         for dsl_inst in dsl_list:
@@ -46,6 +48,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
         # TEMP Moving down
         yield copy_fn(Reg("1_placeholder", 8, 8))
+        yield LiteralHole.contexts[0]
 
         def is_expr_valid(expr):
             if max_leaves is None:
@@ -230,17 +233,24 @@ def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size
 
     for expr in depth_expressions_generator:
         copied_expr = expr
+
+
         new_expr, discard = set_reg_names_exprs_helper(copied_expr, 0)
 
         if isinstance(expr, Context):
             #print("NEW EPXR")
             #print("\n\n",new_expr.emit_context_expr_string())
+            num_regs = len(get_unique_context_registers(expr))
+
+            if num_regs == 0:
+                continue
+
             pass
 
 
 
 
-        if does_valid_concretization_exist(new_expr, output_size, dsl_list):
+        if does_valid_concretization_exist(new_expr, output_size, dsl_list+[LiteralHole]):
             #valid_conc = get_valid_concretization(new_expr, output_size, dsl_list)
             #assert not valid_conc is None, "Valid concretization should exist"
             #yield valid_conc

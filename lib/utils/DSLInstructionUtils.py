@@ -1062,11 +1062,12 @@ def get_expr_intermediate_sizes(dsl_expr):
     return sizes
 
 def get_expr_depth(dsl_expr):
-    if isinstance(dsl_expr, Context) and dsl_expr.extensions != None and 'integer_arith' in dsl_expr.extensions:
+    if isinstance(dsl_expr, Context) and dsl_expr.extensions != None and ('integer_arith' in dsl_expr.extensions):
         return 0
 
 
-    if isinstance(dsl_expr, Context):
+
+    if isinstance(dsl_expr, Context) and not "LiteralHole" in dsl_expr.name:
         return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
 
     else:
