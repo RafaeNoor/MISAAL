@@ -1,0 +1,136 @@
+
+title = "Vector Elementwise equal of vectors"
+
+
+[pimEQ]
+
+
+
+[pimEQ.v16384_e8__v16384_e8__v16384_e8]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [131072, 131072] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 131072
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v16384_e8(a, b):
+   FOR i IN RANGE(0, 131072, 8):
+    dst[i+7:i] = (a[i+7:i] == b[i+7:i]) ? 1 : 0
+   ENDFOR
+"""
+
+
+
+# 1024-bit vector ops 
+[pimEQ.v1024_e8__v1024_e8__v1024_e8]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [1024, 1024] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v1024_e8(a, b):
+   FOR i IN RANGE(0, 1024, 8):
+    dst[i+7:i] = (a[i+7:i] == b[i+7:i] ) ? 1 : 0
+   ENDFOR
+"""
+
+
+[pimEQ.v1024_e16__v1024_e16__v1024_e16]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [1024, 1024] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v1024_e16(a, b):
+   FOR i IN RANGE(0, 1024, 16):
+    dst[i+15:i] = (a[i+15:i] == b[i+15:i] ) ? 1 : 0
+   ENDFOR
+"""
+
+
+[pimEQ.v1024_e32__v1024_e32__v1024_e32]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [1024, 1024] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v1024_e32(a, b):
+   FOR i IN RANGE(0, 1024, 32):
+    dst[i+31:i] = (a[i+31:i] == b[i+31:i] ) ? 1 : 0
+   ENDFOR
+"""
+
+
+
+# 512-bit vector ops 
+[pimEQ.v512_e8__v512_e8__v512_e8]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [512, 512] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v512_e8(a, b):
+   FOR i IN RANGE(0, 512, 8):
+    dst[i+7:i] = (a[i+7:i] == b[i+7:i] ) ? 1 : 0
+   ENDFOR
+"""
+
+
+[pimEQ.v512_e16__v512_e16__v512_e16]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [512, 512] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v512_e16(a, b):
+   FOR i IN RANGE(0, 512, 16):
+    dst[i+15:i] = (a[i+15:i] == b[i+15:i] ) ? 1 : 0
+   ENDFOR
+"""
+
+
+[pimEQ.v512_e32__v512_e32__v512_e32]
+name = "pimEQ"
+num_operands = 2
+operand_sizes = [512, 512] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimEQ_v512_e32(a, b):
+   FOR i IN RANGE(0, 512, 32):
+    dst[i+31:i] = (a[i+31:i] == b[i+31:i] ) ? 1 : 0
+   ENDFOR
+"""

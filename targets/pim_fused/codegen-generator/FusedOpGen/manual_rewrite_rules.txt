@@ -1,0 +1,20 @@
+===========================
+SRC EXPR
+(test_enum_1_manual_comb_27_fused_pim_op_2396 reg_0 reg_1 reg_2 reg_3 reg_4)
+DST EXPR
+(test_enum_1_manual_comb_11_fused_pim_op_16 reg_0 reg_1 (test_enum_1_manual_comb_11_fused_pim_op_16 reg_2 reg_3 reg_4))
+===========================
+SRC EXPR
+(test_enum_1_manual_comb_27_fused_pim_op_2674 reg_0 reg_1 reg_2 reg_3 reg_4)
+DST EXPR
+(test_enum_1_manual_comb_11_fused_pim_op_16 reg_0 (test_enum_1_manual_comb_11_fused_pim_op_16 reg_1 reg_2 reg_3) reg_4)
+===========================
+SRC EXPR
+(test_enum_1_manual_comb_31_fused_pim_op_2396 reg_0 reg_1 reg_2 reg_3 reg_4)
+DST EXPR
+(test_enum_1_manual_comb_15_fused_pim_op_16 reg_0 reg_1 (test_enum_1_manual_comb_15_fused_pim_op_16 reg_2 reg_3 reg_4))
+===========================
+SRC EXPR
+(test_enum_1_manual_comb_31_fused_pim_op_2674 reg_0 reg_1 reg_2 reg_3 reg_4)
+DST EXPR
+(test_enum_1_manual_comb_15_fused_pim_op_16 reg_0 (test_enum_1_manual_comb_15_fused_pim_op_16 reg_1 reg_2 reg_3) reg_4)

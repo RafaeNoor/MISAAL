@@ -1,0 +1,687 @@
+
+title = "Vector Addition of vectors"
+
+
+[pimXorScalar]
+
+# Vectorization factor 16384
+
+
+[pimXorScalar.v16384_e8__v16384_e8__v16384_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [131072, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 131072
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16384_e8(a, b):
+   FOR i IN RANGE(0, 131072, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v16384_e16__v16384_e16__v16384_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [262144, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 262144
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16384_e16(a, b):
+   FOR i IN RANGE(0, 262144, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v16384_e32__v16384_e32__v16384_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [524288, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 524288
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16384_e32(a, b):
+   FOR i IN RANGE(0, 524288 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+
+
+# Vectorization factor  8192
+
+
+[pimXorScalar.v8192_e8__v8192_e8__v8192_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [65536, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 65536
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8192_e8(a, b):
+   FOR i IN RANGE(0, 65536, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v8192_e16__v8192_e16__v8192_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [131072, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 131072
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8192_e16(a, b):
+   FOR i IN RANGE(0, 131072, 16):
+    dst[i+15:i] = a[i+15:i] XOR b
+   ENDFOR
+"""
+
+[pimXorScalar.v8192_e32__v8192_e32__v8192_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [262144, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 262144
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8192_e32(a, b):
+   FOR i IN RANGE(0, 262144 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+# Vectorization factor  4096
+
+
+[pimXorScalar.v4096_e8__v4096_e8__v4096_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [32768, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 32768
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v4096_e8(a, b):
+   FOR i IN RANGE(0, 32768, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v4096_e16__v4096_e16__v4096_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [65536, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 65536
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v4096_e16(a, b):
+   FOR i IN RANGE(0, 65536, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v4096_e32__v4096_e32__v4096_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [131072, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 131072
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v4096_e32(a, b):
+   FOR i IN RANGE(0, 131072 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+# Vectorization factor  2048
+
+
+[pimXorScalar.v2048_e8__v2048_e8__v2048_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [16384, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 16384
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v2048_e8(a, b):
+   FOR i IN RANGE(0, 16384, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v2048_e16__v2048_e16__v2048_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [32768, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 32768
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v2048_e16(a, b):
+   FOR i IN RANGE(0, 32768, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v2048_e32__v2048_e32__v2048_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [65536, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 65536
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v2048_e32(a, b):
+   FOR i IN RANGE(0, 65536 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+
+# Vectorization factor  1024
+
+
+[pimXorScalar.v1024_e8__v1024_e8__v1024_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [8192, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 8192
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v1024_e8(a, b):
+   FOR i IN RANGE(0, 8192, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v1024_e16__v1024_e16__v1024_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [16384, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 16384
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v1024_e16(a, b):
+   FOR i IN RANGE(0, 16384, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v1024_e32__v1024_e32__v1024_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [32768, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 32768
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v1024_e32(a, b):
+   FOR i IN RANGE(0, 32768 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+
+# Vectorization factor  512
+
+
+[pimXorScalar.v512_e8__v512_e8__v512_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [4096, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 4096
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v512_e8(a, b):
+   FOR i IN RANGE(0, 4096, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v512_e16__v512_e16__v512_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [8192, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 8192
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v512_e16(a, b):
+   FOR i IN RANGE(0, 8192, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v512_e32__v512_e32__v512_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [16384, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 16384
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v512_e32(a, b):
+   FOR i IN RANGE(0, 16384 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+
+
+# Vectorization factor  256
+
+
+[pimXorScalar.v256_e8__v256_e8__v256_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [2048, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 2048
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v256_e8(a, b):
+   FOR i IN RANGE(0, 2048, 8):
+    dst[i+7:i] = a[i+7:i] XOR b 
+   ENDFOR
+"""
+
+
+[pimXorScalar.v256_e16__v256_e16__v256_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [4096, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 4096
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v256_e16(a, b):
+   FOR i IN RANGE(0, 4096, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v256_e32__v256_e32__v256_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [8192, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 8192
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v256_e32(a, b):
+   FOR i IN RANGE(0, 8192 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b 
+   ENDFOR
+"""
+
+
+
+
+# Vectorization factor  128
+
+
+[pimXorScalar.v128_e8__v128_e8__v128_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [1024, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v128_e8(a, b):
+   FOR i IN RANGE(0, 1024, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v128_e16__v128_e16__v128_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [2048, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 2048
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v128_e16(a, b):
+   FOR i IN RANGE(0, 2048, 16):
+    dst[i+15:i] = a[i+15:i] XOR b 
+   ENDFOR
+"""
+
+[pimXorScalar.v128_e32__v128_e32__v128_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [4096, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 4096
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v128_e32(a, b):
+   FOR i IN RANGE(0, 4096 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b
+   ENDFOR
+"""
+
+
+
+# Vectorization factor  64
+
+
+[pimXorScalar.v64_e8__v64_e8__v64_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [512, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v64_e8(a, b):
+   FOR i IN RANGE(0, 512, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v64_e16__v64_e16__v64_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [1024, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 1024 
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v64_e16(a, b):
+   FOR i IN RANGE(0, 1024, 16):
+    dst[i+15:i] = a[i+15:i] XOR b
+   ENDFOR
+"""
+
+[pimXorScalar.v64_e32__v64_e32__v64_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [2048, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 2048
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v64_e32(a, b):
+   FOR i IN RANGE(0, 2048 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b
+   ENDFOR
+"""
+
+
+
+# Vectorization factor  32
+
+
+[pimXorScalar.v32_e8__v32_e8__v32_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [256, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 256
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v32_e8(a, b):
+   FOR i IN RANGE(0, 256, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v32_e16__v32_e16__v32_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [512, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size =  512
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v32_e16(a, b):
+   FOR i IN RANGE(0, 512, 16):
+    dst[i+15:i] = a[i+15:i] XOR b
+   ENDFOR
+"""
+
+[pimXorScalar.v32_e32__v32_e32__v32_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [1024, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v32_e32(a, b):
+   FOR i IN RANGE(0, 1024 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b
+   ENDFOR
+"""
+
+
+
+# Vectorization factor  16
+
+
+[pimXorScalar.v16_e8__v16_e8__v16_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [128, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16_e8(a, b):
+   FOR i IN RANGE(0, 128, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v16_e16__v16_e16__v16_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [256, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size =  256
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16_e16(a, b):
+   FOR i IN RANGE(0, 256, 16):
+    dst[i+15:i] = a[i+15:i] XOR b
+   ENDFOR
+"""
+
+[pimXorScalar.v16_e32__v16_e32__v16_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [512, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v16_e32(a, b):
+   FOR i IN RANGE(0, 512 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b
+   ENDFOR
+"""
+
+
+# Vectorization factor  8
+
+
+[pimXorScalar.v8_e8__v8_e8__v8_e8]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [64, 8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8_e8(a, b):
+   FOR i IN RANGE(0, 64, 8):
+    dst[i+7:i] = a[i+7:i] XOR b
+   ENDFOR
+"""
+
+
+[pimXorScalar.v8_e16__v8_e16__v8_e16]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [128, 16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size =  128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8_e16(a, b):
+   FOR i IN RANGE(0, 128, 16):
+    dst[i+15:i] = a[i+15:i] XOR b
+   ENDFOR
+"""
+
+[pimXorScalar.v8_e32__v8_e32__v8_e32]
+name = "pimXorScalar"
+num_operands = 2
+operand_sizes = [256, 32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 256
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimXorScalar_v8_e32(a, b):
+   FOR i IN RANGE(0, 256 , 32):
+    dst[i+31:i] = a[i+31:i] XOR b
+   ENDFOR
+"""

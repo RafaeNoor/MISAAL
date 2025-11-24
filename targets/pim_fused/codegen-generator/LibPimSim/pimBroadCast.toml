@@ -1,0 +1,136 @@
+
+title = "Vector BroadCast of vectors"
+
+
+[pimBroadCast]
+
+
+
+[pimBroadCast.v16384_e8__v8_e8]
+name = "pimBroadCast"
+num_operands = 8
+operand_sizes = [8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 131072
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v16384_e8(a):
+   FOR i IN RANGE(0, 131072, 8):
+    dst[i+7:i] = a[7:0] 
+   ENDFOR
+"""
+
+
+
+# 1024-bit vector ops 
+[pimBroadCast.v1024_e8__v8_e8]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [8 ]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v1024_e8(a):
+   FOR i IN RANGE(0, 1024, 8):
+    dst[i+7:i] = a[7:0] 
+   ENDFOR
+"""
+
+
+[pimBroadCast.v1024_e16__v16_e16]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [16] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v1024_e16(a):
+   FOR i IN RANGE(0, 1024, 16):
+    dst[i+15:i] = a[15:0]
+   ENDFOR
+"""
+
+
+[pimBroadCast.v1024_e32__v32_e32]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [32] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 1024
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v1024_e32(a):
+   FOR i IN RANGE(0, 1024, 32):
+    dst[i+31:i] = a[31:0]
+   ENDFOR
+"""
+
+
+
+# 512-bit vector ops 
+[pimBroadCast.v512_e8__v8_e8]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [8] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v512_e8(a):
+   FOR i IN RANGE(0, 512, 8):
+    dst[i+7:i] = a[7:0] 
+   ENDFOR
+"""
+
+
+[pimBroadCast.v512_e16__v16_e16]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [512] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT", "DRAM_VERT"] 
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v512_e16(a):
+   FOR i IN RANGE(0, 512, 16):
+    dst[i+15:i] = a[15:0] 
+   ENDFOR
+"""
+
+
+[pimBroadCast.v512_e32__v32_e32]
+name = "pimBroadCast"
+num_operands = 1
+operand_sizes = [512] # Number of bits for each operand
+operand_layouts = ["DRAM_VERT"] 
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 512
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE pimBroadCast_v512_e32(a):
+   FOR i IN RANGE(0, 512, 32):
+    dst[i+31:i] = a[31:0] 
+   ENDFOR
+"""

@@ -1,0 +1,3660 @@
+[test_enum_1]
+[test_enum_1.comb_0_fused_pim_op_0]
+name = "comb_0_fused_pim_op_0"
+operand_sizes = [512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_0_fused_pim_op_0(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+7:var_0_low] < b[var_1_low+7:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_0_fused_pim_op_1]
+name = "comb_0_fused_pim_op_1"
+operand_sizes = [1024, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_0_fused_pim_op_1(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+15:var_0_low] < b[var_1_low+15:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_0_fused_pim_op_2]
+name = "comb_0_fused_pim_op_2"
+operand_sizes = [2048, 2048]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_0_fused_pim_op_2(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+31:var_0_low] < b[var_1_low+31:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_0_fused_pim_op_3]
+name = "comb_0_fused_pim_op_3"
+operand_sizes = [512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_0_fused_pim_op_3(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+7:var_0_low] < b[var_1_low+7:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_0_fused_pim_op_4]
+name = "comb_0_fused_pim_op_4"
+operand_sizes = [1024, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_0_fused_pim_op_4(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+15:var_0_low] < b[var_1_low+15:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_0_fused_pim_op_5]
+name = "comb_0_fused_pim_op_5"
+operand_sizes = [2048, 2048]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_0_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+31:var_0_low] < b[var_1_low+31:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_0]
+name = "comb_1_fused_pim_op_0"
+operand_sizes = [8]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 8, 1):
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = a[7:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_1]
+name = "comb_1_fused_pim_op_1"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = Truncate8(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_2]
+name = "comb_1_fused_pim_op_2"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = ~a[var_0_low+7:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_3]
+name = "comb_1_fused_pim_op_3"
+operand_sizes = [64, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_3(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_4]
+name = "comb_1_fused_pim_op_4"
+operand_sizes = [64, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_4(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] << b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_5]
+name = "comb_1_fused_pim_op_5"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] + b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_6]
+name = "comb_1_fused_pim_op_6"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] - b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_7]
+name = "comb_1_fused_pim_op_7"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_1_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] * b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_8]
+name = "comb_1_fused_pim_op_8"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_1_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] / b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_9]
+name = "comb_1_fused_pim_op_9"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_1_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = MAX(a[var_0_low+7:var_0_low], b[var_1_low+7:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_10]
+name = "comb_1_fused_pim_op_10"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_1_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = MIN(a[var_0_low+7:var_0_low], b[var_1_low+7:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_11]
+name = "comb_1_fused_pim_op_11"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] & b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_12]
+name = "comb_1_fused_pim_op_12"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] | b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_13]
+name = "comb_1_fused_pim_op_13"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] XOR b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_1_fused_pim_op_14]
+name = "comb_1_fused_pim_op_14"
+operand_sizes = [8, 64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_1_fused_pim_op_14(a, b, c):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 1
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3_low = idx * 8
+dst[var_3_low+7:var_3_low] = (a[var_0_low+0:var_0_low] == 1) ? b[var_1_low+7:var_1_low] : c[var_2_low+7:var_2_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_0]
+name = "comb_2_fused_pim_op_0"
+operand_sizes = [16]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 4, 1):
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = a[15:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_1]
+name = "comb_2_fused_pim_op_1"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 0
+semantics = """\
+DEFINE comb_2_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 8
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = ZeroExtend16(a[var_0_low+7:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_2]
+name = "comb_2_fused_pim_op_2"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_2_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 8
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = SignExtend16(a[var_0_low+7:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_3]
+name = "comb_2_fused_pim_op_3"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_3(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = Truncate16(a[var_0_low+31:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_4]
+name = "comb_2_fused_pim_op_4"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_4(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = ~a[var_0_low+15:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_5]
+name = "comb_2_fused_pim_op_5"
+operand_sizes = [64, 16]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = 0 * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] >> b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_6]
+name = "comb_2_fused_pim_op_6"
+operand_sizes = [64, 16]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = 0 * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] << b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_7]
+name = "comb_2_fused_pim_op_7"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] + b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_8]
+name = "comb_2_fused_pim_op_8"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] - b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_9]
+name = "comb_2_fused_pim_op_9"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_2_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] * b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_10]
+name = "comb_2_fused_pim_op_10"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_2_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] / b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_11]
+name = "comb_2_fused_pim_op_11"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_2_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = MAX(a[var_0_low+15:var_0_low], b[var_1_low+15:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_12]
+name = "comb_2_fused_pim_op_12"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_2_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = MIN(a[var_0_low+15:var_0_low], b[var_1_low+15:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_13]
+name = "comb_2_fused_pim_op_13"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] & b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_14]
+name = "comb_2_fused_pim_op_14"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_14(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] | b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_2_fused_pim_op_15]
+name = "comb_2_fused_pim_op_15"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_2_fused_pim_op_15(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] XOR b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_0]
+name = "comb_3_fused_pim_op_0"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 2, 1):
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = a[31:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_1]
+name = "comb_3_fused_pim_op_1"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 0
+semantics = """\
+DEFINE comb_3_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 16
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = ZeroExtend32(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_2]
+name = "comb_3_fused_pim_op_2"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_3_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 16
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = SignExtend32(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_3]
+name = "comb_3_fused_pim_op_3"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [64]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_3(a):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 64
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = Truncate32(a[var_0_low+63:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_4]
+name = "comb_3_fused_pim_op_4"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_4(a):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = ~a[var_0_low+31:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_5]
+name = "comb_3_fused_pim_op_5"
+operand_sizes = [64, 32]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = 0 * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] >> b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_6]
+name = "comb_3_fused_pim_op_6"
+operand_sizes = [64, 32]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = 0 * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] << b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_7]
+name = "comb_3_fused_pim_op_7"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] + b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_8]
+name = "comb_3_fused_pim_op_8"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] - b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_9]
+name = "comb_3_fused_pim_op_9"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_3_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] * b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_10]
+name = "comb_3_fused_pim_op_10"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_3_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] / b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_11]
+name = "comb_3_fused_pim_op_11"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_3_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = MAX(a[var_0_low+31:var_0_low], b[var_1_low+31:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_12]
+name = "comb_3_fused_pim_op_12"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_3_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = MIN(a[var_0_low+31:var_0_low], b[var_1_low+31:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_13]
+name = "comb_3_fused_pim_op_13"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] & b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_14]
+name = "comb_3_fused_pim_op_14"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_14(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] | b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_3_fused_pim_op_15]
+name = "comb_3_fused_pim_op_15"
+operand_sizes = [64, 64]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_3_fused_pim_op_15(a, b):
+FOR idx IN RANGE(0, 2, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] XOR b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_0]
+name = "comb_4_fused_pim_op_0"
+operand_sizes = [1024, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_4_fused_pim_op_0(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+7:var_0_low] < b[var_1_low+7:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_1]
+name = "comb_4_fused_pim_op_1"
+operand_sizes = [2048, 2048]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_4_fused_pim_op_1(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+15:var_0_low] < b[var_1_low+15:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_2]
+name = "comb_4_fused_pim_op_2"
+operand_sizes = [4096, 4096]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_4_fused_pim_op_2(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+31:var_0_low] < b[var_1_low+31:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_3]
+name = "comb_4_fused_pim_op_3"
+operand_sizes = [1024, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_4_fused_pim_op_3(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+7:var_0_low] < b[var_1_low+7:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_4]
+name = "comb_4_fused_pim_op_4"
+operand_sizes = [2048, 2048]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_4_fused_pim_op_4(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+15:var_0_low] < b[var_1_low+15:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_4_fused_pim_op_5]
+name = "comb_4_fused_pim_op_5"
+operand_sizes = [4096, 4096]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 1
+signedness = -1
+semantics = """\
+DEFINE comb_4_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 128, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 1
+dst[var_2_low+0:var_2_low] = (a[var_0_low+31:var_0_low] < b[var_1_low+31:var_1_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_0]
+name = "comb_5_fused_pim_op_0"
+operand_sizes = [8]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 16, 1):
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = a[7:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_1]
+name = "comb_5_fused_pim_op_1"
+operand_sizes = [256]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 16
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = Truncate8(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_2]
+name = "comb_5_fused_pim_op_2"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+dst[var_1_low+7:var_1_low] = ~a[var_0_low+7:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_3]
+name = "comb_5_fused_pim_op_3"
+operand_sizes = [128, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_3(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_4]
+name = "comb_5_fused_pim_op_4"
+operand_sizes = [128, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_4(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] << b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_5]
+name = "comb_5_fused_pim_op_5"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] + b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_6]
+name = "comb_5_fused_pim_op_6"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] - b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_7]
+name = "comb_5_fused_pim_op_7"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_5_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] * b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_8]
+name = "comb_5_fused_pim_op_8"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_5_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] / b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_9]
+name = "comb_5_fused_pim_op_9"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_5_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = MAX(a[var_0_low+7:var_0_low], b[var_1_low+7:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_10]
+name = "comb_5_fused_pim_op_10"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = 1
+semantics = """\
+DEFINE comb_5_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = MIN(a[var_0_low+7:var_0_low], b[var_1_low+7:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_11]
+name = "comb_5_fused_pim_op_11"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] & b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_12]
+name = "comb_5_fused_pim_op_12"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] | b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_13]
+name = "comb_5_fused_pim_op_13"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+dst[var_2_low+7:var_2_low] = a[var_0_low+7:var_0_low] XOR b[var_1_low+7:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_5_fused_pim_op_14]
+name = "comb_5_fused_pim_op_14"
+operand_sizes = [16, 128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 8
+signedness = -1
+semantics = """\
+DEFINE comb_5_fused_pim_op_14(a, b, c):
+FOR idx IN RANGE(0, 16, 1):
+var_0_low = idx * 1
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3_low = idx * 8
+dst[var_3_low+7:var_3_low] = (a[var_0_low+0:var_0_low] == 1) ? b[var_1_low+7:var_1_low] : c[var_2_low+7:var_2_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_0]
+name = "comb_6_fused_pim_op_0"
+operand_sizes = [16]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 8, 1):
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = a[15:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_1]
+name = "comb_6_fused_pim_op_1"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 0
+semantics = """\
+DEFINE comb_6_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = ZeroExtend16(a[var_0_low+7:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_2]
+name = "comb_6_fused_pim_op_2"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [8]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_6_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 8
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = SignExtend16(a[var_0_low+7:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_3]
+name = "comb_6_fused_pim_op_3"
+operand_sizes = [256]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_3(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 32
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = Truncate16(a[var_0_low+31:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_4]
+name = "comb_6_fused_pim_op_4"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_4(a):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+dst[var_1_low+15:var_1_low] = ~a[var_0_low+15:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_5]
+name = "comb_6_fused_pim_op_5"
+operand_sizes = [128, 16]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = 0 * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] >> b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_6]
+name = "comb_6_fused_pim_op_6"
+operand_sizes = [128, 16]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = 0 * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] << b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_7]
+name = "comb_6_fused_pim_op_7"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] + b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_8]
+name = "comb_6_fused_pim_op_8"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] - b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_9]
+name = "comb_6_fused_pim_op_9"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_6_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] * b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_10]
+name = "comb_6_fused_pim_op_10"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_6_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] / b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_11]
+name = "comb_6_fused_pim_op_11"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_6_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = MAX(a[var_0_low+15:var_0_low], b[var_1_low+15:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_12]
+name = "comb_6_fused_pim_op_12"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = 1
+semantics = """\
+DEFINE comb_6_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = MIN(a[var_0_low+15:var_0_low], b[var_1_low+15:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_13]
+name = "comb_6_fused_pim_op_13"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] & b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_14]
+name = "comb_6_fused_pim_op_14"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_14(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] | b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_15]
+name = "comb_6_fused_pim_op_15"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_15(a, b):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 16
+var_1_low = idx * 16
+var_2_low = idx * 16
+dst[var_2_low+15:var_2_low] = a[var_0_low+15:var_0_low] XOR b[var_1_low+15:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_6_fused_pim_op_16]
+name = "comb_6_fused_pim_op_16"
+operand_sizes = [8, 128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [1, 16, 16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 16
+signedness = -1
+semantics = """\
+DEFINE comb_6_fused_pim_op_16(a, b, c):
+FOR idx IN RANGE(0, 8, 1):
+var_0_low = idx * 1
+var_1_low = idx * 16
+var_2_low = idx * 16
+var_3_low = idx * 16
+dst[var_3_low+15:var_3_low] = (a[var_0_low+0:var_0_low] == 1) ? b[var_1_low+15:var_1_low] : c[var_2_low+15:var_2_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_0]
+name = "comb_7_fused_pim_op_0"
+operand_sizes = [32]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_0(a):
+FOR idx IN RANGE(0, 4, 1):
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = a[31:0]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_1]
+name = "comb_7_fused_pim_op_1"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 0
+semantics = """\
+DEFINE comb_7_fused_pim_op_1(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = ZeroExtend32(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_2]
+name = "comb_7_fused_pim_op_2"
+operand_sizes = [64]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [16]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_7_fused_pim_op_2(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 16
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = SignExtend32(a[var_0_low+15:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_3]
+name = "comb_7_fused_pim_op_3"
+operand_sizes = [256]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [64]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_3(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 64
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = Truncate32(a[var_0_low+63:var_0_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_4]
+name = "comb_7_fused_pim_op_4"
+operand_sizes = [128]
+operand_layouts = ['DRAM_VERT']
+operand_elem_bw = [32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_4(a):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+dst[var_1_low+31:var_1_low] = ~a[var_0_low+31:var_0_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_5]
+name = "comb_7_fused_pim_op_5"
+operand_sizes = [128, 32]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_5(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = 0 * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] >> b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_6]
+name = "comb_7_fused_pim_op_6"
+operand_sizes = [128, 32]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_6(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = 0 * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] << b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_7]
+name = "comb_7_fused_pim_op_7"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_7(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] + b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_8]
+name = "comb_7_fused_pim_op_8"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_8(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] - b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_9]
+name = "comb_7_fused_pim_op_9"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_7_fused_pim_op_9(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] * b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_10]
+name = "comb_7_fused_pim_op_10"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_7_fused_pim_op_10(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] / b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_11]
+name = "comb_7_fused_pim_op_11"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_7_fused_pim_op_11(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = MAX(a[var_0_low+31:var_0_low], b[var_1_low+31:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_12]
+name = "comb_7_fused_pim_op_12"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = 1
+semantics = """\
+DEFINE comb_7_fused_pim_op_12(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = MIN(a[var_0_low+31:var_0_low], b[var_1_low+31:var_1_low])
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_13]
+name = "comb_7_fused_pim_op_13"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_13(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] & b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_14]
+name = "comb_7_fused_pim_op_14"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_14(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] | b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_7_fused_pim_op_15]
+name = "comb_7_fused_pim_op_15"
+operand_sizes = [128, 128]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [32, 32]
+result_layout = "DRAM_VERT"
+result_size = 128
+result_elem_bw = 32
+signedness = -1
+semantics = """\
+DEFINE comb_7_fused_pim_op_15(a, b):
+FOR idx IN RANGE(0, 4, 1):
+var_0_low = idx * 32
+var_1_low = idx * 32
+var_2_low = idx * 32
+dst[var_2_low+31:var_2_low] = a[var_0_low+31:var_0_low] XOR b[var_1_low+31:var_1_low]
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_0]
+name = "comb_8_fused_pim_op_0"
+operand_sizes = [512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_0(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (a[var_0_low+7:var_0_low] < b[7:0]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_1]
+name = "comb_8_fused_pim_op_1"
+operand_sizes = [512, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_1(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 16
+var_2 = Truncate8(b[var_1_low+15:var_1_low])
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (a[var_0_low+7:var_0_low] < var_2) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_2]
+name = "comb_8_fused_pim_op_2"
+operand_sizes = [512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_2(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2 = ~b[var_1_low+7:var_1_low]
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (a[var_0_low+7:var_0_low] < var_2) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_3]
+name = "comb_8_fused_pim_op_3"
+operand_sizes = [512, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_3(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = 0 * 8
+var_3 = b[var_1_low+7:var_1_low] >> c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_4]
+name = "comb_8_fused_pim_op_4"
+operand_sizes = [512, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_4(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = 0 * 8
+var_3 = b[var_1_low+7:var_1_low] << c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_5]
+name = "comb_8_fused_pim_op_5"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_5(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] + c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_6]
+name = "comb_8_fused_pim_op_6"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_6(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] - c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_7]
+name = "comb_8_fused_pim_op_7"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_7(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] * c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_8]
+name = "comb_8_fused_pim_op_8"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_8(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] / c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_9]
+name = "comb_8_fused_pim_op_9"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_9(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = MAX(b[var_1_low+7:var_1_low], c[var_2_low+7:var_2_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_10]
+name = "comb_8_fused_pim_op_10"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_10(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = MIN(b[var_1_low+7:var_1_low], c[var_2_low+7:var_2_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_11]
+name = "comb_8_fused_pim_op_11"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_11(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] & c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_12]
+name = "comb_8_fused_pim_op_12"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_12(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] | c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_13]
+name = "comb_8_fused_pim_op_13"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_13(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 8
+var_2_low = idx * 8
+var_3 = b[var_1_low+7:var_1_low] XOR c[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[var_0_low+7:var_0_low] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_14]
+name = "comb_8_fused_pim_op_14"
+operand_sizes = [512, 64, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_14(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = idx * 1
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = (b[var_1_low+0:var_1_low] == 1) ? c[var_2_low+7:var_2_low] : d[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[var_0_low+7:var_0_low] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_15]
+name = "comb_8_fused_pim_op_15"
+operand_sizes = [8, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_15(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (a[7:0] < b[var_2_low+7:var_2_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_16]
+name = "comb_8_fused_pim_op_16"
+operand_sizes = [8, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_16(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[7:0] < b[7:0]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_17]
+name = "comb_8_fused_pim_op_17"
+operand_sizes = [8, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_17(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 16
+var_3 = Truncate8(b[var_2_low+15:var_2_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[7:0] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_18]
+name = "comb_8_fused_pim_op_18"
+operand_sizes = [8, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_18(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3 = ~b[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (a[7:0] < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_19]
+name = "comb_8_fused_pim_op_19"
+operand_sizes = [8, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_19(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] >> c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_20]
+name = "comb_8_fused_pim_op_20"
+operand_sizes = [8, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_20(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] << c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_21]
+name = "comb_8_fused_pim_op_21"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_21(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] + c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_22]
+name = "comb_8_fused_pim_op_22"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_22(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] - c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_23]
+name = "comb_8_fused_pim_op_23"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_23(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] * c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_24]
+name = "comb_8_fused_pim_op_24"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_24(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] / c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_25]
+name = "comb_8_fused_pim_op_25"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_25(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MAX(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_26]
+name = "comb_8_fused_pim_op_26"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_26(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MIN(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_27]
+name = "comb_8_fused_pim_op_27"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_27(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] & c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_28]
+name = "comb_8_fused_pim_op_28"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_28(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] | c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_29]
+name = "comb_8_fused_pim_op_29"
+operand_sizes = [8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_29(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] XOR c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (a[7:0] < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_30]
+name = "comb_8_fused_pim_op_30"
+operand_sizes = [8, 64, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_30(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_2_low = idx * 1
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = (b[var_2_low+0:var_2_low] == 1) ? c[var_3_low+7:var_3_low] : d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (a[7:0] < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_31]
+name = "comb_8_fused_pim_op_31"
+operand_sizes = [1024, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_31(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (var_1 < b[var_2_low+7:var_2_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_32]
+name = "comb_8_fused_pim_op_32"
+operand_sizes = [1024, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_32(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < b[7:0]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_33]
+name = "comb_8_fused_pim_op_33"
+operand_sizes = [1024, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_33(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 16
+var_3 = Truncate8(b[var_2_low+15:var_2_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_34]
+name = "comb_8_fused_pim_op_34"
+operand_sizes = [1024, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_34(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3 = ~b[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_35]
+name = "comb_8_fused_pim_op_35"
+operand_sizes = [1024, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_35(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] >> c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_36]
+name = "comb_8_fused_pim_op_36"
+operand_sizes = [1024, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_36(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] << c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_37]
+name = "comb_8_fused_pim_op_37"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_37(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] + c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_38]
+name = "comb_8_fused_pim_op_38"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_38(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] - c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_39]
+name = "comb_8_fused_pim_op_39"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_39(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] * c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_40]
+name = "comb_8_fused_pim_op_40"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_40(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] / c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_41]
+name = "comb_8_fused_pim_op_41"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_41(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MAX(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_42]
+name = "comb_8_fused_pim_op_42"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_42(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MIN(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_43]
+name = "comb_8_fused_pim_op_43"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_43(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] & c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_44]
+name = "comb_8_fused_pim_op_44"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_44(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] | c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_45]
+name = "comb_8_fused_pim_op_45"
+operand_sizes = [1024, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_45(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] XOR c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_46]
+name = "comb_8_fused_pim_op_46"
+operand_sizes = [1024, 64, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [16, 1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_46(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 16
+var_1 = Truncate8(a[var_0_low+15:var_0_low])
+var_2_low = idx * 1
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = (b[var_2_low+0:var_2_low] == 1) ? c[var_3_low+7:var_3_low] : d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_1 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_47]
+name = "comb_8_fused_pim_op_47"
+operand_sizes = [512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_47(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 1
+dst[var_3_low+0:var_3_low] = (var_1 < b[var_2_low+7:var_2_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_48]
+name = "comb_8_fused_pim_op_48"
+operand_sizes = [512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_48(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < b[7:0]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_49]
+name = "comb_8_fused_pim_op_49"
+operand_sizes = [512, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_49(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 16
+var_3 = Truncate8(b[var_2_low+15:var_2_low])
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_50]
+name = "comb_8_fused_pim_op_50"
+operand_sizes = [512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_50(a, b):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3 = ~b[var_2_low+7:var_2_low]
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_1 < var_3) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_51]
+name = "comb_8_fused_pim_op_51"
+operand_sizes = [512, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_51(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] >> c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_52]
+name = "comb_8_fused_pim_op_52"
+operand_sizes = [512, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_52(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = 0 * 8
+var_4 = b[var_2_low+7:var_2_low] << c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_53]
+name = "comb_8_fused_pim_op_53"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_53(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] + c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_54]
+name = "comb_8_fused_pim_op_54"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_54(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] - c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_55]
+name = "comb_8_fused_pim_op_55"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_55(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] * c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_56]
+name = "comb_8_fused_pim_op_56"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_56(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] / c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_57]
+name = "comb_8_fused_pim_op_57"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_57(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MAX(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_58]
+name = "comb_8_fused_pim_op_58"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_58(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = MIN(b[var_2_low+7:var_2_low], c[var_3_low+7:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_59]
+name = "comb_8_fused_pim_op_59"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_59(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] & c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_60]
+name = "comb_8_fused_pim_op_60"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_60(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] | c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_61]
+name = "comb_8_fused_pim_op_61"
+operand_sizes = [512, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_61(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 8
+var_3_low = idx * 8
+var_4 = b[var_2_low+7:var_2_low] XOR c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_1 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_62]
+name = "comb_8_fused_pim_op_62"
+operand_sizes = [512, 64, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 1, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_62(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1 = ~a[var_0_low+7:var_0_low]
+var_2_low = idx * 1
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = (b[var_2_low+0:var_2_low] == 1) ? c[var_3_low+7:var_3_low] : d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_1 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_63]
+name = "comb_8_fused_pim_op_63"
+operand_sizes = [512, 8, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_63(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 1
+dst[var_4_low+0:var_4_low] = (var_2 < c[var_3_low+7:var_3_low]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_64]
+name = "comb_8_fused_pim_op_64"
+operand_sizes = [512, 8, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_64(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_2 < c[7:0]) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_65]
+name = "comb_8_fused_pim_op_65"
+operand_sizes = [512, 8, 1024]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 16]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_65(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 16
+var_4 = Truncate8(c[var_3_low+15:var_3_low])
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_2 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_66]
+name = "comb_8_fused_pim_op_66"
+operand_sizes = [512, 8, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_66(a, b, c):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4 = ~c[var_3_low+7:var_3_low]
+var_5_low = idx * 1
+dst[var_5_low+0:var_5_low] = (var_2 < var_4) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_67]
+name = "comb_8_fused_pim_op_67"
+operand_sizes = [512, 8, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_67(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = 0 * 8
+var_5 = c[var_3_low+7:var_3_low] >> d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_68]
+name = "comb_8_fused_pim_op_68"
+operand_sizes = [512, 8, 512, 8]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_68(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = 0 * 8
+var_5 = c[var_3_low+7:var_3_low] << d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_69]
+name = "comb_8_fused_pim_op_69"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_69(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] + d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_70]
+name = "comb_8_fused_pim_op_70"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_70(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] - d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_71]
+name = "comb_8_fused_pim_op_71"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_71(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] * d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_72]
+name = "comb_8_fused_pim_op_72"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_72(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] / d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_73]
+name = "comb_8_fused_pim_op_73"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_73(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = MAX(c[var_3_low+7:var_3_low], d[var_4_low+7:var_4_low])
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_74]
+name = "comb_8_fused_pim_op_74"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_74(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = MIN(c[var_3_low+7:var_3_low], d[var_4_low+7:var_4_low])
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_75]
+name = "comb_8_fused_pim_op_75"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_75(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] & d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_76]
+name = "comb_8_fused_pim_op_76"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_76(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] | d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
+[test_enum_1.comb_8_fused_pim_op_77]
+name = "comb_8_fused_pim_op_77"
+operand_sizes = [512, 8, 512, 512]
+operand_layouts = ['DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT', 'DRAM_VERT']
+operand_elem_bw = [8, 8, 8, 8]
+result_layout = "DRAM_VERT"
+result_size = 64
+result_elem_bw = 1
+signedness = 1
+semantics = """\
+DEFINE comb_8_fused_pim_op_77(a, b, c, d):
+FOR idx IN RANGE(0, 64, 1):
+var_0_low = idx * 8
+var_1_low = 0 * 8
+var_2 = a[var_0_low+7:var_0_low] >> b[var_1_low+7:var_1_low]
+var_3_low = idx * 8
+var_4_low = idx * 8
+var_5 = c[var_3_low+7:var_3_low] XOR d[var_4_low+7:var_4_low]
+var_6_low = idx * 1
+dst[var_6_low+0:var_6_low] = (var_2 < var_5) ? 1 : 0
+ENDFOR
+"""
+
