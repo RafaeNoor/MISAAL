@@ -4111,5 +4111,14 @@
                 "dst": "(typed-folded:cast-truncate_dsl (typed-folded:cast-extend_dsl (reg (bv #x00 8)) 8 128 16 1) 16 256 8)"
             }
         }
+    ],
+    " (test_enum_1_comb_5_fused_pim_op_14_dsl ; test_enum_1_comb_5_fused_pim_op_14\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t(lit (bv #b1 (bitvector 1)))\n\t(reg (bv 1 (bitvector 8))) ; < 1 x i8> False\n\t(reg (bv 2 (bitvector 8))) ; < 1 x i8> False\n\t128\n\t128\n\t0\n\t128\n\t8\n\t1\n\t8\n\t0\n )_ (typed-folded:vec-if_dsl ; typed-folded:vec-if_p16_s1024_signed_None\n\t(reg (bv 0 (bitvector 8))) ; < 1 x i8> False\n\t(reg (bv 1 (bitvector 8))) ; < 1 x i8> False\n\t(reg (bv 2 (bitvector 8))) ; < 1 x i8> False\n\t16\n\t1024\n )": [
+        {
+            "property_name": "EqClassEqualDepthV4Fullvec-if",
+            "property": {
+                "src": "(test_enum_1_comb_5_fused_pim_op_14_dsl (reg (bv #x00 8)) (lit (bv #b1 1)) (reg (bv #x01 8)) (reg (bv #x02 8)) 128 128 0 128 8 1 8 0)",
+                "dst": "(typed-folded:vec-if_dsl (reg (bv #x01 8)) (reg (bv #x02 8)) (reg (bv #x00 8)) 8 128)"
+            }
+        }
     ]
 }
