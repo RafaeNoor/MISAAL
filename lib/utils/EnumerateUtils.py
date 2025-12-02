@@ -245,14 +245,13 @@ def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size
             if num_regs == 0:
                 continue
 
-            pass
+            if contains_lit_hole_only_expression(expr):
+                continue
+
 
 
 
 
         if does_valid_concretization_exist(new_expr, output_size, dsl_list+[LiteralHole]):
-            #valid_conc = get_valid_concretization(new_expr, output_size, dsl_list)
-            #assert not valid_conc is None, "Valid concretization should exist"
-            #yield valid_conc
 
             yield new_expr

@@ -49,7 +49,7 @@ property_label = "Test_"+PropertyInstance.name
 fname = "{}.py".format(PropertyInstance.name)
 
 if os.path.exists(fname):
-    prepend = get_random_tempfile_name()
+    prepend = "literal_synth"
     # If file exists then append prefix
     fname = prepend +"_"+fname
     property_label = prepend + "_"+property_label

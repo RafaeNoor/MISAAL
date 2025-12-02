@@ -5,6 +5,7 @@ we will identify the specific context and bind arguments accordingly.
 """
 
 import copy
+from utils.LiteralHole import LiteralHole
 from pyparsing import nestedExpr
 from  common.Types import *
 from  common.Instructions import Context
@@ -302,6 +303,7 @@ def parse_nested_expr_to_dsl(nested_expr, dsl_list, expecting_return_size = None
 
 
 def read_string_to_dsl(input_string, dsl_list):
+    dsl_list = dsl_list + [LiteralHole]
     lines = input_string.replace("'","").split("\n")
 
     # remove racket comments

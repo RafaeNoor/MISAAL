@@ -1388,5 +1388,41 @@ def count_num_instructions(ctx):
     return 1 + count
 
 
+def contains_lit_hole_only_expression(expr):
+    if not isinstance(expr, Context):
+        return False
+
+
+    any_contexts = any([isinstance(arg, Context) and "LiteralHole" not in arg.name for arg in expr.context_args])
+    any_regs = any([isinstance(arg, Reg) for arg in expr.context_args])
+    any_literal_holes = any([isinstance(arg, Context) and "LiteralHole" in arg.name for arg in expr.context_args])
+
+
+
+    if any_contexts:
+        # if any of the operands are contexts,
+        # we handle those first
+        lit_only = False
+        for arg in expr.context_args:
+            if isinstance(arg, Context) and "LiteralHole" not in arg.name:
+                lit_only = lit_only or contains_lit_hole_only_expression(expr)
+
+        return lit_only
+    elif any_regs:
+        # If leaf expression and contains any registers, then this expression is valid
+        return False
+    elif any_literal_holes:
+        # If leaf expression and contains only literal holes return True
+        return True
+    else:
+        assert False and f"Unsupported case {expr.emit_context_expr_string()}"
+
+
+
+
+
+
+
+
 
 
