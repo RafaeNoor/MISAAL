@@ -68,7 +68,7 @@ if True:
     property_map = PropertyInstance.get_property()
 
 
-if False:
+if True:
     enum_file = "./EnumeratePattern_halide_intermediate_results.py"
     with open(enum_file, "r") as ReadFile:
         props = [json.load(ReadFile)]
