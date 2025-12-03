@@ -9,7 +9,11 @@ from utils.CodeSynthesizerDesc import X86_SYNTH_DESC, HVX_SYNTH_DESC, HALIDE_HVX
 from sema.halide_decomposed import halide_decomposed  as halide_semantics
 
 from properties.EqClassEqualDepthV4Full import EqClassEqualDepthV4Full
+from properties.EnumeratePattern import EnumeratePattern
 from utils.EnumerateUtils import create_exhaustive_expressions_generator_v2
+
+from compiler.Pattern import Pattern, parse_pattern_from_string
+from patterns.PatternUtils import create_patterns, deduplicate_patterns, PatternAbstractor
 
 
 halide_dsl_list = parse_dict(halide_semantics)
@@ -33,25 +37,49 @@ for e in expr_gen:
 target_swizzles = []
 swizzle_forward_path = None
 forward_path_name = None
-commutative_path = None
+commutative_path = "./commutative_map.json"
 synthesizer_desc = HALIDE_HVX_SYNTH_DESC
 
 
-PropertyInstance = EqClassEqualDepthV4Full(dsl_list = halide_dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+if True:
+    PropertyInstance = EqClassEqualDepthV4Full(dsl_list = halide_dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
 
-PropertyInstance.parallel = False
-PropertyInstance.POOL_SIZE = 8
-PropertyInstance.BATCH_SIZE = 1024
+    PropertyInstance.parallel = False
+    PropertyInstance.POOL_SIZE = 8
+    PropertyInstance.BATCH_SIZE = 1024
 
-property_map = PropertyInstance.get_property()
+    property_map = PropertyInstance.get_property()
 
-property_label = "Test_"+PropertyInstance.name
-fname = "{}.py".format(PropertyInstance.name)
 
-if os.path.exists(fname):
-    prepend = "literal_synth"
-    # If file exists then append prefix
-    fname = prepend +"_"+fname
-    property_label = prepend + "_"+property_label
-with open(fname, "w+") as DumpFile:
-    DumpFile.write(property_label + "=" + json.dumps(property_map, indent = 4))
+if True:
+
+    pattern_file = "./EqClassEqualDepthV4Full_halide_intermediate_results.py"
+
+    with open(pattern_file, "r") as PatternFile:
+        input_patterns = json.load(PatternFile)
+
+    print("Number of AutoLLVM IR pattern", input_patterns)
+    PropertyInstance = EnumeratePattern(dsl_list = halide_dsl_list, synth_desc = HALIDE_HVX_SYNTH_DESC, input_patterns_dict = input_patterns )
+
+    PropertyInstance.parallel = True
+    PropertyInstance.POOL_SIZE = 8
+    PropertyInstance.BATCH_SIZE = 1024
+
+    property_map = PropertyInstance.get_property()
+
+
+if False:
+    enum_file = "./EnumeratePattern_halide_intermediate_results.py"
+    with open(enum_file, "r") as ReadFile:
+        props = [json.load(ReadFile)]
+
+    parsed_patterns = create_patterns(props, halide_dsl_list)
+
+    parsed_patterns = deduplicate_patterns(parsed_patterns)
+
+    abstractor = PatternAbstractor(parsed_patterns, halide_dsl_list, examples_limit = 16, target = "halide")
+    abstracted_patterns = abstractor.abstract_patterns(parsed_patterns, halide_dsl_list)
+
+    for idx, pattern in enumerate(abstracted_patterns):
+        print("Pattern Number", idx+1)
+        pattern.print_pattern()

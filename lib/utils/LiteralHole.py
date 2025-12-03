@@ -6,7 +6,7 @@ from  common.Instructions import Context, DSLInstruction
 
 LiteralHoleSemantics = [
     "(define (LiteralHole bv-hole bw vsize)",
-    #"(define-symbolic* bv-hole (bitvector bw))",
+    "(cond [(not (concrete? bv-hole)) (assert (not (equal? bv-hole (bv 0 bw))))   (assert (bvule bv-hole (bv 8 bw)))])",
     "(define num-elems (/ vsize bw))",
     "(apply",
     "concat",
@@ -23,6 +23,7 @@ def create_literal_hole():
     LiteralHole = DSLInstruction(name = "LiteralHole", simd=False, operation=False, semantics = LiteralHoleSemantics)
 
     bitwidths = [8, 16, 32]
+    #bitwidths = [32]
     vect_sizes = [pow(2,i) for i in range(3, 12)]
 
     print(bitwidths)
