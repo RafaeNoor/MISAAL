@@ -11,8 +11,11 @@ from sema.halide_decomposed import halide_decomposed  as halide_semantics
 from properties.EqClassEqualDepthV4Full import EqClassEqualDepthV4Full
 from properties.EnumeratePattern import EnumeratePattern
 from utils.EnumerateUtils import create_exhaustive_expressions_generator_v2
+from utils.EggLogUtils import emit_expr_to_egg
+from utils.LiteralHole import legalize_concrete_literal_holes, LiteralHole
 
 from compiler.Pattern import Pattern, parse_pattern_from_string
+from compiler.HydrideCompiler import HydrideCompiler
 from patterns.PatternUtils import create_patterns, deduplicate_patterns, PatternAbstractor
 
 
@@ -42,7 +45,7 @@ synthesizer_desc = HALIDE_HVX_SYNTH_DESC
 
 
 if True:
-    PropertyInstance = EqClassEqualDepthV4Full(dsl_list = halide_dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False)
+    PropertyInstance = EqClassEqualDepthV4Full(dsl_list = halide_dsl_list, source_synth_desc = synthesizer_desc, target_synth_desc = HALIDE_HVX_SYNTH_DESC, target_dsl_list = halide_dsl_list, output_depth = 1,input_depth = 1,  forward_map_path = forward_path_name, swizzle_dsl_list = target_swizzles, swizzle_map_path = swizzle_forward_path, commutative_map_path=  commutative_path, depth_range = True , use_canon_map = False, include_lit_holes = True)
 
     PropertyInstance.parallel = False
     PropertyInstance.POOL_SIZE = 8
@@ -51,7 +54,7 @@ if True:
     property_map = PropertyInstance.get_property()
 
 
-if True:
+if False:
 
     pattern_file = "./EqClassEqualDepthV4Full_halide_intermediate_results.py"
 
@@ -68,7 +71,7 @@ if True:
     property_map = PropertyInstance.get_property()
 
 
-if True:
+if False:
     enum_file = "./EnumeratePattern_halide_intermediate_results.py"
     with open(enum_file, "r") as ReadFile:
         props = [json.load(ReadFile)]
@@ -83,3 +86,29 @@ if True:
     for idx, pattern in enumerate(abstracted_patterns):
         print("Pattern Number", idx+1)
         pattern.print_pattern()
+
+        print("SRC EXPR")
+        print(emit_expr_to_egg(pattern.src_expr))
+
+        print("TARGET EXPR")
+        print(emit_expr_to_egg(pattern.target_expr))
+
+
+    tests = []
+    test_expr = "(typed:vec-shl (reg (bv #x00 8)) (LiteralHole (lit (bv #x01 8)) 8 512) 8 512)"
+    test_name = "test_shift_left"
+
+    tests.append((test_name ,test_expr ))
+
+    egg_compiler = HydrideCompiler(abstracted_patterns, src_dsl_list = halide_dsl_list, run_iterations = 5, egg_pkg_path = "/home/arnoor2/egglogs/egg_log_2025/egglog",  parallel = False, tests = tests, skip_axioms = True)
+
+    egg_compiler.compile_hydride()
+    egg_compiler.run_llvm_legalizer()
+    egg_compiler.print_stats()
+
+
+
+
+
+
+

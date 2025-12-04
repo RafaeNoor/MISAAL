@@ -25,7 +25,7 @@ import gc
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
-    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None, ensure_structure = True):
+    def __init__(self, dsl_list = [], source_synth_desc = None, target_synth_desc = None, target_dsl_list = [], output_depth = 1, forward_map_path = None, swizzle_dsl_list = [], swizzle_map_path = None, commutative_map_path = None, input_depth = 2, depth_range = False, use_canon_map = False, start_input_depth = 1, start_output_depth =1, bidirectional_test = False, filter_list = None, ensure_structure = True, include_lit_holes = False):
 
 
 
@@ -43,6 +43,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         self.bidirectional_test = bidirectional_test
         self.filter_list = filter_list
         self.ensure_structure =ensure_structure
+        self.include_lit_holes = include_lit_holes
 
 
 
@@ -250,7 +251,8 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         continue
                     print("output_size = ", src_ctx.out_vectsize)
 
-                    src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
+                    print("include_lit_holes:", self.include_lit_holes)
+                    src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize, max_leaves = 5, include_lit_holes = self.include_lit_holes)
 
                     self.src_canon_map.clear()
                     for src_expr in src_expressions:
@@ -293,7 +295,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
 
 
-                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 5)
+                        target_expressions = create_exhaustive_expressions_generator_v2(relavent_output_subset, output_depth, output_size = src_ctx.out_vectsize, max_leaves = 5, include_lit_holes = self.include_lit_holes)
                         self.target_canon_map.clear()
                         for target_count ,target_expr in enumerate(target_expressions):
 

@@ -7,14 +7,15 @@ from utils.LiteralHole import LiteralHole
 
 
 
-def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1, max_leaves = None):
+def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1, max_leaves = None, include_lit_holes = False):
 
 
     copy_fn = copy.deepcopy
 
     if expr_depth == 0:
         yield copy_fn(Reg("0_placeholder", 8, 8))
-        yield LiteralHole.contexts[0]
+        if include_lit_holes:
+            yield LiteralHole.contexts[0]
     else:
         relavent_ctx = []
         for dsl_inst in dsl_list:
@@ -48,7 +49,8 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
         # TEMP Moving down
         yield copy_fn(Reg("1_placeholder", 8, 8))
-        yield LiteralHole.contexts[0]
+        if include_lit_holes:
+            yield LiteralHole.contexts[0]
 
         def is_expr_valid(expr):
             if max_leaves is None:
@@ -72,7 +74,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
             if len(symbolic_indices) == 4:
 
-                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                 for expr0 in generator_0:
 
                     expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
@@ -84,7 +86,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
 
-                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                     for expr1 in generator_1:
 
 
@@ -98,7 +100,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
 
 
-                        generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                        generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                         for expr2 in generator_2:
 
                             expr2_out_sizes = get_possible_output_sizes_of_eq_class(expr2, dsl_list)
@@ -109,7 +111,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                             if not is_expr_valid(expr2):
                                 continue
 
-                            generator_3 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                            generator_3 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                             for expr3 in generator_3:
 
                                 expr3_out_sizes = get_possible_output_sizes_of_eq_class(expr3, dsl_list)
@@ -130,7 +132,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                                 yield copied_rctx
             elif len(symbolic_indices) == 3:
 
-                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                 for expr0 in generator_0:
 
                     expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
@@ -142,7 +144,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         continue
 
 
-                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                     for expr1 in generator_1:
 
                         expr1_out_sizes = get_possible_output_sizes_of_eq_class(expr1, dsl_list)
@@ -153,7 +155,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         if not is_expr_valid(expr1):
                             continue
 
-                        generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                        generator_2 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
 
                         for expr2 in generator_2:
 
@@ -174,7 +176,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
             elif len(symbolic_indices) == 2:
 
-                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
 
                 for expr0 in generator_0:
 
@@ -186,7 +188,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                     if not is_expr_valid(expr0):
                         continue
 
-                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                    generator_1 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                     for expr1 in generator_1:
 
 
@@ -204,7 +206,7 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
                         yield copied_rctx
 
             elif len(symbolic_indices) == 1:
-                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves)
+                generator_0 = create_exhaustive_expressions_generator_helper_v2(dsl_list,   expr_depth = expr_depth - 1, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
                 for expr0 in generator_0:
 
                     expr0_out_sizes = get_possible_output_sizes_of_eq_class(expr0, dsl_list)
@@ -227,9 +229,10 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
 
 
 
-def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size = None, max_leaves = None):
+
+def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size = None, max_leaves = None, include_lit_holes = False):
     assert not output_size is None, "Require passing it output size for version 2 generator"
-    depth_expressions_generator = create_exhaustive_expressions_generator_helper_v2(dsl_list, expr_depth = expr_depth, max_leaves = max_leaves)
+    depth_expressions_generator = create_exhaustive_expressions_generator_helper_v2(dsl_list, expr_depth = expr_depth, max_leaves = max_leaves, include_lit_holes = include_lit_holes)
 
     for expr in depth_expressions_generator:
         copied_expr = expr

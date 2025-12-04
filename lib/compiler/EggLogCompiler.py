@@ -14,7 +14,7 @@ import time
 
 class EggLogCompiler(CompilerBase):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, prune_patterns = False):
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, prune_patterns = False, skip_axioms = False):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
@@ -29,6 +29,7 @@ class EggLogCompiler(CompilerBase):
         self.memo = {}
         self.MISAAL_ROOT = os.getenv('MISAAL_SRC')
         self.axioms_file = os.path.join(self.MISAAL_ROOT, "targets","halide","axioms.egg")
+        self.skip_axioms = skip_axioms
 
 
     def remove_concat_slice_only_patterns(self):
@@ -111,9 +112,12 @@ class EggLogCompiler(CompilerBase):
             egglog_patterns.append(rewrite)
 
 
-        # Read in axioms file:
-        with open(self.axioms_file, "r") as AxiomFile:
-            axioms = AxiomFile.read()
+        axioms = ""
+
+        if not self.skip_axioms:
+            # Read in axioms file:
+            with open(self.axioms_file, "r") as AxiomFile:
+                axioms = AxiomFile.read()
 
 
         egg_log_desc = "\n".join([egglog_decls, axioms] + egglog_patterns)
