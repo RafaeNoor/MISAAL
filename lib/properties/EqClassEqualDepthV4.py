@@ -21,6 +21,7 @@ from utils.DoubleGrammarSynthesisUtils import DoubleGrammarSynthesisUtils
 from utils.EnumerateUtils import *
 from utils.ConcretizeUtils import *
 import gc
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 
 class EqClassEqualDepthV4(EqClassEqualDepthV3):
 
@@ -77,13 +78,14 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         print("OUTPUT SIZE", output_size)
 
 
-        test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list
-        valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+        test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list + [LiteralHole, LiteralHoleReg]
+        valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list+[LiteralHole, LiteralHoleReg])
 
 
 
-        valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+        valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list + [LiteralHole, LiteralHoleReg])
         valid_dst_conc = next(valid_dst_conc)
+
 
         LIMIT = 1
 
@@ -251,7 +253,6 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                         continue
                     print("output_size = ", src_ctx.out_vectsize)
 
-                    print("include_lit_holes:", self.include_lit_holes)
                     src_expressions = create_exhaustive_expressions_generator_v2(relavent_swizzle_subset + [dsl_inst], input_depth, output_size = src_ctx.out_vectsize, max_leaves = 5, include_lit_holes = self.include_lit_holes)
 
                     self.src_canon_map.clear()

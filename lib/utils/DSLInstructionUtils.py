@@ -1069,7 +1069,8 @@ def get_expr_depth(dsl_expr):
 
     if isinstance(dsl_expr, Context) and not "LiteralHole" in dsl_expr.name:
         return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
-
+    elif isinstance(dsl_expr, Context) and "LiteralHole" in dsl_expr.name and isinstance(dsl_expr.context_args[0], Reg):
+        return 1
     else:
         return 0
 
@@ -1394,7 +1395,10 @@ def contains_lit_hole_only_expression(expr):
 
 
     any_contexts = any([isinstance(arg, Context) and "LiteralHole" not in arg.name for arg in expr.context_args])
+
     any_regs = any([isinstance(arg, Reg) for arg in expr.context_args])
+    any_regs = any_regs or any([isinstance(arg, Context) and "LiteralHole" in arg.name and isinstance(arg.context_args[0], Reg) for arg in expr.context_args])
+
     any_literal_holes = any([isinstance(arg, Context) and "LiteralHole" in arg.name for arg in expr.context_args])
 
 

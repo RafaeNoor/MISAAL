@@ -9,7 +9,7 @@ from utils.EggLogUtils import *
 import json
 from utils.ReadDSL import read_string_to_dsl
 from utils.ExprParamUtils import generate_parameter_map
-from utils.LiteralHole import LiteralHole
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 import subprocess
 import os
 from os import kill
@@ -35,7 +35,7 @@ class Property:
             dsl_list (list, optional): _description_. Defaults to [].
         """
         self.name = name
-        self.dsl_list = dsl_list + [LiteralHole]
+        self.dsl_list = dsl_list + [LiteralHole, LiteralHoleReg]
         self.synth_desc = synth_desc
         self.parallel = parallel
 

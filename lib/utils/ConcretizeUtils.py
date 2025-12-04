@@ -385,10 +385,15 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, r
 
     if isinstance(ref_expr, Context) and "LiteralHole" in ref_expr.name:
         # Get the context with the largest possible bitwidth
-
+        is_lit_hole_symbolic = isinstance(ref_expr.context_args[0], Reg)
         ctx_ = None
         for ctx in dsl_inst.contexts:
             if ctx.out_vectsize != output_size:
+                continue
+
+            if is_lit_hole_symbolic and not isinstance(ctx.context_args[0], BitVector):
+                continue
+            if not is_lit_hole_symbolic and  isinstance(ctx.context_args[0], BitVector):
                 continue
 
             if ctx_ is None:
@@ -402,6 +407,10 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, r
 
 
         assert not ctx_ is None
+        if is_lit_hole_symbolic:
+            ctx_ = copy.deepcopy(ctx_)
+            reg_arg = ref_expr.context_args[0]
+            ctx_.context_args[0] = Reg(reg_arg.index, reg_arg.precision, ref_expr.in_vectsize, signed = reg_arg.signed)
         yield [ctx_, None]
         return []
 

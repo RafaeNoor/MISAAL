@@ -18,16 +18,30 @@ LiteralHoleSemantics = [
     ")",
 ]
 
+LiteralHoleRegSemantics = [
+    "(define (LiteralHoleReg bv-hole-param bw vsize)",
+    "(define bv-hole (sign-extend bv-hole-param (bitvector bw)))",
+    "(define num-elems (/ vsize bw))",
+    "(apply",
+    "concat",
+    "(for/list ([i (range 0 num-elems)])",
+    "bv-hole",
+    ")",
+    ")",
+    ")",
+]
+
 
 
 def create_literal_hole():
     LiteralHole = DSLInstruction(name = "LiteralHole", simd=False, operation=False, semantics = LiteralHoleSemantics)
+    LiteralHoleReg = DSLInstruction(name = "LiteralHoleReg", simd=False, operation=False, semantics = LiteralHoleRegSemantics)
 
     bitwidths = [8, 16, 32]
     vect_sizes = [pow(2,i) for i in range(3, 12)]
 
-    print(bitwidths)
-    print(vect_sizes)
+    print("LitHoles bitwidth", bitwidths)
+    print("LitHoles vect_sizes", vect_sizes)
 
     for bw in bitwidths:
         for vsize in vect_sizes:
@@ -44,8 +58,19 @@ def create_literal_hole():
                 args = [f"CONST_HOLE_BV_{bw}",str(bw), str(vsize)]
             )
 
+            ctx_name = f"LiteralHole_reg_bw{bw}_size{vsize}"
+            LiteralHoleReg.add_context(
+                name = ctx_name,
+                in_vectsize = vsize,
+                out_vectsize = vsize,
+                lane_size = bw,
+                in_precision = bw,
+                out_precision = bw,
+                args = [f"SYMBOLIC_BV_{bw}",str(bw), str(vsize)]
+            )
 
-    return LiteralHole
+
+    return LiteralHole, LiteralHoleReg
 
 def is_literal_hole(expr):
     if not isinstance(expr, Context):
@@ -77,5 +102,5 @@ def legalize_concrete_literal_holes(expr):
 
 
 
-LiteralHole = create_literal_hole()
+LiteralHole, LiteralHoleReg = create_literal_hole()
 

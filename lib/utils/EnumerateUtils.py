@@ -1,6 +1,6 @@
 from utils.DSLInstructionUtils import *
 from utils.ConcretizeUtils import *
-from utils.LiteralHole import LiteralHole
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 
 
 
@@ -15,7 +15,12 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
     if expr_depth == 0:
         yield copy_fn(Reg("0_placeholder", 8, 8))
         if include_lit_holes:
+            # Specialized constant hole
             yield LiteralHole.contexts[0]
+            lit_hole_copy =  copy_fn(LiteralHoleReg.contexts[0])
+            lit_hole_copy.context_args[0] = copy_fn(Reg("0_placeholder", 8, 8))
+            yield lit_hole_copy
+
     else:
         relavent_ctx = []
         for dsl_inst in dsl_list:
@@ -51,6 +56,9 @@ def create_exhaustive_expressions_generator_helper_v2(dsl_list,  expr_depth = 1,
         yield copy_fn(Reg("1_placeholder", 8, 8))
         if include_lit_holes:
             yield LiteralHole.contexts[0]
+            lit_hole_copy =  copy_fn(LiteralHoleReg.contexts[0])
+            lit_hole_copy.context_args[0] = copy_fn(Reg("0_placeholder", 8, 8))
+            yield lit_hole_copy
 
         def is_expr_valid(expr):
             if max_leaves is None:
@@ -255,6 +263,7 @@ def create_exhaustive_expressions_generator_v2(dsl_list, expr_depth, output_size
 
 
 
-        if does_valid_concretization_exist(new_expr, output_size, dsl_list+[LiteralHole]):
+
+        if does_valid_concretization_exist(new_expr, output_size, dsl_list+[LiteralHole, LiteralHoleReg]):
 
             yield new_expr
