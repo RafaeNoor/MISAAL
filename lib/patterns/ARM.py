@@ -40,8 +40,7 @@ props = [
 
 
 pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM.pickle"
-#abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM_abstract.pickle"
-abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/ARM_abstract.pickle"
 
 arm_patterns = []
 
