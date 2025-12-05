@@ -28,7 +28,7 @@ test_files = [
     f"{MISAAL_ROOT}/targets/hvx/EnumeratePatternhvx_rmpy_hvx-enumerate_intermediate_results.py",
     f"{MISAAL_ROOT}/targets/hvx/RoundMulShiftRightPatterns.py",
     f"{MISAAL_ROOT}/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
-    f"{MISAAL_ROOT}/test/property/eq_class_enumeration/hvx/tempEnumxHVX_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/tempEnumxHVX_hvx_intermediate_results.py",
     f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py",
     f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_scalar_widen_hvx-enumerate_intermediate_results.py",
     f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_shift_right_hvx-enumerate_intermediate_results.py",
