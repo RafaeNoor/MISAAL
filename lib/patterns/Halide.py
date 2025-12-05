@@ -34,8 +34,7 @@ for tf in test_files:
         props.append(json.load(ReadFile))
 
 pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
-#abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
-abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide.pickle"
+abstract_pickle_file_name = MISAAL_ROOT+"/lib/patterns/halide_abstract.pickle"
 
 Halide_patterns = []
 

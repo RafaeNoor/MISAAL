@@ -1,9 +1,10 @@
 #HALIDE_DIR ?= ../../../distrib
 
-HALIDE_DISTRIB ?= /home/arnoor2/MISAAL/frontends/halide/distrib/
-HALIDE_DIR = $(HALIDE_DISTRIB)
+HALIDE_DISTRIB ?= ../../../frontends/halide/distrib/
+HALIDE_DIR ?=../../../../MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
+# TODO: Change to HVX SDK path
 HEXAGON_SIM ?= /shared/akashk4/Hexagon_SDK/3.5.3/tools/HEXAGON_Tools/8.3.07/Tools/bin/hexagon-sim
 HEXAGON_CLANG ?= /shared/akashk4/Hexagon_SDK/3.5.3/tools/HEXAGON_Tools/8.3.07/Tools/bin/hexagon-clang++
 

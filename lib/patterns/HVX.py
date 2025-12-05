@@ -22,27 +22,26 @@ hvx_swizzles_dsl_list = parse_dict(hvx_swizzles)
 combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
 
 test_files = [
-    #"/home/arnoor2/MISAAL/lib/EnumeratePattern_hvx-swizzles_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_acc_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_vmpyh_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePatternhvx_swizzle_transfer_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePatternhvx_rmpy_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/RoundMulShiftRightPatterns.py",
-    "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/test/property/eq_class_enumeration/hvx/tempEnumxHVX_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_scalar_widen_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_right_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_right_w_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx-enumerate-absd_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_avgrnd_hvx-enumerate-absd_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/LowerSwizzles_hvx_swizzle_hvx_intermediate_results_addon.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_hvx_combine_simpl_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_scalar_hvx-enumerate-absd_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_shift_left_acc_hvx-enumerate-absd_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EnumeratePattern_hvx_sat_hvx-enumerate_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_asrh_acc_hvx_intermediate_results.py",
-    "/home/arnoor2/MISAAL/targets/hvx/EqClassEqualDepthV4_interleave_2_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx_acc_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx_vmpyh_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePatternhvx_swizzle_transfer_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePatternhvx_rmpy_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/RoundMulShiftRightPatterns.py",
+    f"{MISAAL_ROOT}/targets/hvx/LowerSwizzles_filtered_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/tempEnumxHVX_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_scalar_widen_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_shift_right_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_shift_right_w_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx-enumerate-absd_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_avgrnd_hvx-enumerate-absd_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/LowerSwizzles_hvx_swizzle_hvx_intermediate_results_addon.py",
+    f"{MISAAL_ROOT}/targets/hvx/EqClassEqualDepthV4_hvx_combine_simpl_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_shift_left_scalar_hvx-enumerate-absd_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_shift_left_acc_hvx-enumerate-absd_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EnumeratePattern_hvx_sat_hvx-enumerate_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EqClassEqualDepthV4_asrh_acc_hvx_intermediate_results.py",
+    f"{MISAAL_ROOT}/targets/hvx/EqClassEqualDepthV4_interleave_2_hvx_intermediate_results.py",
 ]
 
 props = [
@@ -50,9 +49,8 @@ props = [
 
 
 
-pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
-#abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx_abstract.pickle"
-abstract_pickle_file_name = "/home/arnoor2/MISAAL/lib/patterns/hvx.pickle"
+pickle_file_name = f"{MISAAL_ROOT}/lib/patterns/hvx.pickle"
+abstract_pickle_file_name = f"{MISAAL_ROOT}/lib/patterns/hvx_abstract.pickle"
 
 HVX_patterns = []
 
