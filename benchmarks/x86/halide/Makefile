@@ -1,5 +1,5 @@
 HALIDE_DISTRIB ?= ../../../frontends/halide/distrib/
-HALIDE_DIR ?=../../../MISAAL/frontends/halide/distrib/
+HALIDE_DIR ?=../../../../MISAAL/frontends/halide/distrib/
 LLVM_ROOT ?= $(LLVM_DIS_ROOT)
 
 benchmarks = gaussian3x3 \
