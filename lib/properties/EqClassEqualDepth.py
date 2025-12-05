@@ -1,4 +1,5 @@
 from properties.Property import *
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 import os
 import time
 import glob
@@ -323,7 +324,7 @@ class EqClassEqualDepth(EqualOnValues):
 
     def get_eq_class(self, eq_class_name):
         eq_class_name = eq_class_name.split("_dsl")[0]
-        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list:
+        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list+[LiteralHole, LiteralHoleReg]:
             if dsl_inst.name == eq_class_name:
                 return dsl_inst
         print("Unable to find", eq_class_name)

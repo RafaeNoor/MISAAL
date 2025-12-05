@@ -9,6 +9,7 @@ from utils.EggLogUtils import *
 import json
 from utils.ReadDSL import read_string_to_dsl
 from utils.ExprParamUtils import generate_parameter_map
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 import subprocess
 import os
 from os import kill
@@ -34,7 +35,7 @@ class Property:
             dsl_list (list, optional): _description_. Defaults to [].
         """
         self.name = name
-        self.dsl_list = dsl_list
+        self.dsl_list = dsl_list + [LiteralHole, LiteralHoleReg]
         self.synth_desc = synth_desc
         self.parallel = parallel
 
@@ -77,7 +78,7 @@ class Property:
         self.work_dir = work_dir
         if not os.path.exists(self.work_dir):
             os.makedirs(self.work_dir)
-        
+
 
     def get_property_desc(self):
         """Abstract method for returning string which describes the property
@@ -279,7 +280,7 @@ class Property:
                 self.run_on_batch_completion()
 
                 print("Property", self.name, "holds on", candidate_count,  " candidates ...")
-                
+
                 intermediate_results_path = self.name+"_"+self.synth_desc.target_name+"_intermediate_results.py"
                 if self.work_dir is not None:
                     intermediate_results_path = os.path.join(self.work_dir, intermediate_results_path)

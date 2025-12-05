@@ -1062,13 +1062,15 @@ def get_expr_intermediate_sizes(dsl_expr):
     return sizes
 
 def get_expr_depth(dsl_expr):
-    if isinstance(dsl_expr, Context) and dsl_expr.extensions != None and 'integer_arith' in dsl_expr.extensions:
+    if isinstance(dsl_expr, Context) and dsl_expr.extensions != None and ('integer_arith' in dsl_expr.extensions):
         return 0
 
 
-    if isinstance(dsl_expr, Context):
-        return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
 
+    if isinstance(dsl_expr, Context) and not "LiteralHole" in dsl_expr.name:
+        return 1 + max([get_expr_depth(arg) for arg in dsl_expr.context_args])
+    elif isinstance(dsl_expr, Context) and "LiteralHole" in dsl_expr.name and isinstance(dsl_expr.context_args[0], Reg):
+        return 1
     else:
         return 0
 
@@ -1385,6 +1387,45 @@ def count_num_instructions(ctx):
         count += count_num_instructions(arg)
 
     return 1 + count
+
+
+def contains_lit_hole_only_expression(expr):
+    if not isinstance(expr, Context):
+        return False
+
+
+    any_contexts = any([isinstance(arg, Context) and "LiteralHole" not in arg.name for arg in expr.context_args])
+
+    any_regs = any([isinstance(arg, Reg) for arg in expr.context_args])
+    any_regs = any_regs or any([isinstance(arg, Context) and "LiteralHole" in arg.name and isinstance(arg.context_args[0], Reg) for arg in expr.context_args])
+
+    any_literal_holes = any([isinstance(arg, Context) and "LiteralHole" in arg.name for arg in expr.context_args])
+
+
+
+    if any_contexts:
+        # if any of the operands are contexts,
+        # we handle those first
+        lit_only = False
+        for arg in expr.context_args:
+            if isinstance(arg, Context) and "LiteralHole" not in arg.name:
+                lit_only = lit_only or contains_lit_hole_only_expression(expr)
+
+        return lit_only
+    elif any_regs:
+        # If leaf expression and contains any registers, then this expression is valid
+        return False
+    elif any_literal_holes:
+        # If leaf expression and contains only literal holes return True
+        return True
+    else:
+        assert False and f"Unsupported case {expr.emit_context_expr_string()}"
+
+
+
+
+
+
 
 
 

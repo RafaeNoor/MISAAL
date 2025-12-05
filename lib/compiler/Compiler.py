@@ -1,4 +1,5 @@
 from utils.DSLInstructionUtils import *
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 import sys
 import time
 from common.Types import *
@@ -14,7 +15,7 @@ class CompilerBase:
     def __init__(self, patterns, src_dsl_list = [], target_dsl_list = []):
         self.patterns = patterns
         self.src_dsl_list = src_dsl_list
-        self.target_dsl_list = target_dsl_list
+        self.target_dsl_list = target_dsl_list + [LiteralHole, LiteralHoleReg]
 
         # Each AutoLLVM IR operation will need to be
         # represented using some data structure.

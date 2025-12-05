@@ -1,6 +1,7 @@
 from utils.DSLInstructionUtils import *
 from utils.CodeSynthesizerDesc import *
 from utils.CanonicalizeExpressions import CanonicalizeExpression
+from utils.LiteralHole import LiteralHole, LiteralHoleReg
 from utils.ReadDSL import read_string_to_dsl
 from common.Types import *
 from common.StructDef import StructDef
@@ -315,7 +316,7 @@ class DoubleGrammarSynthesisUtils:
 
     def get_eq_class(self, eq_class_name):
         eq_class_name = eq_class_name.split("_dsl")[0]
-        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list + self.auxilary_dsl_list:
+        for dsl_inst in self.input_dsl_list+self.output_dsl_list+self.swizzle_dsl_list + self.auxilary_dsl_list + [LiteralHole, LiteralHoleReg]:
             if dsl_inst.name == eq_class_name:
                 return dsl_inst
         print("Unable to find", eq_class_name)

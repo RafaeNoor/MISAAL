@@ -6,6 +6,7 @@ import sys
 from common.Types import *
 from  common.Instructions import Context
 from utils.DSLInstructionUtils import *
+from utils.LiteralHole import LiteralHole
 import subprocess
 import os
 import time
@@ -134,6 +135,8 @@ def get_possible_output_sizes_of_eq_class(ctx_, dsl_list):
     if isinstance(ctx_, Reg):
         return set()
 
+    dsl_list = dsl_list + [LiteralHole]
+
     for dsl_inst in dsl_list:
         sizes = []
         ret_size = False
@@ -158,6 +161,8 @@ def get_possible_input_sizes_of_eq_class(ctx_, dsl_list):
     if isinstance(ctx_, Reg):
         return set()
 
+    dsl_list = dsl_list + [LiteralHole]
+
     for dsl_inst in dsl_list:
         sizes = []
         ret_size = False
@@ -180,6 +185,8 @@ def get_possible_output_sizes_of_eq_class(ctx_, dsl_list):
 
     if isinstance(ctx_, Reg):
         return set()
+
+    dsl_list = dsl_list + [LiteralHole]
 
     for dsl_inst in dsl_list:
         sizes = []
@@ -208,6 +215,8 @@ def does_valid_concretization_exist(ref_expr, output_size, dsl_list):
     if isinstance(ref_expr, Reg):
         return True
 
+
+    dsl_list = dsl_list + [LiteralHole]
 
     if isinstance(ref_expr, Context):
 
@@ -264,6 +273,9 @@ def is_expression_template_valid(template):
     if isinstance(template[0], ConstBitVector):
         return True
 
+    if isinstance(template[0], Context) and "LiteralHole" in template[0].name:
+        return True
+
     if isinstance(template[0], Context):
         required_num_sym_args = sum([1 for arg in template[0].context_args if isinstance(arg, BitVector)])
         num_provided = len(template[1])
@@ -297,6 +309,9 @@ def materialize_expression_template(valid_template):
 
     context_copy = copy.deepcopy(expr)
     print(context_copy.name)
+
+    if "LiteralHole" in context_copy.name:
+        return context_copy
 
     argument_settings = valid_template[1]
 
@@ -340,6 +355,9 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list, root_ctx
 
 def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, root_ctx_name = None):
 
+
+    dsl_list = dsl_list + [LiteralHole]
+
     if isinstance(ref_expr, Reg):
         #print("Creating reg of required size: ", output_size)
         yield [Reg(ref_expr.index, ref_expr.precision, output_size, signed = ref_expr.signed), None]
@@ -363,6 +381,38 @@ def get_valid_concretization_generator_helper(ref_expr, output_size, dsl_list, r
         return ref_expr.context_args[idx]
 
     dsl_inst = get_dsl_inst_for_ctx(ref_expr, dsl_list)
+
+
+    if isinstance(ref_expr, Context) and "LiteralHole" in ref_expr.name:
+        # Get the context with the largest possible bitwidth
+        is_lit_hole_symbolic = isinstance(ref_expr.context_args[0], Reg)
+        ctx_ = None
+        for ctx in dsl_inst.contexts:
+            if ctx.out_vectsize != output_size:
+                continue
+
+            if is_lit_hole_symbolic and not isinstance(ctx.context_args[0], BitVector):
+                continue
+            if not is_lit_hole_symbolic and  isinstance(ctx.context_args[0], BitVector):
+                continue
+
+            if ctx_ is None:
+                ctx_ = ctx
+                continue
+
+            if ctx_.out_precision < ctx.out_precision:
+                ctx_ = ctx
+                continue
+
+
+
+        assert not ctx_ is None
+        if is_lit_hole_symbolic:
+            ctx_ = copy.deepcopy(ctx_)
+            reg_arg = ref_expr.context_args[0]
+            ctx_.context_args[0] = Reg(reg_arg.index, reg_arg.precision, ref_expr.in_vectsize, signed = reg_arg.signed)
+        yield [ctx_, None]
+        return []
 
     num_sym_args = 0
     sym_idxs = []

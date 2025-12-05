@@ -11,8 +11,8 @@ import shutil
 
 class HydrideCompiler(EggLogCompiler):
 
-    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], tests = [],  intrinsics_file = None, hydride_root_path = None, llvm_out_file_name = "llvm.out", prune_patterns = False, parallel = True):
-        super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations,  egg_pkg_path = egg_pkg_path, prune_patterns = prune_patterns)
+    def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, llvm_so_path = None, llvm_flags = [], tests = [],  intrinsics_file = None, hydride_root_path = None, llvm_out_file_name = "llvm.out", prune_patterns = False, parallel = True, skip_axioms = False):
+        super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list, run_iterations = run_iterations,  egg_pkg_path = egg_pkg_path, prune_patterns = prune_patterns, skip_axioms = skip_axioms)
         self.llvm_out_file_name = llvm_out_file_name
         self.llvm_so_path = llvm_so_path
         self.llvm_flags = llvm_flags
