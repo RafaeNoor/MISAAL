@@ -12,11 +12,12 @@ import json
 import pickle
 
 from patterns.PatternUtils import create_patterns, deduplicate_patterns, prune_redundant_patterns, deduplicate_patterns_parallel, PatternAbstractor
-from EqClassEqualDepthV4_hvx_results import hvx_EqClassEqualDepthV4
 
 halide_dsl_list = parse_dict(halide_semantics)
 hvx_dsl_list = parse_dict_with_bounded(hvx_semantics)
 hvx_swizzles_dsl_list = parse_dict(hvx_swizzles)
+
+MISAAL_ROOT = os.getenv('MISAAL_SRC')
 
 
 combined_dsl_list = halide_dsl_list + hvx_dsl_list + hvx_swizzles_dsl_list
