@@ -1652,8 +1652,10 @@ public:
             if (!equal(store->index, op->index))
                 continue;
 
+            /*
             if (!store->param.same_as(op->param))
                 continue;
+                */
 
             // Halide modulus remainder class only
             // defines equality
