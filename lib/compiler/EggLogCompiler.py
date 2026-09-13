@@ -15,9 +15,17 @@ class EggLogCompiler(CompilerBase):
 
     def __init__(self, patterns, src_dsl_list = [], target_dsl_list = [], run_iterations = 10, egg_pkg_path = None, prune_patterns = False, skip_axioms = False):
         super().__init__(patterns, src_dsl_list = src_dsl_list, target_dsl_list = target_dsl_list)
+        if not egg_pkg_path:
+            raise RuntimeError(
+                "egglog not found: set EGG_PKG_PATH to an egglog checkout built with "
+                "`cargo build --release` (see lib/utils/egg_config.py)")
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
         self.egglog_bin = os.path.join(self.egg_pkg_path, "target","release","egglog")
+        if not os.path.isfile(self.egglog_bin):
+            raise RuntimeError(
+                f"egglog binary not found at {self.egglog_bin}: run `cargo build --release` "
+                f"in {self.egg_pkg_path}, or point EGG_PKG_PATH at a built egglog checkout")
         self.input_cost = 100000000
         self.prune_patterns = prune_patterns
         self.output_cost = 1
