@@ -69,100 +69,109 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
         gc.collect()
 
     def property_holds_on_candidate(self, candidate):
-        src_ctx = candidate[0]
-        dst_ctx = candidate[1]
-        output_size = candidate[3]
-        print("OUTPUT SIZE", output_size)
+        try:
+            src_ctx = candidate[0]
+            dst_ctx = candidate[1]
+            output_size = candidate[3]
+            #print("OUTPUT SIZE", output_size)
 
 
-        test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list
-        valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
-
-
-
-        valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
-        valid_dst_conc = next(valid_dst_conc)
-
-        LIMIT = 1
-
-        count = 0
-        input_sizes_visited = []
-
-        contains_swizzle = self.count_contexts(src_ctx, "swizzle") != 0
-
-        for valid_src_conc in valid_src_conc_gen:
-            regs = get_unique_context_registers(valid_src_conc)
-            reg_sizes = sorted([reg.size for reg in regs])
-
-            if reg_sizes in input_sizes_visited:
-                continue
-
-            input_sizes_visited.append(reg_sizes)
-
-            print("Input sizes to test", reg_sizes)
-
-            if valid_src_conc is None or valid_dst_conc is None:
-                print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
-                continue
-
-            count += 1
-
-            dst_copy = copy.deepcopy(valid_dst_conc)
-
-
-            print("Valid src conc")
-            print(valid_src_conc.emit_context_expr_string())
-            success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
-
-            if not success:
-                break
-
-            # Confirm that the parsed expressions match the required structure
-            synth_src_expr = read_string_to_dsl(src_expr_str, test_dsl_list)
-
-            # isCanonical matches structure according to DSL list
-            if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_src_expr, valid_src_conc):
-                continue
-
-            synth_dst_expr = read_string_to_dsl(dst_expr_str, test_dsl_list)
-
-            # isCanonical matches structure according to DSL list
-            if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_dst_expr, dst_copy):
-                continue
-
-
-            if success:
-                print("SUCCESS!")
-                key = self.serialize_candidate(candidate)
-                self.simplify_map[key] = (src_expr_str, dst_expr_str)
-                return success
-
-
-            if not contains_swizzle or count >= LIMIT:
-                break
-
-
-        if self.bidirectional_test and not isinstance(dst_ctx, Reg):
-            print("Bidirectional test")
-
+            test_dsl_list =  self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list
             valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
-            for valid_src_conc in valid_src_conc_gen:
+
+
+
+            valid_dst_conc = get_valid_concretization_generator(dst_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+            valid_dst_conc = next(valid_dst_conc)
+
+            LIMIT = 1
+
+            count = 0
+            input_sizes_visited = []
+
+            contains_swizzle = self.count_contexts(src_ctx, "swizzle") != 0
+
+            for idx, valid_src_conc in enumerate(valid_src_conc_gen):
+                regs = get_unique_context_registers(valid_src_conc)
+                reg_sizes = sorted([reg.size for reg in regs])
+
+                if reg_sizes in input_sizes_visited:
+                    continue
+
+                input_sizes_visited.append(reg_sizes)
+
+                print("Input sizes to test", reg_sizes)
+
+                if valid_src_conc is None or valid_dst_conc is None:
+                    print("No valid source or dst with output size ", output_size, "for", src_ctx.name, dst_ctx.name)
+                    continue
+
+                count += 1
+
                 dst_copy = copy.deepcopy(valid_dst_conc)
-                success, dst_expr_str, src_expr_str = self.synth_utils.double_grammar_synthesis(dst_copy, valid_src_conc)
+
+
+                print("Valid src conc")
+                print(valid_src_conc.emit_context_expr_string())
+                success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis(valid_src_conc, dst_copy)
+
+                if not success:
+                    break
+
+                # Confirm that the parsed expressions match the required structure
+                synth_src_expr = read_string_to_dsl(src_expr_str, test_dsl_list)
+
+                # isCanonical matches structure according to DSL list
+                if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_src_expr, valid_src_conc):
+                    continue
+
+                synth_dst_expr = read_string_to_dsl(dst_expr_str, test_dsl_list)
+
+                # isCanonical matches structure according to DSL list
+                if self.ensure_structure and  not self.canonicalizer.isCanonical(synth_dst_expr, dst_copy):
+                    continue
+
 
                 if success:
-                    print("SUCCESS BIDIRECTIONAL!")
+                    print("SUCCESS!")
                     key = self.serialize_candidate(candidate)
                     self.simplify_map[key] = (src_expr_str, dst_expr_str)
                     return success
+
 
                 if not contains_swizzle or count >= LIMIT:
                     break
 
 
+            if self.bidirectional_test and not isinstance(dst_ctx, Reg):
+                print("Bidirectional test")
+
+                valid_src_conc_gen = get_valid_concretization_generator(src_ctx, output_size, self.input_dsl_list + self.swizzle_dsl_list + self.output_dsl_list)
+                for valid_src_conc in valid_src_conc_gen:
+                    dst_copy = copy.deepcopy(valid_dst_conc)
+                    success, dst_expr_str, src_expr_str = self.synth_utils.double_grammar_synthesis(dst_copy, valid_src_conc)
+
+                    if success:
+                        print("SUCCESS BIDIRECTIONAL!")
+                        key = self.serialize_candidate(candidate)
+                        self.simplify_map[key] = (src_expr_str, dst_expr_str)
+                        return success
+
+                    if not contains_swizzle or count >= LIMIT:
+                        break
 
 
-        return False
+
+
+            return False
+
+
+        except KeyboardInterrupt:
+            sys.exit()
+        except:
+            return False
+
+
 
 
     def serialize_candidate(self, candidate):
@@ -202,6 +211,7 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
             max_out = self.output_depth  + 1
             for output_depth in range(output_start, max_out):
                 self.current_output_depth = output_depth
+                print(f"Input depth {input_depth}, output depth {output_depth}")
                 for dsl_inst in self.input_dsl_list:
 
                     if not self.filter_list is None:
@@ -226,11 +236,19 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                     sample_ctx = dsl_inst.get_sample_context()
 
 
+
                     if sample_ctx.out_vectsize == None:
                         print("Skipping as samle context has no outvect size")
                         continue
 
                     src_ctx = self.get_context_with_min_sym_bvs(dsl_inst)
+
+                    # TEMP
+                    if src_ctx.in_vectsize > 2048:
+                        ctx_lt = [ctx for ctx in dsl_inst.contexts if ctx.in_vectsize <= 2048]
+                        if len(ctx_lt) != 0:
+                            src_ctx = ctx_lt[0]
+                            print("Setting sample ctx to", src_ctx.name)
 
 
                     if src_ctx.out_vectsize == None:
@@ -296,39 +314,47 @@ class EqClassEqualDepthV4(EqClassEqualDepthV3):
                             if isinstance(target_expr, Reg) and output_depth != output_start:
                                 continue
 
+                            try:
 
-                            if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
-                                canonical_target_expr = self.canonicalizer.canonicalize(target_expr)
+                                if get_expr_depth(target_expr) == output_depth or isinstance(target_expr, Reg):
+                                    canonical_target_expr = self.canonicalizer.canonicalize(target_expr)
 
-                                if self.use_canon_map:
-                                    canon_map_key = canonical_target_expr.emit_context_expr_string()
-                                    if canon_map_key in self.target_canon_map:
-                                        self.canon_skipped_dst += 1
+                                    if self.use_canon_map:
+                                        canon_map_key = canonical_target_expr.emit_context_expr_string()
+                                        if canon_map_key in self.target_canon_map:
+                                            self.canon_skipped_dst += 1
+                                            continue
+
+                                        self.target_canon_map[canon_map_key] = 1
+
+
+                                    else:
+                                        if not self.canonicalizer.isCanonical(target_expr, canonical_target_expr):
+                                            self.canon_skipped_dst += 1
+                                            continue
+
+                                    # Equality check
+                                    if self.canonicalizer.isCanonical(target_expr, src_expr):
                                         continue
 
-                                    self.target_canon_map[canon_map_key] = 1
-
-
-                                else:
-                                    if not self.canonicalizer.isCanonical(target_expr, canonical_target_expr):
-                                        self.canon_skipped_dst += 1
+                                    # TEMP:
+                                    #if not isinstance(target_expr,Reg) and  not self.expr_contains(target_expr, dsl_inst.name):
+                                    #    continue
+                                    if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 6:
                                         continue
 
-                                # Equality check
-                                if self.canonicalizer.isCanonical(target_expr, src_expr):
-                                    continue
-
-                                # TEMP:
-                                #if not isinstance(target_expr,Reg) and  not self.expr_contains(target_expr, dsl_inst.name):
-                                #    continue
-                                if not isinstance(target_expr,Reg) and len(get_unique_context_registers(target_expr)) > 6:
-                                    continue
-
-                                self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
-                                candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_ctx.out_vectsize)#src_expr.out_vectsize)
+                                    self.absolute_expr_count += self.get_absolute_count(canonical_target_expr) * self.get_absolute_count(canonical_src_expr)
+                                    candidate = (canonical_src_expr, canonical_target_expr, relavent_output_subset, src_ctx.out_vectsize)#src_expr.out_vectsize)
 
 
-                                yield candidate
+                                    yield candidate
+                            except KeyboardInterrupt:
+                                sys.exit()
+                                pass
+                            except Exception as e:
+                                with open("error_log.txt", "a+") as ErrFile:
+                                    ErrFile.write(f"An unexpected error occurred: {e}")
+                                continue
 
 
 

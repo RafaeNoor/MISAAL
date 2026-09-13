@@ -272,6 +272,26 @@ private:
 protected:
     void include(const Expr &e) override {
         include_type(e.type());
+#if 0
+        // Add all vector types for PIM Compilation
+        for(int64_t vector_lanes = 8; vector_lanes <= 67108864; vector_lanes *= 2){
+            debug(0) << "Adding vector types for lanes "<<vector_lanes <<"\n"; 
+            include_type(Int(8, vector_lanes));
+            include_type(Int(16, vector_lanes));
+            include_type(Int(32, vector_lanes));
+            include_type(UInt(8, vector_lanes));
+            include_type(UInt(16, vector_lanes));
+            include_type(UInt(32, vector_lanes));
+
+            vector_types_used.insert(Int(8, vector_lanes));
+            vector_types_used.insert(Int(16, vector_lanes));
+            vector_types_used.insert(Int(32, vector_lanes));
+            vector_types_used.insert(UInt(8, vector_lanes));
+            vector_types_used.insert(UInt(16, vector_lanes));
+            vector_types_used.insert(UInt(32, vector_lanes));
+
+        }
+#endif
         IRGraphVisitor::include(e);
     }
 
@@ -493,6 +513,17 @@ struct CppVector {
     }
 };
 
+
+enum class CppReductionOperator {
+    Add,
+    Mul,
+    Min,
+    Max,
+    And,
+    Or,
+    SaturatingAdd,
+};
+
 template <typename ElementType_, size_t Lanes_>
 class CppVectorOps {
 public:
@@ -503,6 +534,8 @@ public:
     using Mask = CppVector<uint8_t, Lanes>;
 
     CppVectorOps() = delete;
+
+
 
     static Vec broadcast(const ElementType v) {
         Vec r;
@@ -607,6 +640,75 @@ public:
         }
         return r;
     }
+
+
+static ElementType vector_reduce_to_scalar(const Vec &a, size_t reduce_range, CppReductionOperator op) {
+    ElementType result = a[0];
+    for (size_t i = 1; i < reduce_range; i++) {
+        switch (op) {
+            case CppReductionOperator::Add:
+                result += a[i];
+                break;
+            case CppReductionOperator::Mul:
+                result *= a[i];
+                break;
+            case CppReductionOperator::Min:
+                result = ::halide_cpp_min(result, a[i]);
+                break;
+            case CppReductionOperator::Max:
+                result = ::halide_cpp_max(result, a[i]);
+                break;
+            case CppReductionOperator::And:
+                result &= a[i];
+                break;
+            case CppReductionOperator::Or:
+                result |= a[i];
+                break;
+            case CppReductionOperator::SaturatingAdd:
+                assert(false);
+                break;
+        }
+    }
+    return result;
+}
+
+#if 0
+   // Unable to statically reduce 
+    static Vec vector_reduce(const Vec &a, size_t reduce_range, CppReductionOperator op) {
+        size_t output_lanes = Lanes / reduce_range;
+        CppVector<ElementType, output_lanes> r;
+        for (size_t i = 0; i < output_lanes; i++) {
+            ElementType result = a[i * reduce_range];
+            for (size_t j = 1; j < reduce_range; j++) {
+                switch (op) {
+                case CppReductionOperator::Add:
+                    result += a[i * reduce_range + j];
+                    break;
+                case CppReductionOperator::Mul:
+                    result *= a[i * reduce_range + j];
+                    break;
+                case CppReductionOperator::Min:
+                    result = ::halide_cpp_min(result, a[i * reduce_range + j]);
+                    break;
+                case CppReductionOperator::Max:
+                    result = ::halide_cpp_max(result, a[i * reduce_range + j]);
+                    break;
+                case CppReductionOperator::And:
+                    result &= a[i * reduce_range + j];
+                    break;
+                case CppReductionOperator::Or:
+                    result |= a[i * reduce_range + j];
+                    break;
+                case CppReductionOperator::SaturatingAdd:
+                    assert(false);
+                    break;
+                }
+            }
+            r[i] = result;
+        }
+        return r;
+    }
+#endif
 
     static Mask logical_or(const Vec &a, const Vec &b) {
         CppVector<uint8_t, Lanes> r;
@@ -1269,6 +1371,7 @@ public:
         stream << cpp_vector_decl << native_vector_decl << vector_selection_decl;
         stream << std::flush;
 
+#if 0
         for (const auto &t : vector_types) {
             string name = print_type(t, DoNotAppendSpace);
             string scalar_name = print_type(t.element_of(), DoNotAppendSpace);
@@ -1284,6 +1387,40 @@ public:
             // stream << "#pragma message \"using CppVector for " << t << "\"\n";
             stream << "#endif\n";
         }
+#else
+
+        // Add all vector types for PIM Compilation
+        for(int64_t vector_lanes = 8; vector_lanes <= 67108864; vector_lanes *= 2){
+
+            // Special consideration for int1 types
+            string scalar_name_signed = "int"+std::to_string(8)+"_t";
+            string vector_name_signed = "int"+std::to_string(1)+"x"+std::to_string(vector_lanes)+"_t";
+            string scalar_name_unsigned = "uint"+std::to_string(8)+"_t";
+            string vector_name_unsigned = "uint"+std::to_string(1)+"x"+std::to_string(vector_lanes)+"_t";
+
+            stream << "using " << vector_name_signed << " = CppVector<" << scalar_name_signed << ", " << vector_lanes << ">;\n";
+            stream << "using " << vector_name_signed << "_ops = CppVectorOps<" << scalar_name_signed << ", " << vector_lanes << ">;\n";
+            stream << "using " << vector_name_unsigned << " = CppVector<" << scalar_name_unsigned << ", " << vector_lanes << ">;\n";
+            stream << "using " << vector_name_unsigned << "_ops = CppVectorOps<" << scalar_name_unsigned << ", " << vector_lanes << ">;\n";
+
+            for(int bitwidth = 8; bitwidth <= 32; bitwidth *=2){
+                
+                string scalar_name_signed = "int"+std::to_string(bitwidth)+"_t";
+                string vector_name_signed = "int"+std::to_string(bitwidth)+"x"+std::to_string(vector_lanes)+"_t";
+                string scalar_name_unsigned = "uint"+std::to_string(bitwidth)+"_t";
+                string vector_name_unsigned = "uint"+std::to_string(bitwidth)+"x"+std::to_string(vector_lanes)+"_t";
+
+                stream << "using " << vector_name_signed << " = CppVector<" << scalar_name_signed << ", " << vector_lanes << ">;\n";
+                stream << "using " << vector_name_signed << "_ops = CppVectorOps<" << scalar_name_signed << ", " << vector_lanes << ">;\n";
+
+                stream << "using " << vector_name_unsigned << " = CppVector<" << scalar_name_unsigned << ", " << vector_lanes << ">;\n";
+                stream << "using " << vector_name_unsigned << "_ops = CppVectorOps<" << scalar_name_unsigned << ", " << vector_lanes << ">;\n";
+
+
+            }
+        }
+
+#endif
     }
 
     using_vector_typedefs = true;
@@ -2845,6 +2982,51 @@ Expr CodeGen_C::scalarize_vector_reduce(const VectorReduce *op) {
 
 void CodeGen_C::visit(const VectorReduce *op) {
     stream << get_indent() << "// Vector reduce: " << op->op << "\n";
+
+    const Call* call_op = op->value.as<Call>();
+    // if is reduce a call to a function with misaal in it's name
+    if (call_op && call_op->name.find("misaal") != std::string::npos) {
+
+        // Lambda to Map from vector reduce reduction type to CppReductionOperator:
+        auto map_reduction_type_to_cpp_reduction_operator = [](const VectorReduce* op) {
+            switch (op->op) {
+            case VectorReduce::Add:
+                return "CppReductionOperator::Add";
+            case VectorReduce::Mul:
+                return "CppReductionOperator::Mul";
+            case VectorReduce::Min:
+                return "CppReductionOperator::Min";
+            case VectorReduce::Max:
+                return "CppReductionOperator::Max";
+            case VectorReduce::And:
+                return "CppReductionOperator::And";
+            case VectorReduce::Or:
+                return "CppReductionOperator::Or";
+            case VectorReduce::SaturatingAdd:
+                return "CppReductionOperator::SaturatingAdd";
+            default:
+                internal_error << "Unhandled vector reduce operation: " << op << "\n";
+            }
+        };
+
+
+        // If result of reduction is a scalar, then we can just call vector_reduce_to_scalar else we call vector_reduce
+        if (op->type.is_scalar()) {
+            std::string scalar_name = (op->value.type().is_uint() ? "uint" : "int") + std::to_string(op->value.type().bits()) + "_t";
+            std::string cpp_vector_ops_ty = "CppVectorOps<" + scalar_name + "," + std::to_string(op->value.type().lanes())+ ">";
+            std::string call_invocation = cpp_vector_ops_ty +"::vector_reduce_to_scalar(" + print_expr(op->value) + ", " + std::to_string(op->type.lanes()) + ", " + map_reduction_type_to_cpp_reduction_operator(op) + ")";
+            print_assignment(op->type, call_invocation);
+            return;
+        } else {
+            //std::string call_invocation = "vector_reduce(" + print_expr(op->value) + ", " + std::to_string(op->type.lanes()) + ", " + map_reduction_type_to_cpp_reduction_operator(op) + ")";
+            //print_assignment(op->type, call_invocation);
+            
+        }
+
+        
+
+    }
+    
 
     Expr scalarized = scalarize_vector_reduce(op);
     if (scalarized.type().is_scalar()) {

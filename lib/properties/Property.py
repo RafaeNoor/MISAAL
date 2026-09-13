@@ -1,4 +1,5 @@
 from common.Types import *
+import sys
 from datetime import datetime
 import time
 import psutil
@@ -174,18 +175,24 @@ class Property:
             Args:
                 candidate (_type_): _description_
             """
-            if self.property_holds_on_candidate(candidate):
-                key = self.serialize_candidate(candidate)
+            try:
+                if self.property_holds_on_candidate(candidate):
+                    key = self.serialize_candidate(candidate)
 
-                global candidate_count
-                candidate_count += 1
+                    global candidate_count
+                    candidate_count += 1
 
-                if key not in property_map:
-                    property_map[key] = []
-                property_map[key].append ({
-                    "property_name": self.name,
-                    "property": self.get_property_on_candidate(candidate)
-                })
+                    if key not in property_map:
+                        property_map[key] = []
+                    property_map[key].append ({
+                        "property_name": self.name,
+                        "property": self.get_property_on_candidate(candidate)
+                    })
+            except KeyboardInterrupt:
+                sys.exit(0)
+            except:
+                pass
+
 
 
         BATCH_SIZE = self.BATCH_SIZE

@@ -63,7 +63,8 @@ from sema.hvx_swizzles_decomposed import hvx_swizzles_decomposed as hvx_swizzles
 from sema.x86_swizzles_decomposed import x86_swizzles_decomposed as x86_swizzles\n\
 from sema.arm_swizzles_decomposed import arm_swizzles_decomposed as arm_swizzles\n\
 from sema.ARMSema import arm_semantics\n\
-from sema.bitserial_fused_sema import bitserial_fused_sema\n\
+#from sema.bitserial_fused_sema import bitserial_fused_sema\n\
+from sema.bitserial_fused_sema_v2 import bitserial_fused_sema_v2 as bitserial_fused_sema\n\
 from sema.pim_extend_dsl import pim_extended_dsl\n\
 from sema.repairs_sema import repair_semantics\n\
 from utils.DSLInstructionUtils import parse_dict_with_bounded\n\

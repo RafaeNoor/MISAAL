@@ -112,6 +112,59 @@ class Pattern:
         return equal_forward or equal_backward
 
 
+    def equal_to_opt(self, other_pattern):
+        other_src = other_pattern.src_expr
+        other_target = other_pattern.target_expr
+
+        self_src = self.src_expr
+        self_target = self.target_expr
+
+
+        def are_expr_equal(e1, e2):
+            if isinstance(e1, Context) and isinstance(e2, Context):
+
+                if e1.name != e2.name:
+                    return False
+
+                # If the same context then the type of the operands must be the same for them to be equal
+
+                for idx in range(len(e1.context_args)):
+                    e1_arg = e1.context_args[idx]
+                    e2_arg = e2.context_args[idx]
+
+                    if type(e1_arg) != type(e2_arg):
+                        return False
+
+                    if isinstance(e1_arg, Reg):
+                        continue
+
+                    if isinstance(e1_arg, Context):
+                        args_equal = are_expr_equal(e1_arg, e2_arg)
+                        if not args_equal:
+                            return False
+
+                return True
+
+            if isinstance(e1, Reg) and isinstance(e2, Reg):
+                return True
+
+            return False
+
+        # Forward Case
+        if are_expr_equal(other_src, self_src) and are_expr_equal(other_target, self_target):
+            return True
+
+        # Backware case
+        if are_expr_equal(other_target, self_src) and are_expr_equal(other_src, self_target):
+            return True
+
+        return False
+
+
+
+
+
+
 
 
 

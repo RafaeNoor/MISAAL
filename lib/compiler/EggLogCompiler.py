@@ -18,7 +18,7 @@ class EggLogCompiler(CompilerBase):
         self.egg_pkg_path = egg_pkg_path
         self.egg_manifest_path = os.path.join(self.egg_pkg_path, "Cargo.toml")
         self.egglog_bin = os.path.join(self.egg_pkg_path, "target","release","egglog")
-        self.input_cost = 1000
+        self.input_cost = 100000000
         self.prune_patterns = prune_patterns
         self.output_cost = 1
         self.run_iterations = run_iterations

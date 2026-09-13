@@ -21,7 +21,9 @@ halide_dsl_list = parse_dict(halide_semantics)
 x86_dsl_list = parse_dict(x86_semantics)
 x86_swizzle_dsl_list = parse_dict(x86_swizzles)
 
-hvx_dsl_list = parse_dict(hvx_semantics)
+hvx_dsl_list = parse_dict_with_bounded(hvx_semantics)
+
+
 hvx_swizzle_dsl_list = parse_dict(hvx_swizzles)
 
 arm_dsl_list = parse_dict(arm_semantics)
@@ -30,7 +32,7 @@ arm_swizzle_dsl_list = parse_dict(arm_swizzles)
 test_dsl_list = []
 test_swizzle_dsl_list = []
 
-TARGET = "arm"
+TARGET = "hvx"
 
 if TARGET == "x86":
     test_dsl_list = x86_dsl_list

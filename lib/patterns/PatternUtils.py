@@ -61,7 +61,7 @@ def deduplicate_patterns(patterns):
         for j in range(s_idx + 1, len(patterns)):
             other_pattern = patterns[j]
 
-            if other_pattern.equal_to(pattern):
+            if other_pattern.equal_to_opt(pattern):
                 insert = False
                 break
         if insert:
@@ -177,6 +177,8 @@ def translate_pattern_for_output_size(src_ctx, dst_ctx, combined_dsl_list , outp
 
 
 
+    print("VALID SRC CONTEXT", valid_src_conc.emit_context_expr_string())
+    print("VALID DST CONTEXT", valid_dst_conc.emit_context_expr_string())
 
 
 

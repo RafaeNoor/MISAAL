@@ -72,6 +72,7 @@ class EqClassExpandGenerator:
             ref_arg = ref_ctx.context_args[idx]
 
             if isinstance(ref_arg, Reg) and isinstance(f_arg, ConstBitVector):
+                print("PREMATURE RET 0")
                 return
             #elif isinstance(ref_arg, Reg) and f_arg.size != ref_arg.size:
             #    return
@@ -90,16 +91,20 @@ class EqClassExpandGenerator:
                     # To allow program to compile, insert a lit hole zero
                     if len(choose_any_clauses) == 0:
                         #choose_any_clauses += [self.emit_choose_lit(5+random.randint(0, 16), ref_arg.size)]
+
+                        print("PREMATURE RET 1 idx is",idx)
                         return
 
 
                     clause_tokens.append("(choose* {})".format(" ".join(choose_any_clauses)))
                 else:
                     if self.input_sizes[int(ref_arg.index)] != f_arg.size:
+                        print("PREMATURE RET 2")
                         return
                     clause_tokens.append("(choose* {})".format(self.emit_choose_reg(int(ref_arg.index), precision = f_ctx.in_precision, signedness = sign)))
 
             elif isinstance(ref_arg, Context) and isinstance(f_arg, ConstBitVector):
+                print("REF ARG IS CONTEXT and CONTEXT ARG IS CONST")
                 return
 
             elif isinstance(ref_arg, ConstBitVector) and isinstance(f_arg, BitVector):
@@ -128,6 +133,7 @@ class EqClassExpandGenerator:
 
 
         clause = "({}\n)".format("\n".join(clause_tokens))
+        print("Processed into clause", clause)
         self.add_clause_to_layer_context(current_layer_name, clause)
 
 
@@ -224,7 +230,7 @@ class EqClassExpandGenerator:
                 feasible_ctxs.append(e_ctx)
 
 
-        #print("Number of feasible contexts: ", len(feasible_ctxs))
+        print("Number of feasible contexts: ", len(feasible_ctxs), "for", ctx.name)
 
         for f_ctx in feasible_ctxs:
             self.process_ctx(f_ctx, ctx, current_layer_name, layer_idx)

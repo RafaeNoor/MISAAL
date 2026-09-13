@@ -95,6 +95,7 @@ class ReplaceDiv : public IRMutator {
         return IRMutator::visit(op);
     }
 
+
     Expr visit(const Call *op) override {
 
         if (arch == HydrideSupportedArchitecture::ARM && op->is_intrinsic(Call::shift_right)) {
@@ -196,6 +197,32 @@ class ReplaceDiv : public IRMutator {
 
 public:
     ReplaceDiv(HydrideSupportedArchitecture _arch)
+        : arch(_arch) {
+    }
+
+private:
+    HydrideSupportedArchitecture arch;
+};
+
+
+class ReplaceMod : public IRMutator {
+    using IRMutator::visit;
+
+
+    Expr visit(const Mod *op) override {
+
+        if (!op->type.is_float() && op->type.is_vector()) {
+            auto lowered_mod = lower_int_uint_mod(op->a, op->b);
+            debug(0) << "Halide Lowered mod to: " << lowered_mod << "\n";
+            return mutate(lowered_mod);
+        }
+
+        return IRMutator::visit(op);
+    }
+
+
+public:
+    ReplaceMod(HydrideSupportedArchitecture _arch)
         : arch(_arch) {
     }
 
@@ -723,13 +750,18 @@ public:
             
             std::string suffix = oprec > iprec ? "-extend" : "-truncate";
 
+            std::string opnd_size = std::to_string(op->value.type().lanes() * op->value.type().bits());
+            std::string opnd_prec = std::to_string(op->value.type().bits());
             
 
-            std::string type_str = " " + iprec_str + " 1 " + lanes_str + " " +bits_str ;
-            if (op->type.is_uint()) {
-                return tabs() + "(typed:cast-uint" + suffix + "\n" + rkt_val + " "+ type_str  + ")";
+            std::string type_str = " " + iprec_str  + " " + opnd_size + " "+ oprec_str ;
+            if (op->type.is_uint() && oprec > iprec) {
+                
+                return tabs() + "(typed-folded:cast" + suffix + "\n" + rkt_val + " "+ type_str + " 0" + ")";
+            } else if (oprec > iprec){
+                return tabs() + "(typed-folded:cast" + suffix+ "\n" + rkt_val + " " + type_str + " 1"+ ")";
             } else {
-                return tabs() + "(typed:cast-int" + suffix+ "\n" + rkt_val + " " + type_str + ")";
+                return tabs() + "(typed-folded:cast" + suffix + "\n" + rkt_val + " "+ type_str +  ")";
             }
         }
     }
@@ -1542,16 +1574,16 @@ public:
 
             if (!isConstantValue(s->value)) {
                 Expr updated_val = mutate(s->value);
-                debug(0) << "Store Instruction: " << stmt << "\n";
-                debug(0) << "Store name: " << s->name << "\n";
+                debug(1) << "Store Instruction: " << stmt << "\n";
+                debug(1) << "Store name: " << s->name << "\n";
 
                 std::string current_scope = scope_name.top();
-                debug(0) << "Current Scope name: " << current_scope << "\n";
+                debug(1) << "Current Scope name: " << current_scope << "\n";
 
                 auto &context = MemMap.ref(scope_name.top());
 
                 Stmt NewStore = Store::make(s->name, updated_val, s->index, s->param, s->predicate, s->alignment);
-                debug(0) << "Updated store for \n"<< stmt<< "\n is \n" << NewStore << "\n";
+                debug(1) << "Updated store for \n"<< stmt<< "\n is \n" << NewStore << "\n";
 
                 UpdateDeadStatements(context, s);
                 context[NewStore.as<Store>()] = updated_val;
@@ -1562,15 +1594,15 @@ public:
 
         if (stmt.node_type() == IRNodeType::For) {
             const For *f = stmt.as<For>();
-            debug(0) << "For Instruction: " << stmt << "\n";
+            debug(1) << "For Instruction: " << stmt << "\n";
             std::map<const Store *, Expr> scoped_map;
 
             scope_name.push(f->name);
 
-            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt = mutate(f->body);
-            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1581,15 +1613,15 @@ public:
         // Start a new scope for Let
         if (stmt.node_type() == IRNodeType::LetStmt) {
             const LetStmt *l = stmt.as<LetStmt>();
-            debug(0) << "Let  Instruction: " << stmt << "\n";
+            debug(1) << "Let  Instruction: " << stmt << "\n";
             std::map<const Store *, Expr> scoped_map;
 
             scope_name.push(l->name);
 
-            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt = mutate(l->body);
-            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1600,7 +1632,7 @@ public:
         const char *disable_prod = getenv("HL_PROD_CONS_DISABLE");
         if (stmt.node_type() == IRNodeType::ProducerConsumer && !disable_prod) {
 
-            debug(0) << "Producer Consumer STMT  Instruction: " << stmt << "\n";
+            debug(1) << "Producer Consumer STMT  Instruction: " << stmt << "\n";
 
             const ProducerConsumer *pc = stmt.as<ProducerConsumer>();
             std::string p_or_c = pc->is_producer ? "_prod" : "_cons";
@@ -1610,7 +1642,7 @@ public:
             std::map<const Store *, Expr> scoped_map;
             MemMap.push(scope_name.top(), scoped_map);
             auto new_produce_consume = mutate(pc->body);
-            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1621,23 +1653,23 @@ public:
         // Start a new scope for IfThenElse
         if (stmt.node_type() == IRNodeType::IfThenElse) {
             const IfThenElse *ite = stmt.as<IfThenElse>();
-            debug(0) << "If then else  Instruction: " << stmt << "\n";
+            debug(1) << "If then else  Instruction: " << stmt << "\n";
 
             std::map<const Store *, Expr> scoped_map;
             scope_name.push("ite_then");
-            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map);
             auto new_stmt_then = mutate(ite->then_case);
-            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
             std::map<const Store *, Expr> scoped_map_else;
             scope_name.push("ite_else");
-            debug(0) << "Pushing scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Pushing scope_name: " << scope_name.top() << "\n";
             MemMap.push(scope_name.top(), scoped_map_else);
             auto new_stmt_else = mutate(ite->else_case);
-            debug(0) << "Popping scope_name: " << scope_name.top() << "\n";
+            debug(1) << "Popping scope_name: " << scope_name.top() << "\n";
             MemMap.pop(scope_name.top());
             scope_name.pop();
 
@@ -1651,9 +1683,9 @@ public:
     Expr visit(const Load *op) override {
         Expr folded = Load::make(op->type, op->name, op->index, op->image, op->param, op->predicate, op->alignment);
 
-        debug(0) << "Current load:" << folded <<"\n";
+        debug(1) << "Current load:" << folded <<"\n";
         std::string current_scope = scope_name.top();
-        debug(0) << "Current Scope name for load: " << current_scope << "\n";
+        debug(1) << "Current Scope name for load: " << current_scope << "\n";
 
         if (scope_name.empty() || !MemMap.contains(scope_name.top())) {
             return folded;
@@ -1663,27 +1695,27 @@ public:
 
         for (auto const &x : context) {
             auto store = x.first;
-            debug(0) << " Checking if store matches: "<<store->name << "\n";
+            debug(1) << " Checking if store matches: "<<store->name << "\n";
 
             if (store->name != op->name){
-                debug(0) << "Op name not match\n";
+                debug(1) << "Op name not match\n";
                 continue;
             }
 
             if (!equal(store->predicate, op->predicate)){
-                debug(0) << "Predicate not equal\n";
+                debug(1) << "Predicate not equal\n";
                 continue;
             }
 
 
             if (!equal(store->index, op->index)){
-                debug(0) << "Index not equal\n";
+                debug(1) << "Index not equal\n";
                 continue;
             }
 
             /*
             if (!store->param.same_as(op->param)){
-                debug(0) << "Param not same\n";
+                debug(1) << "Param not same\n";
                 continue;
             }
             */
@@ -1691,14 +1723,14 @@ public:
             // Halide modulus remainder class only
             // defines equality
             if (!(store->alignment == op->alignment)){
-                debug(0) << "Alignment not same\n";
+                debug(1) << "Alignment not same\n";
                 continue;
             }
 
-            debug(0) << "LOAD STORE MATCHED!"
+            debug(1) << "LOAD STORE MATCHED!"
                      << "\n";
 
-            debug(0) << "Replaced " << folded << " with " << x.second << "\n";
+            debug(1) << "Replaced " << folded << " with " << x.second << "\n";
             folded = x.second;
         }
 
@@ -1731,7 +1763,7 @@ public:
         if (stmt.node_type() == IRNodeType::Store) {
             const Store *s = stmt.as<Store>();
 
-            debug(0) << "Checking if pointer " << s << " is redundant "
+            debug(1) << "Checking if pointer " << s << " is redundant "
                      << "\n";
 
             for (auto DS_IR : DeadStatements) {
@@ -1740,11 +1772,11 @@ public:
 
                 Stmt DeadStoreStmt = Store::make(DS->name, DS->value, DS->index, DS->param, DS->predicate, DS->alignment);
 
-                debug(0) << "Orig Stmt: " << stmt << "\n";
-                debug(0) << "Test Stmt: " << DeadStoreStmt << "\n";
+                debug(1) << "Orig Stmt: " << stmt << "\n";
+                debug(1) << "Test Stmt: " << DeadStoreStmt << "\n";
 
                 if (equal(DeadStoreStmt, stmt)) {
-                    debug(0) << "It is redundant!\n";
+                    debug(1) << "It is redundant!\n";
                     return Evaluate::make(0);
                 }
             }
@@ -1897,7 +1929,15 @@ public:
         // If the expression is just a single load instruction, ignore it
         if (base_e.node_type() == IRNodeType::Load) {
             debug(1) << "Single load case"
-                     << "\n";
+                << "\n";
+
+            const char *skip_loads= getenv("MISAAL_SKIP_NODES");
+
+            if(skip_loads){
+                debug(0) << "Not optimizing load index calculations\n";
+                return expr;
+            }
+
             return IRMutator::mutate(expr);
         }
 
@@ -1998,6 +2038,25 @@ public:
             }
 
             spec_expr = ReplaceDiv(arch).mutate(spec_expr);
+            // Lowering of division may introduce new intrinsics
+            spec_expr = LowerIntrinsics(arch).mutate(spec_expr);
+        }
+
+        if (arch == HydrideSupportedArchitecture::PIM ) {
+
+            Expr previous_expr = spec_expr;
+
+            while (true) {
+                spec_expr = ReplaceMod(arch).mutate(spec_expr);
+                // Lowering of division may introduce new intrinsics
+                spec_expr = LowerIntrinsics(arch).mutate(spec_expr);
+
+                if (equal(spec_expr, previous_expr)) break;
+
+                previous_expr = spec_expr;
+            }
+
+            spec_expr = ReplaceMod(arch).mutate(spec_expr);
             // Lowering of division may introduce new intrinsics
             spec_expr = LowerIntrinsics(arch).mutate(spec_expr);
         }
@@ -2189,6 +2248,46 @@ private:
 
         Expr visit(const Call *op) override {
             std::cout << "Lower Intrinsic on call: " << op->name << "\n";
+
+
+            if (_arch == HydrideSupportedArchitecture::PIM) {
+                std::vector<Call::IntrinsicOp> supported_calls = {
+                    Call::shift_right,
+                    Call::shift_left,
+                    Call::bitwise_and,
+                    Call::bitwise_not,
+                    Call::bitwise_xor,
+                    Call::if_then_else
+                };
+
+
+                std::vector<Call::IntrinsicOp> unsupported_calls = {
+                    Call::saturating_add,
+                    Call::saturating_sub,
+                    Call::absd,
+                    Call::abs,
+                    Call::widening_mul,
+                    Call::rounding_shift_right,
+                    Call::rounding_mul_shift_right,
+                    Call::rounding_halving_add
+                };
+
+                bool supported = true;
+                for (auto IntrinID : unsupported_calls) {
+                    if (op->is_intrinsic(IntrinID)) {
+                        supported = false;
+                    }
+                }
+
+                if(!supported){
+                    return mutate(lower_intrinsic(op));
+                } else {
+                    return IRMutator::visit(op);
+                }
+            }
+
+
+
             Expr lowered;
 
             bool lower_using_halide = false;
@@ -2691,7 +2790,7 @@ private:
             Call::saturating_add,
             Call::saturating_sub,
             Call::shift_right,
-            Call::shift_left,
+            //Call::shift_left,
             Call::absd,
             Call::abs,
             Call::bitwise_and,
@@ -2712,6 +2811,7 @@ private:
                     supported = true;
                 }
             }
+
 
             if (!supported) {
                 std::string uname = unique_name('h');
@@ -2812,6 +2912,12 @@ private:
                 return Variable::make(op->type, uname);
             }
 
+            if(op->condition.type().is_scalar()){
+                std::string uname = unique_name('h');
+                abstractions[uname] = IRMutator::visit(op);
+                return Variable::make(op->type, uname);
+            }
+
             return IRMutator::visit(op);
         }
 
@@ -2845,7 +2951,8 @@ private:
 
             // Abstract scalar arithmetic
             // operations.
-            if (!op->type.is_vector() || (_arch == HydrideSupportedArchitecture::HVX && op->type.bits() >= 64)) {
+            if (!op->type.is_vector() || (_arch == HydrideSupportedArchitecture::HVX && op->type.bits() >= 64)
+                    || (_arch == HydrideSupportedArchitecture::PIM)) {
                 std::string uname = unique_name('h');
                 abstractions[uname] = IRMutator::visit(op);
                 return Variable::make(op->type, uname);
@@ -3086,6 +3193,14 @@ private:
 
             Expr v = op->value;
 
+            if (op->type.bits() == 1){
+                std::string uname = unique_name('h');
+                abstractions[uname] = IRMutator::visit(op);
+                return Variable::make(op->type, uname);
+
+            }
+
+
             bool supported = false;
             for (int input_size : supported_input_sizes) {
                 debug(1) << "Testing for vector input length: " << input_size << "\n";
@@ -3171,6 +3286,15 @@ private:
                 vec_lens.push_back(256);
                 vec_lens.push_back(128);
                 vec_lens.push_back(32);
+
+            case HydrideSupportedArchitecture::PIM:
+                debug(1) << "Abstraction vector sizes for X86 "
+                         << "\n";
+                {
+                    for(int i = 8; i < 524288; i *= 2){
+                        vec_lens.push_back(i);
+                    } 
+                }
             };
 
             bool supported = false;
@@ -3182,8 +3306,11 @@ private:
                              << "\n";
                     debug(1) << "v.bits(): " << v.type().bits() << "\n";
                     debug(1) << "v.lanes(): " << v.type().lanes() << "\n";
+
                     supported = true;
                 }
+
+
             }
 
             if (_arch == HydrideSupportedArchitecture::HVX && (op->type.bits() >= 64 || v.type().bits() >= 64)) {
@@ -3808,8 +3935,8 @@ Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const Base
     std::set<const IRNode *> DeadStmts;
     auto FLS = Hydride::FoldLoadStores(DeadStmts);
     auto folded = FLS.mutate(s);
-    debug(0) << "Printing Folded Stmt:\n";
-    debug(0) << folded << "\n";
+    debug(1) << "Printing Folded Stmt:\n";
+    debug(1) << folded << "\n";
 
     debug(1) << "DEAD STMT SIZE: " << DeadStmts.size() << "\n";
 
@@ -3830,6 +3957,8 @@ Stmt misaal_optimize_pim(FuncValueBounds fvb, const Stmt &s, std::set<const Base
     auto Optimizer = Hydride::IROptimizer(fvb, HydrideSupportedArchitecture::PIM, mutated_exprs, random_seed, name);
     auto Result = Optimizer.mutate(distributed);
     Optimizer.run_rewrites();
+    debug(0) << "Result Stmt:\n";
+    debug(0) << Result << "\n";
 
     return Result;
 }
@@ -4100,6 +4229,7 @@ Stmt optimize_x86_instructions_synthesis(Stmt s, const Target &t, FuncValueBound
 
 Stmt optimize_pim_instructions_synthesis(Stmt s, const Target &t, FuncValueBounds fvb) {
 
+    debug(0) << "Optimizing PIM with MISAAL\n";
     std::set<const BaseExprNode *> mutated_exprs;
     bool use_misaal = true;
     if (use_misaal){

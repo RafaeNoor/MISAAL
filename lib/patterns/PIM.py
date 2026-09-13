@@ -43,14 +43,19 @@ else:
 
     test_files = [
         f"{pim_dir}/EnumeratePattern_pim_bi_map_v2_pim_fused-enumerate_self_intermediate_results.py",
-        f"{pim_dir}/EnumeratePattern_pim_construct_v2_pim_fused-enumerate_self_intermediate_results.py",
+        #f"{pim_dir}/EnumeratePattern_pim_construct_v2_pim_fused-enumerate_self_intermediate_results.py",
         f"{pim_dir}/EnumeratePattern_pim_self_to_self_v2_pim_fused-enumerate_self_intermediate_results.py",
+        f"{pim_dir}/EnumeratePattern_pim_construction_v2_select_fix_pim_fused-enumerate_self_intermediate_results.py",
     ]
 
-    pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_v2.pickle"
-    abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_v2.pickle"
-    simplified_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_simplified_v2.pickle"
+    pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_v2_fix.pickle"
+    abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_v2_fix.pickle"
+    simplified_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_simplified_v2_fix.pickle"
 
+
+    #pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_v2.pickle"
+    #abstract_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_v2.pickle"
+    #simplified_pickle_file_name = MISAAL_ROOT+ "/lib/patterns/bitserial_fused_abstract_simplified_v2.pickle"
 
 
 
@@ -106,7 +111,7 @@ else:
 
 
 
-SIMPLIFY=True
+SIMPLIFY=False
 
 if SIMPLIFY:
     pim_patterns = simplify_double_division(pim_patterns)

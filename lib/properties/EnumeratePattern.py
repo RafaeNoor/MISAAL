@@ -1,4 +1,5 @@
 from properties.Property import *
+import traceback
 import sys
 import gc
 from patterns.PatternUtils import *
@@ -66,6 +67,10 @@ class EnumeratePattern(Property):
                 for src_ctx in src_eq_class.contexts:
                     size = src_ctx.out_vectsize
 
+                    if size > 512:
+                        continue
+
+
                     for dst_ctx in dst_eq_class.contexts:
                         try:
                             if src_ctx.out_vectsize != dst_ctx.out_vectsize:
@@ -73,8 +78,9 @@ class EnumeratePattern(Property):
 
                             if can_pattern_be_abstracted_for_output_size(src_expr, dst_expr, self.dsl_list, size):
                                 yield (src_expr, dst_expr, size, src_ctx, dst_ctx)
-                        except:
-                            print("Encountered exception")
+
+                        except Exception as e:
+                            print(f"Encountered exception: {e}")
                             continue
 
 
@@ -99,7 +105,7 @@ class EnumeratePattern(Property):
             src_ctx = candidate[3]
             dst_ctx = candidate[4]
 
-            print("Testing for", src_ctx.name, dst_ctx.name)
+            print("Testing for", src_ctx.name, dst_ctx.name, "in output size", output_size)
 
 
             src_eq_class = get_eq_class_for_ctx(src_expr, self.dsl_list)
@@ -139,6 +145,9 @@ class EnumeratePattern(Property):
 
 
             start_time = time.time()
+            # TEMP
+            print("Src expression", src_expr.emit_context_expr_string())
+            print("dst expression", dst_expr.emit_context_expr_string())
             success, src_expr_str, dst_expr_str = translate_pattern_for_output_size(src_expr, dst_expr, filtered_list, output_size, required_src_ctx = src_ctx, required_dst_ctx = dst_ctx)
             end_time = time.time()
             print("Find conc expression time Elapsed time", end_time-start_time)
@@ -171,6 +180,7 @@ class EnumeratePattern(Property):
 
             return success
         except Exception as e:
+            traceback.print_exc()
             print("Caught exception", e)
             return False
 

@@ -36,6 +36,7 @@ class EqClassEqualDepthV3Synth(EqClassEqualDepthV3):
         depth = candidate[1]
         subset = copy.deepcopy(candidate[2])
 
+        success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis_hydride(src_ctx, subset, depth = depth)
         try:
             success, src_expr_str, dst_expr_str = self.synth_utils.double_grammar_synthesis_hydride(src_ctx, subset, depth = depth)
 

@@ -1,7 +1,8 @@
 from common.Types import *
 import copy
 from utils.WriteDSL import convert_dsl_list_to_dict, write_dsl_dict_to_file
-from sema.bitserial_fused_sema import bitserial_fused_sema
+#from sema.bitserial_fused_sema import bitserial_fused_sema
+from sema.bitserial_fused_sema_v2 import bitserial_fused_sema_v2 as bitserial_fused_sema
 from common.DSLParser import parse_dict
 import numpy as np
 
@@ -51,6 +52,7 @@ class ExtendDSLUtils:
 
     def add_context(self, dsl_inst, output_size, output_bitwidth):
 
+        print("Here", dsl_inst.name, output_size, output_bitwidth)
         # To extend we first find a parameterization with with
         # the  required output_bitwidth
 
@@ -58,14 +60,24 @@ class ExtendDSLUtils:
         #assert len(valid_ctxs) != 0, f"Unable to find valid contexts for {dsl_inst.name} at output_precision {output_bitwidth}"
         if len(valid_ctxs) == 0:
             # Possibly extending instructions
+            print("Return early no valid context")
             return
 
         # Next we find a context with at least 128-bit vector sizes to
         # reduce any confusion between parameters which correspond to size
         # and lanes / precisions
 
-        valid_ctxs = [ctx for ctx in valid_ctxs if ctx.out_vectsize == 128]
-        assert len(valid_ctxs) != 0 , f"Unable to find valid contexts for {dsl_inst.name} at output_precision {output_bitwidth} at output size {128}"
+        valid_ctxs = [ctx for ctx in valid_ctxs if ctx.out_vectsize >= 64]
+
+        print("Len valid contexts start:", len(valid_ctxs))
+        valid_match_prec = [ctx for ctx in valid_ctxs if ctx.out_precision == output_bitwidth]
+        invalid_match_prec = [ctx for ctx in valid_ctxs if ctx.out_precision != output_bitwidth]
+
+        valid_ctxs = valid_match_prec + invalid_match_prec
+        print("Len valid contexts:", len(valid_ctxs))
+
+
+        #assert len(valid_ctxs) != 0 , f"Unable to find valid contexts for {dsl_inst.name} at output_precision {output_bitwidth} at output size {128}"
 
         for ctx_idx, sample_ctx in enumerate(valid_ctxs):
             in_vect_size_matches = True
@@ -74,9 +86,9 @@ class ExtendDSLUtils:
             print(f"IO Ratio:\t{io_ratio}")
 
             for idx, ctx in enumerate(dsl_inst.contexts):
-                bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector) and arg.size != ctx.in_precision] # Leave the 'scalar' bitvector sizes as is
+                bv_args = [arg for arg in ctx.context_args if isinstance(arg, BitVector)]# and arg.size != ctx.in_precision] # Leave the 'scalar' bitvector sizes as is
                 ctx_input_sizes = [arg.size for arg in bv_args]
-                print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision, "comparing to",ctx.in_vectsize)
+                #print("ctx_input_sizes", ctx_input_sizes, "in_precision:", ctx.in_precision, "comparing to",ctx.in_vectsize)
                 if ctx_input_sizes == []:
                     # I.e. has only scalar operands
                     break
@@ -94,6 +106,7 @@ class ExtendDSLUtils:
                     for c in ctx_input_sizes:
                         valid_ = valid_ or (b == c)
                 if not valid_:
+                    print("not valid_")
                     continue
                 print(f"Found match!")
 
@@ -119,6 +132,7 @@ class ExtendDSLUtils:
                         # For broadcast like instructions just use the same size
                         if sample_ctx.in_precision >= arg_size:
                             # If really scalar then continue
+                            print("Is scalar")
                             continue
 
                     io_ratio = sample_ctx.out_vectsize / arg_size
@@ -330,7 +344,7 @@ class ExtendDSLUtils:
             dsl_inst.add_context(name = extended_name,
                                  in_vectsize = new_arg_size,
                                  out_vectsize = output_size,
-                                 lane_size = int(new_ctx_args[sample_ctx.in_lanesize_index]),
+                                 lane_size = int(new_ctx_args[sample_ctx.in_lanesize_index]) if sample_ctx.in_lanesize_index is not None else int(new_ctx_args[sample_ctx.in_precision_index]),
                                  in_precision = int(new_ctx_args[sample_ctx.in_precision_index]),
                                  out_precision = output_bitwidth,
                                  args = new_ctx_args,
@@ -338,6 +352,7 @@ class ExtendDSLUtils:
                                  out_precision_index = sample_ctx.out_precision_index,
                                  permutation = sample_ctx.permutation
                                  )
+            return
 
 
 
@@ -362,6 +377,7 @@ class ExtendDSLUtils:
                 for dsl_inst in dsl_list:
                     ctx = self.get_eq_class_ctx(dsl_inst, output_size, bitwidth)
                     if not ctx is None:
+                        print(f"Trying to extend {dsl_inst.name} to {output_size} size and {bitwidth} bitwidth failed")
                         # If specific context exists
                         continue
 
@@ -490,14 +506,23 @@ class ExtendDSLUtils:
 
 pim_dsl_list = parse_dict(bitserial_fused_sema)
 filter_names = [
-    "test_enum_1_comb_13_fused_pim_op_59",
+    #"test_enum_1_comb_13_fused_pim_op_59",
     #"test_enum_1_comb_13_fused_pim_op_951",
+    #"test_enum_1_comb_2_fused_pim_op_0",
+    #"test_enum_1_comb_13_fused_pim_op_59"
+    #"test_enum_1_comb_12_fused_pim_op_191"
+    "test_enum_2_comb_3_fused_pim_op_2",
 
 ]
-#pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
+pim_dsl_list = [d for d in pim_dsl_list if d.name in filter_names]
+
 #pim_dsl_list = [d for d in pim_dsl_list]
 print("Sample dsl_list:", pim_dsl_list)
-DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 23+1)], extend_to_bw = [8, 16, 32])
+#DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 34+1)], extend_to_bw = [1,8, 16, 32])
+
+DSLExtender = ExtendDSLUtils(extend_to_sizes = [pow(2, i) for i in range(8, 34+1)], extend_to_bw = [32])
+pim_dsl_list[0].contexts = [pim_dsl_list[0].contexts[0]]
+
 
 DSLExtender.extend(pim_dsl_list)
 

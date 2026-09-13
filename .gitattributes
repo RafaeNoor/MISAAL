@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# Git LFS
+#
+# The pre-synthesized bitserial rewrite rules are shipped artifacts: they are
+# the input the PIM-AutoDSE flow starts from, and regenerating them requires
+# the full Rosette/Racket synthesis path. They must be in the repo for a
+# submodule checkout to be usable.
+#
+# The live set (loaded by lib/patterns/PIM.py) is the *_v2_fix trio:
+#     bitserial_fused_v2_fix.pickle                      ~256 MB
+#     bitserial_fused_abstract_v2_fix.pickle             ~ 91 MB
+#     bitserial_fused_abstract_simplified_v2_fix.pickle  ~ 91 MB
+#
+# The other ~2 GB of pickles in lib/patterns (the _scaled, _self and non-v2
+# variants) are superseded and should NOT be committed.
+#
+# Setup, once per clone:
+#     git lfs install
+#     git lfs track --filename lib/patterns/bitserial_fused_v2_fix.pickle
+# ---------------------------------------------------------------------------
+
+lib/patterns/bitserial_fused_v2_fix.pickle                     filter=lfs diff=lfs merge=lfs -text
+lib/patterns/bitserial_fused_abstract_v2_fix.pickle            filter=lfs diff=lfs merge=lfs -text
+lib/patterns/bitserial_fused_abstract_simplified_v2_fix.pickle filter=lfs diff=lfs merge=lfs -text
+
+# Large generated semantics tables consumed by lib/patterns/PIM.py
+lib/sema/pim_extend_dsl.py        filter=lfs diff=lfs merge=lfs -text
+lib/sema/bitserial_fused_sema_v2.py filter=lfs diff=lfs merge=lfs -text
+lib/sema/halide_full_pim.py       filter=lfs diff=lfs merge=lfs -text
+lib/sema/extend_dsl.py            filter=lfs diff=lfs merge=lfs -text
+
+# Enumeration results referenced by lib/patterns/PIM.py test_files;
+# needed whenever the rewrite-rule pickles have to be rebuilt.
+targets/pim_fused/EnumeratePattern_pim_construction_v2_select_fix_pim_fused-enumerate_self_intermediate_results.py filter=lfs diff=lfs merge=lfs -text
+
+# ---------------------------------------------------------------------------
+# Never store these in LFS or in git - they are build products.
+#   *.o *.a *.so   (fused_lib.o alone is ~577 MB per benchmark config dir)
+# Add them to .gitignore instead.
+# ---------------------------------------------------------------------------

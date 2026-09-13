@@ -324,14 +324,16 @@ def get_valid_concretization_generator(ref_expr, output_size, dsl_list, root_ctx
         if not is_expression_template_valid(valid_template):
             continue
         valid = True
-        print(valid_template)
+        print("Valid template",valid_template)
         materialize_context = materialize_expression_template(valid_template)
         yield materialize_context
 
     if valid:
         return
 
+    print("Failed to find single expression")
     print(ref_expr.emit_context_expr_string())
+    print(f"Ref expression output size: {ref_expr.out_vectsize}")
     print(output_size)
     assert False, "Unreachable"
     return None
